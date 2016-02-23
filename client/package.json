@@ -18,5 +18,15 @@
       "url": "https://dionyziz.com"
     }
   ]
-  "license": "MIT"
+  "license": "MIT",
+  "jest": {
+    "scriptPreprocessor": "preprocessor.js"
+  },
+  "dependencies": {
+    "browserify": "^13.0.0",
+    "gulp": "^3.9.1",
+    "reactify": "^1.1.1",
+    "vinyl-source-stream": "^1.1.0",
+    "watchify": "^3.7.0"
+  }
 }
