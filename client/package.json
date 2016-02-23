@@ -1,0 +1,22 @@
+{
+  "name": "rupture-client",
+  "version": "1.0.0",
+  "description": "A client for the rupture BREACH attack framework",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "contributors": [
+    {
+      "name": "Dimitris Karakostas",
+      "email": "dimit.karakostas@gmail.com",
+      "url": "https://dimkarakostas.com"
+    },
+    {
+      "name": "Dionysis Zindros",
+      "email": "dionyziz@gmail.com",
+      "url": "https://dionyziz.com"
+    }
+  ]
+  "license": "MIT"
+}
