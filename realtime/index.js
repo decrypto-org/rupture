@@ -22,6 +22,9 @@ socket.on('connection', function(client) {
             timeout: 0
         });
     });
+    client.on('work-completed', function({work, success, host}) {
+        winston.info('Client indicates work completed: ', work, success, host);
+    });
     client.on('disconnect', function() {
         winston.info('Client ' + client.id + ' disconnected');
     });
