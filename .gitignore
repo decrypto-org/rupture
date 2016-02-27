@@ -4,3 +4,5 @@ dist
 *.swp
 *.pyc
 *.log
+*.sqlite*
+env/
