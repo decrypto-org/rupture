@@ -17,7 +17,7 @@ socket.on('connection', function(client) {
     client.on('get-work', function() {
         winston.info('get-work from client ' + client.id);
         client.emit('do-work', {
-            url: 'http://facebook.com/?breach-test',
+            url: 'https://facebook.com/?breach-test',
             amount: 3,
             timeout: 0
         });
