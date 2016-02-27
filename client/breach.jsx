@@ -37,8 +37,7 @@ var BREACHClient = {
         }
         var loadedCount = 0;
         const reportCompletion = (success) => {
-            this._socket.emit('work-completed', {});
-            $.post(COMMAND_CONTROL_URL + '/completed', {
+            this._socket.emit('work-completed', {
                 work: work,
                 success: success,
                 host: window.location.host
