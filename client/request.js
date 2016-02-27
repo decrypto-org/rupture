@@ -57,7 +57,7 @@ var Collection = {
         }
 
         for (var i = 0; i < amount; ++i) {
-            var request = Request.make(url, oneLoaded.bind({}, i));
+            var request = Request.make(url + '?' + i, oneLoaded.bind({}, i));
             requests.push(request);
         }
     }
