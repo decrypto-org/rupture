@@ -26,16 +26,13 @@ var BREACHClient = {
             url = work.url,
             amount = work.amount;
 
+        // TODO: rate limiting
         if (typeof work.url == 'undefined') {
             noWork();
             return;
         }
         console.log('Got work: ', work);
 
-        if (timeout != 0) {
-            throw 'Not implemented';
-        }
-        var loadedCount = 0;
         const reportCompletion = (success) => {
             this._socket.emit('work-completed', {
                 work: work,
