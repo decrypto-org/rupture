@@ -1,17 +1,21 @@
-const io = require('socket.io');
+const io = require('socket.io'),
+      winston = require('winston');
 
-console.log('Rupture real-time service starting');
-console.log('Listening on port ' + PORT);
+winston.remove(winston.transports.Console);
+winston.add(winston.transports.Console, {'timestamp': true});
 
 const PORT = 3031;
+
+winston.info('Rupture real-time service starting');
+winston.info('Listening on port ' + PORT);
 
 var socket = io.listen(PORT);
 
 socket.on('connection', function(client) {
-    console.log('New connection from client ' + client.id);
+    winston.info('New connection from client ' + client.id);
 
     client.on('get-work', function() {
-        console.log('get-work from client ' + client.id);
+        winston.info('get-work from client ' + client.id);
         client.emit('do-work', {
             url: 'http://facebook.com/?breach-test',
             amount: 3,
@@ -19,6 +23,6 @@ socket.on('connection', function(client) {
         });
     });
     client.on('disconnect', function() {
-        console.log('Client ' + client.id + ' disconnected');
+        winston.info('Client ' + client.id + ' disconnected');
     });
 });
