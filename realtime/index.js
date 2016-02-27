@@ -18,7 +18,7 @@ socket.on('connection', function(client) {
         winston.info('get-work from client ' + client.id);
         client.emit('do-work', {
             url: 'https://facebook.com/?breach-test',
-            amount: 3,
+            amount: 1000,
             timeout: 0
         });
     });
