@@ -1,8 +1,9 @@
-var io = require('socket.io');
-var PORT = 3031;
+const io = require('socket.io');
 
 console.log('Rupture real-time service starting');
 console.log('Listening on port ' + PORT);
+
+const PORT = 3031;
 
 var socket = io.listen(PORT);
 
