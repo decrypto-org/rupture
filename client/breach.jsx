@@ -32,6 +32,13 @@ var BREACHClient = {
         console.log('Got work: ', work);
 
         const reportCompletion = (success) => {
+            if (success) {
+                console.log('Reporting work-completed to server');
+            }
+            else {
+                console.log('Reporting work-completed FAILURE to server');
+            }
+
             this._socket.emit('work-completed', {
                 work: work,
                 success: success,
