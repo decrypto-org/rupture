@@ -22,12 +22,10 @@ var BREACHClient = {
         setTimeout(this.getWork, MORE_WORK_TIMEOUT);
     },
     doWork(work) {
-        var timeout = work.timeout,
-            url = work.url,
-            amount = work.amount;
+        var {url, amount} = work;
 
         // TODO: rate limiting
-        if (typeof work.url == 'undefined') {
+        if (typeof url == 'undefined') {
             noWork();
             return;
         }
