@@ -5,7 +5,8 @@ from django.utils import timezone
 
 class Target(models.Model):
     """
-    A particular static target endpoint that the attack can apply to, e.g. gmail, facebook
+    A particular static target endpoint that the attack can apply to
+    e.g. gmail csrf, facebook message
     """
     endpoint = models.CharField(max_length=255)
     prefix = models.CharField(max_length=255)
@@ -13,14 +14,16 @@ class Target(models.Model):
 
 class Victim(models.Model):
     """
-    A particular instance of a target for a particular user-victim e.g. dionyziz@gmail.com
+    A particular instance of a target for a particular user-victim
+    e.g. dionyziz@gmail.com
     """
     target = models.ForeignKey(Target)
     # TODO: method (divide & conquer, etc.)
 
 class SampleSet(models.Model):
     """
-    A set of samples collected for a particular victim pertaining to an attack vector used to extend a known secret.
+    A set of samples collected for a particular victim pertaining to an alphabet
+    vector used to extend a known secret.
     """
     victim = models.ForeignKey(Victim)
     # number of samples contained in the set
