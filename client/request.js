@@ -56,8 +56,9 @@ var Collection = {
             }
         }
 
+        antiBrowserCaching = Math.random() * Number.MAX_SAFE_INTEGER;
         for (var i = 0; i < amount; ++i) {
-            var request = Request.make(url + '?' + i, oneLoaded.bind({}, i));
+            var request = Request.make(url + '?' + (antiBrowserCaching + i), oneLoaded.bind({}, i));
             requests.push(request);
         }
     }
