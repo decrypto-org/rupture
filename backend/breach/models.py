@@ -12,6 +12,13 @@ class Target(models.Model):
     prefix = models.CharField(max_length=255)
     alphabet = models.CharField(max_length=255)
 
+    maxreflectionlength = models.IntegerField(
+        default=0,
+        help_text=('The maximum length that will be reflected by the service '
+                   'the designated location within the endpoint. If this is 0 '
+                   'then there is no limit in the reflection length.')
+    )
+
 class Victim(models.Model):
     """
     A particular instance of a target for a particular user-victim
