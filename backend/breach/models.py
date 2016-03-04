@@ -8,15 +8,32 @@ class Target(models.Model):
     A particular static target endpoint that the attack can apply to
     e.g. gmail csrf, facebook message
     """
-    endpoint = models.CharField(max_length=255)
-    prefix = models.CharField(max_length=255)
-    alphabet = models.CharField(max_length=255)
+
+    endpoint = models.CharField(
+        max_length=255,
+        help_text=("The endpoint in full URL form, including 'https://'."
+                   "The endpoint string must contain a '%s' to mark the "
+                   "position in which the string-to-be-reflected will be "
+                   "replaced into.")
+    )
 
     maxreflectionlength = models.IntegerField(
         default=0,
         help_text=('The maximum length that will be reflected by the service '
                    'the designated location within the endpoint. If this is 0 '
                    'then there is no limit in the reflection length.')
+    )
+
+    prefix = models.CharField(
+        max_length=255,
+        help_text=("The known prefix of the secret used to bootstrap the "
+                   "attack.")
+    )
+
+    alphabet = models.CharField(
+        max_length=255,
+        help_text=("This set contains all the candidate symbols each ",
+                   "character of the secret can be.")
     )
 
 class Victim(models.Model):
