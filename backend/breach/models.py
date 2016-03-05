@@ -144,7 +144,7 @@ class SampleSet(models.Model):
     success = models.BooleanField(
         default=False,
         help_text=("Whether the samples in this sampleset were all collected "
-                  "successfully")
+                   "successfully")
     )
 
 class AttackVectorElement(models.Model):
