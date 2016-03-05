@@ -1,3 +1,5 @@
+![Rupture architecture](http://i.imgur.com/Q0oVChp.png)
+
 ### client <-> realtime ([socket.io](http://socket.io/))
 
 Communication between client and realtime server is possible using [socket.io](http://socket.io/) websockets.
