@@ -85,6 +85,16 @@ class SampleSet(models.Model):
                    "confidence.")
     )
     # assert(self.round <= self.victim.round)
+    roundcardinality = models.IntegerField(
+        default=1,
+        help_text=('How many alphabet symbols are being tested in this round.'
+                   'This can be larger or equal to the current sampleset\'s '
+                   'candidatealphabet length, as other samplesets may not '
+                   'have the same candidatealphabet length. This discrepancy '
+                   'occurs when the target alphabet is not a perfect power of '
+                   '2.')
+    )
+    # assert(self.roundcardinality >= len(self.candidatealphabet))
 
     amount = models.IntegerField(
         default=1,
