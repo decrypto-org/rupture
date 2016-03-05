@@ -64,12 +64,14 @@ def decide_next_world_state(samplesets):
     # Ensure all samplesets are extending the same known state
     knownsecret = samplesets[0].knownsecret
     knownalphabet = samplesets[0].knownalphabet
+    amount = samplesets[0].amount
     victim = samplesets[0].victim
     target = victim.target
     for sampleset in samplesets:
         assert(sampleset.knownsecret == knownsecret)
         assert(sampleset.knownalphabet == knownalphabet)
         assert(sampleset.victim == victim)
+        assert(sampleset.amount == amount)
 
     # Split samplesets based on alphabetvector under consideration
     # and accumulate data lengths for each candidate.
