@@ -76,8 +76,17 @@ def decide_next_world_state(samplesets):
     # Split samplesets based on alphabetvector under consideration
     # and accumulate data lengths for each candidate.
     candidate_lengths = collections.defaultdict(lambda: 0)
+    candidate_count_samplesets = collections.defaultdict(lambda: 0)
     for sampleset in samplesets:
         candidate_lengths[sampleset.candidatealphabet] += len(sampleset.data)
+        candidate_count_samplesets[sampleset.candidatealphabet] += 1
+
+    candidate_count_samplesets = candidate_count_samplesets.items()
+
+    samplesets_per_candidate = candidate_count_samplesets[0][1]
+
+    for alphabet, count in candidate_count_samplesets:
+        assert(count == samplesets_per_candidate)
 
     # Ensure we have a decision to make
     assert(len(candidate_lengths) > 1)
