@@ -146,7 +146,3 @@ class SampleSet(models.Model):
         help_text=("Whether the samples in this sampleset were all collected "
                    "successfully")
     )
-
-class AttackVectorElement(models.Model):
-    sampleset = models.ForeignKey(SampleSet)
-    symbol = models.CharField(max_length=1)
