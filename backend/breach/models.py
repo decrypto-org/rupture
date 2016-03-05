@@ -3,6 +3,9 @@ from __future__ import unicode_literals
 from django.db import models
 from django.utils import timezone
 
+import urlparse
+
+
 class Target(models.Model):
     """
     A particular static target endpoint that the attack can apply to
@@ -16,6 +19,10 @@ class Target(models.Model):
                    "position in which the string-to-be-reflected will be "
                    "replaced into.")
     )
+
+    @property
+    def host(self):
+        return urlparse.urlparse(self.endpoint).hostname
 
     maxreflectionlength = models.IntegerField(
         default=0,
