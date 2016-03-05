@@ -67,12 +67,9 @@ def decide_next_world_state(samplesets):
     victim = samplesets[0].victim
     target = victim.target
     for sampleset in samplesets:
-        if sampleset.knownsecret != knownsecret:
-            raise AnalyzerError('samplesets do not share the same world state')
-        if sampleset.knownalphabet != knownalphabet:
-            raise AnalyzerError('samplesets do not share the same world state')
-        if sampleset.victim != victim:
-            raise AnalyzerError('samplesets do not share the same victim')
+        assert(sampleset.knownsecret == knownsecret)
+        assert(sampleset.knownalphabet == knownalphabet)
+        assert(sampleset.victim == victim)
 
     # Split samplesets based on alphabetvector under consideration
     # and accumulate data lengths for each candidate.
