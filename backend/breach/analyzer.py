@@ -108,4 +108,7 @@ def decide_next_world_state(samplesets):
         "knownalphabet": decision_knownalphabet
     }
 
-    return state, confidence
+    return {
+        'state': state,
+        'confidence': confidence
+    }
