@@ -43,6 +43,13 @@ class Target(models.Model):
                    "character of the secret can be.")
     )
 
+    secretlength = models.IntegerField(
+        default=0,
+        help_text=("The length of the secret, if known. If the length of the "
+                   "secret is unknown, leave this as 0.")
+    )
+
+
 class Victim(models.Model):
     """
     A particular instance of a target for a particular user-victim
