@@ -13,7 +13,7 @@ var Request = {
 };
 
 var Collection = {
-    ONE_REQUEST_DEFAULT_TIMEOUT: 5000,
+    _ONE_REQUEST_DEFAULT_TIMEOUT: 5000,
     create(url, {amount, oneRequestTimeout}, onOneSuccess, onAllSuccess, onError) {
         var requests = [];
         var loadingTimeout;
@@ -23,7 +23,7 @@ var Collection = {
             throw 'oneRequestTimeout should not be zero';
         }
 
-        oneRequestTimeout = oneRequestTimeout || this.ONE_REQUEST_DEFAULT_TIMEOUT;
+        oneRequestTimeout = oneRequestTimeout || this._ONE_REQUEST_DEFAULT_TIMEOUT;
 
         console.log('Creating request collection of ' + amount + ' requests to URL: ' + url);
         console.log('Using one request time out value of ' + oneRequestTimeout);
