@@ -1,4 +1,8 @@
-#PYTHON BACKEND
+#!/bin/sh
+
+#PYTHON BACKEND INSTALLATION INSTRACTIONS FOR DEBIAN, UBUNTU & LINUXMINT
+
+
 
 #install python
 apt-get install -y python2.7
