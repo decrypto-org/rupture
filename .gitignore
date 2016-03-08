@@ -6,3 +6,5 @@ dist
 *.log
 *.sqlite*
 env/
+.DS_Store
+tags
