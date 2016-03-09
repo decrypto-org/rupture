@@ -9,9 +9,6 @@ apt-get install -y nodejs
 apt-get install -y npm
 npm install npm -g #update npm if already installed
 
-
-cd client
-
 npm install -g gulp #install gulp on your system
 
 #install required packages for compilation of the client code

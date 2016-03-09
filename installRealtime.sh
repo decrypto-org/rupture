@@ -11,8 +11,6 @@ apt-get install -y npm
 npm install npm -g #update npm if already installed
 
 #install required packages for server setups
-cd ./..
-cd realtime
 npm install
 
 
