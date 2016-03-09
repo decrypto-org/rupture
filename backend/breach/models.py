@@ -66,32 +66,19 @@ class Victim(models.Model):
     sourceip = models.GenericIPAddressField(
         help_text='Source IP on the local network, e.g. 192.168.10.140'
     )
-    round = models.IntegerField(
-        default=1,
-        help_text=("Which round the attack is currently running on. This "
-                   "starts at 1 and advances by 1 in each round until the "
-                   "attack is concluded. The latest samplesets collected for "
-                   "the victim always pertain to the current round.")
-    )
     # TODO: method (divide & conquer, etc.)
 
-class SampleSet(models.Model):
-    """
-    A set of samples collected for a particular victim pertaining to an alphabet
-    vector used to extend a known secret.
-    """
-    victim = models.ForeignKey(Victim)
 
-    round = models.IntegerField(
+class Round(models.Model):
+    class Meta:
+        unique_together = (('victim', 'index'),)
+
+    victim = models.ForeignKey(Victim)
+    index = models.IntegerField(
         default=1,
-        help_text=("Which round this sampleset belongs to. Each round contains "
-                   "the collection of multiple samplesets pertaining to "
-                   "different candidate alphabets. To complete a round, "
-                   "enough samplesets must be completed to be able to make "
-                   "a decision for a state transition with a certain "
-                   "confidence.")
+        help_text=("Which round of the attack this is. The first round has ",
+                   "index 1.")
     )
-    # assert(self.round <= self.victim.round)
     roundcardinality = models.IntegerField(
         default=1,
         help_text=('How many alphabet symbols are being tested in this round.'
@@ -125,6 +112,24 @@ class SampleSet(models.Model):
     # assert(
     #     all([c in self.victim.target.alphabet for c in self.knownalphabet])
     # )
+
+
+class SampleSet(models.Model):
+    """
+    A set of samples collected for a particular victim pertaining to an
+    alphabet vector used to extend a known secret.
+    """
+
+    round = models.ForeignKey(
+        Round,
+        help_text=("Which round this sampleset belongs to. Each round "
+                   "contains the collection of multiple samplesets pertaining "
+                   "to different candidate alphabets. To complete a round, "
+                   "enough samplesets must be completed to be able to make "
+                   "a decision for a state transition with a certain "
+                   "confidence.")
+    )
+    # assert(self.round.index <= self.victim.round.index)
 
     # candidate state
     candidatealphabet = models.CharField(
