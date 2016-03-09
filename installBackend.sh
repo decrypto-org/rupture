@@ -4,13 +4,12 @@
 
 
 
-#install python
-apt-get install -y python2.7
+#install python (execute with elevated privileges)
+sudo apt-get install -y python2.7
 
 #install virtual enviroment module using pip.
-apt-get install -y python-pip
+sudo apt-get install -y python-pip
 pip install virtualenv
-cd backend
 virtualenv env #create Python virtual environment for the project
 
 #Activate virtual environment
