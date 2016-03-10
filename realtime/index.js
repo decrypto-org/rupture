@@ -46,6 +46,7 @@ socket.on('connection', function(client) {
 
         var workCompletedOptions = options;
         workCompletedOptions['path'] = '/breach/work_completed';
+        workCompletedOptions['method'] = 'POST';
 
         var requestBody = work;
         requestBody['success'] = success;
