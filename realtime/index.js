@@ -64,6 +64,8 @@ socket.on('connection', function(client) {
                 winston.info('Got (work-completed) response from backend: ' + res);
             });
         }).end();
+
+        createNewWork();
     });
     client.on('disconnect', function() {
         winston.info('Client ' + client.id + ' disconnected');
