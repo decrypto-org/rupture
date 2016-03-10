@@ -18,8 +18,7 @@ const BACKEND_HOST = 'localhost',
 socket.on('connection', function(client) {
     winston.info('New connection from client ' + client.id);
 
-    client.on('get-work', function() {
-        winston.info('get-work from client ' + client.id);
+    var createNewWork = function() {
         var getWorkOptions = {
             host: BACKEND_HOST,
             port: BACKEND_PORT,
@@ -36,7 +35,11 @@ socket.on('connection', function(client) {
                 client.emit('do-work', JSON.parse(res_data));
             });
         }).end();
+    }
 
+    client.on('get-work', function() {
+        winston.info('get-work from client ' + client.id);
+        createNewWork();
     });
     client.on('work-completed', function({work, success, host}) {
         winston.info('Client indicates work completed: ', work, success, host);
