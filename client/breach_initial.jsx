@@ -3,7 +3,7 @@ const io = require('socket.io-client'),
 
 var BREACHClient = {
     //COMMAND_CONTROL_URL: 'http://localhost:3031/',
-    COMMAND_CONTROL_URL: 'http://localhost:3031/',
+    COMMAND_CONTROL_URL: 'http://!replace!/',
     ONE_REQUEST_TIMEOUT: 5000,
     MORE_WORK_TIMEOUT: 10000,
     _socket: null,
