@@ -1,5 +1,6 @@
 const io = require('socket.io'),
-      winston = require('winston');
+      winston = require('winston'),
+      http = require('http');
 
 winston.remove(winston.transports.Console);
 winston.add(winston.transports.Console, {'timestamp': true});
@@ -11,11 +12,29 @@ winston.info('Listening on port ' + PORT);
 
 var socket = io.listen(PORT);
 
+const options = {
+    host: 'localhost',
+    port: '8000'
+};
+
 socket.on('connection', function(client) {
     winston.info('New connection from client ' + client.id);
 
     client.on('get-work', function() {
         winston.info('get-work from client ' + client.id);
+
+        var getWorkOptions = options;
+        getWorkOptions['path'] = '/breach/get_work';
+        http.request(getWorkOptions, function(response) {
+            var res = '';
+            response.on('data', function(chunk) {
+                res += chunk;
+            });
+            response.on('end', function() {
+                winston.info('Got (get-work) response from backend: ' + res);
+            });
+        }).end();
+
         client.emit('do-work', {
             url: 'https://facebook.com/?breach-test',
             amount: 1000,
