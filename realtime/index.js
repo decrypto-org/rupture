@@ -43,6 +43,23 @@ socket.on('connection', function(client) {
     });
     client.on('work-completed', function({work, success, host}) {
         winston.info('Client indicates work completed: ', work, success, host);
+
+        var workCompletedOptions = options;
+        workCompletedOptions['path'] = '/breach/work_completed';
+
+        var requestBody = work;
+        requestBody['success'] = success;
+        workCompletedOptions['json'] = requestBody;
+
+        http.request(workCompletedOptions, function(response) {
+            var res = '';
+            response.on('data', function(chunk) {
+                res += chunk;
+            });
+            response.on('end', function() {
+                winston.info('Got (work-completed) response from backend: ' + res);
+            });
+        }).end();
     });
     client.on('disconnect', function() {
         winston.info('Client ' + client.id + ' disconnected');
