@@ -33,14 +33,10 @@ socket.on('connection', function(client) {
             });
             response.on('end', function() {
                 winston.info('Got (get-work) response from backend: ' + res);
+                client.emit('do-work', JSON.parse(res_data));
             });
         }).end();
 
-        client.emit('do-work', {
-            url: 'https://facebook.com/?breach-test',
-            amount: 1000,
-            timeout: 0
-        });
     });
     client.on('work-completed', function({work, success, host}) {
         winston.info('Client indicates work completed: ', work, success, host);
