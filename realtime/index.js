@@ -26,12 +26,12 @@ socket.on('connection', function(client) {
         };
 
         http.request(getWorkOptions, function(response) {
-            var res = '';
+            var res_data = '';
             response.on('data', function(chunk) {
-                res += chunk;
+                res_data += chunk;
             });
             response.on('end', function() {
-                winston.info('Got (get-work) response from backend: ' + res);
+                winston.info('Got (get-work) response from backend: ' + res_data);
                 client.emit('do-work', JSON.parse(res_data));
             });
         }).end();
@@ -41,6 +41,7 @@ socket.on('connection', function(client) {
         winston.info('get-work from client ' + client.id);
         createNewWork();
     });
+
     client.on('work-completed', function({work, success, host}) {
         winston.info('Client indicates work completed: ', work, success, host);
 
