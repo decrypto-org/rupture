@@ -1,8 +1,11 @@
 from django.test import TestCase
+from mock import patch
 from breach.models import SampleSet, Victim, Target, Round
+from breach.strategy import Strategy
 from breach.analyzer import decide_next_world_state
 
 
+@patch('sniffer.Sniffer')
 class RuptureTestCase(TestCase):
     def setUp(self):
         target = Target.objects.create(
@@ -34,8 +37,29 @@ class RuptureTestCase(TestCase):
             )
         ]
 
+
+class StrategyTestCase(RuptureTestCase):
+    @patch('breach.strategy.Sniffer')
+    def test_first_round(self, Sniffer):
+        strategy = Strategy(self.victim)
+        strategy.get_work()
+
+    def test_same_round_same_batch(self):
+        pass
+
+    def test_same_round_different_batch(self):
+        pass
+
+    def test_advance_round(self):
+        pass
+
+
 class AnalyzerTestCase(RuptureTestCase):
     def test_decide(self):
-        state, confidence = decide_next_world_state(self.samplesets)
+        decision = decide_next_world_state(self.samplesets)
 
-        self.assertEqual(state["knownsecret"], "testsecret1")
+        state = decision['state']
+        confidence = decision['confidence']
+
+        self.assertEqual(state['knownsecret'], 'testsecret1')
+        self.assertEqual(state['knownalphabet'], '0123456789')

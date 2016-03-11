@@ -30,6 +30,8 @@ def work_completed(request, victim_id):
         raise Http404('Victim not found')
 
     strategy = Strategy(victim)
-    strategy.work_completed()
+    victory = strategy.work_completed()
 
-    return JsonResponse()
+    return JsonResponse({
+        'victory': victory
+    })
