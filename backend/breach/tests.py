@@ -13,13 +13,13 @@ class RuptureTestCase(TestCase):
             prefix='test',
             alphabet='0123456789'
         )
-        victim = Victim.objects.create(
+        self.victim = Victim.objects.create(
             target=target,
             sourceip='192.168.10.140',
             snifferendpoint='http://localhost/'
         )
         round = Round.objects.create(
-            victim=victim,
+            victim=self.victim,
             amount=1,
             knownsecret='testsecret',
             knownalphabet='01'
