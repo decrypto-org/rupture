@@ -47,14 +47,21 @@ Python backend application communicates with the sniffer server, in order to ini
 
 ##### API
 
-- /sniff
+- /start
     - POST request that initializes a new sniffer.
     - Request contains a JSON with the following fields:
         - source_ip: The IP of the victim on the local network.
         - destination_host: The hostname of the target that is being attacked.
-    - Returns *201 - Created* with a unique 10-hexadecimal-digit id for the sniffer if created correctly, else returns *409 - Conflict*, if a sniffer for the given arguments already exists.
-- /sniff/<sniffid>
-    - GET request asks for the network capture of the sniffer identified by sniffid.
-    - Returns *200 - OK* with a JSON that has a field *capture* which contains the network capture of the sniffer or *404 - Sniffer not found* if no sniffer with the given sniffid exists.
-    - DELETE request asks for the deletion of the sniffer identified by sniffid.
-    - Returns *200 - Sniffer deleted* if sniffer deleted correctly or *400 - Sniffer not found* if no sniffer with the given sniffid exists.
+    - Returns ***201*** *- Created* if the sniffer is created correctly, ***400*** *- Bad Request*, if either of the parameters is not properly set, or ***409*** *- Conflict*, if a sniffer for the given arguments already exists.
+- /read
+    - GET request that asks for the network capture of the sniffer.
+    - GET parameters should define:
+        - source_ip: The IP of the victim on the local network.
+        - destination_host: The hostname of the target that is being attacked.
+    - Returns ***200*** *- OK* with a JSON that has a field *capture* which contains the network capture of the sniffer, ***422*** *- Unprocessable Entity* if the captured TLS records were not properly formed or ***404*** *- Sniffer not found* if no sniffer with the given parameters exists.
+- /delete
+    - POST request that asks for the deletion of the sniffer.
+    - Request contains a JSON with the following fields:
+        - source_ip: The IP of the victim on the local network.
+        - destination_host: The hostname of the target that is being attacked.
+    - Returns ***200*** *- Sniffer deleted* if sniffer deleted correctly or ***404*** *- Sniffer not found* if no sniffer with the given parameters exists.
