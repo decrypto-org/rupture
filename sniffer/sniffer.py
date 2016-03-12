@@ -2,9 +2,40 @@ import threading
 import socket
 from scapy.all import sniff, Raw, IP, TCP, send
 
+# TLS Header
+TLS_HEADER_LENGTH = 5
+TLS_CONTENT_TYPE = 0
+TLS_LENGTH_MAJOR = 3
+TLS_LENGTH_MINOR = 4
+
+# TLS Content Types
+TLS_CHANGE_CIPHER_SPEC = 20
+TLS_ALERT = 21
+TLS_HANDSHAKE = 22
+TLS_APPLICATION_DATA = 23
+TLS_HEARTBEAT = 24
+TLS_CONTENT = {TLS_CHANGE_CIPHER_SPEC: 'Change cipher spec (20)',
+               TLS_ALERT: 'Alert (21)',
+               TLS_HANDSHAKE: 'Handshake (22)',
+               TLS_APPLICATION_DATA: 'Application Data (23)',
+               TLS_HEARTBEAT: 'Heartbeat (24)'}
+
 
 class Sniffer(threading.Thread):
+    '''
+    Class that defines a sniffer thread object. It implements interface methods for
+    creating, starting, reading the captured packets and deleting the sniffer.
+    '''
     def __init__(self, arg):
+        '''
+        Initialize the sniffer thread object.
+
+        Argument:
+        arg -- dictionary with the sniffer parameters:
+               interface: the device interface to use sniff on, e.g. wlan0
+               source_ip: the local network IP of the victim, e.g. 192.168.1.66
+               destination_host: the hostname of the attacked endpoint, e.g. dimkarakostas.com
+        '''
         super(Sniffer, self).__init__()
 
         # Set thread to run as daemon
@@ -52,7 +83,10 @@ class Sniffer(threading.Thread):
         return self.status
 
     def get_capture(self):
-        return self.captured_packets
+        # Get the data that were captured so far
+        capture = self.parse_capture(self.captured_packets)
+
+        return capture
 
     def stop(self):
         # Kill it with fire!
@@ -66,3 +100,51 @@ class Sniffer(threading.Thread):
         which will be caught by sniff filter and cause sniff function to stop.
         '''
         send(IP(dst=self.source_ip, src=socket.gethostbyaddr(self.destination_host)[-1][0])/TCP(), verbose=0)
+
+    def parse_capture(self, packets):
+        '''
+        Parse the captured packets and return a string of the appropriate data.
+        '''
+        payload_data = b''
+
+        # Iterate over the captured packets
+        # and aggregate the application level payload
+        for pkt in packets:
+            if Raw in pkt:
+                payload_data += str(pkt[Raw])
+
+        return self.get_application_data(payload_data)
+
+    def get_application_data(self, payload_data):
+        '''
+        Parse aggregated packet data and keep only TLS application data.
+
+        Argument:
+            payload_data - binary string of TLS layer packet payload
+
+        Returns a string of aggregated binary TLS application data,
+        including record headers.
+        '''
+        # If no packets were captured return empty
+        if payload_data == '':
+            return payload_data
+
+        application_data = ''
+
+        content_type = ord(payload_data[TLS_CONTENT_TYPE])
+        length = 256*ord(payload_data[TLS_LENGTH_MAJOR]) + ord(payload_data[TLS_LENGTH_MINOR])
+
+        # payload_data should begin with a valid TLS header
+        if content_type not in TLS_CONTENT:
+            # Flush invalid captured packets
+            self.captured_packets = []
+            assert False, 'Captured packets were not properly constructed'
+
+        # Keep only TLS application data
+        if content_type == TLS_APPLICATION_DATA:
+            application_data += payload_data[TLS_HEADER_LENGTH:TLS_HEADER_LENGTH+length]
+
+        # Recursively parse all TLS records in the aggregated payload data
+        application_data += self.get_application_data(payload_data[TLS_HEADER_LENGTH+length:])
+
+        return application_data
