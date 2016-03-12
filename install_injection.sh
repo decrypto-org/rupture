@@ -1,5 +1,12 @@
 #!/bin/sh
 
+##INJECTION INSTALLATION INSTRUCTIONS FOR DEBIAN, UBUNTU & LINUXMINT
+##check if apt-get command is installed
+command -v apt-get >/dev/null 2>&1 ||
+{ echo >&2 "Installation script requires  apt-get but it's not installed.  Aborting.";
+exit 1; }
+
+
 ##bettercap installation (requires rubygem)
 
 ##install rubygems, a package manager for Ruby
