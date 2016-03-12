@@ -5,6 +5,7 @@ from flask import Flask, request, jsonify
 
 app = Flask(__name__)
 
+sniffers = {}
 INTERFACE = 'wlan0'  # Capturing interface, should be same for all sniffers
 
 
@@ -25,16 +26,20 @@ def start():
     source_ip -- the local network IP of the victim, e.g. 192.168.1.66
     destination_host -- the hostname of the attacked endpoint, e.g. dimkarakostas.com
 
-    Returns a dictionary with two key-value pairs:
-    code -- status code for the request.
+    Status code for the request:
+            409: a sniffer on the same source_ip and destination host already exists
             400: parameters were not properly set
             201: a new sniffer for those arguments has been created
-    msg -- the sniffer's sniffid, for status codes 409 and 201, or an error message, for status code 400
     '''
     data = request.get_json()
     source_ip = data['source_ip']
     destination_host = data['destination_host']
 
+    # Check if a same sniffer already exists
+    if (source_ip, destination_host) in sniffers:
+        err = '409 - Sniffer (source_ip: {}, destination_host: {}) already exists.'.format(source_ip, destination_host)
+        logger.warning(err)
+        return str(err), 409
 
     params = {'source_ip': source_ip,
               'destination_host': destination_host,
@@ -44,7 +49,7 @@ def start():
     try:
         sniffer = Sniffer(params)
     except AssertionError, err:
-        logger.debug(err)
+        logger.warning(err)
         return str(err), 400
 
     sniffers[(source_ip, destination_host)] = sniffer
@@ -52,7 +57,7 @@ def start():
     # Start the new sniffer thread and block until it has come to life
     sniffer.start()
     while not sniffer.is_alive():
-        sleep(0.5)
+        sleep(0.01)
     msg = 'Sniffer (source_ip: {}, destination_host: {}) is alive.'.format(source_ip, destination_host)
     logger.debug(msg)
 
