@@ -1,6 +1,14 @@
+import logging
 from flask import Flask, request, jsonify
 
 app = Flask(__name__)
+
+
+level = logging.DEBUG
+logger = logging.getLogger('sniffer')
+logger.setLevel(level)
+FORMAT = '%(asctime)s - %(name)s - %(levelname)s: %(message)s'
+logging.basicConfig(format=FORMAT)
 
 
 @app.route('/set_sniffer')
