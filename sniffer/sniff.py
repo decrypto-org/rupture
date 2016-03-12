@@ -1,5 +1,6 @@
 import logging
 from time import sleep
+from binascii import hexlify
 from sniffer import Sniffer
 from flask import Flask, request, jsonify
 
@@ -64,8 +65,41 @@ def start():
     return msg, 201
 
 
-def get_capture():
-    return 'Not implemented', 200
+@app.route('/read', methods=['GET'])
+def read():
+    '''
+    Get the captured packets of a specific sniffer.
+
+    Arguments:
+    source_ip -- the local network IP of the victim, e.g. 192.168.1.66
+    destination_host -- the hostname of the attacked endpoint, e.g. dimkarakostas.com
+
+    Status code for the request:
+            404: no sniffer exists with the given parameters
+            422: sniffed packets were not formed properly
+            200: sniffer exists and has made a capture
+    '''
+    source_ip = request.args.get('source_ip')
+    destination_host = request.args.get('destination_host')
+
+    # Get the sniffer, if exists, else return status 404
+    try:
+        sniffer = sniffers[(source_ip, destination_host)]
+    except KeyError:
+        msg = '(get_sniff) 404 Not Found: Sniffer (source_ip : {}, destination_host: {})'.format(source_ip, destination_host)
+        logger.warning(msg)
+        return msg, 404
+
+    # Use the sniffer's get_capture() method to get the captured packets
+    try:
+        capture = sniffer.get_capture()
+    except AssertionError, err:
+        logger.warning(err)
+        return str(err), 422
+
+    logger.debug('Got capture with length: {}'.format(len(capture)))
+
+    return jsonify(**{'capture': hexlify(capture)}), 200
 
 
 @app.route('/delete', methods=['POST'])
