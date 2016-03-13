@@ -1,6 +1,10 @@
 import threading
+import logging
+import binascii
 import socket
 from scapy.all import sniff, Raw, IP, TCP, send
+
+logger = logging.getLogger('sniffer')
 
 # TLS Header
 TLS_HEADER_LENGTH = 5
@@ -84,7 +88,7 @@ class Sniffer(threading.Thread):
 
     def get_capture(self):
         # Get the data that were captured so far
-        capture = self.parse_capture(self.captured_packets)
+        capture = self.parse_capture()
 
         return capture
 
@@ -101,7 +105,7 @@ class Sniffer(threading.Thread):
         '''
         send(IP(dst=self.source_ip, src=socket.gethostbyaddr(self.destination_host)[-1][0])/TCP(), verbose=0)
 
-    def parse_capture(self, packets):
+    def parse_capture(self):
         '''
         Parse the captured packets and return a string of the appropriate data.
         '''
@@ -109,7 +113,8 @@ class Sniffer(threading.Thread):
 
         # Iterate over the captured packets
         # and aggregate the application level payload
-        for pkt in packets:
+        for pkt in self.captured_packets:
+            logger.debug(pkt.summary())
             if Raw in pkt:
                 payload_data += str(pkt[Raw])
 
@@ -132,17 +137,21 @@ class Sniffer(threading.Thread):
         application_data = ''
 
         content_type = ord(payload_data[TLS_CONTENT_TYPE])
-        length = 256*ord(payload_data[TLS_LENGTH_MAJOR]) + ord(payload_data[TLS_LENGTH_MINOR])
+        length = 256 * ord(payload_data[TLS_LENGTH_MAJOR]) + ord(payload_data[TLS_LENGTH_MINOR])
 
         # payload_data should begin with a valid TLS header
         if content_type not in TLS_CONTENT:
+            logger.warning('Invalid payload: \n' + binascii.hexlify(payload_data))
+
             # Flush invalid captured packets
             self.captured_packets = []
             assert False, 'Captured packets were not properly constructed'
 
+        logger.debug('Content type: {} - Length: {}'.format(TLS_CONTENT[content_type], length))
+
         # Keep only TLS application data
         if content_type == TLS_APPLICATION_DATA:
-            application_data += payload_data[TLS_HEADER_LENGTH:TLS_HEADER_LENGTH+length]
+            application_data += payload_data[TLS_HEADER_LENGTH:TLS_HEADER_LENGTH + length]
 
         # Recursively parse all TLS records in the aggregated payload data
         application_data += self.get_application_data(payload_data[TLS_HEADER_LENGTH+length:])
