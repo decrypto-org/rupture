@@ -3,7 +3,7 @@ from breach.models import SampleSet, Victim, Target, Round
 from breach.analyzer import decide_next_world_state
 
 
-class AnalyzerTestCase(TestCase):
+class RuptureTestCase(TestCase):
     def setUp(self):
         target = Target.objects.create(
             endpoint='http://di.uoa.gr/',
@@ -34,6 +34,7 @@ class AnalyzerTestCase(TestCase):
             )
         ]
 
+class AnalyzerTestCase(RuptureTestCase):
     def test_decide(self):
         state, confidence = decide_next_world_state(self.samplesets)
 
