@@ -8,14 +8,14 @@ class AnalyzerError(Exception):
 
 
 def decide_optimal_candidate(candidates):
-    """Take a dictionary of candidate alphabets and their associated
+    '''Take a dictionary of candidate alphabets and their associated
     accumulative lengths and decide which candidate alphabet is the best
     (minimum) with what confidence.
 
     Returns a pair with the decision. The first element of the pair is which
     candidate alphabet is best; the second element is the confidence level for
     the decision.
-    """
+    '''
 
     # sort sampleset groups by length
     sorted_candidate_lengths = sorted(
@@ -41,7 +41,7 @@ def decide_optimal_candidate(candidates):
 
 
 def decide_next_world_state(samplesets):
-    """Take a list of samplesets and extract a decision for a state transition
+    '''Take a list of samplesets and extract a decision for a state transition
     with some confidence.
 
     Argument:
@@ -57,7 +57,7 @@ def decide_next_world_state(samplesets):
     Returns a pair with the decision. The first element of the pair is the new
     state of the world; the second element of the pair is the confidence with
     which the analyzer is suggesting the state transition.
-    """
+    '''
     # Ensure we have enough sample sets to compare.
     assert(len(samplesets) > 1)
 
@@ -101,8 +101,8 @@ def decide_next_world_state(samplesets):
         decision_knownalphabet = target.alphabet
 
     state = {
-        "knownsecret": decision_knownsecret,
-        "knownalphabet": decision_knownalphabet
+        'knownsecret': decision_knownsecret,
+        'knownalphabet': decision_knownalphabet
     }
 
     return {
