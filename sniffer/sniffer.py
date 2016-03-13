@@ -70,7 +70,7 @@ class Sniffer(threading.Thread):
 
     def run(self):
         # Capture only response packets
-        capture_filter = 'tcp and src host {} and dst host {}'.format(self.destination_ip, self.source_ip)
+        capture_filter = 'tcp and src host {} and src port 443 and dst host {}'.format(self.destination_ip, self.source_ip)
 
         self.status = True
 
