@@ -6,9 +6,9 @@ from breach.analyzer import decide_next_world_state
 class AnalyzerTestCase(TestCase):
     def setUp(self):
         target = Target.objects.create(
-            endpoint="http://di.uoa.gr/",
-            prefix="test",
-            alphabet="0123456789"
+            endpoint='http://di.uoa.gr/',
+            prefix='test',
+            alphabet='0123456789'
         )
         victim = Victim.objects.create(
             target=target,
@@ -18,18 +18,18 @@ class AnalyzerTestCase(TestCase):
             SampleSet.objects.create(
                 victim=victim,
                 amount=1,
-                knownsecret="testsecret",
-                knownalphabet="01",
-                candidatealphabet="0",
-                data="bigbigbigbigbigbig"
+                knownsecret='testsecret',
+                knownalphabet='01',
+                candidatealphabet='0',
+                data='bigbigbigbigbigbig'
             ),
             SampleSet.objects.create(
                 victim=victim,
                 amount=1,
-                knownsecret="testsecret",
-                knownalphabet="01",
-                candidatealphabet="1",
-                data="small"
+                knownsecret='testsecret',
+                knownalphabet='01',
+                candidatealphabet='1',
+                data='small'
             )
         ]
 
