@@ -149,10 +149,13 @@ class SampleSet(models.Model):
     )
 
     started = models.DateTimeField(
-        default=timezone.now,
+        default=None,
+        null=True,
+        blank=True,
         help_text='Date and time at which sample set collection was started'
     )
     completed = models.DateTimeField(
+        default=None,
         null=True,
         blank=True,
         help_text=('When we stopped collecting samples for this sampleset, '
