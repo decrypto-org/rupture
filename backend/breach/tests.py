@@ -1,5 +1,5 @@
 from django.test import TestCase
-from breach.models import SampleSet, Victim, Target
+from breach.models import SampleSet, Victim, Target, Round
 from breach.analyzer import decide_next_world_state
 
 
@@ -12,22 +12,23 @@ class AnalyzerTestCase(TestCase):
         )
         victim = Victim.objects.create(
             target=target,
-            sourceip='192.168.10.140'
+            sourceip='192.168.10.140',
+            snifferendpoint='http://localhost/'
+        )
+        round = Round.objects.create(
+            victim=victim,
+            amount=1,
+            knownsecret='testsecret',
+            knownalphabet='01'
         )
         self.samplesets = [
             SampleSet.objects.create(
-                victim=victim,
-                amount=1,
-                knownsecret='testsecret',
-                knownalphabet='01',
+                round=round,
                 candidatealphabet='0',
                 data='bigbigbigbigbigbig'
             ),
             SampleSet.objects.create(
-                victim=victim,
-                amount=1,
-                knownsecret='testsecret',
-                knownalphabet='01',
+                round=round,
                 candidatealphabet='1',
                 data='small'
             )
