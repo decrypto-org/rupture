@@ -138,7 +138,7 @@ class Strategy(object):
     def _create_round(self, state):
         '''Creates a new round based on the analysis of the current round.'''
 
-        assert(self._round_is_completed())
+        assert(self._analyzed)
 
         candidate_alphabets = self._build_candidates(state)
 
