@@ -22,7 +22,8 @@ def get_work(request, victim_id=0):
 
     new_work = strategy.get_work()
 
-    return HttpResponse(json.dumps(new_work), content_type='application/json')
+    return JsonResponse(new_work)
+
 
 @csrf_exempt
 def work_completed(request, victim_id=0):
