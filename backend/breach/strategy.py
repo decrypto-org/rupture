@@ -8,6 +8,7 @@ from breach.sniffer import Sniffer
 
 SAMPLES_PER_SAMPLESET = 100
 
+
 class Strategy(object):
     def __init__(self, victim):
         self._victim = victim
