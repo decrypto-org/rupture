@@ -158,8 +158,8 @@ class Strategy(object):
 
     def _create_round_samplesets(self):
         state = {
-            'knownalphabet': self.round.knownalphabet,
-            'knownsecret': self.round.knownsecret
+            'knownalphabet': self._round.knownalphabet,
+            'knownsecret': self._round.knownsecret
         }
 
         candidate_alphabets = self._build_candidates(state)
@@ -218,3 +218,4 @@ class Strategy(object):
 
     def begin_attack(self):
         self._create_round(self._get_first_round_state())
+        self._create_round_samplesets()
