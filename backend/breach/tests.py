@@ -9,7 +9,7 @@ from breach.analyzer import decide_next_world_state
 class RuptureTestCase(TestCase):
     def setUp(self):
         target = Target.objects.create(
-            endpoint='http://di.uoa.gr/',
+            endpoint='https://di.uoa.gr/?breach=%s',
             prefix='test',
             alphabet='0123456789'
         )
