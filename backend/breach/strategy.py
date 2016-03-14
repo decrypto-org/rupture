@@ -108,9 +108,10 @@ class Strategy(object):
 
         return sampleset
 
-    def _mark_current_work_completed(self):
+    def _mark_current_work_completed(self, capture):
         sampleset = self._get_current_sampleset()
         sampleset.completed = timezone.now()
+        sampleset.data = capture
         sampleset.success = True
         sampleset.save()
 
@@ -197,7 +198,8 @@ class Strategy(object):
 
         # Stop data collection and delete sniffer
         self._sniffer.delete(self._victim.sourceip, self._victim.target.host)
-        self._mark_current_work_completed()
+
+        self._mark_current_work_completed(capture)
 
         round_samplesets = SampleSet.objects.filter(round=self._round)
         unstarted_samplesets = round_samplesets.filter(started=None)
