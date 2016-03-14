@@ -194,6 +194,9 @@ class Strategy(object):
 
         # Call sniffer to get captured data
         capture = self._collect_capture()
+
+        # Stop data collection and delete sniffer
+        self._sniffer.delete(self._victim.sourceip, self._victim.target.host)
         self._mark_current_work_completed()
 
         round_samplesets = SampleSet.objects.filter(round=self._round)
