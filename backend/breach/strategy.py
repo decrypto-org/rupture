@@ -84,7 +84,6 @@ class Strategy(object):
 
         Pre-condition: There is already work to do.'''
 
-        # TODO: collect sniffid
         self._sniffer.start(self._victim.sourceip, self._victim.target.host)
 
         unstarted_samplesets = self._get_unstarted_samplesets()
