@@ -38,7 +38,8 @@ class Strategy(object):
     def _get_first_round_state(self):
         return {
             'knownsecret': self._victim.target.prefix,
-            'candidatealphabet': self._victim.target.alphabet
+            'candidatealphabet': self._victim.target.alphabet,
+            'knownalphabet': self._victim.target.alphabet
         }
 
     def _get_unstarted_samplesets(self):
