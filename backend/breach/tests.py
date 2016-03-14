@@ -9,7 +9,7 @@ from breach.analyzer import decide_next_world_state
 class RuptureTestCase(TestCase):
     def setUp(self):
         target = Target.objects.create(
-            endpoint='http://di.uoa.gr/',
+            endpoint='https://di.uoa.gr/?breach=%s',
             prefix='test',
             alphabet='0123456789'
         )
@@ -41,8 +41,23 @@ class RuptureTestCase(TestCase):
 class StrategyTestCase(RuptureTestCase):
     @patch('breach.strategy.Sniffer')
     def test_first_round(self, Sniffer):
-        strategy = Strategy(self.victim)
-        strategy.get_work()
+        strategy0 = Strategy(self.victim)
+
+        work0 = strategy0.get_work()
+        self.assertEqual(
+            work0['url'],
+            'https://di.uoa.gr/?breach=^testsecret0^1^3^2^5^4^7^6^9^8^'
+        )
+        self.assertTrue('amount' in work0)
+        self.assertTrue('timeout' in work0)
+
+        strategy1 = Strategy(self.victim)
+
+        work1 = strategy1.get_work()
+        self.assertEqual(
+            work1['url'],
+            'https://di.uoa.gr/?breach=^testsecret1^0^3^2^5^4^7^6^9^8^'
+        )
 
     def test_same_round_same_batch(self):
         pass

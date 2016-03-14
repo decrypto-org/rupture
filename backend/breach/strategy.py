@@ -41,9 +41,43 @@ class Strategy(object):
 
     def _get_unstarted_samplesets(self):
         return SampleSet.objects.filter(
-            victim=self._victim,
+            round=self._round,
             started=None
         )
+
+    def _reflection(self, sampleset):
+        # We use '^' as a separator symbol and we assume it is not part of the
+        # secret. We also assume it will not be in the content.
+
+        sentinel = '^'
+
+        assert(sentinel not in self._victim.target.alphabet)
+
+        huffman_complement = set(self._victim.target.alphabet) - set(sampleset.candidatealphabet)
+
+        candidate_secrets = set()
+
+        for letter in sampleset.candidatealphabet:
+            candidate_secret = self._round.knownsecret + letter
+            candidate_secrets.add(candidate_secret)
+
+        reflected_data = [
+            '',
+            sentinel.join(candidate_secrets),
+            sentinel.join(huffman_complement),
+            ''
+        ]
+
+        reflection = sentinel.join(reflected_data)
+
+        return reflection
+
+    def _sampleset_to_work(self, sampleset):
+        return {
+            'url': self._victim.target.endpoint % self._reflection(sampleset),
+            'amount': SAMPLES_PER_SAMPLESET,
+            'timeout': 0
+        }
 
     def get_work(self):
         '''Produces work for the victim.
@@ -61,7 +95,7 @@ class Strategy(object):
         sampleset.started = timezone.now()
         sampleset.save()
 
-        return sampleset
+        return self._sampleset_to_work(sampleset)
 
     def _get_current_sampleset(self):
         started_samplesets = SampleSet.objects.filter(round=self._round).exclude(started=None)
