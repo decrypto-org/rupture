@@ -87,7 +87,6 @@ class Strategy(object):
 
         Pre-condition: There is already work to do.'''
 
-        # TODO: collect sniffid
         self._sniffer.start(self._victim.sourceip, self._victim.target.host)
 
         unstarted_samplesets = self._get_unstarted_samplesets()
@@ -189,7 +188,6 @@ class Strategy(object):
         Post-condition: Either the attack is completed, or there is work to
         do (there are unstarted samplesets in the database).'''
 
-        # TODO: Call sniffer to obtain sniffer data and stop data collection
         self._mark_current_work_completed()
 
         round_samplesets = SampleSet.objects.filter(round=self._round)
