@@ -146,7 +146,7 @@ class Strategy(object):
         # A final round has the complete secret stored in knownsecret.
         next_round = Round(
             victim=self._victim,
-            index=self._round.index + 1,
+            index=self._round.index + 1 if hasattr(self, '_round') else 1,
             roundcardinality=max(map(len, candidate_alphabets)),
             amount=SAMPLES_PER_SAMPLESET,
             knownalphabet=state['knownalphabet'],
