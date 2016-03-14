@@ -131,7 +131,8 @@ class Strategy(object):
         return self._decision['confidence'] > 1
 
     def _create_next_round(self):
-        assert(self._analyzed)
+        assert(self._round_is_completed())
+
         self._create_round(self._decision['state'])
 
     def _create_round(self, state):
