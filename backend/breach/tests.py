@@ -11,7 +11,8 @@ class AnalyzerTestCase(TestCase):
             alphabet="0123456789"
         )
         victim = Victim.objects.create(
-            target=target
+            target=target,
+            sourceip='192.168.10.140'
         )
         self.samplesets = [
             SampleSet.objects.create(

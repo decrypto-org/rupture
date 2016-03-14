@@ -42,6 +42,16 @@ class Victim(models.Model):
     e.g. dionyziz@gmail.com
     """
     target = models.ForeignKey(Target)
+    snifferendpoint = models.CharField(
+        max_length=255,
+        help_text=('The HTTP endpoint of the adversarial sniffer running on '
+                   'the victim\'s network which is listening for our HTTP '
+                   'requests. This endpoint must include the \'http://\' '
+                   'prefix.')
+    )
+    sourceip = models.GenericIPAddressField(
+        help_text='Source IP on the local network, e.g. 192.168.10.140'
+    )
     # TODO: method (divide & conquer, etc.)
 
 class SampleSet(models.Model):
