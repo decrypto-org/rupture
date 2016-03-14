@@ -100,19 +100,24 @@ class SampleSet(models.Model):
         default=1,
         help_text="Number of samples contained in the sampleset"
     )
-
     # sampleset knownstate: knownsecret and knownalphabet
     knownsecret = models.CharField(
         default="",
         max_length=255,
         help_text="Known secret before the sample set was collected"
     )
-    # assert(self.knownsecret[0:len(self.victim.target.prefix)] == self.victim.target.prefix)
+    # assert(
+    #     self.knownsecret[0:len(self.victim.target.prefix)]
+    #     ==
+    #     self.victim.target.prefix
+    # )
     knownalphabet = models.CharField(
         max_length=255,
         help_text="The candidate alphabet for the next unknown character"
     )
-    # assert(all([c in self.victim.target.alphabet for c in self.knownalphabet]))
+    # assert(
+    #     all([c in self.victim.target.alphabet for c in self.knownalphabet])
+    # )
 
     # candidate state
     candidatealphabet = models.CharField(
