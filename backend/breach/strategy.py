@@ -41,7 +41,7 @@ class Strategy(object):
 
     def _get_unstarted_samplesets(self):
         return SampleSet.objects.filter(
-            victim=self._victim,
+            round=self._round,
             started=None
         )
 
