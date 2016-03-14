@@ -41,6 +41,9 @@ class Sniffer(object):
     def delete(self, source_ip, destination_host):
         r = requests.post(
             '%s/delete' % self.endpoint,
+            headers={
+                'Content-Type': 'application/json'
+            },
             data=json.dumps({
                 'source_ip': source_ip,
                 'destination_host': destination_host
