@@ -39,7 +39,7 @@ class Sniffer(object):
         return r.json()
 
     def stop(self, source_ip, destination_host):
-        r = requests.delete(
+        r = requests.post(
             '%s/delete' % self.endpoint,
             data=json.dumps({
                 'source_ip': source_ip,
