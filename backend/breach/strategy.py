@@ -114,6 +114,10 @@ class Strategy(object):
         sampleset.success = True
         sampleset.save()
 
+    def _collect_capture(self):
+        captured_data = self._sniffer.read(self._victim.sourceip, self._victim.target.host)
+        return captured_data
+
     def _analyze_current_round(self):
         '''Analyzes the current round samplesets to extract a decision.'''
 
@@ -188,6 +192,8 @@ class Strategy(object):
         Post-condition: Either the attack is completed, or there is work to
         do (there are unstarted samplesets in the database).'''
 
+        # Call sniffer to get captured data
+        capture = self._collect_capture()
         self._mark_current_work_completed()
 
         round_samplesets = SampleSet.objects.filter(round=self._round)
