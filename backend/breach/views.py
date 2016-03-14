@@ -5,7 +5,9 @@ from breach.strategy import Strategy
 from breach.models import Victim
 
 
-def get_work(request, victim_id):
+def get_work(request, victim_id=0):
+    assert(victim_id)
+
     try:
         victim = Victim.objects.get(pk=victim_id)
     except:
@@ -23,7 +25,9 @@ def get_work(request, victim_id):
     return HttpResponse(json.dumps(new_work), content_type='application/json')
 
 @csrf_exempt
-def work_completed(request, victim_id):
+def work_completed(request, victim_id=0):
+    assert(victim_id)
+
     try:
         victim = Victim.objects.get(pk=victim_id)
     except:
