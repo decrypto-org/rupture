@@ -8,6 +8,7 @@ from breach.sniffer import Sniffer
 
 SAMPLES_PER_SAMPLESET = 100
 
+
 class Strategy(object):
     def __init__(self, victim):
         self._victim = victim
@@ -18,6 +19,7 @@ class Strategy(object):
 
         if not current_round_index:
             current_round_index = 1
+            self._analyzed = True
             self.begin_attack()
 
         self._round = Round.objects.filter(victim=self._victim, index=current_round_index)[0]
@@ -36,7 +38,8 @@ class Strategy(object):
     def _get_first_round_state(self):
         return {
             'knownsecret': self._victim.target.prefix,
-            'candidatealphabet': self._victim.target.alphabet
+            'candidatealphabet': self._victim.target.alphabet,
+            'knownalphabet': self._victim.target.alphabet
         }
 
     def _get_unstarted_samplesets(self):
@@ -128,13 +131,14 @@ class Strategy(object):
         return self._decision['confidence'] > 1
 
     def _create_next_round(self):
-        assert(self._analyzed)
+        assert(self._round_is_completed())
+
         self._create_round(self._decision['state'])
 
     def _create_round(self, state):
         '''Creates a new round based on the analysis of the current round.'''
 
-        assert(self._round_is_completed())
+        assert(self._analyzed)
 
         candidate_alphabets = self._build_candidates(state)
 
@@ -142,7 +146,7 @@ class Strategy(object):
         # A final round has the complete secret stored in knownsecret.
         next_round = Round(
             victim=self._victim,
-            index=self._round.index + 1,
+            index=self._round.index + 1 if hasattr(self, '_round') else 1,
             roundcardinality=max(map(len, candidate_alphabets)),
             amount=SAMPLES_PER_SAMPLESET,
             knownalphabet=state['knownalphabet'],
@@ -164,10 +168,13 @@ class Strategy(object):
             round=self._round,
             candidatealphabet=candidate_alphabets[0]
         )
+        a.save()
+
         b = SampleSet(
             round=self._round,
             candidatealphabet=candidate_alphabets[1]
         )
+        b.save()
 
     def _attack_is_completed(self):
         return len(self._round.knownsecret) == self._victim.target.secretlength
