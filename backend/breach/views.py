@@ -1,11 +1,12 @@
-import json
 from django.http import Http404, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from breach.strategy import Strategy
 from breach.models import Victim
 
 
-def get_work(request, victim_id):
+def get_work(request, victim_id=0):
+    assert(victim_id)
+
     try:
         victim = Victim.objects.get(pk=victim_id)
     except:
@@ -20,10 +21,13 @@ def get_work(request, victim_id):
 
     new_work = strategy.get_work()
 
-    return HttpResponse(json.dumps(new_work), content_type='application/json')
+    return JsonResponse(new_work)
+
 
 @csrf_exempt
-def work_completed(request, victim_id):
+def work_completed(request, victim_id=0):
+    assert(victim_id)
+
     try:
         victim = Victim.objects.get(pk=victim_id)
     except:

