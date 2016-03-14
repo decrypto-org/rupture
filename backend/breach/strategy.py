@@ -168,10 +168,13 @@ class Strategy(object):
             round=self._round,
             candidatealphabet=candidate_alphabets[0]
         )
+        a.save()
+
         b = SampleSet(
             round=self._round,
             candidatealphabet=candidate_alphabets[1]
         )
+        b.save()
 
     def _attack_is_completed(self):
         return len(self._round.knownsecret) == self._victim.target.secretlength
