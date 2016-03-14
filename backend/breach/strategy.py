@@ -218,3 +218,4 @@ class Strategy(object):
 
     def begin_attack(self):
         self._create_round(self._get_first_round_state())
+        self._create_round_samplesets()
