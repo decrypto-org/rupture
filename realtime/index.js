@@ -57,12 +57,12 @@ socket.on('connection', function(client) {
         };
 
         http.request(workCompletedOptions, function(response) {
-            var res = '';
+            var res_data = '';
             response.on('data', function(chunk) {
-                res += chunk;
+                res_data += chunk;
             });
             response.on('end', function() {
-                winston.info('Got (work-completed) response from backend: ' + res);
+                winston.info('Got (work-completed) response from backend: ' + res_data);
             });
         }).end();
 
