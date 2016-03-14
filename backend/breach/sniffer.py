@@ -38,9 +38,12 @@ class Sniffer(object):
         r.raise_for_status()
         return r.json()
 
-    def stop(self, source_ip, destination_host):
+    def delete(self, source_ip, destination_host):
         r = requests.post(
             '%s/delete' % self.endpoint,
+            headers={
+                'Content-Type': 'application/json'
+            },
             data=json.dumps({
                 'source_ip': source_ip,
                 'destination_host': destination_host

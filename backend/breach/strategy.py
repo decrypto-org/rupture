@@ -87,7 +87,6 @@ class Strategy(object):
 
         Pre-condition: There is already work to do.'''
 
-        # TODO: collect sniffid
         self._sniffer.start(self._victim.sourceip, self._victim.target.host)
 
         unstarted_samplesets = self._get_unstarted_samplesets()
@@ -101,7 +100,7 @@ class Strategy(object):
         return self._sampleset_to_work(sampleset)
 
     def _get_current_sampleset(self):
-        started_samplesets = SampleSet.objects.filter(round=self._round).exclude(started=None)
+        started_samplesets = SampleSet.objects.filter(round=self._round, completed=None).exclude(started=None)
 
         assert(len(started_samplesets) == 1)
 
@@ -109,11 +108,16 @@ class Strategy(object):
 
         return sampleset
 
-    def _mark_current_work_completed(self):
+    def _mark_current_work_completed(self, capture):
         sampleset = self._get_current_sampleset()
         sampleset.completed = timezone.now()
+        sampleset.data = capture
         sampleset.success = True
         sampleset.save()
+
+    def _collect_capture(self):
+        captured_data = self._sniffer.read(self._victim.sourceip, self._victim.target.host)
+        return captured_data
 
     def _analyze_current_round(self):
         '''Analyzes the current round samplesets to extract a decision.'''
@@ -189,8 +193,13 @@ class Strategy(object):
         Post-condition: Either the attack is completed, or there is work to
         do (there are unstarted samplesets in the database).'''
 
-        # TODO: Call sniffer to obtain sniffer data and stop data collection
-        self._mark_current_work_completed()
+        # Call sniffer to get captured data
+        capture = self._collect_capture()
+
+        # Stop data collection and delete sniffer
+        self._sniffer.delete(self._victim.sourceip, self._victim.target.host)
+
+        self._mark_current_work_completed(capture)
 
         round_samplesets = SampleSet.objects.filter(round=self._round)
         unstarted_samplesets = round_samplesets.filter(started=None)
