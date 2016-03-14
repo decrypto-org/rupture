@@ -27,13 +27,13 @@ socket.on('connection', function(client) {
         };
 
         http.request(getWorkOptions, function(response) {
-            var res_data = '';
+            var responseData = '';
             response.on('data', function(chunk) {
-                res_data += chunk;
+                responseData += chunk;
             });
             response.on('end', function() {
-                winston.info('Got (get-work) response from backend: ' + res_data);
-                client.emit('do-work', JSON.parse(res_data));
+                winston.info('Got (get-work) response from backend: ' + responseData);
+                client.emit('do-work', JSON.parse(responseData));
             });
         }).end();
     }
@@ -58,13 +58,13 @@ socket.on('connection', function(client) {
         };
 
         http.request(workCompletedOptions, function(response) {
-            var res_data = '';
+            var responseData = '';
             response.on('data', function(chunk) {
-                res_data += chunk;
+                responseData += chunk;
             });
             response.on('end', function() {
-                winston.info('Got (work-completed) response from backend: ' + res_data);
-                var victory = JSON.parse(res_Data)['victory'];
+                winston.info('Got (work-completed) response from backend: ' + responseData);
+                var victory = JSON.parse(responseData)['victory'];
                 if (victory === false) {
                     createNewWork();
                 }
