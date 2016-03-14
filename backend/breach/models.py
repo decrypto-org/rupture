@@ -1,8 +1,5 @@
 from __future__ import unicode_literals
-
 from django.db import models
-from django.utils import timezone
-
 import urlparse
 
 
@@ -14,8 +11,8 @@ class Target(models.Model):
 
     endpoint = models.CharField(
         max_length=255,
-        help_text=('The endpoint in full URL form, including 'https://'.'
-                   'The endpoint string must contain a '%s' to mark the '
+        help_text=('The endpoint in full URL form, including \'https://\'.'
+                   'The endpoint string must contain a \'%s\' to mark the '
                    'position in which the string-to-be-reflected will be '
                    'replaced into.')
     )
@@ -58,10 +55,10 @@ class Victim(models.Model):
     target = models.ForeignKey(Target)
     snifferendpoint = models.CharField(
         max_length=255,
-        help_text=('The HTTP endpoint of the adversarial sniffer running on '
-                   'the victim\'s network which is listening for our HTTP '
-                   'requests. This endpoint must include the \'http://\' '
-                   'prefix.')
+        help_text=("The HTTP endpoint of the adversarial sniffer running on "
+                   "the victim's network which is listening for our HTTP "
+                   "requests. This endpoint must include the 'http://' "
+                   "prefix.")
     )
     sourceip = models.GenericIPAddressField(
         help_text='Source IP on the local network, e.g. 192.168.10.140'
