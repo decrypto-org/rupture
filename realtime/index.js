@@ -63,10 +63,12 @@ socket.on('connection', function(client) {
             });
             response.on('end', function() {
                 winston.info('Got (work-completed) response from backend: ' + res_data);
+                var victory = JSON.parse(res_Data)['victory'];
+                if (victory === false) {
+                    createNewWork();
+                }
             });
         }).end();
-
-        createNewWork();
     });
     client.on('disconnect', function() {
         winston.info('Client ' + client.id + ' disconnected');
