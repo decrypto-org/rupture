@@ -19,6 +19,7 @@ class Strategy(object):
 
         if not current_round_index:
             current_round_index = 1
+            self._analyzed = True
             self.begin_attack()
 
         self._round = Round.objects.filter(victim=self._victim, index=current_round_index)[0]
