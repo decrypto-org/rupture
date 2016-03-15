@@ -136,30 +136,27 @@ class Sniffer(threading.Thread):
         Returns a string of aggregated binary TLS application data,
         including record headers.
         '''
-        # If no packets were captured return empty
-        if payload_data == '':
-            return payload_data
-
         application_data = ''
 
-        content_type = ord(payload_data[TLS_CONTENT_TYPE])
-        length = 256 * ord(payload_data[TLS_LENGTH_MAJOR]) + ord(payload_data[TLS_LENGTH_MINOR])
+        while payload_data:
+            content_type = ord(payload_data[TLS_CONTENT_TYPE])
+            length = 256 * ord(payload_data[TLS_LENGTH_MAJOR]) + ord(payload_data[TLS_LENGTH_MINOR])
 
-        # payload_data should begin with a valid TLS header
-        if content_type not in TLS_CONTENT:
-            logger.warning('Invalid payload: \n' + binascii.hexlify(payload_data))
+            # payload_data should begin with a valid TLS header
+            if content_type not in TLS_CONTENT:
+                logger.warning('Invalid payload: \n' + binascii.hexlify(payload_data))
 
-            # Flush invalid captured packets
-            self.captured_packets = []
-            assert False, 'Captured packets were not properly constructed'
+                # Flush invalid captured packets
+                self.captured_packets = []
+                assert False, 'Captured packets were not properly constructed'
 
-        logger.debug('Content type: {} - Length: {}'.format(TLS_CONTENT[content_type], length))
+            logger.debug('Content type: {} - Length: {}'.format(TLS_CONTENT[content_type], length))
 
-        # Keep only TLS application data
-        if content_type == TLS_APPLICATION_DATA:
-            application_data += payload_data[TLS_HEADER_LENGTH:TLS_HEADER_LENGTH + length]
+            # Keep only TLS application data
+            if content_type == TLS_APPLICATION_DATA:
+                application_data += payload_data[TLS_HEADER_LENGTH:TLS_HEADER_LENGTH + length]
 
-        # Recursively parse all TLS records in the aggregated payload data
-        application_data += self.get_application_data(payload_data[TLS_HEADER_LENGTH+length:])
+            # Parse all TLS records in the aggregated payload data
+            payload_data = payload_data[TLS_HEADER_LENGTH + length:]
 
         return application_data
