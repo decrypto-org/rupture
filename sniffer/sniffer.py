@@ -103,7 +103,7 @@ class Sniffer(threading.Thread):
         Send a dummy TCP packet to the victim with source IP the destination host's,
         which will be caught by sniff filter and cause sniff function to stop.
         '''
-        send(IP(dst=self.source_ip, src=socket.gethostbyaddr(self.destination_host)[-1][0])/TCP(), verbose=0)
+        send(IP(dst=self.source_ip, src=self.destination_ip)/TCP(sport=443), verbose=0)
 
     def parse_capture(self):
         '''

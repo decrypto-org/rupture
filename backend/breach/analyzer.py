@@ -7,20 +7,31 @@ class AnalyzerError(Exception):
     pass
 
 
-def decide_optimal_candidate(candidates):
-    """Take a dictionary of candidate alphabets and their associated
+def decide_optimal_candidate(candidate_lengths, samples_per_sampleset):
+    '''Take a dictionary of candidate alphabets and their associated
     accumulative lengths and decide which candidate alphabet is the best
     (minimum) with what confidence.
 
     Returns a pair with the decision. The first element of the pair is which
     candidate alphabet is best; the second element is the confidence level for
     the decision.
-    """
+    '''
 
-    # sort sampleset groups by length
+    assert(len(candidate_lengths) == 2)
+
+    samplesets_per_candidate = len(candidate_lengths.items()[0][1])
+    accumulated_candidate_lengths = []
+
+    for candidate_alphabet, list_of_lengths in candidate_lengths.iteritems():
+        accumulated_candidate_lengths.append({
+            'candidate_alphabet': candidate_alphabet,
+            'length': sum(list_of_lengths)
+        })
+
+    # Sort sampleset groups by length.
     sorted_candidate_lengths = sorted(
-        candidates.items(),
-        key=operator.itemgetter(1)
+        accumulated_candidate_lengths,
+        key=operator.itemgetter('length')
     )
 
     # Extract candidate with minimum length and the next best competitor
@@ -29,19 +40,16 @@ def decide_optimal_candidate(candidates):
     min_candidate = sorted_candidate_lengths[0]
     next_best_candidate = sorted_candidate_lengths[1]
 
-    min_candidate_length = min_candidate[1]
-    min_candidate_alphabet = min_candidate[0]
+    samples_per_candidate = samplesets_per_candidate * samples_per_sampleset
 
-    next_best_length = next_best_candidate[1]
+    # Extract a confidence value, in bytes, for our decision based on the second-best candidate.
+    confidence = float(next_best_candidate['length'] - min_candidate['length']) / samples_per_candidate
 
-    # extract a confidence value for our decision based on the second-best candidate
-    confidence = float(next_best_length - min_candidate_length) / next_best_length
-
-    return min_candidate_alphabet, confidence
+    return min_candidate['candidate_alphabet'], confidence
 
 
 def decide_next_world_state(samplesets):
-    """Take a list of samplesets and extract a decision for a state transition
+    '''Take a list of samplesets and extract a decision for a state transition
     with some confidence.
 
     Argument:
@@ -57,33 +65,39 @@ def decide_next_world_state(samplesets):
     Returns a pair with the decision. The first element of the pair is the new
     state of the world; the second element of the pair is the confidence with
     which the analyzer is suggesting the state transition.
-    """
+    '''
     # Ensure we have enough sample sets to compare.
     assert(len(samplesets) > 1)
 
     # Ensure all samplesets are extending the same known state
-    knownsecret = samplesets[0].knownsecret
-    knownalphabet = samplesets[0].knownalphabet
-    victim = samplesets[0].victim
+    knownsecret = samplesets[0].round.knownsecret
+    knownalphabet = samplesets[0].round.knownalphabet
+    round = samplesets[0].round
+    amount = round.amount
+    victim = round.victim
     target = victim.target
     for sampleset in samplesets:
-        if sampleset.knownsecret != knownsecret:
-            raise AnalyzerError('samplesets do not share the same world state')
-        if sampleset.knownalphabet != knownalphabet:
-            raise AnalyzerError('samplesets do not share the same world state')
-        if sampleset.victim != victim:
-            raise AnalyzerError('samplesets do not share the same victim')
+        assert(sampleset.round == round)
 
     # Split samplesets based on alphabetvector under consideration
-    # and accumulate data lengths for each candidate.
-    candidate_lengths = collections.defaultdict(lambda: 0)
+    # and collect data lengths for each candidate.
+    candidate_lengths = collections.defaultdict(lambda: [])
+    candidate_count_samplesets = collections.defaultdict(lambda: 0)
     for sampleset in samplesets:
-        candidate_lengths[sampleset.candidatealphabet] += len(sampleset.data)
+        candidate_lengths[sampleset.candidatealphabet].append(len(sampleset.data))
+        candidate_count_samplesets[sampleset.candidatealphabet] += 1
+
+    candidate_count_samplesets = candidate_count_samplesets.items()
+
+    samplesets_per_candidate = candidate_count_samplesets[0][1]
+
+    for alphabet, count in candidate_count_samplesets:
+        assert(count == samplesets_per_candidate)
 
     # Ensure we have a decision to make
     assert(len(candidate_lengths) > 1)
 
-    min_vector, confidence = decide_optimal_candidate(candidate_lengths)
+    min_vector, confidence = decide_optimal_candidate(candidate_lengths, samples_per_sampleset=amount)
 
     # use minimum group's alphabet vector
     decision_knownalphabet = min_vector
@@ -96,8 +110,11 @@ def decide_next_world_state(samplesets):
         decision_knownalphabet = target.alphabet
 
     state = {
-        "knownsecret": decision_knownsecret,
-        "knownalphabet": decision_knownalphabet
+        'knownsecret': decision_knownsecret,
+        'knownalphabet': decision_knownalphabet
     }
 
-    return state, confidence
+    return {
+        'state': state,
+        'confidence': confidence
+    }
