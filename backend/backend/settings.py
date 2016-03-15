@@ -142,4 +142,10 @@ LOGGING = {
             'formatter': 'verbose'
         }
     },
+    'loggers': {
+        'breach.strategy': {
+            'handlers': ['console'],
+            'level': 'DEBUG'
+        }
+    }
 }
