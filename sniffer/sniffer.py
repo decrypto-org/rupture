@@ -89,6 +89,10 @@ class Sniffer(threading.Thread):
         # Return False if sniffer is still alive
         return not self.is_alive()
 
+    def process_packet(self, pkt):
+        logger.debug(pkt.summary())
+        self.captured_packets.append(pkt)
+
     def is_alive(self):
         # Return if thread is dead or alive
         return self.status
