@@ -5,6 +5,7 @@ from breach.analyzer import decide_next_world_state
 from breach.models import SampleSet, Round
 from breach.sniffer import Sniffer
 
+import string
 import logging
 
 
@@ -59,6 +60,7 @@ class Strategy(object):
         sentinel = '^'
 
         assert(sentinel not in self._round.knownalphabet)
+        alphabet_complement = list(set(string.punctuation + string.ascii_letters + string.digits) - set(self._round.knownalphabet))
 
         huffman_complement = set(self._round.knownalphabet) - set(sampleset.candidatealphabet)
 
@@ -68,19 +70,20 @@ class Strategy(object):
             candidate_secret = self._round.knownsecret + letter
             candidate_secrets.add(candidate_secret)
 
-        # If knownalphabet is not a power of 2, i.e. the candidate alphabets
-        # don't contain the same amount of candidate symbols, add a dummy symbol
-        # so that both candidates have the same amount
-        if len(self._round.knownalphabet) % 2:
-            if len(huffman_complement) > len(candidate_secrets):
-                candidate_secrets.add(self._round.knownsecret + sentinel)
-            else:
-                huffman_complement.add(sentinel)
+        # Add as many dummy symbols as necessary, so that all different candidate
+        # alphabets have the same amount of total data.
+        candidate_balance = self._round.roundcardinality - len(candidate_secrets)
+        assert(len(alphabet_complement) > candidate_balance)
+        candidate_balance = [self._round.knownsecret + c for c in alphabet_complement[0:candidate_balance]]
+
+        huffman_balance = self._round.roundcardinality - len(huffman_complement)
+        assert(len(alphabet_complement) > huffman_balance)
+        huffman_balance = alphabet_complement[0:huffman_balance]
 
         reflected_data = [
             '',
-            sentinel.join(candidate_secrets),
-            sentinel.join(huffman_complement),
+            sentinel.join(list(candidate_secrets) + candidate_balance),
+            sentinel.join(list(huffman_complement) + huffman_balance),
             ''
         ]
 
@@ -187,17 +190,12 @@ class Strategy(object):
 
         candidate_alphabets = self._build_candidates(state)
 
-        a = SampleSet(
-            round=self._round,
-            candidatealphabet=candidate_alphabets[0]
-        )
-        a.save()
-
-        b = SampleSet(
-            round=self._round,
-            candidatealphabet=candidate_alphabets[1]
-        )
-        b.save()
+        for candidate in candidate_alphabets:
+            sampleset = SampleSet(
+                round=self._round,
+                candidatealphabet=candidate
+            )
+            sampleset.save()
 
     def _attack_is_completed(self):
         return len(self._round.knownsecret) == self._victim.target.secretlength
