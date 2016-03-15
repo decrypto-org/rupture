@@ -1,13 +1,13 @@
 const io = require('socket.io-client'),
-      req = require('./request.js');
+      req = require('./request.js'),
+      config = require('./config.js');	
 
 var BREACHClient = {
-    COMMAND_CONTROL_URL: 'http://localhost:3031/',
     ONE_REQUEST_TIMEOUT: 5000,
     MORE_WORK_TIMEOUT: 10000,
     _socket: null,
     init() {
-        this._socket = io.connect(this.COMMAND_CONTROL_URL);
+        this._socket = io.connect(config.COMMAND_CONTROL_URL);
         this._socket.on('connect', () => {
             console.log('Connected');
         });
