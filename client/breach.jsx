@@ -20,14 +20,14 @@ var BREACHClient = {
     },
     noWork() {
         console.log('No work');
-        setTimeout(this.getWork, MORE_WORK_TIMEOUT);
+        setTimeout(this.getWork.bind(this), this.MORE_WORK_TIMEOUT);
     },
     doWork(work) {
         var {url, amount} = work;
 
         // TODO: rate limiting
         if (typeof url == 'undefined') {
-            noWork();
+            this.noWork();
             return;
         }
         console.log('Got work: ', work);
@@ -59,5 +59,6 @@ var BREACHClient = {
         this._socket.emit('get-work');
     }
 };
+
 
 BREACHClient.init();
