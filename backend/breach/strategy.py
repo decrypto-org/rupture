@@ -62,11 +62,17 @@ class Strategy(object):
 
         huffman_complement = set(self._round.knownalphabet) - set(sampleset.candidatealphabet)
 
+        if len(huffman_complement) % 2:
+            huffman_complement.add(sentinel)
+
         candidate_secrets = set()
 
         for letter in sampleset.candidatealphabet:
             candidate_secret = self._round.knownsecret + letter
             candidate_secrets.add(candidate_secret)
+
+        if len(candidate_secrets) % 2:
+            candidate_secrets.add(self._round.knownsecret + sentinel)
 
         reflected_data = [
             '',
