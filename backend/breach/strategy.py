@@ -54,9 +54,9 @@ class Strategy(object):
 
         sentinel = '^'
 
-        assert(sentinel not in self._victim.target.alphabet)
+        assert(sentinel not in self._round.knownalphabet)
 
-        huffman_complement = set(self._victim.target.alphabet) - set(sampleset.candidatealphabet)
+        huffman_complement = set(self._round.knownalphabet) - set(sampleset.candidatealphabet)
 
         candidate_secrets = set()
 
