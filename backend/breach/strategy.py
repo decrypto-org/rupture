@@ -5,6 +5,10 @@ from breach.analyzer import decide_next_world_state
 from breach.models import SampleSet, Round
 from breach.sniffer import Sniffer
 
+import logging
+
+
+logger = logging.getLogger(__name__)
 
 SAMPLES_PER_SAMPLESET = 100
 
@@ -97,7 +101,11 @@ class Strategy(object):
         sampleset.started = timezone.now()
         sampleset.save()
 
-        return self._sampleset_to_work(sampleset)
+        work = self._sampleset_to_work(sampleset)
+
+        logger.debug('Giving work: {}'.format(work))
+
+        return work
 
     def _get_current_sampleset(self):
         started_samplesets = SampleSet.objects.filter(round=self._round, completed=None).exclude(started=None)
@@ -124,6 +132,8 @@ class Strategy(object):
 
         current_round_samplesets = SampleSet.objects.filter(round=self._round)
         self._decision = decide_next_world_state(current_round_samplesets)
+
+        logger.debug('Decision: {}'.format(self._decision))
         self._analyzed = True
 
     def _round_is_completed(self):
