@@ -80,7 +80,7 @@ class Sniffer(threading.Thread):
         sniff(iface=self.interface,
               filter=capture_filter,
               prn=lambda pkt: self.captured_packets.append(pkt),
-              stop_filter=lambda pkt: not self.is_alive())
+              stop_filter=lambda pkt: self.filter_packet(pkt))
 
     def filter_packet(self, pkt):
         # Log the captured packet summary
@@ -121,7 +121,6 @@ class Sniffer(threading.Thread):
         # Iterate over the captured packets
         # and aggregate the application level payload
         for pkt in self.captured_packets:
-            logger.debug(pkt.summary())
             if Raw in pkt:
                 payload_data += str(pkt[Raw])
 
