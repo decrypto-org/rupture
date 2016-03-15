@@ -62,17 +62,20 @@ class Strategy(object):
 
         huffman_complement = set(self._round.knownalphabet) - set(sampleset.candidatealphabet)
 
-        if len(huffman_complement) % 2:
-            huffman_complement.add(sentinel)
-
         candidate_secrets = set()
 
         for letter in sampleset.candidatealphabet:
             candidate_secret = self._round.knownsecret + letter
             candidate_secrets.add(candidate_secret)
 
-        if len(candidate_secrets) % 2:
-            candidate_secrets.add(self._round.knownsecret + sentinel)
+        # If knownalphabet is not a power of 2, i.e. the candidate alphabets
+        # don't contain the same amount of candidate symbols, add a dummy symbol
+        # so that both candidates have the same amount
+        if len(self._round.knownalphabet) % 2:
+            if len(huffman_complement) > len(candidate_secrets):
+                candidate_secrets.add(self._round.knownsecret + sentinel)
+            else:
+                huffman_complement.add(sentinel)
 
         reflected_data = [
             '',
