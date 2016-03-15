@@ -79,14 +79,10 @@ class Sniffer(threading.Thread):
         # and set it to stop when stop() is called
         sniff(iface=self.interface,
               filter=capture_filter,
-              prn=lambda pkt: self.captured_packets.append(pkt),
+              prn=lambda pkt: self.process_packet(pkt),
               stop_filter=lambda pkt: self.filter_packet(pkt))
 
     def filter_packet(self, pkt):
-        # Log the captured packet summary
-        logger.debug(pkt.summary())
-
-        # Return False if sniffer is still alive
         return not self.is_alive()
 
     def process_packet(self, pkt):
