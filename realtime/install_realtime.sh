@@ -5,7 +5,7 @@ command -v apt-get >/dev/null 2>&1 ||
 exit 1; }
 
 
-apt-get install -y nodejs npm
+sudo apt-get install -y nodejs npm
 npm install -g npm #update npm if already installed
 
 ##install required packages for server setups
