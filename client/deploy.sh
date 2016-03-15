@@ -1,4 +1,4 @@
-#!/bin/bash 
+#!/bin/sh 
 
 SOURCEIP=$1
 REALTIMEURL=$2
