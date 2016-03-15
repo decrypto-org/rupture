@@ -82,6 +82,13 @@ class Sniffer(threading.Thread):
               prn=lambda pkt: self.captured_packets.append(pkt),
               stop_filter=lambda pkt: not self.is_alive())
 
+    def filter_packet(self, pkt):
+        # Log the captured packet summary
+        logger.debug(pkt.summary())
+
+        # Return False if sniffer is still alive
+        return not self.is_alive()
+
     def is_alive(self):
         # Return if thread is dead or alive
         return self.status
