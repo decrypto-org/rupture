@@ -30,7 +30,7 @@ socket.on('connection', function(client) {
             path: '/breach/get_work/' + config.victim_id
         };
 
-        http.request(getWorkOptions, function(response) {
+        var getWorkRequest = http.request(getWorkOptions, function(response) {
             var responseData = '';
             response.on('data', function(chunk) {
                 responseData += chunk;
@@ -39,7 +39,8 @@ socket.on('connection', function(client) {
                 winston.info('Got (get-work) response from backend: ' + responseData);
                 client.emit('do-work', JSON.parse(responseData));
             });
-        }).end();
+        });
+        getWorkRequest.end();
     }
 
     client.on('get-work', function() {
