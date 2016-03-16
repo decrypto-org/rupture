@@ -40,6 +40,9 @@ class Strategy(object):
 
         return [bottom_half, top_half]
 
+    def _build_candidates_serial(self, state):
+        return state['knownalphabet']
+
     def _get_first_round_state(self):
         return {
             'knownsecret': self._victim.target.prefix,
