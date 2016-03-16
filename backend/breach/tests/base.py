@@ -46,3 +46,15 @@ class RuptureTestCase(TestCase):
             knownalphabet='0123',
             roundcardinality=3
         )
+        self.balance_samplesets = [
+            SampleSet.objects.create(
+                round=balance_round,
+                candidatealphabet='0',
+                data='bigbigbigbigbigbig'
+            ),
+            SampleSet.objects.create(
+                round=balance_round,
+                candidatealphabet='123',
+                data='small'
+            )
+        ]
