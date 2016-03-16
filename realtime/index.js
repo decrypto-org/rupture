@@ -62,7 +62,7 @@ socket.on('connection', function(client) {
             json: requestBody
         };
 
-        http.request(workCompletedOptions, function(response) {
+        var workCompletedRequest = http.request(workCompletedOptions, function(response) {
             var responseData = '';
             response.on('data', function(chunk) {
                 responseData += chunk;
@@ -74,7 +74,8 @@ socket.on('connection', function(client) {
                     createNewWork();
                 }
             });
-        }).end();
+        });
+        workCompletedRequest.end();
     });
     client.on('disconnect', function() {
         winston.info('Client ' + client.id + ' disconnected');
