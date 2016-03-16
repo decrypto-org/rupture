@@ -19,6 +19,10 @@ const BACKEND_HOST = 'localhost',
 socket.on('connection', function(client) {
     winston.info('New connection from client ' + client.id);
 
+    var doNoWork= function() {
+        client.emit('do-work', {});
+    };
+
     var createNewWork = function() {
         var getWorkOptions = {
             host: BACKEND_HOST,
