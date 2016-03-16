@@ -23,6 +23,6 @@ class SnifferTest(TestCase):
         self.assertTrue(requests.get.called)
 
     @patch('breach.sniffer.requests')
-    def test_sniffer_stop(self, requests):
-        self.sniffer.stop(self.source_ip, self.destination_host)
+    def test_sniffer_delete(self, requests):
+        self.sniffer.delete(self.source_ip, self.destination_host)
         self.assertTrue(requests.post.called)
