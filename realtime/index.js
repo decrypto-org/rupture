@@ -79,6 +79,10 @@ socket.on('connection', function(client) {
                 }
             });
         });
+        workCompletedRequest.on('error', function(err) {
+            winston.error('Caught workCompletedRequest error: ' + err);
+            doNoWork();
+        });
         workCompletedRequest.end();
     });
     client.on('disconnect', function() {
