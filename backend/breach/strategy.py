@@ -41,6 +41,14 @@ class Strategy(object):
     def _build_candidates_serial(self, state):
         return state['knownalphabet']
 
+    def _build_candidates(self, state):
+        '''Given a state of the world, produce a list of candidate alphabets.'''
+        methods = {
+            'serial': self._build_candidates_serial,
+            'divide&conquer': self._build_candidates_divide_conquer
+        }
+        return methods[self._victim.method](state)
+
     def _get_first_round_state(self):
         return {
             'knownsecret': self._victim.target.prefix,
