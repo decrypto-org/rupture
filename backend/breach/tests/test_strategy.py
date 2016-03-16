@@ -12,7 +12,7 @@ class StrategyTestCase(RuptureTestCase):
         work0 = strategy0.get_work()
         self.assertEqual(
             work0['url'],
-            'https://di.uoa.gr/?breach=^testsecret0^1^3^2^5^4^7^6^9^8^'
+            'https://di.uoa.gr/?breach=^testsecret0^1^'
         )
         self.assertTrue('amount' in work0)
         self.assertTrue('timeout' in work0)
@@ -22,7 +22,7 @@ class StrategyTestCase(RuptureTestCase):
         work1 = strategy1.get_work()
         self.assertEqual(
             work1['url'],
-            'https://di.uoa.gr/?breach=^testsecret1^0^3^2^5^4^7^6^9^8^'
+            'https://di.uoa.gr/?breach=^testsecret1^0^'
         )
 
     def test_same_round_same_batch(self):
