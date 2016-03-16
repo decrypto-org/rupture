@@ -30,9 +30,7 @@ class Strategy(object):
         self._round = Round.objects.filter(victim=self._victim, index=current_round_index)[0]
         self._analyzed = False
 
-    def _build_candidates(self, state):
-        '''Given a state of the world, produce a list of candidate alphabets.'''
-
+    def _build_candidates_divide_conquer(self, state):
         candidate_alphabet_cardinality = len(state['knownalphabet']) / 2
 
         bottom_half = state['knownalphabet'][:candidate_alphabet_cardinality]
