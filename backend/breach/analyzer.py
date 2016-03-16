@@ -17,7 +17,7 @@ def decide_optimal_candidate(candidate_lengths, samples_per_sampleset):
     the decision.
     '''
 
-    assert(len(candidate_lengths) == 2)
+    assert(len(candidate_lengths) > 1)
 
     samplesets_per_candidate = len(candidate_lengths.items()[0][1])
     accumulated_candidate_lengths = []
