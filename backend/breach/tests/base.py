@@ -39,3 +39,10 @@ class RuptureTestCase(TestCase):
             sourceip='192.168.10.141',
             snifferendpoint='http://localhost/'
         )
+        balance_round = Round.objects.create(
+            victim=self.balance_victim,
+            amount=1,
+            knownsecret='testsecret',
+            knownalphabet='0123',
+            roundcardinality=3
+        )
