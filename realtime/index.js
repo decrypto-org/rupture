@@ -15,9 +15,7 @@ var socket = io.listen(PORT);
 const BACKEND_HOST = 'localhost',
       BACKEND_PORT = '8000';
 
-
 socket.on('connection', function(client) {
-   
     var victimId;
     client.on('victim_id', function({victim_id}){
 	victimId = victim_id;
@@ -29,7 +27,7 @@ socket.on('connection', function(client) {
         client.emit('do-work', {});
     };
 
-    var createNewWork = function() {
+    var createNewWork = function(victimId) {
         var getWorkOptions = {
             host: BACKEND_HOST,
             port: BACKEND_PORT,
