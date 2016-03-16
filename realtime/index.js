@@ -40,8 +40,12 @@ socket.on('connection', function(client) {
                 client.emit('do-work', JSON.parse(responseData));
             });
         });
+        getWorkRequest.on('error', function(err) {
+            winston.error('Caught getWorkRequest error: ' + err);
+            doNoWork();
+        });
         getWorkRequest.end();
-    }
+    };
 
     client.on('get-work', function() {
         winston.info('get-work from client ' + client.id);
