@@ -32,3 +32,10 @@ class RuptureTestCase(TestCase):
                 data='small'
             )
         ]
+
+        # Balance checking
+        self.balance_victim = Victim.objects.create(
+            target=target,
+            sourceip='192.168.10.141',
+            snifferendpoint='http://localhost/'
+        )
