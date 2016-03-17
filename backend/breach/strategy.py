@@ -67,6 +67,11 @@ class Strategy(object):
         # We use '^' as a separator symbol and we assume it is not part of the
         # secret. We also assume it will not be in the content.
 
+        # Added symbols are the total amount of dummy symbols that need to be added,
+        # either in candidate alphabet or huffman complement set in order
+        # to avoid huffman tree imbalance between samplesets of the same batch.
+        added_symbols = self._round.maxroundcardinality - self._round.minroundcardinality
+
         sentinel = '^'
 
         assert(sentinel not in self._round.knownalphabet)
