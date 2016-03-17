@@ -3,6 +3,8 @@ from django.views.decorators.csrf import csrf_exempt
 from breach.strategy import Strategy
 from breach.models import Victim
 
+import json
+
 
 def get_work(request, victim_id=0):
     assert(victim_id)
@@ -27,6 +29,11 @@ def get_work(request, victim_id=0):
 @csrf_exempt
 def work_completed(request, victim_id=0):
     assert(victim_id)
+
+    realtime_parameters = json.loads(request.body.decode('utf-8'))
+    assert('success' in realtime_parameters)
+
+    success = realtime_parameters['success']
 
     try:
         victim = Victim.objects.get(pk=victim_id)
