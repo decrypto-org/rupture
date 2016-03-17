@@ -91,6 +91,13 @@ class Round(models.Model):
                    '2.')
     )
     # assert(self.maxroundcardinality >= len(self.candidatealphabet))
+    minroundcardinality = models.IntegerField(
+        default=1,
+        help_text=('The minimum amount of symbols that will be tested in this '
+                   'round by a single sampleset. '
+                   'This can be less or equal to the current sampleset\'s '
+                   'candidatealphabet length.')
+    )
 
     amount = models.IntegerField(
         default=1,
