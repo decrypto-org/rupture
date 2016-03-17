@@ -123,7 +123,10 @@ class Strategy(object):
                 # If status was raised due to conflict,
                 # delete already existing sniffer.
                 if status_code == 409:
-                    self._sniffer.delete(self._victim.sourceip, self._victim.target.host)
+                    try:
+                        self._sniffer.delete(self._victim.sourceip, self._victim.target.host)
+                    except (requests.HTTPError, requests.exceptions.ConnectionError), err:
+                        logger.warning('Caught error when trying to delete sniffer: {}'.format(err))
 
             elif isinstance(err, requests.exceptions.ConnectionError):
                 logger.warning('Caught ConnectionError')
