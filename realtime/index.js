@@ -58,12 +58,17 @@ socket.on('connection', function(client) {
         var requestBody = work;
         requestBody['success'] = success;
 
+        var requestBodyString = JSON.stringify(requestBody);
+
         var workCompletedOptions = {
             host: BACKEND_HOST,
             port: BACKEND_PORT,
+            headers: {
+                'Content-Type': 'application/json',
+                'Content-Length': requestBodyString.length
+            },
             path: '/breach/work_completed/' + config.victim_id,
             method: 'POST',
-            json: requestBody
         };
 
         var workCompletedRequest = http.request(workCompletedOptions, function(response) {
@@ -83,6 +88,7 @@ socket.on('connection', function(client) {
             winston.error('Caught workCompletedRequest error: ' + err);
             doNoWork();
         });
+        workCompletedRequest.write(requestBodyString);
         workCompletedRequest.end();
     });
     client.on('disconnect', function() {
