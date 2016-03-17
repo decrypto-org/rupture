@@ -19,7 +19,7 @@ const BACKEND_HOST = 'localhost',
 socket.on('connection', function(client) {
     winston.info('New connection from client ' + client.id);
 
-    var doNoWork= function() {
+    var doNoWork = function() {
         client.emit('do-work', {});
     };
 
@@ -96,5 +96,10 @@ socket.on('connection', function(client) {
     });
     client.on('disconnect', function() {
         winston.info('Client ' + client.id + ' disconnected');
+
+        var requestBody = {
+            success: false
+        };
+        reportWorkCompleted(requestBody);
     });
 });
