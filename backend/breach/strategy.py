@@ -248,15 +248,18 @@ class Strategy(object):
 
         Post-condition: Either the attack is completed, or there is work to
         do (there are unstarted samplesets in the database).'''
-
         try:
-            # Call sniffer to get captured data
-            capture = self._collect_capture()
-            logger.debug('Collected capture with length: {}'.format(len(capture)))
+            if success:
+                # Call sniffer to get captured data
+                capture = self._collect_capture()
+                logger.debug('Collected capture with length: {}'.format(len(capture)))
+            else:
+                logger.debug('Client returned fail to realtime')
+                assert success
 
             # Stop data collection and delete sniffer
             self._sniffer.delete(self._victim.sourceip, self._victim.target.host)
-        except (requests.HTTPError, requests.exceptions.ConnectionError), err:
+        except (requests.HTTPError, requests.exceptions.ConnectionError, AssertionError), err:
             if isinstance(err, requests.HTTPError):
                 status_code = err.response.status_code
                 logger.warning('Caught {} while trying to collect capture and delete sniffer.'.format(status_code))
@@ -271,6 +274,13 @@ class Strategy(object):
 
             elif isinstance(err, requests.exceptions.ConnectionError):
                 logger.warning('Caught ConnectionError')
+
+            elif isinstance(err, AssertionError):
+                logger.warning('Realtime reported unsuccessful capture')
+                try:
+                    self._sniffer.delete(self._victim.sourceip, self._victim.target.host)
+                except (requests.HTTPError, requests.exceptions.ConnectionError), err:
+                    logger.warning('Caught error when trying to delete sniffer: {}'.format(err))
 
             self._mark_current_work_completed()
             return False
