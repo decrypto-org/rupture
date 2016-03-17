@@ -216,7 +216,8 @@ class Strategy(object):
         next_round = Round(
             victim=self._victim,
             index=self._round.index + 1 if hasattr(self, '_round') else 1,
-            roundcardinality=max(map(len, candidate_alphabets)),
+            maxroundcardinality=max(map(len, candidate_alphabets)),
+            minroundcardinality=min(map(len, candidate_alphabets)),
             amount=SAMPLES_PER_SAMPLESET,
             knownalphabet=state['knownalphabet'],
             knownsecret=state['knownsecret']
