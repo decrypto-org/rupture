@@ -146,7 +146,7 @@ class Strategy(object):
 
     def _collect_capture(self):
         captured_data = self._sniffer.read(self._victim.sourceip, self._victim.target.host)
-        return captured_data
+        return captured_data['capture']
 
     def _analyze_current_round(self):
         '''Analyzes the current round samplesets to extract a decision.'''
