@@ -85,15 +85,15 @@ class Strategy(object):
         # Candidate balance indicates the amount of dummy symbols that will be included with the
         # candidate alphabet's part of the reflection.
         candidate_balance = self._round.maxroundcardinality - len(candidate_secrets)
-        assert(len(knownalphabet_complement) >= candidate_balance)
+        assert(len(knownalphabet_complement) > candidate_balance)
         candidate_balance = [self._round.knownsecret + c for c in knownalphabet_complement[0:candidate_balance]]
 
         # Huffman complement indicates the knownalphabet symbols that are not currently being tested
         huffman_complement = set(self._round.knownalphabet) - set(sampleset.candidatealphabet)
 
         huffman_balance = added_symbols - len(candidate_balance)
-        assert(len(knownalphabet_complement) >= huffman_balance)
-        huffman_balance = knownalphabet_complement[0:huffman_balance]
+        assert(len(knownalphabet_complement) > len(candidate_balance) + huffman_balance)
+        huffman_balance = knownalphabet_complement[len(candidate_balance):huffman_balance]
 
         reflected_data = [
             '',
