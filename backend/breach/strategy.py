@@ -250,6 +250,9 @@ class Strategy(object):
             # Call sniffer to get captured data
             capture = self._collect_capture()
             logger.debug('Collected capture with length: {}'.format(len(capture)))
+
+            # Stop data collection and delete sniffer
+            self._sniffer.delete(self._victim.sourceip, self._victim.target.host)
         except (requests.HTTPError, requests.exceptions.ConnectionError), err:
             if isinstance(err, requests.HTTPError):
                 status_code = err.response.status_code
