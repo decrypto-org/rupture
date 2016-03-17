@@ -131,6 +131,10 @@ class Strategy(object):
             elif isinstance(err, requests.exceptions.ConnectionError):
                 logger.warning('Caught ConnectionError')
 
+            # An error occurred, so if there is a started sampleset mark it as failed
+            if SampleSet.objects.filter(round=self._round, completed=None).exclude(started=None):
+                self._mark_current_work_completed()
+
             return {}
 
         unstarted_samplesets = self._get_unstarted_samplesets()
