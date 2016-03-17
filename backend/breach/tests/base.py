@@ -32,3 +32,29 @@ class RuptureTestCase(TestCase):
                 data='small'
             )
         ]
+
+        # Balance checking
+        self.balance_victim = Victim.objects.create(
+            target=target,
+            sourceip='192.168.10.141',
+            snifferendpoint='http://localhost/'
+        )
+        balance_round = Round.objects.create(
+            victim=self.balance_victim,
+            amount=1,
+            knownsecret='testsecret',
+            knownalphabet='0123',
+            roundcardinality=3
+        )
+        self.balance_samplesets = [
+            SampleSet.objects.create(
+                round=balance_round,
+                candidatealphabet='0',
+                data='bigbigbigbigbigbig'
+            ),
+            SampleSet.objects.create(
+                round=balance_round,
+                candidatealphabet='123',
+                data='small'
+            )
+        ]

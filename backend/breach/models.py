@@ -63,7 +63,11 @@ class Victim(models.Model):
     sourceip = models.GenericIPAddressField(
         help_text='Source IP on the local network, e.g. 192.168.10.140'
     )
-    # TODO: method (divide & conquer, etc.)
+    method = models.CharField(
+        default='divide&conquer',
+        max_length=255,
+        help_text='Method of building candidate samplesets.'
+    )
 
 
 class Round(models.Model):
