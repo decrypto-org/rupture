@@ -239,7 +239,7 @@ class Strategy(object):
     def _attack_is_completed(self):
         return len(self._round.knownsecret) == self._victim.target.secretlength
 
-    def work_completed(self):
+    def work_completed(self, success=True):
         '''Receives and consumes work completed from the victim, analyzes
         the work, and returns True if the attack is complete (victory),
         otherwise returns False if more work is needed.
