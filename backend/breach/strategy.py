@@ -84,9 +84,9 @@ class Strategy(object):
             candidate_secret = self._round.knownsecret + letter
             candidate_secrets.add(candidate_secret)
 
-        # Add as many dummy symbols as necessary, so that all different candidate
-        # alphabets have the same amount of total data.
-        candidate_balance = self._round.roundcardinality - len(candidate_secrets)
+        # Candidate balance indicates the amount of dummy symbols that will be included with the
+        # candidate alphabet's part of the reflection.
+        candidate_balance = self._round.maxroundcardinality - len(candidate_secrets)
         assert(len(knownalphabet_complement) >= candidate_balance)
         candidate_balance = [self._round.knownsecret + c for c in knownalphabet_complement[0:candidate_balance]]
 
