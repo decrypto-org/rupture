@@ -254,12 +254,20 @@ class Strategy(object):
             if isinstance(err, requests.HTTPError):
                 status_code = err.response.status_code
                 logger.warning('Caught {} while trying to collect capture and delete sniffer.'.format(status_code))
+
+                # If status was raised due to malformed capture,
+                # delete sniffer to avoid conflict.
+                if status_code == 422:
+                    try:
+                        self._sniffer.delete(self._victim.sourceip, self._victim.target.host)
+                    except (requests.HTTPError, requests.exceptions.ConnectionError), err:
+                        logger.warning('Caught error when trying to delete sniffer: {}'.format(err))
+
             elif isinstance(err, requests.exceptions.ConnectionError):
                 logger.warning('Caught ConnectionError')
 
             self._mark_current_work_completed()
             return False
-
 
         self._mark_current_work_completed(capture)
 
