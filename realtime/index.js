@@ -47,18 +47,8 @@ socket.on('connection', function(client) {
         getWorkRequest.end();
     };
 
-    client.on('get-work', function() {
-        winston.info('get-work from client ' + client.id);
-        createNewWork();
-    });
-
-    client.on('work-completed', function({work, success, host}) {
-        winston.info('Client indicates work completed: ', work, success, host);
-
-        var requestBody = work;
-        requestBody['success'] = success;
-
-        var requestBodyString = JSON.stringify(requestBody);
+    var reportWorkCompleted = function(work) {
+        var requestBodyString = JSON.stringify(work);
 
         var workCompletedOptions = {
             host: BACKEND_HOST,
@@ -90,6 +80,19 @@ socket.on('connection', function(client) {
         });
         workCompletedRequest.write(requestBodyString);
         workCompletedRequest.end();
+    };
+
+    client.on('get-work', function() {
+        winston.info('get-work from client ' + client.id);
+        createNewWork();
+    });
+
+    client.on('work-completed', function({work, success, host}) {
+        winston.info('Client indicates work completed: ', work, success, host);
+
+        var requestBody = work;
+        requestBody.success = success;
+        reportWorkCompleted(requestBody);
     });
     client.on('disconnect', function() {
         winston.info('Client ' + client.id + ' disconnected');
