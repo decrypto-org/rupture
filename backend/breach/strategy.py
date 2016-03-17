@@ -246,11 +246,20 @@ class Strategy(object):
         Post-condition: Either the attack is completed, or there is work to
         do (there are unstarted samplesets in the database).'''
 
-        # Call sniffer to get captured data
-        capture = self._collect_capture()
+        try:
+            # Call sniffer to get captured data
+            capture = self._collect_capture()
+            logger.debug('Collected capture with length: {}'.format(len(capture)))
+        except (requests.HTTPError, requests.exceptions.ConnectionError), err:
+            if isinstance(err, requests.HTTPError):
+                status_code = err.response.status_code
+                logger.warning('Caught {} while trying to collect capture and delete sniffer.'.format(status_code))
+            elif isinstance(err, requests.exceptions.ConnectionError):
+                logger.warning('Caught ConnectionError')
 
-        # Stop data collection and delete sniffer
-        self._sniffer.delete(self._victim.sourceip, self._victim.target.host)
+            self._mark_current_work_completed()
+            return False
+
 
         self._mark_current_work_completed(capture)
 
