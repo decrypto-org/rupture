@@ -6,6 +6,7 @@ from breach.models import SampleSet, Round
 from breach.sniffer import Sniffer
 
 import string
+import requests
 import logging
 
 
@@ -112,7 +113,22 @@ class Strategy(object):
 
         Pre-condition: There is already work to do.'''
 
-        self._sniffer.start(self._victim.sourceip, self._victim.target.host)
+        try:
+            self._sniffer.start(self._victim.sourceip, self._victim.target.host)
+        except (requests.HTTPError, requests.exceptions.ConnectionError), err:
+            if isinstance(err, requests.HTTPError):
+                status_code = err.response.status_code
+                logger.warning('Caught {} while trying to start sniffer.'.format(status_code))
+
+                # If status was raised due to conflict,
+                # delete already existing sniffer.
+                if status_code == 409:
+                    self._sniffer.delete(self._victim.sourceip, self._victim.target.host)
+
+            elif isinstance(err, requests.exceptions.ConnectionError):
+                logger.warning('Caught ConnectionError')
+
+            return {}
 
         unstarted_samplesets = self._get_unstarted_samplesets()
 
