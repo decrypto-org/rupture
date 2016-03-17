@@ -87,12 +87,12 @@ class Strategy(object):
         # Add as many dummy symbols as necessary, so that all different candidate
         # alphabets have the same amount of total data.
         candidate_balance = self._round.roundcardinality - len(candidate_secrets)
-        assert(len(knownalphabet_complement) > candidate_balance)
+        assert(len(knownalphabet_complement) >= candidate_balance)
         candidate_balance = [self._round.knownsecret + c for c in knownalphabet_complement[0:candidate_balance]]
 
         huffman_balance = self._round.roundcardinality - len(huffman_complement)
-         assert(len(known_alphabet_complement) > huffman_balance)
-         huffman_balance = known_alphabet_complement[0:huffman_balance]
+        assert(len(knownalphabet_complement) >= huffman_balance)
+        huffman_balance = knownalphabet_complement[0:huffman_balance]
 
         reflected_data = [
             '',
