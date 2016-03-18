@@ -4,7 +4,9 @@
 
 Communication between client and realtime server is possible using [socket.io](http://socket.io/) websockets.
 
-Client emits a message **get-work** requesting from the realtime server a specific work to be performed. Realtime server responds with a **do-work** message, passing a *work* object, that is structured as defined below:
+Client emits a message **client-hello** passing *victimId* to the realtime server. Realtime server responds with  **server-hello** message.
+
+When client receives the "server-hello", it emits a message **get-work** requesting from the realtime server a specific work to be performed. Realtime server responds with a **do-work** message, passing a *work* object, that is structured as defined below:
 ```sh
 typedef work
   amount: int
