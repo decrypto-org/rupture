@@ -133,6 +133,9 @@ LOGGING = {
         },
         'simple': {
             'format': '%(levelname)s %(message)s'
+        },
+        'app': {
+            'format': '%(message)s'
         }
     },
     'handlers': {
@@ -140,11 +143,17 @@ LOGGING = {
             'level': 'DEBUG',
             'class': 'logging.StreamHandler',
             'formatter': 'verbose'
+        },
+        'app': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': 'rupture.log',
+            'formatter': 'app'
         }
     },
     'loggers': {
         'breach.strategy': {
-            'handlers': ['console'],
+            'handlers': ['console', 'app'],
             'level': 'DEBUG'
         }
     }
