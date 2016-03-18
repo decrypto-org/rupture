@@ -80,16 +80,24 @@ class Round(models.Model):
         help_text=('Which round of the attack this is. The first round has ',
                    'index 1.')
     )
-    roundcardinality = models.IntegerField(
+    maxroundcardinality = models.IntegerField(
         default=1,
-        help_text=('How many alphabet symbols are being tested in this round.'
+        help_text=('The maximum amount of symbols that will be tested in this '
+                   'round by a single sampleset. '
                    'This can be larger or equal to the current sampleset\'s '
                    'candidatealphabet length, as other samplesets may not '
                    'have the same candidatealphabet length. This discrepancy '
                    'occurs when the target alphabet is not a perfect power of '
                    '2.')
     )
-    # assert(self.roundcardinality >= len(self.candidatealphabet))
+    # assert(self.maxroundcardinality >= len(self.candidatealphabet))
+    minroundcardinality = models.IntegerField(
+        default=1,
+        help_text=('The minimum amount of symbols that will be tested in this '
+                   'round by a single sampleset. '
+                   'This can be less or equal to the current sampleset\'s '
+                   'candidatealphabet length.')
+    )
 
     amount = models.IntegerField(
         default=1,

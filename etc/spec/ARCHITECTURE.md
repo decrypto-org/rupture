@@ -21,6 +21,8 @@ When the client has finished its work or has been interrupted due to network err
 ```
 *success* is *true* if all requests were performed correctly, otherwise it should return *false*.
 
+In case of error in communication between realtime <-> backend, realtime will return an empty work object, indicating there is not available work to be performed.
+
 
 ### realtime <-> backend (HTTP)
 
@@ -33,9 +35,10 @@ Realtime server communicates with the Python backend application, in order to po
     - Arguments:
         - victim: The id of the victim.
     - Returns *404 - Work not found* if there is an already ongoing sample collection. Otherwise, returns *200 - New work* with a JSON in the body, containing the work structure.
-- /workcompleted
-    - Indicates the successful or unsuccessful completion of work by the victim.
+- /workcompleted/<victim_id>
+    - Indicates the successful or unsuccessful completion of work by the victim. It is used when a client finishes its work, either successfully or not, or upon client's disconnect.
     - Arguments:
+        - victim_id: An id created by backend that defines the victim the particular client attacks.
         - work: work
         - success: bool
     - If *success* is *True*, this indicates that the series of indicated requests were performed by the victim correctly. Otherwise, the victim failed to perform the required requests due to a network error or timeout.
