@@ -196,7 +196,12 @@ class Strategy(object):
         current_round_samplesets = SampleSet.objects.filter(round=self._round, success=True)
         self._decision = decide_next_world_state(current_round_samplesets)
 
-        logger.debug('Decision: {}'.format(self._decision))
+        logger.debug('############################################################################')
+        logger.debug('Decision:')
+        for i in self._decision:
+            logger.debug('\t{}: {}'.format(i, self._decision[i]))
+        logger.debug('############################################################################\n')
+
         self._analyzed = True
 
     def _round_is_completed(self):
