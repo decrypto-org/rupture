@@ -300,7 +300,10 @@ class Strategy(object):
                 except (requests.HTTPError, requests.exceptions.ConnectionError), err:
                     logger.warning('Caught error when trying to delete sniffer: {}'.format(err))
 
-            self._mark_current_work_completed()
+            # An error occurred, so if there is a started sampleset mark it as failed
+            if SampleSet.objects.filter(round=self._round, completed=None).exclude(started=None):
+                self._mark_current_work_completed()
+
             return False
 
         self._mark_current_work_completed(capture)
