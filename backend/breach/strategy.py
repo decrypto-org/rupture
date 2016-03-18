@@ -152,7 +152,10 @@ class Strategy(object):
 
         work = self._sampleset_to_work(sampleset)
 
-        logger.debug('Giving work: {}'.format(work))
+        logger.debug('Giving work:')
+        for i in work:
+            logger.debug('\t{}: {}'.format(i, work[i]))
+        logger.debug('')
 
         return work
 
