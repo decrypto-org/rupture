@@ -152,7 +152,10 @@ class Strategy(object):
 
         work = self._sampleset_to_work(sampleset)
 
-        logger.debug('Giving work: {}'.format(work))
+        logger.debug('Giving work:')
+        for i in work:
+            logger.debug('\t{}: {}'.format(i, work[i]))
+        logger.debug('')
 
         return work
 
@@ -193,7 +196,12 @@ class Strategy(object):
         current_round_samplesets = SampleSet.objects.filter(round=self._round, success=True)
         self._decision = decide_next_world_state(current_round_samplesets)
 
-        logger.debug('Decision: {}'.format(self._decision))
+        logger.debug('############################################################################')
+        logger.debug('Decision:')
+        for i in self._decision:
+            logger.debug('\t{}: {}'.format(i, self._decision[i]))
+        logger.debug('############################################################################\n')
+
         self._analyzed = True
 
     def _round_is_completed(self):
@@ -292,7 +300,10 @@ class Strategy(object):
                 except (requests.HTTPError, requests.exceptions.ConnectionError), err:
                     logger.warning('Caught error when trying to delete sniffer: {}'.format(err))
 
-            self._mark_current_work_completed()
+            # An error occurred, so if there is a started sampleset mark it as failed
+            if SampleSet.objects.filter(round=self._round, completed=None).exclude(started=None):
+                self._mark_current_work_completed()
+
             return False
 
         self._mark_current_work_completed(capture)

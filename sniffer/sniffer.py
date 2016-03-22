@@ -137,6 +137,7 @@ class Sniffer(threading.Thread):
         including record headers.
         '''
         application_data = ''
+        captured_application_records = 0
 
         while payload_data:
             content_type = ord(payload_data[TLS_CONTENT_TYPE])
@@ -154,9 +155,12 @@ class Sniffer(threading.Thread):
 
             # Keep only TLS application data
             if content_type == TLS_APPLICATION_DATA:
+                captured_application_records += 1
                 application_data += payload_data[TLS_HEADER_LENGTH:TLS_HEADER_LENGTH + length]
 
             # Parse all TLS records in the aggregated payload data
             payload_data = payload_data[TLS_HEADER_LENGTH + length:]
+
+        logger.debug('Captured application records: {}'.format(captured_application_records))
 
         return application_data

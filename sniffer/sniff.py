@@ -19,9 +19,6 @@ logging.basicConfig(format=FORMAT)
 console_handler = logging.StreamHandler()
 logger.addHandler(console_handler)
 
-file_handler = logging.FileHandler('sniffer.log')
-logger.addHandler(file_handler)
-
 
 @app.route('/start', methods=['POST'])
 def start():
