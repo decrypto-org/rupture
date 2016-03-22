@@ -12,7 +12,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-SAMPLES_PER_SAMPLESET = 100
+SAMPLES_PER_SAMPLESET = 64
 
 
 class Strategy(object):
