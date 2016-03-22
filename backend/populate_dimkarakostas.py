@@ -28,7 +28,8 @@ sourceip = '192.168.1.70'
 victim_1 = Victim(
     target=target_1,
     snifferendpoint=snifferendpoint,
-    sourceip=sourceip
+    sourceip=sourceip,
+    # method='serial'
 )
 victim_1.save()
 
