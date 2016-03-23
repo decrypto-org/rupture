@@ -124,7 +124,7 @@ class Sniffer(threading.Thread):
             if Raw in pkt:
                 payload_data += str(pkt[Raw])
 
-        return self.get_application_data(payload_data)
+        return ''.join(self.get_application_data(payload_data))
 
     def get_application_data(self, payload_data):
         '''
@@ -136,8 +136,7 @@ class Sniffer(threading.Thread):
         Returns a string of aggregated binary TLS application data,
         including record headers.
         '''
-        application_data = ''
-        captured_application_records = 0
+        application_data = []
 
         while payload_data:
             content_type = ord(payload_data[TLS_CONTENT_TYPE])
@@ -155,8 +154,7 @@ class Sniffer(threading.Thread):
 
             # Keep only TLS application data
             if content_type == TLS_APPLICATION_DATA:
-                captured_application_records += 1
-                application_data += payload_data[TLS_HEADER_LENGTH:TLS_HEADER_LENGTH + length]
+                application_data.append(payload_data[TLS_HEADER_LENGTH:TLS_HEADER_LENGTH + length])
 
             # Parse all TLS records in the aggregated payload data
             payload_data = payload_data[TLS_HEADER_LENGTH + length:]
