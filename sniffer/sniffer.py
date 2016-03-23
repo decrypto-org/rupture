@@ -2,6 +2,7 @@ import threading
 import logging
 import binascii
 import socket
+import collections
 from scapy.all import sniff, Raw, IP, TCP, send
 
 logger = logging.getLogger('sniffer')
@@ -65,6 +66,10 @@ class Sniffer(threading.Thread):
         # Initialize the captured packets' list to empty
         self.captured_packets = []
 
+        # Dictionary with keys the destination (victim's) port
+        # and value the data stream corresponding to that port
+        self.port_streams = collections.defaultdict(lambda: [])
+
         # Thread has not come to life yet
         self.status = False
 
@@ -88,6 +93,8 @@ class Sniffer(threading.Thread):
     def process_packet(self, pkt):
         # logger.debug(pkt.summary())
         self.captured_packets.append(pkt)
+
+        self.port_streams[pkt.dport].append(pkt)
 
     def is_alive(self):
         # Return if thread is dead or alive
