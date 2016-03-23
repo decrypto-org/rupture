@@ -133,14 +133,15 @@ class Sniffer(threading.Thread):
         '''
         Parse the captured packets and return a string of the appropriate data.
         '''
-        payload_data = b''
+        logger.debug('Parsing captured TLS streams')
         application_data = b''
         application_records = 0
 
         # Iterate over the captured packets
         # and aggregate the application level payload
-
         for port, stream in self.port_streams.items():
+            # logger.debug('Parsing port: {}'.format(port))
+
             stream_data = b''
             for pkt in stream:
                 if Raw in pkt:
@@ -150,6 +151,9 @@ class Sniffer(threading.Thread):
 
             application_data += ''.join(data_record_list)
             application_records += len(data_record_list)
+
+        logger.debug('Captured {} application data'.format(len(application_data)))
+        logger.debug('Captured {} application records'.format(application_records))
 
         return ''.join(self.get_application_data(payload_data))
 
