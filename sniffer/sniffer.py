@@ -63,9 +63,6 @@ class Sniffer(threading.Thread):
         # If either of the parameters is None, assert error
         assert self.interface and self.source_ip and self.destination_host, 'Invalid argument dictionary - Invalid parameters'
 
-        # Initialize the captured packets' list to empty
-        self.captured_packets = []
-
         # Dictionary with keys the destination (victim's) port
         # and value the data stream corresponding to that port
         self.port_streams = collections.defaultdict(lambda: [])
@@ -155,7 +152,7 @@ class Sniffer(threading.Thread):
         logger.debug('Captured {} application data'.format(len(application_data)))
         logger.debug('Captured {} application records'.format(application_records))
 
-        return ''.join(self.get_application_data(payload_data))
+        return application_data
 
     def get_application_data(self, payload_data):
         '''
@@ -178,7 +175,6 @@ class Sniffer(threading.Thread):
                 logger.warning('Invalid payload: \n' + binascii.hexlify(payload_data))
 
                 # Flush invalid captured packets
-                self.captured_packets = []
                 assert False, 'Captured packets were not properly constructed'
 
             # logger.debug('Content type: {} - Length: {}'.format(TLS_CONTENT[content_type], length))
