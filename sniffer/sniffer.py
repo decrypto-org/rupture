@@ -134,12 +134,22 @@ class Sniffer(threading.Thread):
         Parse the captured packets and return a string of the appropriate data.
         '''
         payload_data = b''
+        application_data = b''
+        application_records = 0
 
         # Iterate over the captured packets
         # and aggregate the application level payload
-        for pkt in self.captured_packets:
-            if Raw in pkt:
-                payload_data += str(pkt[Raw])
+
+        for port, stream in self.port_streams.items():
+            stream_data = b''
+            for pkt in stream:
+                if Raw in pkt:
+                    stream_data += str(pkt[Raw])
+
+            data_record_list = self.get_application_data(stream_data)
+
+            application_data += ''.join(data_record_list)
+            application_records += len(data_record_list)
 
         return ''.join(self.get_application_data(payload_data))
 
