@@ -51,6 +51,7 @@ class Sniffer(threading.Thread):
             self.interface = arg['interface']
             self.source_ip = arg['source_ip']
             self.destination_host = arg['destination_host']
+            self.destination_port = arg['destination_port']
         except KeyError:
             assert False, 'Invalid argument dictionary - Not enough parameters'
 
@@ -60,7 +61,7 @@ class Sniffer(threading.Thread):
             assert False, 'socket.herror - ' + str(err)
 
         # If either of the parameters is None, assert error
-        assert self.interface and self.source_ip and self.destination_host, 'Invalid argument dictionary - Invalid parameters'
+        assert self.interface and self.source_ip and self.destination_host and self.destination_port, 'Invalid argument dictionary - Invalid parameters'
 
         # Initialize the captured packets' list to empty
         self.captured_packets = []
@@ -70,7 +71,7 @@ class Sniffer(threading.Thread):
 
     def run(self):
         # Capture only response packets
-        capture_filter = 'tcp and src host {} and src port 443 and dst host {}'.format(self.destination_ip, self.source_ip)
+        capture_filter = 'tcp and destination host {} and destination port {} and dst host {}'.format(self.destination_ip, self.destination_port, self.source_ip)
 
         self.status = True
 
@@ -110,7 +111,7 @@ class Sniffer(threading.Thread):
         Send a dummy TCP packet to the victim with source IP the destination host's,
         which will be caught by sniff filter and cause sniff function to stop.
         '''
-        send(IP(dst=self.source_ip, src=self.destination_ip)/TCP(sport=443), verbose=0)
+        send(IP(dst=self.source_ip, destination=self.destination_ip)/TCP(sport=self.destination_port), verbose=0)
 
     def parse_capture(self):
         '''

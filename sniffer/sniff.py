@@ -6,9 +6,7 @@ from flask import Flask, request, jsonify
 
 app = Flask(__name__)
 
-sniffers = {}
-INTERFACE = 'wlan0'  # Capturing interface, should be same for all sniffers
-
+sniffers = {}	
 
 level = logging.DEBUG
 logger = logging.getLogger('sniffer')
@@ -23,12 +21,15 @@ logger.addHandler(console_handler)
 @app.route('/start', methods=['POST'])
 def start():
     '''
-    Take the victim's IP and the hostname of the endpoint that is being
-    attacked and set a sniffer on all TLS connections between them.
+    Take the victim's IP, the hostname of the endpoint that is being
+    attacked, the device interface and the source port of the endpoint
+    and set a sniffer on all TLS connections between them.
 
     Arguments:
     source_ip -- the local network IP of the victim, e.g. 192.168.1.66
     destination_host -- the hostname of the attacked endpoint, e.g. dimkarakostas.com
+    interface -- the device interface to use sniff on, e.g. wlan0
+    destination_port -- the port of the endpoint e.g. 443
 
     Status code for the request:
             409: a sniffer on the same source_ip and destination host already exists
@@ -38,6 +39,8 @@ def start():
     data = request.get_json()
     source_ip = data['source_ip']
     destination_host = data['destination_host']
+    interface = data['interface']
+    destination_port = data['destination_port']
 
     # Check if a same sniffer already exists
     if (source_ip, destination_host) in sniffers:
@@ -47,7 +50,8 @@ def start():
 
     params = {'source_ip': source_ip,
               'destination_host': destination_host,
-              'interface': INTERFACE}
+              'interface': interface,
+              'destination_port': destination_port}
 
     # Check if parameters are invalid
     try:
