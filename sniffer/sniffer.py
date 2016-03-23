@@ -75,7 +75,7 @@ class Sniffer(threading.Thread):
         self.status = True
 
         # Start blocking sniff function,
-        # adding each sniffed packet in the 'captured_packets' list
+        # save captured packet
         # and set it to stop when stop() is called
         sniff(iface=self.interface,
               filter=capture_filter,
@@ -152,7 +152,7 @@ class Sniffer(threading.Thread):
 
             # logger.debug('Content type: {} - Length: {}'.format(TLS_CONTENT[content_type], length))
 
-            # Keep only TLS application data
+            # Keep only TLS application data payload
             if content_type == TLS_APPLICATION_DATA:
                 application_data.append(payload_data[TLS_HEADER_LENGTH:TLS_HEADER_LENGTH + length])
 
