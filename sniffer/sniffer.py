@@ -86,7 +86,7 @@ class Sniffer(threading.Thread):
         return not self.is_alive()
 
     def process_packet(self, pkt):
-        logger.debug(pkt.summary())
+        # logger.debug(pkt.summary())
         self.captured_packets.append(pkt)
 
     def is_alive(self):
@@ -151,7 +151,7 @@ class Sniffer(threading.Thread):
                 self.captured_packets = []
                 assert False, 'Captured packets were not properly constructed'
 
-            logger.debug('Content type: {} - Length: {}'.format(TLS_CONTENT[content_type], length))
+            # logger.debug('Content type: {} - Length: {}'.format(TLS_CONTENT[content_type], length))
 
             # Keep only TLS application data
             if content_type == TLS_APPLICATION_DATA:
@@ -160,7 +160,5 @@ class Sniffer(threading.Thread):
 
             # Parse all TLS records in the aggregated payload data
             payload_data = payload_data[TLS_HEADER_LENGTH + length:]
-
-        logger.debug('Captured application records: {}'.format(captured_application_records))
 
         return application_data
