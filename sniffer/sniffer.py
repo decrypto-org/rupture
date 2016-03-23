@@ -92,7 +92,17 @@ class Sniffer(threading.Thread):
 
     def process_packet(self, pkt):
         # logger.debug(pkt.summary())
-        self.captured_packets.append(pkt)
+
+        # Check for retransmission of same packet
+        try:
+            previous_packet = self.port_streams[pkt.dport][-1]
+            if previous_packet[Raw] == pkt[Raw]:
+                return
+        except IndexError:
+            # Either stream list is empty
+            # or one of the two packets does not have Raw data.
+            # In either case, the packet is OK to be saved.
+            pass
 
         self.port_streams[pkt.dport].append(pkt)
 
