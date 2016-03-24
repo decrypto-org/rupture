@@ -155,6 +155,10 @@ LOGGING = {
         'breach.strategy': {
             'handlers': ['console', 'app'],
             'level': 'DEBUG'
+        },
+        'breach.analyzer': {
+            'handlers': ['console', 'app'],
+            'level': 'DEBUG'
         }
     }
 }
