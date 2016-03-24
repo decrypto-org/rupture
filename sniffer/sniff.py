@@ -100,9 +100,11 @@ def read():
         logger.warning(err)
         return str(err), 422
 
-    logger.debug('Got capture with length: {}'.format(len(capture)))
+    assert('capture' in capture)
 
-    return jsonify(**{'capture': hexlify(capture)}), 200
+    logger.debug('Got capture with length: {}'.format(len(capture['capture'])))
+
+    return jsonify(**capture), 200
 
 
 @app.route('/delete', methods=['POST'])

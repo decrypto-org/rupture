@@ -152,7 +152,8 @@ class Sniffer(threading.Thread):
         logger.debug('Captured {} application data'.format(len(application_data)))
         logger.debug('Captured {} application records'.format(application_records))
 
-        return application_data
+        return {'capture': binascii.hexlify(application_data),
+                'records': application_records}
 
     def get_application_data(self, payload_data):
         '''
