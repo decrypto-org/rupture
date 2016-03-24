@@ -1,6 +1,9 @@
 import operator
 import collections
 from itertools import groupby
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class AnalyzerError(Exception):
