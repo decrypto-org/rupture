@@ -8,6 +8,7 @@ from breach.sniffer import Sniffer
 import string
 import requests
 import logging
+import random
 
 
 logger = logging.getLogger(__name__)
@@ -110,6 +111,7 @@ class Strategy(object):
         return {
             'url': self._victim.target.endpoint % self._reflection(sampleset),
             'amount': SAMPLES_PER_SAMPLESET,
+            'alignmentalphabet': sampleset.alignmentalphabet,
             'timeout': 0
         }
 
@@ -247,10 +249,15 @@ class Strategy(object):
 
         candidate_alphabets = self._build_candidates(state)
 
+        alignmentalphabet = list(self._round.victim.target.alignmentalphabet)
+        random.shuffle(alignmentalphabet)
+        alignmentalphabet = ''.join(alignmentalphabet)
+
         for candidate in candidate_alphabets:
             sampleset = SampleSet(
                 round=self._round,
-                candidatealphabet=candidate
+                candidatealphabet=candidate,
+                alignmentalphabet=alignmentalphabet
             )
             sampleset.save()
 
