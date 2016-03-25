@@ -1,6 +1,7 @@
 from string import ascii_lowercase
 import django
 import os
+import string
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'backend.settings')
 django.setup()
@@ -16,7 +17,8 @@ target_1 = Target(
     endpoint=endpoint,
     prefix=prefix,
     alphabet=alphabet,
-    secretlength=secretlength
+    secretlength=secretlength,
+    alignmentalphabet=string.ascii_uppercase
 )
 target_1.save()
 
