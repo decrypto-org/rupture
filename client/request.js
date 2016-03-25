@@ -1,12 +1,12 @@
-var Request = {
-    _img: null,
-    make(url, callback) {
-        console.log('Making request to ' + url);
+function Request(url, callback) {
+    console.log('Making request to ' + url);
 
-        this._img = new Image();
-        this._img.onerror = callback;
-        this._img.src = url;
-    },
+    this._img = new Image();
+    this._img.onerror = callback;
+    this._img.src = url;
+}
+
+Request.prototype = {
     cancel() {
         this._img.src = '';
     }
@@ -60,7 +60,7 @@ var Collection = {
         for (var i = 0; i < amount; ++i) {
             var symbols = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
             var padding = symbols.substr(0, i % 16);
-            var request = Request.make(url + padding + '?' + (antiBrowserCaching + i), oneLoaded.bind({}, i));
+            var request = new Request(url + padding + '?' + (antiBrowserCaching + i), oneLoaded.bind({}, i));
             requests.push(request);
         }
     }
