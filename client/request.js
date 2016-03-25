@@ -14,7 +14,7 @@ var Request = {
 
 var Collection = {
     _ONE_REQUEST_DEFAULT_TIMEOUT: 5000,
-    create(url, {amount, oneRequestTimeout}, onOneSuccess, onAllSuccess, onError) {
+    create(url, {amount, alignmentalphabet, oneRequestTimeout}, onOneSuccess, onAllSuccess, onError) {
         var requests = [];
         var loadingTimeout;
         var loadedCount = 0;
@@ -57,10 +57,11 @@ var Collection = {
         }
 
         antiBrowserCaching = Math.random() * Number.MAX_SAFE_INTEGER;
+        var alignmentPadding;
+
         for (var i = 0; i < amount; ++i) {
-            var symbols = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-            var padding = symbols.substr(0, i % 16);
-            var request = Request.make(url + padding + '?' + (antiBrowserCaching + i), oneLoaded.bind({}, i));
+            alignmentPadding = alignmentalphabet.substr(0, i % 16);
+            var request = Request.make(url + alignmentPadding + '&' + (antiBrowserCaching + i), oneLoaded.bind({}, i));
             requests.push(request);
         }
     }

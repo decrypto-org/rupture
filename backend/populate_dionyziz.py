@@ -8,7 +8,7 @@ django.setup()
 
 from breach.models import Target, Victim
 
-endpoint = 'https://dimkarakostas.com/rupture/test.php?ref=%s'
+endpoint = 'https://dionyziz.com/breach-test/reflect.php?ref=%s'
 prefix = 'imper'
 alphabet = ascii_lowercase
 secretlength = 9
@@ -25,13 +25,13 @@ target_1.save()
 print 'Created Target:\n\tendpoint: {}\n\tprefix: {}\n\talphabet: {}\n\tsecretlength: {}'.format(endpoint, prefix, alphabet, secretlength)
 
 snifferendpoint = 'http://127.0.0.1:9000'
-sourceip = '192.168.1.70'
+sourceip = '192.168.1.22'
 
 victim_1 = Victim(
     target=target_1,
     snifferendpoint=snifferendpoint,
     sourceip=sourceip,
-    # method='serial'
+    method='serial'
 )
 victim_1.save()
 

@@ -46,6 +46,13 @@ class Target(models.Model):
                    'secret is unknown, leave this as 0.')
     )
 
+    alignmentalphabet = models.CharField(
+        max_length=255,
+        default='',
+        help_text=('Alphabet used for block alignment. This will be shuffled '
+                   'once per batch.')
+    )
+
 
 class Victim(models.Model):
     '''
@@ -151,6 +158,14 @@ class SampleSet(models.Model):
                    'knownnextalphabet.')
     )
     # assert(all([c in self.knownalphabet for c in self.candidatealphabet]))
+    alignmentalphabet = models.CharField(
+        max_length=255,
+        default='',
+        help_text=('The alphabet used for padding in order to achieve block '
+                   'alignment for this batch. This is a permutation of the '
+                   'target alignment alphabet.')
+    )
+    # assert(sort(self.alignmentalphabet) == sort(self.round.victim.target.alignmentalphabet))
 
     data = models.TextField(
         default='',

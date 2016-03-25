@@ -28,7 +28,7 @@ var BREACHClient = {
         setTimeout(this.getWork.bind(this), this.MORE_WORK_TIMEOUT);
     },
     doWork(work) {
-        var {url, amount} = work;
+        var {url, amount, alignmentalphabet} = work;
 
         // TODO: rate limiting
         if (typeof url == 'undefined') {
@@ -53,7 +53,7 @@ var BREACHClient = {
         }
         req.Collection.create(
             url,
-            {amount: amount},
+            {amount: amount, alignmentalphabet: alignmentalphabet},
             function() {},
             reportCompletion.bind(this, true),
             reportCompletion.bind(this, false)
