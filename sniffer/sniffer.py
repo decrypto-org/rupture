@@ -126,6 +126,13 @@ class Sniffer(threading.Thread):
         '''
         send(IP(dst=self.source_ip, src=self.destination_ip)/TCP(sport=443), verbose=0)
 
+    def follow_stream(self, stream):
+        stream_data = b''
+        for pkt in stream:
+            if Raw in pkt:
+                stream_data += str(pkt[Raw])
+        return stream_data
+
     def parse_capture(self):
         '''
         Parse the captured packets and return a string of the appropriate data.
@@ -139,10 +146,7 @@ class Sniffer(threading.Thread):
         for port, stream in self.port_streams.items():
             # logger.debug('Parsing port: {}'.format(port))
 
-            stream_data = b''
-            for pkt in stream:
-                if Raw in pkt:
-                    stream_data += str(pkt[Raw])
+            stream_data = self.follow_stream(stream)
 
             data_record_list = self.get_application_data(stream_data)
 
