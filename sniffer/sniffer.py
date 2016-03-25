@@ -152,7 +152,7 @@ class Sniffer(threading.Thread):
         logger.debug('Captured {} application data'.format(len(application_data)))
         logger.debug('Captured {} application records'.format(application_records))
 
-        return {'capture': binascii.hexlify(application_data),
+        return {'capture': application_data,
                 'records': application_records}
 
     def get_application_data(self, payload_data):
@@ -182,7 +182,7 @@ class Sniffer(threading.Thread):
 
             # Keep only TLS application data payload
             if content_type == TLS_APPLICATION_DATA:
-                application_data.append(payload_data[TLS_HEADER_LENGTH:TLS_HEADER_LENGTH + length])
+                application_data.append(binascii.hexlify(payload_data[TLS_HEADER_LENGTH:TLS_HEADER_LENGTH + length]))
 
             # Parse all TLS records in the aggregated payload data
             payload_data = payload_data[TLS_HEADER_LENGTH + length:]
