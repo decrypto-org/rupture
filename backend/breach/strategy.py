@@ -182,7 +182,8 @@ class Strategy(object):
             # create a new sampleset for the same attack element
             s = SampleSet(
                 round=sampleset.round,
-                candidatealphabet=sampleset.candidatealphabet
+                candidatealphabet=sampleset.candidatealphabet,
+                alignmentalphabet=sampleset.alignmentalphabet
             )
             s.save()
 
