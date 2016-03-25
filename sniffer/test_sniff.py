@@ -14,10 +14,14 @@ class SniffTestCase(ThreadAwareTestCase):
 
         self.source_ip = '192.168.1.118'
         self.destination_host = 'di.uoa.gr'
-
+        self.destination_port = '443'
+        self.interface = 'wlan0'
+      
         self.data = dict(
             source_ip=self.source_ip,
-            destination_host=self.destination_host
+            destination_host=self.destination_host,
+            destination_port=self.destination_port,
+            interface=self.interface
         )
 
         self.json_data = json.dumps(self.data)
