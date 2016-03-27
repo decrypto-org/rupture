@@ -2,6 +2,7 @@ import threading
 import logging
 import binascii
 import socket
+import collections
 from scapy.all import sniff, Raw, IP, TCP, send
 
 logger = logging.getLogger('sniffer')
@@ -62,8 +63,9 @@ class Sniffer(threading.Thread):
         # If either of the parameters is None, assert error
         assert self.interface and self.source_ip and self.destination_host, 'Invalid argument dictionary - Invalid parameters'
 
-        # Initialize the captured packets' list to empty
-        self.captured_packets = []
+        # Dictionary with keys the destination (victim's) port
+        # and value the data stream corresponding to that port
+        self.port_streams = collections.defaultdict(lambda: [])
 
         # Thread has not come to life yet
         self.status = False
@@ -75,7 +77,7 @@ class Sniffer(threading.Thread):
         self.status = True
 
         # Start blocking sniff function,
-        # adding each sniffed packet in the 'captured_packets' list
+        # save captured packet
         # and set it to stop when stop() is called
         sniff(iface=self.interface,
               filter=capture_filter,
@@ -86,8 +88,20 @@ class Sniffer(threading.Thread):
         return not self.is_alive()
 
     def process_packet(self, pkt):
-        logger.debug(pkt.summary())
-        self.captured_packets.append(pkt)
+        # logger.debug(pkt.summary())
+
+        # Check for retransmission of same packet
+        try:
+            previous_packet = self.port_streams[pkt.dport][-1]
+            if previous_packet[Raw] == pkt[Raw]:
+                return
+        except IndexError:
+            # Either stream list is empty
+            # or one of the two packets does not have Raw data.
+            # In either case, the packet is OK to be saved.
+            pass
+
+        self.port_streams[pkt.dport].append(pkt)
 
     def is_alive(self):
         # Return if thread is dead or alive
@@ -112,19 +126,38 @@ class Sniffer(threading.Thread):
         '''
         send(IP(dst=self.source_ip, src=self.destination_ip)/TCP(sport=443), verbose=0)
 
+    def follow_stream(self, stream):
+        stream_data = b''
+        for pkt in stream:
+            if Raw in pkt:
+                stream_data += str(pkt[Raw])
+        return stream_data
+
     def parse_capture(self):
         '''
         Parse the captured packets and return a string of the appropriate data.
         '''
-        payload_data = b''
+        logger.debug('Parsing captured TLS streams')
+        application_data = b''
+        application_records = 0
 
         # Iterate over the captured packets
         # and aggregate the application level payload
-        for pkt in self.captured_packets:
-            if Raw in pkt:
-                payload_data += str(pkt[Raw])
+        for port, stream in self.port_streams.items():
+            # logger.debug('Parsing port: {}'.format(port))
 
-        return self.get_application_data(payload_data)
+            stream_data = self.follow_stream(stream)
+
+            data_record_list = self.get_application_data(stream_data)
+
+            application_data += ''.join(data_record_list)
+            application_records += len(data_record_list)
+
+        logger.debug('Captured {} application data'.format(len(application_data)))
+        logger.debug('Captured {} application records'.format(application_records))
+
+        return {'capture': application_data,
+                'records': application_records}
 
     def get_application_data(self, payload_data):
         '''
@@ -136,8 +169,7 @@ class Sniffer(threading.Thread):
         Returns a string of aggregated binary TLS application data,
         including record headers.
         '''
-        application_data = ''
-        captured_application_records = 0
+        application_data = []
 
         while payload_data:
             content_type = ord(payload_data[TLS_CONTENT_TYPE])
@@ -148,19 +180,15 @@ class Sniffer(threading.Thread):
                 logger.warning('Invalid payload: \n' + binascii.hexlify(payload_data))
 
                 # Flush invalid captured packets
-                self.captured_packets = []
                 assert False, 'Captured packets were not properly constructed'
 
-            logger.debug('Content type: {} - Length: {}'.format(TLS_CONTENT[content_type], length))
+            # logger.debug('Content type: {} - Length: {}'.format(TLS_CONTENT[content_type], length))
 
-            # Keep only TLS application data
+            # Keep only TLS application data payload
             if content_type == TLS_APPLICATION_DATA:
-                captured_application_records += 1
-                application_data += payload_data[TLS_HEADER_LENGTH:TLS_HEADER_LENGTH + length]
+                application_data.append(binascii.hexlify(payload_data[TLS_HEADER_LENGTH:TLS_HEADER_LENGTH + length]))
 
             # Parse all TLS records in the aggregated payload data
             payload_data = payload_data[TLS_HEADER_LENGTH + length:]
-
-        logger.debug('Captured application records: {}'.format(captured_application_records))
 
         return application_data

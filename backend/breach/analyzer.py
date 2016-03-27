@@ -1,6 +1,9 @@
 import operator
 import collections
 from itertools import groupby
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class AnalyzerError(Exception):
@@ -34,6 +37,9 @@ def decide_optimal_candidate(candidate_lengths, samples_per_sampleset):
         key=operator.itemgetter('length')
     )
 
+    for cand in sorted_candidate_lengths:
+        logger.debug('{}: {}'.format(cand['candidate_alphabet'], cand['length']))
+
     # Extract candidate with minimum length and the next best competitor
     # candidate. In case of binary search, these will be the only two
     # candidates.
@@ -44,6 +50,10 @@ def decide_optimal_candidate(candidate_lengths, samples_per_sampleset):
 
     # Extract a confidence value, in bytes, for our decision based on the second-best candidate.
     confidence = float(next_best_candidate['length'] - min_candidate['length']) / samples_per_candidate
+
+    # Captured bytes are represented as hex string,
+    # so we need to convert confidence metric to bytes
+    confidence /= 2.0
 
     return min_candidate['candidate_alphabet'], confidence
 

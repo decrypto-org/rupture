@@ -182,7 +182,8 @@ class Strategy(object):
             # create a new sampleset for the same attack element
             s = SampleSet(
                 round=sampleset.round,
-                candidatealphabet=sampleset.candidatealphabet
+                candidatealphabet=sampleset.candidatealphabet,
+                alignmentalphabet=sampleset.alignmentalphabet
             )
             s.save()
 
@@ -190,7 +191,7 @@ class Strategy(object):
 
     def _collect_capture(self):
         captured_data = self._sniffer.read(self._victim.sourceip, self._victim.target.host)
-        return captured_data['capture']
+        return captured_data['capture'], captured_data['records']
 
     def _analyze_current_round(self):
         '''Analyzes the current round samplesets to extract a decision.'''
@@ -276,8 +277,9 @@ class Strategy(object):
         try:
             if success:
                 # Call sniffer to get captured data
-                capture = self._collect_capture()
+                capture, records = self._collect_capture()
                 logger.debug('Collected capture with length: {}'.format(len(capture)))
+                logger.debug('Collected records: {}'.format(records))
             else:
                 logger.debug('Client returned fail to realtime')
                 assert success

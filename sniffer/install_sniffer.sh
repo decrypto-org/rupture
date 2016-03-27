@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 command -v apt-get >/dev/null 2>&1 ||
 { echo >&2 "Installation script requires  apt-get but it's not installed.  Aborting.";

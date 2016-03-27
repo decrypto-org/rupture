@@ -234,10 +234,12 @@ The GET parameters are:
  - source_ip: The IP of the victim on the local network.
  - destination_host: The hostname of the target that is being attacked.
 
-Returns HTTP `200` with a JSON that has a field *capture* which contains the
-network capture of the sniffer. In case of error, HTTP `422 - Unprocessable
-Entity` is returned if the captured TLS records were not properly formed on the
-sniffed network, or HTTP `404` if no sniffer with the given parameters exists.
+Returns HTTP `200` with a JSON that has a field *capture*, which contains the
+network capture of the sniffer as hexadecimal digits, and a field *records*,
+that contains the total amount of captured TLS application records. In case of
+error, HTTP `422 - Unprocessable Entity` is returned if the captured TLS
+records were not properly formed on the sniffed network, or HTTP `404` if no
+sniffer with the given parameters exists.
 
 ### /delete
 POST request that asks for the deletion of the sniffer.
