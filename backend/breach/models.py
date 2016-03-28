@@ -53,6 +53,13 @@ class Target(models.Model):
                    'once per batch.')
     )
 
+    recordscardinality = models.IntegerField(
+        default=0,
+        help_text=('The amount of expected TLS response records per request. '
+                   'If 0 then the amount is not known or is expected to '
+                   'change per request.')
+    )
+
 
 class Victim(models.Model):
     '''
