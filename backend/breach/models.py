@@ -21,6 +21,12 @@ class Target(models.Model):
     def host(self):
         return urlparse.urlparse(self.endpoint).hostname
 
+    port = models.IntegerField(
+        default=443,
+        help_text=('The port that responses are expected to come from. '
+                   'For TLS this should generally be 443.')
+    )
+
     maxreflectionlength = models.IntegerField(
         default=0,
         help_text=('The maximum length that will be reflected by the service '
