@@ -280,6 +280,11 @@ class Strategy(object):
                 capture, records = self._collect_capture()
                 logger.debug('Collected capture with length: {}'.format(len(capture)))
                 logger.debug('Collected records: {}'.format(records))
+
+                # Check if all TLS response records were captured,
+                # if available
+                if self._victim.target.recordscardinality:
+                    assert records == SAMPLES_PER_SAMPLESET * self._victim.target.recordscardinality, 'Not all records captured'
             else:
                 logger.debug('Client returned fail to realtime')
                 assert success
