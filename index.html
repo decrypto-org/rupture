@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Rupture -- a framework for easily conducting BREACH and other compression-based attacks.</title>
+	<meta property="st:title" content="Rupture is a framework for easily conducting BREACH and other compression-based attacks." />
+	<meta property="og:title" content="Rupture is a framework for easily conducting BREACH and other compression-based attacks." />
+
+	<meta property="og:description" content="" />
+	<meta property="og:image" content="http://emberjs.com/images/tomster-sm.png" />
+	<meta name="twitter:card" content="summary" />
+	<meta name="twitter:site" content="@emberjs" />
+	<meta name="twitter:title" content="A framework for creating ambitious web applications."/>
+	<meta name="twitter:image" content="http://emberjs.com/images/tomster-twitter-card.png" />
+	<link rel="shortcut icon" href="images/favicon.png" />
+	<!--[if lte IE 7 ]><link href="stylesheets/fonts/fontello-ie7.css" rel="stylesheet" /><![endif]-->
+	<link href="stylesheets/site.css" rel="stylesheet" />
+	<link href="blog/feed.xml" rel="alternate" type="application/atom+xml" title="Ember.js - Blog" />
+</head>
+
+<body class="index not-responsive">
+
+	<!--[if lt IE 9]>
+	<script type="text/javascript" src="javascripts/common-old-ie.js"></script>
+	<![endif]-->
+	<!--[if gte IE 9]><!-->
+	<script type="text/javascript" src="javascripts/common-modern.js"></script>
+	<!--<![endif]-->
+
+	<header class="header">
+		<nav role="navigation" aria-label="main">
+			<ul class="header-nav container">
+				<li class="header-logo">
+					<a href="https://github.com/dionyziz/rupture"><span class="visually-hidden">Rupture on Github</span></a>
+					<li><a href="/about">About</a></li>
+					<li><a href="http://guides.emberjs.com">Guides</a></li>
+					<li><a href="/api">API</a></li>
+					<li><a href="/community">Community</a></li>
+					<li><a href="/blog">Blog</a></li>
+					<li><a href="/builds">Builds</a></li>
+					<li class="header-search">
+						<form>
+							<input type="text" id="st-search-input" placeholder="" class="st-search-input" />
+						</form>
+						<div id="st-results-container"></div>
+					</li>
+			</ul>
+		</nav>
+	</header>
+
+	<div id="content-wrapper">
+		<div id="content" >
+
+			<h1 class="about-header-text">
+				A framework for easily conducting BREACH and other compression-based attacks.
+			</h1>
+
+			<div class="features section">
+				<h2>More Productive Out of the Box.</h2>
+				<div class="feature">
+					<div class="handlebars"></div>
+					<p>Write dramatically less code with Ember's Handlebars integrated templates that update automatically when the underlying data changes.
+				</div>
+				<div class="feature">
+					<div class="structure"></div>
+					<p>Don't waste time making trivial choices. Ember.js incorporates common idioms so you can focus on what makes your app special, not reinventing the wheel.</p>
+				</div>
+				<div class="feature">
+					<div class="productivity"></div>
+					<p>Ember.js is built for productivity. Designed with developer ergonomics in mind, its friendly APIs help you get your job done&mdash;fast.</p>
+				</div>
+			</div>
+
+			<div class="getting-started section">
+				<script type="text/x-handlebars" id="application">
+				<div class="example-tabs">
+							{{#each model as |item|}}
+								{{tab-item item=item selectedTab=selectedTab selectTab='selectTab'}}
+							{{/each}}
+							<span class="tabs-footer"></span>
+						</div>
+						{{syntax-highlight selectedTab.contents}}
+						<div class="example-arrow"></div>
+				</script>
+				<script type="text/x-handlebars" data-template-name="components/tab-item">
+					<a class="{{if isSelected 'active'}}" href="#">{{unbound item.name}}</a>
+				</script>
+
+				<div class="example-app" data-name="binding" data-files="templates/application.hbs">
+					<h2 class="sub">Auto-Updating Handlebars Templates</h2>
+					<p class="prose">Ember makes Handlebars templates even better, by ensuring your HTML
+					stays up-to-date when the underlying model changes. To get started, you
+					don't even need to write any JavaScript.</p>
+				</div>
+
+				<div class="example-app" data-name="components" data-files="components/gravatar-image.js templates/application.hbs templates/components/gravatar-image.hbs">
+					<h2 class="sub">Components</h2>
+					<p class="prose">Experience the future of the web platform today with Ember's components.
+					Components allow you to create your own application-specific HTML tags,
+					using Handlebars to describe their markup and JavaScript to implement
+					custom behavior.</p>
+				</div>
+
+				<div class="example-app example-loading" data-name="loading" data-files="app.js templates/application.hbs">
+					<h2 class="sub">Loading Data from a Server</h2>
+					<p class="prose">
+					Ember.js eliminates the boilerplate of displaying JSON retrieved
+					from your server. If you know how to use jQuery, you know how to
+					fetch models in Ember.
+					</p>
+				</div>
+
+				<div id="routing-example" class="example-app" data-name="routing" data-files="app.js templates/application.hbs templates/index.hbs templates/mail.hbs templates/mailbox.hbs templates/mailbox/index.hbs fixtures.js">
+					<h2 class="sub">Routing</h2>
+					<p class="prose">Build JavaScript apps that don't break the web!
+					Ember.js makes it downright simple to create sophisticated,
+					multi-page JavaScript applications with great URL support, in a
+					fraction of the code you'd write in other frameworks.</p>
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+	<div class="footer">
+		<div class="container">
+			<div class="footer-info">
+				BASED ON <a href="http://emberjs.com/">emberjs</a>
+			</div>
+
+			<div class="footer-statement">
+				Ember.js is free, open source and always will be.
+			</div>
+
+			<div class="footer-social">
+				<a href="http://twitter.com/emberjs" title="Twitter">
+					<i class="icon-twitter"></i>
+				</a>
+				<a href="https://github.com/emberjs/ember.js" title="GitHub">
+					<i class="icon-github"></i>
+				</a>
+				<a href="https://plus.google.com/communities/106387049790387471205" title="Google+">
+					<i class="icon-gplus"></i>
+				</a>
+			</div>
+		</div>
+	</div>
+
+
+	<script type="text/javascript">
+$(function() {
+$('#slider').bxSlider({
+	displaySlideQty: 4,
+	moveSlideQty: 4,
+	auto: true,
+	pager: true,
+	speed: 700,
+	pause: 5000
+});
+
+// Hack to force proper sizing
+$('.bx-wrapper, .bx-window').css('width', 940);
+});
+	</script>
+
+</body>
+</html>
