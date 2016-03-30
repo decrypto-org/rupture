@@ -19,7 +19,7 @@ SAMPLES_PER_SAMPLESET = 64
 class Strategy(object):
     def __init__(self, victim):
         self._victim = victim
-        self._sniffer = Sniffer(victim.snifferendpoint)
+        self._sniffer = Sniffer(victim.snifferendpoint, self._victim.sourceip, self._victim.target.host, self._victim.interface, self._victim.target.port)
 
         # Extract maximum round index for the current victim.
         current_round_index = Round.objects.filter(victim=self._victim).aggregate(Max('index'))['index__max']
@@ -121,7 +121,7 @@ class Strategy(object):
         Pre-condition: There is already work to do.'''
 
         try:
-            self._sniffer.start(self._victim.sourceip, self._victim.target.host, self._victim.interface, self._victim.target.port)
+            self._sniffer.start()
         except (requests.HTTPError, requests.exceptions.ConnectionError), err:
             if isinstance(err, requests.HTTPError):
                 status_code = err.response.status_code
@@ -131,7 +131,7 @@ class Strategy(object):
                 # delete already existing sniffer.
                 if status_code == 409:
                     try:
-                        self._sniffer.delete(self._victim.sourceip, self._victim.target.host, self._victim.interface, self._victim.target.port)
+                        self._sniffer.delete()
                     except (requests.HTTPError, requests.exceptions.ConnectionError), err:
                         logger.warning('Caught error when trying to delete sniffer: {}'.format(err))
 
@@ -188,7 +188,7 @@ class Strategy(object):
         sampleset.save()
 
     def _collect_capture(self):
-        captured_data = self._sniffer.read(self._victim.sourceip, self._victim.target.host, self._victim.interface, self._victim.target.port)
+        captured_data = self._sniffer.read()
         return captured_data['capture'], captured_data['records']
 
     def _analyze_current_round(self):
@@ -295,7 +295,7 @@ class Strategy(object):
                 assert success
 
             # Stop data collection and delete sniffer
-            self._sniffer.delete(self._victim.sourceip, self._victim.target.host, self._victim.interface, self._victim.target.port)
+            self._sniffer.delete()
         except (requests.HTTPError, requests.exceptions.ConnectionError, AssertionError), err:
             if isinstance(err, requests.HTTPError):
                 status_code = err.response.status_code
@@ -305,7 +305,7 @@ class Strategy(object):
                 # delete sniffer to avoid conflict.
                 if status_code == 422:
                     try:
-                        self._sniffer.delete(self._victim.sourceip, self._victim.target.host, self._victim.interface, self._victim.target.port)
+                        self._sniffer.delete()
                     except (requests.HTTPError, requests.exceptions.ConnectionError), err:
                         logger.warning('Caught error when trying to delete sniffer: {}'.format(err))
 
@@ -315,7 +315,7 @@ class Strategy(object):
             elif isinstance(err, AssertionError):
                 logger.warning('Realtime reported unsuccessful capture')
                 try:
-                    self._sniffer.delete(self._victim.sourceip, self._victim.target.host, self._victim.interface, self._victim.target.port)
+                    self._sniffer.delete()
                 except (requests.HTTPError, requests.exceptions.ConnectionError), err:
                     logger.warning('Caught error when trying to delete sniffer: {}'.format(err))
 
