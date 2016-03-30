@@ -73,6 +73,7 @@ class Victim(models.Model):
     e.g. dionyziz@gmail.com
     '''
     target = models.ForeignKey(Target)
+
     snifferendpoint = models.CharField(
         max_length=255,
         help_text=("The HTTP endpoint of the adversarial sniffer running on "
@@ -80,14 +81,17 @@ class Victim(models.Model):
                    "requests. This endpoint must include the 'http://' "
                    "prefix.")
     )
+
     sourceip = models.GenericIPAddressField(
         help_text='Source IP on the local network, e.g. 192.168.10.140'
     )
+
     method = models.CharField(
         default='divide&conquer',
         max_length=255,
         help_text='Method of building candidate samplesets.'
     )
+
     interface = models.CharField(
         default='wlan0',
         max_length=255,
@@ -101,11 +105,13 @@ class Round(models.Model):
         unique_together = (('victim', 'index'),)
 
     victim = models.ForeignKey(Victim)
+
     index = models.IntegerField(
         default=1,
         help_text=('Which round of the attack this is. The first round has ',
                    'index 1.')
     )
+
     maxroundcardinality = models.IntegerField(
         default=1,
         help_text=('The maximum amount of symbols that will be tested in this '
@@ -117,6 +123,7 @@ class Round(models.Model):
                    '2.')
     )
     # assert(self.maxroundcardinality >= len(self.candidatealphabet))
+
     minroundcardinality = models.IntegerField(
         default=1,
         help_text=('The minimum amount of symbols that will be tested in this '
@@ -129,6 +136,7 @@ class Round(models.Model):
         default=1,
         help_text='Number of samples contained in each sampleset of this round.'
     )
+
     # sampleset knownstate: knownsecret and knownalphabet
     knownsecret = models.CharField(
         default='',
@@ -140,6 +148,7 @@ class Round(models.Model):
     #     ==
     #     self.victim.target.prefix
     # )
+
     knownalphabet = models.CharField(
         max_length=255,
         help_text='The candidate alphabet for the next unknown character'
@@ -177,6 +186,7 @@ class SampleSet(models.Model):
                    'knownnextalphabet.')
     )
     # assert(all([c in self.knownalphabet for c in self.candidatealphabet]))
+
     alignmentalphabet = models.CharField(
         max_length=255,
         default='',
@@ -197,6 +207,7 @@ class SampleSet(models.Model):
         blank=True,
         help_text='Date and time at which sample set collection was started'
     )
+
     completed = models.DateTimeField(
         default=None,
         null=True,
@@ -204,6 +215,7 @@ class SampleSet(models.Model):
         help_text=('When we stopped collecting samples for this sampleset, '
                    'successfully or not')
     )
+
     success = models.BooleanField(
         default=False,
         help_text=('Whether the samples in this sampleset were all collected '

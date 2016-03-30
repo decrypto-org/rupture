@@ -1,6 +1,5 @@
 import operator
 import collections
-from itertools import groupby
 import logging
 
 logger = logging.getLogger(__name__)
@@ -81,7 +80,6 @@ def decide_next_world_state(samplesets):
 
     # Ensure all samplesets are extending the same known state
     knownsecret = samplesets[0].round.knownsecret
-    knownalphabet = samplesets[0].round.knownalphabet
     round = samplesets[0].round
     amount = round.amount
     victim = round.victim

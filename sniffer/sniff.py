@@ -1,12 +1,11 @@
 import logging
 from time import sleep
-from binascii import hexlify
 from sniffer import Sniffer
 from flask import Flask, request, jsonify
 
 app = Flask(__name__)
 
-sniffers = {}	
+sniffers = {}
 
 level = logging.DEBUG
 logger = logging.getLogger('sniffer')
