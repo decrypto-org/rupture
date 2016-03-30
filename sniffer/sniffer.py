@@ -125,7 +125,7 @@ class Sniffer(threading.Thread):
         Send a dummy TCP packet to the victim with source IP the destination host's,
         which will be caught by sniff filter and cause sniff function to stop.
         '''
-        send(IP(dst=self.source_ip, destination=self.destination_ip)/TCP(sport=self.destination_port), verbose=0)
+        send(IP(dst=self.destination_ip, src=self.source_ip)/TCP(dport=self.destination_port), verbose=0)
 
     def follow_stream(self, stream):
         stream_data = b''
