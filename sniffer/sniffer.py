@@ -49,10 +49,10 @@ class Sniffer(threading.Thread):
         # Initialize object variables with parameters from arg dictionary
         self.arg = arg
         try:
-            self.interface = arg['interface']
-            self.source_ip = arg['source_ip']
-            self.destination_host = arg['destination_host']
-            self.destination_port = arg['destination_port']
+            self.interface = str(arg['interface'])
+            self.source_ip = str(arg['source_ip'])
+            self.destination_host = str(arg['destination_host'])
+            self.destination_port = int(arg['destination_port'])
         except KeyError:
             assert False, 'Invalid argument dictionary - Not enough parameters'
 
