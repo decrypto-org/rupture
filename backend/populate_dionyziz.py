@@ -18,7 +18,8 @@ target_1 = Target(
     prefix=prefix,
     alphabet=alphabet,
     secretlength=secretlength,
-    alignmentalphabet=string.ascii_uppercase
+    alignmentalphabet=string.ascii_uppercase,
+    recordscardinality=1
 )
 target_1.save()
 
