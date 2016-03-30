@@ -155,9 +155,7 @@ class Strategy(object):
         work = self._sampleset_to_work(sampleset)
 
         logger.debug('Giving work:')
-        for i in work:
-            logger.debug('\t{}: {}'.format(i, work[i]))
-        logger.debug('')
+        logger.debug('\tCandidate: {}'.format(sampleset.candidatealphabet))
 
         return work
 
@@ -242,6 +240,11 @@ class Strategy(object):
 
         self._round = next_round
 
+        logger.debug('Created new round:')
+        logger.debug('\tKnown secret: {}'.format(next_round.knownsecret))
+        logger.debug('\tKnown alphabet: {}'.format(next_round.knownalphabet))
+        logger.debug('\tAmount: {}'.format(next_round.amount))
+
     def _create_round_samplesets(self):
         state = {
             'knownalphabet': self._round.knownalphabet,
@@ -253,6 +256,7 @@ class Strategy(object):
         alignmentalphabet = list(self._round.victim.target.alignmentalphabet)
         random.shuffle(alignmentalphabet)
         alignmentalphabet = ''.join(alignmentalphabet)
+        logger.debug('\tAlignment alphabet: {}'.format(alignmentalphabet))
 
         for candidate in candidate_alphabets:
             sampleset = SampleSet(
@@ -278,8 +282,9 @@ class Strategy(object):
             if success:
                 # Call sniffer to get captured data
                 capture, records = self._collect_capture()
-                logger.debug('Collected capture with length: {}'.format(len(capture)))
-                logger.debug('Collected records: {}'.format(records))
+                logger.debug('Work completed:')
+                logger.debug('\tLength: {}'.format(len(capture)))
+                logger.debug('\tRecords: {}'.format(records))
 
                 # Check if all TLS response records were captured,
                 # if available

@@ -36,8 +36,10 @@ def decide_optimal_candidate(candidate_lengths, samples_per_sampleset):
         key=operator.itemgetter('length')
     )
 
+    logger.debug('\n############################################################################')
+    logger.debug('Candidate scoreboard:')
     for cand in sorted_candidate_lengths:
-        logger.debug('{}: {}'.format(cand['candidate_alphabet'], cand['length']))
+        logger.debug('\t{}: {}'.format(cand['candidate_alphabet'], cand['length']))
 
     # Extract candidate with minimum length and the next best competitor
     # candidate. In case of binary search, these will be the only two
