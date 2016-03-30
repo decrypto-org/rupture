@@ -145,7 +145,7 @@ font-family:'fontello';src:url("../fonts/fontello.eot?59185756");src:url("../fon
     display:block
   }
 }.header-logo a{
-  height:40px;width:100px;background:url("../images/ember-logo.svg") no-repeat;display:block;margin:-15px auto 0 0
+  height:55px;width:170px;background:url("../images/rupture\ logo\ smallest.png") no-repeat;display:block;margin:-15px auto 0 0
 }
 @media screen and (max-width: 53.75rem){
   .responsive .header-logo a{
