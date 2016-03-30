@@ -1,0 +1,11 @@
+node_modules
+dist
+*.tmp
+*.swp
+*.pyc
+*.log
+*.sqlite*
+env/
+.DS_Store
+tags
+*.aux
