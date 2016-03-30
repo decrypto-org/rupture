@@ -121,7 +121,7 @@ class Strategy(object):
         Pre-condition: There is already work to do.'''
 
         try:
-            self._sniffer.start(self._victim.sourceip, self._victim.target.host)
+            self._sniffer.start(self._victim.sourceip, self._victim.target.host, self._victim.interface, self._victim.target.port)
         except (requests.HTTPError, requests.exceptions.ConnectionError), err:
             if isinstance(err, requests.HTTPError):
                 status_code = err.response.status_code
@@ -131,7 +131,7 @@ class Strategy(object):
                 # delete already existing sniffer.
                 if status_code == 409:
                     try:
-                        self._sniffer.delete(self._victim.sourceip, self._victim.target.host)
+                        self._sniffer.delete(self._victim.sourceip, self._victim.target.host, self._victim.interface, self._victim.target.port)
                     except (requests.HTTPError, requests.exceptions.ConnectionError), err:
                         logger.warning('Caught error when trying to delete sniffer: {}'.format(err))
 
@@ -190,7 +190,7 @@ class Strategy(object):
         sampleset.save()
 
     def _collect_capture(self):
-        captured_data = self._sniffer.read(self._victim.sourceip, self._victim.target.host)
+        captured_data = self._sniffer.read(self._victim.sourceip, self._victim.target.host, self._victim.interface, self._victim.target.port)
         return captured_data['capture'], captured_data['records']
 
     def _analyze_current_round(self):
@@ -290,7 +290,7 @@ class Strategy(object):
                 assert success
 
             # Stop data collection and delete sniffer
-            self._sniffer.delete(self._victim.sourceip, self._victim.target.host)
+            self._sniffer.delete(self._victim.sourceip, self._victim.target.host, self._victim.interface, self._victim.target.port)
         except (requests.HTTPError, requests.exceptions.ConnectionError, AssertionError), err:
             if isinstance(err, requests.HTTPError):
                 status_code = err.response.status_code
@@ -300,7 +300,7 @@ class Strategy(object):
                 # delete sniffer to avoid conflict.
                 if status_code == 422:
                     try:
-                        self._sniffer.delete(self._victim.sourceip, self._victim.target.host)
+                        self._sniffer.delete(self._victim.sourceip, self._victim.target.host, self._victim.interface, self._victim.target.port)
                     except (requests.HTTPError, requests.exceptions.ConnectionError), err:
                         logger.warning('Caught error when trying to delete sniffer: {}'.format(err))
 
@@ -310,7 +310,7 @@ class Strategy(object):
             elif isinstance(err, AssertionError):
                 logger.warning('Realtime reported unsuccessful capture')
                 try:
-                    self._sniffer.delete(self._victim.sourceip, self._victim.target.host)
+                    self._sniffer.delete(self._victim.sourceip, self._victim.target.host, self._victim.interface, self._victim.target.port)
                 except (requests.HTTPError, requests.exceptions.ConnectionError), err:
                     logger.warning('Caught error when trying to delete sniffer: {}'.format(err))
 
