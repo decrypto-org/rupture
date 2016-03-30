@@ -88,6 +88,12 @@ class Victim(models.Model):
         max_length=255,
         help_text='Method of building candidate samplesets.'
     )
+    interface = models.CharField(
+        default='wlan0',
+        max_length=255,
+        help_text=("Attacking machine's interface that is on the victim's "
+                   "network.")
+    )
 
 
 class Round(models.Model):
