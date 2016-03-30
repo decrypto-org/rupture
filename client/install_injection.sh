@@ -6,8 +6,8 @@ exit 1; }
 
 #bettercap installation (requires rubygem)
 
-sudo apt-get install rubygems build-essential
-gem install syslog-logger #install syslog-logger from local directory or remote server
+sudo apt-get install ruby rubygems build-essential
+sudo gem install syslog-logger #install syslog-logger from local directory or remote server
 sudo apt-get install build-essential ruby-dev libpcap-dev #install dependencies
 
-gem install bettercap
+sudo gem install bettercap

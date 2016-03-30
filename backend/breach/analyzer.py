@@ -1,6 +1,5 @@
 import operator
 import collections
-from itertools import groupby
 import logging
 
 logger = logging.getLogger(__name__)
@@ -37,8 +36,10 @@ def decide_optimal_candidate(candidate_lengths, samples_per_sampleset):
         key=operator.itemgetter('length')
     )
 
+    logger.debug('\n############################################################################')
+    logger.debug('Candidate scoreboard:')
     for cand in sorted_candidate_lengths:
-        logger.debug('{}: {}'.format(cand['candidate_alphabet'], cand['length']))
+        logger.debug('\t{}: {}'.format(cand['candidate_alphabet'], cand['length']))
 
     # Extract candidate with minimum length and the next best competitor
     # candidate. In case of binary search, these will be the only two
@@ -81,7 +82,6 @@ def decide_next_world_state(samplesets):
 
     # Ensure all samplesets are extending the same known state
     knownsecret = samplesets[0].round.knownsecret
-    knownalphabet = samplesets[0].round.knownalphabet
     round = samplesets[0].round
     amount = round.amount
     victim = round.victim

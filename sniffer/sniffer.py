@@ -49,10 +49,10 @@ class Sniffer(threading.Thread):
         # Initialize object variables with parameters from arg dictionary
         self.arg = arg
         try:
-            self.interface = arg['interface']
-            self.source_ip = arg['source_ip']
-            self.destination_host = arg['destination_host']
-            self.destination_port = arg['destination_port']
+            self.interface = str(arg['interface'])
+            self.source_ip = str(arg['source_ip'])
+            self.destination_host = str(arg['destination_host'])
+            self.destination_port = int(arg['destination_port'])
         except KeyError:
             assert False, 'Invalid argument dictionary - Not enough parameters'
 
@@ -73,7 +73,7 @@ class Sniffer(threading.Thread):
 
     def run(self):
         # Capture only response packets
-        capture_filter = 'tcp and destination host {} and destination port {} and dst host {}'.format(self.destination_ip, self.destination_port, self.source_ip)
+        capture_filter = 'tcp and src host {} and src port {} and dst host {}'.format(self.destination_ip, self.destination_port, self.source_ip)
 
         self.status = True
 
@@ -125,7 +125,7 @@ class Sniffer(threading.Thread):
         Send a dummy TCP packet to the victim with source IP the destination host's,
         which will be caught by sniff filter and cause sniff function to stop.
         '''
-        send(IP(dst=self.source_ip, destination=self.destination_ip)/TCP(sport=self.destination_port), verbose=0)
+        send(IP(dst=self.destination_ip, src=self.source_ip)/TCP(dport=self.destination_port), verbose=0)
 
     def follow_stream(self, stream):
         stream_data = b''

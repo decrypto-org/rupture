@@ -4,17 +4,20 @@
 log_file=$(date "+%Y_%m_%d-%H_%M_%S")
 
 ## Deploy backend
-backend_dir='backend'
-backend_python='$backend_dir/env/bin/python'
+backend_python='backend/env/bin/python'
 
-mkdir -p $backend_dir/logs
+mkdir -p backend/logs
 echo '[-] Removing old database...'
-rm -f $backend_dir/db.sqlite3
+rm -f backend/db.sqlite3
+if test -e "db.sqlite3"; then
+    echo '[!] Database could not be deleted';
+    exit;
+fi
 echo '[-] Applying Django migrations...'
-$backend_python $backend_dir/manage.py migrate &>> $backend_dir/logs/$log_file.log
+$backend_python backend/manage.py migrate &>> backend/logs/$log_file.log
 echo '[-] Running test population scripts...'
-$backend_python $backend_dir/populate_dimkarakostas.py &>> $backend_dir/logs/$log_file.log
-$backend_python $backend_dir/manage.py runserver &>> $backend_dir/logs/$log_file.log &
+$backend_python backend/populate_dionyziz.py &>> backend/logs/$log_file.log
+$backend_python backend/manage.py runserver &>> backend/logs/$log_file.log &
 echo '[*] Backend has been deployed.'
 
 ## Deploy sniffer
