@@ -1,0 +1,517 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+
+\title{Compression security theoretical underpinnings}
+\author{
+Dimitris Karakostas
+\and
+Aggelos Kiayias
+\and
+Dionysis Zindros
+}
+\date{April 2016}
+
+\usepackage{natbib}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{mathtools}
+\usepackage{amsfonts}
+\usepackage{amsthm}
+\usepackage{amssymb}
+
+\DeclarePairedDelimiter{\ceil}{\lceil}{\rceil}
+\let\oldemptyset\emptyset
+\let\emptyset\varnothing
+
+\newtheorem*{lemma}{Lemma}
+
+\newcommand\defeq{\stackrel{\mathclap{\normalfont\mbox{def}}}{=}}
+
+\begin{document}
+
+\maketitle
+
+\section{Reflection security}
+
+\subsection{Adaptive reflection game}
+
+Let $\mathcal{PE} = (\mathcal{K}, \mathcal{E}, \mathcal{D})$ be a public-key
+encryption scheme, $\mathcal{A}$ be an adversary and $\mathcal{S}$ be a
+simulator of $\mathcal{A}$.  The game
+$\text{Game}_{\text{REF-SEC}}^{\mathcal{PE},\mathcal{A}}(\lambda,  f,
+\mathcal{V}, g)$ is parameterized with a rendering function $f(\cdot, \cdot,
+\cdot)$, a noise distribution $\mathcal{V}$, the security parameter $\lambda$,
+some function $g$ of the plaintext, and a distribution of secrets $\mathcal{M}$
+such that $\forall s \in \mathcal{M}: |s| = \lambda$.
+
+At the initialization phase of the game, the challenger produces a
+$\lambda$-bit key $(pk, sk) \leftarrow \mathcal{K}(\lambda)$. The adversary is
+given $pk$, $\mathcal{V}$, $g$ and $f$.  The challenger then chooses a secret
+$s \leftarrow \mathcal{M}$.
+
+After the initialization phase of the game, the game is played in rounds. At
+the beginning of each round $i$, the adversary chooses a reflection string
+$r_i$ and sends it to the challenger. The challenger produces a noise string
+$v_i \leftarrow \mathcal{V}$ and computes $m_i = f(s, r_i, v_i)$.  Subsequently
+$m_i$ is encrypted as $c_i = \mathcal{E}_\kappa(m_i)$, and $c_i$ is sent back
+to the adversary. At the end of the round, the adversary  decides if more
+rounds are needed, and if so, more rounds are played at the discretion of the
+adversary.
+
+When the adversary decides to complete the game, they output a guess $y$. The
+adversary is successful if $g(s) = y$.
+
+Formally, let the public key adversarial game be defined as follows:
+
+\begin{lstlisting}[texcl,mathescape]
+def $\text{Game}_{\text{REF-SEC}}^{\mathcal{PE},\mathcal{A}}(\lambda, f, \mathcal{V}, \mathcal{M}, g)$:
+    $(pk, sk) \leftarrow \mathcal{K}(\lambda)$
+    $st \leftarrow \mathcal{A}(\text{"init"}, pk, f, \mathcal{V}, \mathcal{M}, g)$
+    $s \leftarrow \mathcal{M}$
+    $y = \bot$
+    while $y = \bot$:
+        $(st, r) \leftarrow \mathcal{A}(\text{"reflect"}, st)$
+        $v \leftarrow V$
+        $m = f(s, r, v)$
+        $c = \mathcal{E}_{pk}(m)$
+        $(st, y) \leftarrow \mathcal{A}(\text{"play"}, st, c)$
+    if $y = g(s)$:
+        return 1
+    else:
+        return 0
+\end{lstlisting}
+
+Let the simulator game be defined as follows:
+
+\begin{lstlisting}[texcl,mathescape]
+def $\text{Game}_{\text{REF-SIM}}^{\mathcal{PE},\mathcal{S}}(\lambda, f, \mathcal{V}, \mathcal{M}, g)$:
+    $y \leftarrow \mathcal{S}(f, \mathcal{V}, \mathcal{M}, g)$
+    $s \leftarrow \mathcal{M}$
+    if $g(y) = s$:
+        return 1
+    else:
+        return 0
+\end{lstlisting}
+
+Let
+
+\begin{equation*}
+    \text{Adv}_{\mathcal{PE}, \mathcal{A}, \mathcal{S}}(\lambda, f, \mathcal{V}, \mathcal{M}, g)
+    \defeq
+    |Pr[\text{Game}_{\text{REF-SEC}}^{\mathcal{PE},\mathcal{A}}(\lambda, f, \mathcal{V}, \mathcal{M}, g) = 1]
+    -
+    Pr[\text{Game}_{\text{REF-SIM}}^{\mathcal{PE},\mathcal{S}}(\lambda, f, \mathcal{V}, \mathcal{M}, g) = 1]|.
+\end{equation*}
+
+The above game can be modified to deal with symmetric encryption. For this,
+the choice of key is changed to be limited to a secret key instead of a public and private key
+pair. The adversary is not given access to any key material. Instead,
+the adversary is given access to an encryption oracle which encrypts a given message
+using the secret key and returns the respective ciphertext. This oracle can be
+called an arbitrary number of times by the challenger.
+
+In the following proofs, we will assume that the game
+played is symmetrically. As the attack does not pertain to the key exchange mechanism,
+all theorems can be directly translated between the two versions of the game.
+
+\subsection{Adaptive reflection security}
+
+Given a polynomially computable rendering function $f(\cdot, \cdot, \cdot)$ and
+a  noise distribution $\mathcal{V}$, a public-key encryption scheme
+$\mathcal{PE}$ is \textit{reflection-secure} if:
+
+\begin{equation*}
+\forall \mathcal{M}:
+\forall g:
+\forall PPT \mathcal{A}:
+\exists PPT \mathcal{S}:
+\text{Adv}_{\mathcal{PE}, \mathcal{A}, \mathcal{S}}(\lambda, f, \mathcal{V}, \mathcal{M}, g) = negl(\lambda)
+\end{equation*}
+
+\section{The security of compression}
+
+\subsection{Compression functions}
+
+A compression function $Com$ is a polynomial polynomially reversible $1 - 1$
+function that takes an input $x$ and outputs $y$. $x$ is a random variable that
+follows the distribution $X$. $y = Com(x)$ will follow the
+distribution $Com(X)$.  $E(|y|) / E(|x|) < 1$ is the metric that defines the
+function's performance, where $E$ denotes expectation.
+
+\subsection{Composing with compression}
+
+We now shift our interest to algorithms which compose compression and
+encryption.  Therefore, we treat the public-key encryption scheme above as a
+composition of a compression and encryption algorithm:
+
+\begin{equation*}
+    \mathcal{E} = Enc \circ Com
+\end{equation*}
+
+$Com$ denotes a compression function as defined above, while $Enc$ denotes an
+encryption function. We stress our important assumption that $Enc$ is defined
+on $\{0, 1\}^*$ and not on some fixed-length input.
+
+\subsection{Length monotonicity}
+
+An important assumption for our attack is that the encryption function $Enc$ is
+\textit{length monotonic}. Specifically,
+
+\begin{equation*}
+\begin{split}
+\forall m_1, m_2 \in \{0, 1\}^*\\
+\forall \kappa_1, \kappa_2 \in \mathcal{K}\\
+|m_2| > |m_1|
+\Rightarrow
+|Enc_{\kappa_1}(m_2)| \geq |Enc_{\kappa_2}(m_1)|
+\end{split}
+\end{equation*}
+
+If the last inequality becomes strict, we call the encryption function
+\textit{strictly length monotonic}.
+
+A practical instance of a length monotonic encryption function is AES.
+Stream ciphers can be treated as strictly monotonic to the bit level.
+
+\section{Property compressibility}
+
+We now define what it means for a property $Q$ of the plaintext $x$ chosen out of the distribution $\mathcal{M}$ to be \textit{compression-detectable} by plaintext $y$ under a compression function $Com$ rendered under some rendering function $f$ together with some noise chosen out of the noise distribution $\mathcal{V}$:
+
+\begin{equation*}
+    \begin{split}
+        \exists y \in Y\\
+        Pr[
+            |Com(f(x_1, y, v_1))| < |Com(f(x_2, y, v_2))|
+        ]
+        \geq
+        \frac{1}{2} + \alpha(\lambda)
+    \end{split}
+\end{equation*}
+
+Where $\alpha(\lambda)$ is a non-negligible function and
+the probability is taken over the following random variables:
+
+\begin{align*}
+    x_1 &\leftarrow \mathcal{M}|_Q\\
+    x_2 &\leftarrow \mathcal{M}|_{\lnot Q}\\
+    v_1 &\leftarrow \mathcal{V}\\
+    v_2 &\leftarrow \mathcal{V}
+\end{align*}
+
+Where $\mathcal{M}|_Q$ denotes the subset of $\mathcal{M}$ restricted
+over the elements for which $Q$ holds proportionally retaining measure.
+
+Furthermore we require that such a $y$ is polynomially computable given
+the property $Q$, the functions $Com$ and $f$, the set $Y$ and the distributions
+$\mathcal{M}$ and $\mathcal{V}$ by a function denoted $\mathcal{O}_R(Com, f, Q, \mathcal{M}, \mathcal{V})$.
+
+Note that compression detectability implies that the distributions of lengths,
+$|Com(f(x_1, y, v_1))|$ and $|Com(f(x_2, y, v_2))|$, have non-negligible statistical
+distance with an efficiently computable distinguisher.
+
+The compression-detectibility property exists in all common compression function
+as long as $x$ and $y$ compress in the same context. We will illustrate such examples later in this work.
+
+\section{The BREACH model}
+We now turn our attention to the BREACH attack specifically, which utilizes
+the properties explored above, and we show that, under ideal modeling,
+the above attack is instantiated when the TLS algorithms are in use.
+
+In the BREACH model, we deal with a specific function $f$, property $Q$,
+compression function $Com$, length-leaking $Enc$, and secret distribution
+$\mathcal{M}$.
+
+In the next paragraphs, we describe a simplified model of the attack that
+lends itself to formal theoretical proofs, while abstracting away the complex
+practical details of the attack pertaining to the networking and particularities
+of the implementation that are of little significance to the cryptographic
+formalisms presented here.
+
+\subsection{The rendering context assumption}
+
+In the modern web, function $f$ represents a specific attack target, which
+constitutes the renderer of a web page, given a specific secret, reflection,
+and noise. Typically, $f$ will concatenate instances of the secret, the
+reflection, and the noise, between some context strings which constitute the
+static portions of the site.
+
+We assume that $f$ outputs a concatenation of various instances of
+$s$, $r$, and $v$ with arbitrary repetitions, in addition to concatenating with some
+constant context whose position is independent of the values of $s, r, v$.
+The number of repetitions of $s, r, v$ are also independent of the values of
+$s, r, v$.
+
+Formally, assume that the symbols $\{\beta_1, \beta_2, \beta_3\}$ do not appear in the
+alphabet of the secret.
+
+Our assumptions for $f$ can be stated as follows. Let
+
+\begin{equation*}
+\begin{split}
+\exists \mu \in \{0, 1, \beta_1, \beta_2, \beta_3\}^*\\
+\exists u_1, v_1, u_2, v_2, u_3, v_3 \in \{0, 1, \beta_1, \beta_2, \beta_3\}^*\\
+\mu = u_1 \beta_1 v_1 \land\\
+\mu = u_2 \beta_2 v_2 \land\\
+\mu = u_3 \beta_3 v_3 \land\\
+\forall s, r, v \in \{0, 1\}^*\\
+f(s, r, v) = Rep(Rep(Rep(\mu, \beta_1, s), \beta_2, r), \beta_3, v)
+\end{split}
+\end{equation*}
+
+Where $Rep$ is the string replacement function:
+
+\begin{align*}
+Rep(\epsilon, \alpha, \beta) &\defeq \epsilon\\
+Rep(\alpha:xs, \alpha, \beta) &\defeq \beta:Rep(xs, \alpha, \beta)\\
+Rep(x:xs, \alpha, \beta) &\defeq x:Rep(xs, \alpha, \beta)
+\end{align*}
+
+Where $:$ denotes the concatenation of a symbol with a string.
+
+We call $f$ functions that exhibit such behavior \textit{concatenative}.
+
+\subsection{The compression function assumption}
+
+In BREACH, $Com$ is a variant of LZ77. In this compression algorithm, repetitions
+of strings are well-compressed. In our ideal model, we examine a simplified version
+of LZ77 which we describe in this paragraph.
+
+Our version of LZ77 is not composed with a symbol-compressing algorithm such as
+Huffman coding. Therefore, a way is needed to encode literal symbols and compression
+symbols. The LZ77 algorithm treats the uncompressed text as a series of bits. Let the
+plaintext be $p$ and its length be $n = |p|$. The LZ77 compression function needs
+to have an alphabet of 2 symbols for representing literals (the bits $0$ and $1$ of
+the plaintext) as well as an alphabet of an additional $n$ symbols for representing compression distances from $1$ to $n$ and lengths from $1$ to $n$ (the same symbol is
+used to represent a distance and a length). This makes an alphabet of a total of
+$n + 2$ symbols which are represented by bit sequences of exactly $\ceil{lg(n + 2)}$
+bits each.
+
+We first describe the decompression algorithm. At the beginning of the compressed
+string, the number
+of characters in the uncompressed plaintext is encoded in ASCII followed by the "$\$$"
+ASCII character as a separator. This allows the decoder to compute how many bits are used to
+represent each symbol in the compressed text.
+
+Ordering these bit strings lexicographically, the first two bit strings will correspond to the literal
+"$0$" and "$1$" bits of the plaintext. The next bit strings will correspond to \textit{distance} bit sequences of 
+values $1, 2, \ldots, n$ respectively.
+
+After the "$\$$" separator, an encoding of the plaintext is given. The encoding
+can be decompressed by linearly reading it one character at a time. If a bit sequence
+corresponding to a literal
+is given, this is decoded as the respective literal bit of the plaintext. If
+a distance bit sequence of value $a$ is given, then another distance bit sequence of value $b$ sequence follows.
+Then $a$ must be less than or equal to the plaintext characters decoded so far, while $b$
+is arbitrary. This pair of values is decoded as follows. The decompressed text beginning at a distance of $a$ bits behind the current position decoding position and of length $b$ bits is taken into account. That text is then the new decompressed plaintext which is appended to the existing decompressed plaintext one bit at a time. This
+procedure can cause self-overlapping texts. In the end, the decoded text must be $n$
+bits long, otherwise the compression is invalid.
+
+\begin{lstlisting}[texcl,mathescape]
+def $\text{LZ77}^{-1}(c)$:
+    parts = c.split("$\$$")
+    plaintextLength = parse_int(parts[0])
+    bitsPerSymbol = $\ceil{lg(\text{plaintextLength}) + 2}$
+    encodedPlaintext = stringToBinaryArray("".join(parts[1:]))
+    
+    plaintext = ''
+    for i in range(0, len(encodedPlaintext), bitsPerSymbol):
+        symbol = binaryToInt(encodedPlaintext[i:bitsPerSymbol])
+        if symbol = 0:
+            plaintext += '0'
+        else if symbol = 1:
+            plaintext += '1'
+        else:
+            distance = symbol - 1
+            i += bitsPerSymbol
+            length = int(encodedPlaintext[i:bitsPerSymbol])
+            if distance > len(plaintext):
+                return $\bot$
+            while length:
+                plaintext += plaintext[-distance]
+                length -= 1
+    if len(plaintext) != plaintextLength:
+        return $\bot$
+    else:
+        return plaintext
+\end{lstlisting}
+
+Where negative and range array indexing and the $range$ function is as in Python.
+
+Our LZ77 compressor can then be described simply: It chooses the shortest
+in bits compressed text, which, when decoded
+using the above algorithm yields the desired plaintext.
+
+% TODO: Prove that it is a compression function for some $\mathcal{M}$
+
+\subsection{The full-text predicate assumption}
+
+The BREACH attack is a specific instance of reflection-based attacks in which
+the $Q$ property pertains to a prefix of the secret. It asks "Does the secret
+begin with such text?"
+
+We require $X$ to be of compressible length,
+i.e. the following equation must be satisfied:
+
+\begin{equation*}
+    |X| > \ceil{lg(f(X, X, \epsilon) + 2)}
+\end{equation*}
+
+In practical terms, this requires the secret that needs to be stolen
+to be at least 3 bytes so that it is better compressed rather than
+represented as a literal.
+
+\subsection{BREACH prefixes are compression-detectable}
+
+Let $startswith(v, s)$ be the $k$-length prefix checking predicate on a $\lambda$-bit
+secret $s$:
+
+\begin{equation*}
+    startswith(v, s) \defeq \exists w: s = v w
+\end{equation*}
+
+\begin{lemma}
+
+Let $f$ be a concatenative rendering function and let $Com = LZ77$. Then:
+
+\begin{equation}
+Pr[startswith(v, \cdot) \textrm{ compression-detectable under } f, Com] = \text{non-negl}(\lambda - k)
+\end{equation}
+
+Where the probability randomness is taken uniformly over all $k$-bit prefixes $v \in \{0, 1\}^k$.
+
+\end{lemma}
+
+\begin{proof}
+?
+\end{proof}
+
+\section{The compression distinguishing attack}
+
+\begin{lemma}
+
+Let $Com$ be a compression function, $f$ be a rendering function and $Q$
+be a plaintext predicate. If $Q$ is compression-detectable under a rendering
+of $f$ compressed with $Com$
+under plaintext distribution
+$\mathcal{M}$, reflection alphabet $\mathcal{M}$ and noise distribution
+$\mathcal{V}$, then:
+
+\begin{align*}
+\forall Enc:
+\exists g:
+\exists PPT \mathcal{A}:
+\forall PPT \mathcal{S}:
+\text{Adv}_{\mathcal{SE}(Enc, Com), \mathcal{A}, \mathcal{S}}(\lambda, f, \mathcal{V}, \mathcal{M}, g) = P(\lambda)
+\end{align*}
+
+Where $P$ is a non-negligible function and $Enc$
+is strictly length-monotonic.
+
+\end{lemma}
+
+\begin{proof}
+
+Let $g$ be the boolean function $Q$ on the plaintext. Define the adversary
+$\mathcal{A}$ as follows:
+
+\begin{lstlisting}[texcl,mathescape]
+def $\mathcal{A}("init")$:
+    return $\bot$
+
+def $\mathcal{A}("reflect", Com, f, Q, \mathcal{M}, \mathcal{V})$:
+    $r \leftarrow \mathcal{O}_R(Com, f, Q, \mathcal{M}, \mathcal{V})$
+    return $r$
+
+def $\mathcal{A}("play", Q, \mathcal{M}, c, y)$:
+    $s_1 \leftarrow \mathcal{M}|_Q$
+    $s_2 \leftarrow \mathcal{M}|_{\lnot Q}$
+
+    $v_1 \leftarrow \mathcal{V}$
+    $v_2 \leftarrow \mathcal{V}$
+
+    $l_1 = |Enc_\epsilon(Com(f(s_1, r, v_1)))|$
+    $l_2 = |Enc_\epsilon(Com(f(s_2, r, v_2)))|$
+    
+    if $|c| < l_1$:
+        return True
+    else if $|c| > l_2$:
+        return False
+    else:
+        return $\bot$
+\end{lstlisting}
+
+Then let $\mathcal{S}$ be an arbitrary simulator. Since the probability of simulator
+success is bounded by $?$, since its output is independent of the choice of
+$s$.
+
+\begin{equation}
+    \forall \mathcal{S}:
+    Pr[\text{Game}_{\text{REF-SIM}}^{\mathcal{PE},\mathcal{S}}(\lambda, f, \mathcal{V}, \mathcal{M}, g) = 1] \leq 0.5
+\end{equation}
+
+But the probability of success of $\mathcal{A}$ is $\frac{1}{2} + \alpha(\lambda)$ for some non-negligible function $\alpha$ (proof?).
+
+Therefore,
+
+\begin{equation}
+\begin{split}
+    \forall PPT \mathcal{S}:
+    \text{Adv}_{\mathcal{SE}(Enc, Com), \mathcal{A}, \mathcal{S}}(\lambda, f, \mathcal{V}, \mathcal{M}, g) \geq ?
+\end{split}
+\end{equation}
+
+Which is non-negligible. This completes the proof.
+
+\end{proof}
+
+We can now amplify the attack to achieve a better probability of success by a small modification in our adversary. For readability, we make use of a global adversary state $st$. Formally, this global state would be carried between adversary invocations as a function argument. The amplification is parameterized by a parameter $k$.
+
+\begin{lstlisting}[texcl,mathescape]
+global $st$
+
+def $\mathcal{A}("init")$:
+    $st = \{i: 0, low: 0, high: 0\}$
+    return $\bot$
+
+def $\mathcal{A}("reflect", Com, f, Q, \mathcal{M}, \mathcal{V})$:
+    $r \leftarrow \mathcal{O}_R(Com, f, Q, \mathcal{M}, \mathcal{V})$
+    return $r$
+
+def $\mathcal{A}("play", Q, \mathcal{M}, c, y)$:
+    $\{i, low, high\} = st$
+    
+    $s_1 \leftarrow \mathcal{M}|_Q$
+    $s_2 \leftarrow \mathcal{M}|_{\lnot Q}$
+
+    $v_1 \leftarrow \mathcal{V}$
+    $v_2 \leftarrow \mathcal{V}$
+
+    $l_1 = |Enc_\epsilon(Com(f(s_1, r, v_1)))|$
+    $l_2 = |Enc_\epsilon(Com(f(s_2, r, v_2)))|$
+
+    if $|c| < l_1$:
+        $low = low + 1$
+    else if $|c| > l_2$:
+        $high = high + 1$
+    
+    $i = i + 1$
+    if $i > k$:
+        if $low > high$:
+            return True
+        else if $high > low$:
+            return False
+        else:
+            return $\bot$
+    else:
+        $st = \{i, low, high\}$
+        return $\bot$
+\end{lstlisting}
+
+Proof that this amplifies?
+
+\subsection{Compression is insecure}
+
+We now show that all reasonable compression function expose a compression-detectable property $Q$. Indeed, if a compression function does not expose any compression-detectable properties $Q$, then the compression function does not cross-compress the data in $X$ with the data in $Y$ (Why?).
+
+\end{document}
