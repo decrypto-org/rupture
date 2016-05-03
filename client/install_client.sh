@@ -6,6 +6,10 @@ exit 1; }
 
 sudo apt-get install -y nodejs npm
 sudo npm install -g npm ##update npm if already installed
+sudo ln -s /usr/bin/nodejs /usr/bin/node ##update nodejs if already installed
+sudo npm cache clean -f
+sudo npm install -g n
+sudo n stable
 
 sudo npm install -g gulp ##install gulp on your system
 
