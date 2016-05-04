@@ -2,7 +2,7 @@ from django.utils import timezone
 from django.db.models import Max
 
 from breach.analyzer import decide_next_world_state
-from breach.models import SampleSet, Round
+from breach.models import SampleSet, Round, Victim
 from breach.sniffer import Sniffer
 
 import string
@@ -46,8 +46,8 @@ class Strategy(object):
     def _build_candidates(self, state):
         '''Given a state of the world, produce a list of candidate alphabets.'''
         methods = {
-            'serial': self._build_candidates_serial,
-            'divide&conquer': self._build_candidates_divide_conquer
+            Victim.SERIAL: self._build_candidates_serial,
+            Victim.DIVIDE_CONQUER: self._build_candidates_divide_conquer
         }
         return methods[self._victim.method](state)
 
