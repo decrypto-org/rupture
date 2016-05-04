@@ -16,7 +16,7 @@ fi
 echo '[-] Applying Django migrations...'
 $backend_python backend/manage.py migrate &>> backend/logs/$log_file.log
 echo '[-] Running test population scripts...'
-$backend_python backend/populate_dionyziz.py &>> backend/logs/$log_file.log
+$backend_python backend/populate_ruptureit.py &>> backend/logs/$log_file.log
 $backend_python backend/manage.py runserver &>> backend/logs/$log_file.log &
 echo '[*] Backend has been deployed.'
 

@@ -16,7 +16,7 @@ echo '[-] Applying Django migrations...'
 $python manage.py migrate 2>&1 | tee logs/$log_file.log
 
 echo '[-] Running test population scripts...'
-$python populate_dionyziz.py 2>&1 | tee logs/$log_file.log
+$python populate_ruptureit.py 2>&1 | tee logs/$log_file.log
 
 echo '[*] Backend has been deployed.'
 $python manage.py runserver 2>&1 | tee logs/$log_file.log
