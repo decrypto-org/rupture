@@ -32,7 +32,7 @@ victim_1 = Victim(
     target=target_1,
     snifferendpoint=snifferendpoint,
     sourceip=sourceip,
-    method='serial'
+    method=Victim.SERIAL
 )
 victim_1.save()
 
