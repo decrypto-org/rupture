@@ -21,12 +21,13 @@ socket.on('connection', function(client) {
     
     var victimId;
     client.on('client-hello', function({victim_id}) {
-	if (!victims.victim_id){
-            victimId = victim_id;
-            client.emit('server-hello');
-	else {
+        if (!victims.victim_id) {
+	    victimId = victim_id;
+	    client.emit('server-hello');
+	 }
+        else {
 	    client.emit('server-nowork')
-	}    
+	 }
     });
 
     var doNoWork = function() {
@@ -94,7 +95,7 @@ socket.on('connection', function(client) {
 
     client.on('get-work', function() {
         winston.info('get-work from client ' + client.id);
-	victims.victimId=client.id
+        victims.victimId = client.id;
         createNewWork();
     });
 
@@ -107,6 +108,12 @@ socket.on('connection', function(client) {
     });
     client.on('disconnect', function() {
         winston.info('Client ' + client.id + ' disconnected');
+
+        for (var i in victims) {
+            if (victims.i == client.id) {
+	        victims.i = null;
+	     };
+        };
 
         var requestBody = {
             success: false
