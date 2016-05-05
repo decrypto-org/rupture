@@ -94,6 +94,7 @@ socket.on('connection', function(client) {
 
     client.on('get-work', function() {
         winston.info('get-work from client ' + client.id);
+	victims.victimId=client.id
         createNewWork();
     });
 
