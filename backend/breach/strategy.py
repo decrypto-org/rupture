@@ -292,11 +292,11 @@ class Strategy(object):
                     assert records == SAMPLES_PER_SAMPLESET * self._victim.target.recordscardinality, 'Not all records captured'
             else:
                 logger.debug('Client returned fail to realtime')
-                assert success
+                raise ValueError('Realtime reported unsuccessful capture')
 
             # Stop data collection and delete sniffer
             self._sniffer.delete()
-        except (requests.HTTPError, requests.exceptions.ConnectionError, AssertionError), err:
+        except (requests.HTTPError, requests.exceptions.ConnectionError, ValueError), err:
             if isinstance(err, requests.HTTPError):
                 status_code = err.response.status_code
                 logger.warning('Caught {} while trying to collect capture and delete sniffer.'.format(status_code))
@@ -312,8 +312,8 @@ class Strategy(object):
             elif isinstance(err, requests.exceptions.ConnectionError):
                 logger.warning('Caught ConnectionError')
 
-            elif isinstance(err, AssertionError):
-                logger.warning('Realtime reported unsuccessful capture')
+            elif isinstance(err, ValueError):
+                logger.warning(repr(err))
                 try:
                     self._sniffer.delete()
                 except (requests.HTTPError, requests.exceptions.ConnectionError), err:
