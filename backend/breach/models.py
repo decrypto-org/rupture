@@ -86,9 +86,16 @@ class Victim(models.Model):
         help_text='Source IP on the local network, e.g. 192.168.10.140'
     )
 
-    method = models.CharField(
-        default='divide&conquer',
-        max_length=255,
+    SERIAL = 1
+    DIVIDE_CONQUER = 2
+    METHOD_CHOICES = (
+        (SERIAL, SERIAL),
+        (DIVIDE_CONQUER, DIVIDE_CONQUER),
+    )
+
+    method = models.IntegerField(
+        default=DIVIDE_CONQUER,
+        choices=METHOD_CHOICES,
         help_text='Method of building candidate samplesets.'
     )
 
