@@ -1,5 +1,16 @@
 #!/bin/bash -e
 
+trap 'terminate' INT TERM QUIT
+
+terminate() {
+    trap '' INT TERM QUIT
+    echo ""
+    echo "[*] Shutting down..."
+    kill 0
+    wait
+    echo "[*] Shut down complete."
+}
+
 ## Deploy different rupture modules in background processes
 log_file=$(date "+%Y_%m_%d-%H_%M_%S")
 
@@ -42,7 +53,4 @@ cat /dev/null > rupture.log
 tailf rupture.log &
 
 
-## Trap Ctrl-C signal and kill all subtree of current process
-trap "kill -- -$(ps -o pgid= $PID | grep -o [0-9]*)" SIGINT
 
-wait
