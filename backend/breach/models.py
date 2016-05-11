@@ -106,6 +106,14 @@ class Victim(models.Model):
                    "network.")
     )
 
+    realtimeurl = models.CharField(
+        default='http://localhost:3031',
+        max_length=255,
+        help_text=("The realtime module URL that the client should "
+                   "communicate with. This URL must include the "
+                   "'http://' prefix.")
+    )
+
 
 class Round(models.Model):
     class Meta:
