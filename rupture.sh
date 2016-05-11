@@ -14,9 +14,7 @@ terminate() {
 BASEDIR=$(dirname "$0")
 
 
-setup()
-attack()
-
+PARAMETER=$1
 
 setup() {
     $BASEDIR/backend/setup_backend.sh
@@ -34,3 +32,13 @@ attack() {
     cat /dev/null > $BASEDIR/rupture.log
     tailf $BASEDIR/rupture.log
 }
+
+case $PARAMETER in
+    "setup" ) setup;;
+    "target" ) $BASEDIR/backend/setup_targets.sh;;
+    "victim" ) $BASEDIR/backend/setup_victims.sh;;
+    "backend" ) $BASEDIR/backend/deploy_backend.sh;;
+    "sniffer" ) $BASEDIR/sniffer/deploy_sniffer.sh;;
+    "realtime" ) $BASEDIR/realtime/deploy_realtime.sh;;
+    "attack" ) attack;;
+esac
