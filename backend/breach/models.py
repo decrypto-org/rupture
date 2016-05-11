@@ -89,12 +89,12 @@ class Victim(models.Model):
     SERIAL = 1
     DIVIDE_CONQUER = 2
     METHOD_CHOICES = (
-        (SERIAL, SERIAL),
-        (DIVIDE_CONQUER, DIVIDE_CONQUER),
+        (SERIAL, 'serial'),
+        (DIVIDE_CONQUER, 'divide&conquer'),
     )
 
     method = models.IntegerField(
-        default=DIVIDE_CONQUER,
+        default=SERIAL,
         choices=METHOD_CHOICES,
         help_text='Method of building candidate samplesets.'
     )
