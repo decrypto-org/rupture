@@ -28,64 +28,71 @@ Development
 
 Rupture uses Javascript for communication between the client code and the realtime server. Client code is compiled using *browserify* and server code is run on *Node.js*.
 
-#### Client
- - Install gulp on your system.
+#### Injection
+ - Install injection.
 ```sh
-npm install -g gulp
+rupture$ ./install.sh injection
 ```
- - Install required packages for compilation of the client code.
-```sh
-rupture/client $ npm install
-```
- - Use browserify to compile the code.
-```sh
-rupture/client $ gulp browserify
-```
- - Use watchify to automatically bundle together scripts compiled with browserify.
-```sh
-rupture/client $ gulp watchify
-```
- - Open test.html using browser.
 
-#### Realtime
- - Install Node.js on your system ([Instructions](https://nodejs.org/en/download/package-manager/)).
- - Install required packages for server setup.
+#### Client
+ - Install client.
 ```sh
-rupture/realtime $ npm install
+rupture$ ./install.sh client
 ```
- - Start the server endpoint.
+ - Deploy client and injection.
 ```sh
-rupture/realtime $ npm start
+rupture/client $ ./deploy.sh {victimIP} {realtimeURL} {VictimId}
 ```
+example: ``` ./deploy.sh 192.168.1.2 http://localhost:3031 1 ```
+
+ - Otherwise do it seperately.
+   Build client.
+```sh
+rupture/client $ ./build.sh {realtimeURL} {VictimId}
+```
+ - Open test.html using browser or inject the js code to the victim's browser.
+```sh
+rupture/client $ ./inject {victimIP}
+```
+
+
 
 ### Python
 
 Rupture uses Python for the Command & Control server. Communication between js realtime server and Python backend is performed with a Django API endpoint.
 
- - Install Python 2.7.x.
- - Install pip package manager.
- - Install virtual enviroment module using *pip*.
+#### Backend
+ - Install backend.
 ```sh
-pip install virtualenv
+rupture/ $ ./install.sh backend
 ```
- - Create Python virtual environment for the project.
+ - Edit population script with the IP in which the backend runs or make your own popoulation script. The population script 'populate_ruptureit.py ' is in rupture/backend.
+ - Deploy backend.
 ```sh
-rupture/backend $ virtualenv env
+rupture/ $ ./deploy_backend.sh
 ```
- - Activate virtual environment.
+
+
+#### Sniffer
+ - Install sniffer.
 ```sh
-rupture/backend $ source env/bin/activate
+rupture/ $ ./install.sh sniffer
 ```
- - Install package dependencies according to requirements.txt.
+ - Deploy sniffer.
 ```sh
-rupture/backend $ pip install -r requirements.txt
+rupture/ $ ./deploy_sniffer
 ```
- - Migrate database.
+
+##### You can also install and deploy the whole framework as it follows:
+
+ - Install rupture.
 ```sh
-rupture/backend $ python manage.py migrate
+rupture/ $ ./install.sh all
 ```
- - Run Django project.
+ - Edit the population script as mentioned above in the backend section.
+
+ - Deploy rupture.
 ```sh
-rupture/backend $ python manage.py runserver
+rupture/ $ sudo ./rupture.sh
 ```
 
