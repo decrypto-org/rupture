@@ -13,6 +13,34 @@ terminate() {
 
 BASEDIR=$(dirname "$0")
 
+usage() {
+    echo "Usage:
+    ./rupture <parameter>
+where <parameter> is:
+    setup
+          Initialize backend, create database schema and load it with
+          configured targets and victims and create client files
+          for each one.
+    target
+          Load configured targets in database.
+    victim
+          Choose configured victims to be loaded in database and create
+          the relative client files for each one.
+    backend
+          Deploy backend module. Standard output messages are logged in
+          'backend/logs/<datetime>.log'.
+    realtime
+          Deploy realtime module. Standard output messages are logged in
+          'realtime/logs/<datetime>.log'.
+    sniffer
+          Deploy sniffer module. Standard output messages are logged in
+          'sniffer/logs/<datetime>.log'.
+    attack
+          Deploy backend, realtime and sniffer all together.
+          Standard output will display the evolution of the attack, which
+          is also logged in 'rupture.log'. Logs for each module also exist
+          in relative directories."
+}
 
 PARAMETER=$1
 
@@ -41,4 +69,5 @@ case $PARAMETER in
     "sniffer" ) $BASEDIR/sniffer/deploy_sniffer.sh;;
     "realtime" ) $BASEDIR/realtime/deploy_realtime.sh;;
     "attack" ) attack;;
+    *) usage;;
 esac
