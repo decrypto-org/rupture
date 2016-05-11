@@ -88,6 +88,27 @@ def create_victim(target, victim):
                 v.realtimeurl
             )
 
+    create_client(v.realtimeurl, v.id)
+
+
+def create_client(realtimeurl, victimid):
+    print '[*] Creating client for chosen victim...'
+
+    rupture_dir = os.path.abspath(os.path.join(BASE_DIR, os.pardir))
+    client_dir = os.path.join(rupture_dir, 'client')
+
+    with open(os.devnull, 'w') as FNULL:
+        p = subprocess.Popen(
+            [os.path.join(client_dir, 'build.sh'), str(realtimeurl), str(victimid)],
+            cwd=client_dir,
+            stdout=FNULL,
+            stderr=subprocess.PIPE
+        )
+        if not p.wait():
+            print '[*] Client created in following directory:\n\t{}'.format(os.path.join(client_dir, 'client_{}'.format(victimid)))
+        else:
+            print '[!] Something went wrong when creating client {}'.format(victimid)
+
 
 if __name__ == '__main__':
     try:
