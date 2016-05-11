@@ -289,7 +289,8 @@ class Strategy(object):
                 # Check if all TLS response records were captured,
                 # if available
                 if self._victim.target.recordscardinality:
-                    assert records == SAMPLES_PER_SAMPLESET * self._victim.target.recordscardinality, 'Not all records captured'
+                    if records != SAMPLES_PER_SAMPLESET * self._victim.target.recordscardinality:
+                        raise ValueError('Not all records captured')
             else:
                 logger.debug('Client returned fail to realtime')
                 raise ValueError('Realtime reported unsuccessful capture')
@@ -313,7 +314,7 @@ class Strategy(object):
                 logger.warning('Caught ConnectionError')
 
             elif isinstance(err, ValueError):
-                logger.warning(repr(err))
+                logger.warning(err)
                 try:
                     self._sniffer.delete()
                 except (requests.HTTPError, requests.exceptions.ConnectionError), err:
