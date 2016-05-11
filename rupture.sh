@@ -11,6 +11,7 @@ terminate() {
     echo "[*] Shut down complete."
 }
 
+BASEDIR=$(dirname "$0")
 ## Deploy different rupture modules in background processes
 log_file=$(date "+%Y_%m_%d-%H_%M_%S")
 
@@ -51,6 +52,3 @@ echo ''
 
 cat /dev/null > rupture.log
 tailf rupture.log &
-
-
-
