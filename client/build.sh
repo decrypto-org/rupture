@@ -10,4 +10,7 @@ echo "module.exports = {
     VICTIM_ID: '${VICTIMID}'
 };"  > $BASEDIR/config.js
 
-gulp browserify
+if gulp browserify; then
+    mkdir -p $BASEDIR/client_$VICTIMID
+    cp -r $BASEDIR/test.html $BASEDIR/dist $BASEDIR/client_$VICTIMID
+fi
