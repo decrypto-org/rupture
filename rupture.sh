@@ -17,9 +17,6 @@ BASEDIR=$(dirname "$0")
 setup()
 attack()
 
-echo ''
-echo '[*] System has launched.'
-echo ''
 
 setup() {
     $BASEDIR/backend/setup_backend.sh
