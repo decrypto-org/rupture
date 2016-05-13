@@ -21,8 +21,17 @@ License
 =======
 Rupture is licensed under MIT. See LICENSE for more information.
 
-Development
-===========
+Installation
+============
+
+You can install the whole framework as follows:
+
+ - Install rupture.
+```sh
+rupture/ $ ./install.sh all
+```
+
+or you can also install each module separately, as below.
 
 ### Javascript
 
@@ -39,23 +48,6 @@ rupture$ ./install.sh injection
 ```sh
 rupture$ ./install.sh client
 ```
- - Deploy client and injection.
-```sh
-rupture/client $ ./deploy.sh {victimIP} {realtimeURL} {VictimId}
-```
-example: ``` ./deploy.sh 192.168.1.2 http://localhost:3031 1 ```
-
- - Otherwise do it seperately.
-   Build client.
-```sh
-rupture/client $ ./build.sh {realtimeURL} {VictimId}
-```
- - Open test.html using browser or inject the js code to the victim's browser.
-```sh
-rupture/client $ ./inject {victimIP}
-```
-
-
 
 ### Python
 
@@ -66,33 +58,56 @@ Rupture uses Python for the Command & Control server. Communication between js r
 ```sh
 rupture/ $ ./install.sh backend
 ```
- - Edit population script with the IP in which the backend runs or make your own popoulation script. The population script 'populate_ruptureit.py ' is in rupture/backend.
- - Deploy backend.
-```sh
-rupture/ $ ./deploy_backend.sh
-```
-
 
 #### Sniffer
  - Install sniffer.
 ```sh
 rupture/ $ ./install.sh sniffer
 ```
+
+Execution
+=========
+
+#### Backend
+ - Edit following configuration scripts:
+    - rupture/backend/target_config.yml
+    - rupture/backend/victim_config.yml
+ - Setup backend.
+```sh
+rupture $ ./rupture setup
+```
+ - Deploy backend.
+```sh
+rupture $ ./rupture backend
+```
+
+#### Realtime
+ - Deploy realtime.
+```sh
+rupture $ ./rupture realtime
+```
+
+#### Sniffer
  - Deploy sniffer.
 ```sh
-rupture/ $ ./deploy_sniffer
+rupture $ ./rupture sniffer
 ```
 
-##### You can also install and deploy the whole framework as it follows:
-
- - Install rupture.
+##### Attack
+ - You can also deploy backend, realtime and sniffer modules all together:
 ```sh
-rupture/ $ ./install.sh all
+rupture/ $ sudo ./rupture attack
 ```
- - Edit the population script as mentioned above in the backend section.
 
- - Deploy rupture.
+#### Client
+ - Client code is in following directory:
+    - rupture/client/client_<id>
+
+   where <id> is the victim's id in the backend database.
+ - Open the following test HTML page in browser:
+    - rupture/client/client_<id>/test.html
+
+   or inject client code in HTTP responses:
 ```sh
-rupture/ $ sudo ./rupture.sh
+rupture/client/client_<id> $ ./inject.sh
 ```
-
