@@ -89,6 +89,7 @@ def create_victim(target, victim):
             )
 
     create_client(v.realtimeurl, v.id)
+    create_injection(v.sourceip, v.id)
 
 
 def create_client(realtimeurl, victimid):
@@ -108,6 +109,23 @@ def create_client(realtimeurl, victimid):
             print '[*] Client created in following directory:\n\t{}'.format(os.path.join(client_dir, 'client_{}'.format(victimid)))
         else:
             print '[!] Something went wrong when creating client {}'.format(victimid)
+
+
+def create_injection(sourceip, victimid):
+    print '[*] Creating injection script for chosen victim...'
+
+    rupture_dir = os.path.abspath(os.path.join(BASE_DIR, os.pardir))
+    client_dir = os.path.join(rupture_dir, 'client')
+
+    with open(os.path.join(client_dir, 'inject.sh'), 'r') as f:
+        injection = f.read()
+
+    injection = injection.replace('$1', str(sourceip))
+
+    with open(os.path.join(client_dir, 'client_{}/inject.sh'.format(victimid)), 'w') as f:
+        f.write(injection)
+
+    print '[*] Injection script created in following directory:\n\t{}'.format(os.path.join(client_dir, 'client_{}/inject.sh'.format(victimid)))
 
 
 if __name__ == '__main__':
