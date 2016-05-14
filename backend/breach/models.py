@@ -73,6 +73,19 @@ class Target(models.Model):
                    'change per request.')
     )
 
+    SERIAL = 1
+    DIVIDE_CONQUER = 2
+    METHOD_CHOICES = (
+        (SERIAL, 'serial'),
+        (DIVIDE_CONQUER, 'divide&conquer'),
+    )
+
+    method = models.IntegerField(
+        default=SERIAL,
+        choices=METHOD_CHOICES,
+        help_text='Method of building candidate samplesets.'
+    )
+
 
 class Victim(models.Model):
     '''
@@ -91,19 +104,6 @@ class Victim(models.Model):
 
     sourceip = models.GenericIPAddressField(
         help_text='Source IP on the local network, e.g. 192.168.10.140'
-    )
-
-    SERIAL = 1
-    DIVIDE_CONQUER = 2
-    METHOD_CHOICES = (
-        (SERIAL, 'serial'),
-        (DIVIDE_CONQUER, 'divide&conquer'),
-    )
-
-    method = models.IntegerField(
-        default=SERIAL,
-        choices=METHOD_CHOICES,
-        help_text='Method of building candidate samplesets.'
     )
 
     interface = models.CharField(
