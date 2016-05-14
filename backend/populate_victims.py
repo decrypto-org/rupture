@@ -16,7 +16,7 @@ def select_victim(victims):
         print '\tID: {}  -  {} ({} {})'.format(i, v[0], v[1]['target'], v[1]['sourceip'])
 
     try:
-        vic_ids = str(input('[*] Choose victim ids separated by commas, or leave empty to select all: '))
+        vic_ids = str(input('[*] Choose victim IDs separated by commas or leave empty to select all: '))
     except SyntaxError:
         return [vic[1] for vic in victims]
 
