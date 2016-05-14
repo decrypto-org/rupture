@@ -11,6 +11,17 @@ from breach.models import Target
 
 
 def create_target(target):
+    method = ''
+    for m in Target.METHOD_CHOICES:
+        if target['method'] == m[1]:
+            method = m[0]
+            break
+    if method:
+        target['method'] = method
+    else:
+        print '[!] Invalid method for target "{}".'.format(target['name'])
+        return
+
     t = Target(
         name=target['name'],
         endpoint=target['endpoint'],
@@ -18,7 +29,8 @@ def create_target(target):
         alphabet=target['alphabet'],
         secretlength=target['secretlength'],
         alignmentalphabet=target['alignmentalphabet'],
-        recordscardinality=target['recordscardinality']
+        recordscardinality=target['recordscardinality'],
+        method=target['method'],
     )
     t.save()
     print '''Created Target:
@@ -28,14 +40,16 @@ def create_target(target):
              \talphabet: {}
              \tsecretlength: {}
              \talignmentalphabet: {}
-             \trecordscardinality'''.format(
+             \trecordscardinality: {}
+             \tmethod: {}'''.format(
                 t.name,
                 t.endpoint,
                 t.prefix,
                 t.alphabet,
                 t.secretlength,
                 t.alignmentalphabet,
-                t.recordscardinality
+                t.recordscardinality,
+                t.method
             )
 
 if __name__ == '__main__':
