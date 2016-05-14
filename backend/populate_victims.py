@@ -128,15 +128,18 @@ def create_injection(sourceip, victimid):
     print '[*] Injection script created in following directory:\n\t{}'.format(os.path.join(client_dir, 'client_{}/inject.sh'.format(victimid)))
 
 
-if __name__ == '__main__':
+def get_victims():
     try:
         with open(os.path.join(BASE_DIR, 'victim_config.yml'), 'r') as ymlconf:
             cfg = yaml.load(ymlconf)
     except IOError, err:
         print 'IOError: %s' % err
         exit(1)
-    victims = list(cfg.items())
+    return list(cfg.items())
 
+
+if __name__ == '__main__':
+    victims = get_victims()
     try:
         victim_list = select_victim(victims)
         target_list = select_target()
