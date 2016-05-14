@@ -89,12 +89,12 @@ class Victim(models.Model):
     SERIAL = 1
     DIVIDE_CONQUER = 2
     METHOD_CHOICES = (
-        (SERIAL, SERIAL),
-        (DIVIDE_CONQUER, DIVIDE_CONQUER),
+        (SERIAL, 'serial'),
+        (DIVIDE_CONQUER, 'divide&conquer'),
     )
 
     method = models.IntegerField(
-        default=DIVIDE_CONQUER,
+        default=SERIAL,
         choices=METHOD_CHOICES,
         help_text='Method of building candidate samplesets.'
     )
@@ -104,6 +104,14 @@ class Victim(models.Model):
         max_length=255,
         help_text=("Attacking machine's interface that is on the victim's "
                    "network.")
+    )
+
+    realtimeurl = models.CharField(
+        default='http://localhost:3031',
+        max_length=255,
+        help_text=("The realtime module URL that the client should "
+                   "communicate with. This URL must include the "
+                   "'http://' prefix.")
     )
 
 

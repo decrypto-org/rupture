@@ -1,0 +1,10 @@
+victim_1:
+    snifferendpoint: 'http://127.0.0.1:9000'
+    sourceip: '192.168.1.70'
+    method: 'serial'
+    realtimeurl: 'http://127.0.0.1:3031'
+victim_2:
+    snifferendpoint: 'http://127.0.0.1:9000'
+    sourceip: '192.168.43.246'
+    method: 'divide&conquer'
+    realtimeurl: 'http://127.0.0.1:3031'
