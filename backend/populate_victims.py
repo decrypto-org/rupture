@@ -59,16 +59,11 @@ def select_target():
 
 
 def create_victim(target, victim):
-    for m in Victim.METHOD_CHOICES:
-        if victim['method'] == m[1]:
-            victim['method'] = m[0]
-            break
 
     v = Victim(
         target=target,
         snifferendpoint=victim['snifferendpoint'],
         sourceip=victim['sourceip'],
-        method=victim['method'],
         realtimeurl=victim['realtimeurl']
     )
     v.save()
@@ -78,13 +73,11 @@ def create_victim(target, victim):
              \ttarget: {}
              \tsnifferendpoint: {}
              \tsourceip: {}
-             \tmethod: {}
              \trealtimeurl: {}'''.format(
                 v.id,
                 v.target.host,
                 v.snifferendpoint,
                 v.sourceip,
-                v.method,
                 v.realtimeurl
             )
 
