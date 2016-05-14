@@ -14,7 +14,7 @@ from breach.models import Target, Victim
 def select_victim(victims):
     print '[*] Victims:'
     for i, v in enumerate(victims):
-        print '\tID: {}  -  Victim: {} ({})'.format(i, v[0], v[1]['sourceip'])
+        print '\tID: {}  -  {} ({} {})'.format(i, v[0], v[1]['target'], v[1]['sourceip'])
 
     try:
         vic_ids = str(input('[*] Choose victim ids separated by commas, or leave empty to select all: '))
@@ -58,7 +58,12 @@ def select_target():
     return target_list
 
 
-def create_victim(target, victim):
+def create_victim(victim):
+    try:
+        target = Target.objects.filter(name=victim['target'])[0]
+    except IndexError:
+        print '[!] Invalid target for victim ({}, {}).'.format(victim['target'], victim['sourceip'])
+        return
 
     v = Victim(
         target=target,
@@ -75,7 +80,7 @@ def create_victim(target, victim):
              \tsourceip: {}
              \trealtimeurl: {}'''.format(
                 v.id,
-                v.target.host,
+                v.target.name,
                 v.snifferendpoint,
                 v.sourceip,
                 v.realtimeurl
@@ -137,8 +142,10 @@ if __name__ == '__main__':
         victim_list = select_victim(victims)
         target_list = select_target()
         for victim in victim_list:
-            for target in target_list:
-                create_victim(target, victim)
+            try:
+                create_victim(victim)
+            except ValueError:
+                print '[!] Invalid parameters for victim ({}, {}).'.format(victim['target'], victim['sourceip'])
     except KeyboardInterrupt:
         print ''
         exit(1)
