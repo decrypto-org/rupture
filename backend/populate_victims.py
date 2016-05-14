@@ -1,7 +1,6 @@
 from django import setup
 import os
 import yaml
-from django.core.exceptions import ObjectDoesNotExist
 from backend.settings import BASE_DIR
 import subprocess
 
@@ -33,29 +32,6 @@ def select_victim(victims):
         print '[!] Invalid victim id.'
         exit(1)
     return victim_list
-
-
-def select_target():
-    print '[*] Targets:'
-    for t in Target.objects.all():
-        print '\tID: {}  -  Target: {}'.format(t.id, t.host)
-    try:
-        tids = str(input('[*] Choose target ids separated by commas, or leave empty to select all: '))
-    except SyntaxError:
-        return Target.objects.all()
-
-    tids = [i.strip() for i in tids.split(',')]
-    if '' in tids:
-        tids.remove('')
-
-    try:
-        target_list = []
-        for t in tids:
-            target_list.append(Target.objects.get(id=int(t)))
-    except ObjectDoesNotExist:
-        print '[!] Invalid target id.'
-        exit(1)
-    return target_list
 
 
 def create_victim(victim):
@@ -140,7 +116,6 @@ if __name__ == '__main__':
     victims = get_victims()
     try:
         victim_list = select_victim(victims)
-        target_list = select_target()
         for victim in victim_list:
             try:
                 create_victim(victim)
