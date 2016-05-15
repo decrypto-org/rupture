@@ -41,12 +41,14 @@ def create_victim(victim):
         print '[!] Invalid target for victim ({}, {}).'.format(victim['target'], victim['sourceip'])
         return
 
-    v = Victim(
-        target=target,
-        snifferendpoint=victim['snifferendpoint'],
-        sourceip=victim['sourceip'],
-        realtimeurl=victim['realtimeurl']
-    )
+    victim_args = {
+        'target': target,
+        'snifferendpoint': victim['snifferendpoint'],
+        'sourceip': victim['sourceip'],
+        'realtimeurl': victim['realtimeurl']
+    }
+
+    v = Victim(**victim_args)
     v.save()
 
     print '''Created Victim:
