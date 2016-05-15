@@ -8,3 +8,4 @@ victim_2:
     snifferendpoint: 'http://127.0.0.1:9000'
     sourceip: '192.168.43.246'
     realtimeurl: 'http://127.0.0.1:3031'
+    interface: 'eth0'
