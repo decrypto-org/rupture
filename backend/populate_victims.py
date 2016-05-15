@@ -47,6 +47,8 @@ def create_victim(victim):
         'sourceip': victim['sourceip'],
         'realtimeurl': victim['realtimeurl']
     }
+    if 'interface' in victim:
+        victim_args['interface'] = victim['interface']
 
     v = Victim(**victim_args)
     v.save()
@@ -56,11 +58,13 @@ def create_victim(victim):
              \ttarget: {}
              \tsnifferendpoint: {}
              \tsourceip: {}
+             \tinterface: {}
              \trealtimeurl: {}'''.format(
                 v.id,
                 v.target.name,
                 v.snifferendpoint,
                 v.sourceip,
+                v.interface,
                 v.realtimeurl
             )
 
