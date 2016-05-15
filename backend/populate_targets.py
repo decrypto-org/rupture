@@ -22,16 +22,18 @@ def create_target(target):
         print '[!] Invalid method for target "{}".'.format(target['name'])
         return
 
-    t = Target(
-        name=target['name'],
-        endpoint=target['endpoint'],
-        prefix=target['prefix'],
-        alphabet=target['alphabet'],
-        secretlength=target['secretlength'],
-        alignmentalphabet=target['alignmentalphabet'],
-        recordscardinality=target['recordscardinality'],
-        method=target['method'],
-    )
+    target_args = {
+        'name': target['name'],
+        'endpoint': target['endpoint'],
+        'prefix': target['prefix'],
+        'alphabet': target['alphabet'],
+        'secretlength': target['secretlength'],
+        'alignmentalphabet': target['alignmentalphabet'],
+        'recordscardinality': target['recordscardinality'],
+        'method': target['method']
+    }
+
+    t = Target(**target_args)
     t.save()
     print '''Created Target:
              \tname: {}
