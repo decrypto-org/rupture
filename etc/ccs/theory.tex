@@ -536,6 +536,13 @@ functionality would break the property compressibility assumption by disallowing
 the reflection to be compressed in the same context as the secret.
 
 \subsubsection{Masking secrets}
+Masking is a method of hiding secrets' properties per request. A mask is a
+bitsteam equal in size with the secret. The masked text contains the result of
+the XOR operation between the secret and the mask concatenated with the mask.
+The secret can be obtaining by applying XOR between the first and the second
+half of the masked text. Masking results in the creation of a random permutation
+of the secret per request resulting in BREACH prefixes not being
+compression-detectable.
 
 \subsubsection{Length hiding}
 
