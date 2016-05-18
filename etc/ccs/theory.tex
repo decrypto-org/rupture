@@ -524,6 +524,10 @@ compression would break the adaptive reflection game, since it removes
 the compression part of the encryption function.
 
 \subsubsection{SameSite cookies}
+SameSite cookies \cite{c1} is a proposed draft for enhancing web security. This policy
+states that cookies may only be included in same origin requests. Enabling
+SameSite cookies would result in the elimination of cross-origin requests as a
+method of implementing the "play" oracle of the Reflection-Security Game.
 
 \subsubsection{Compress secrets in distinct contexts}
 
@@ -534,6 +538,9 @@ the compression part of the encryption function.
 \subsubsection{Rate limiting/monitoring}
 
 \begin{thebibliography}{1}
+
+\bibitem{c1} M. West, First-Party-Only Cookies, RFC Internet-Draft, 2015.
+
 \end{thebibliography}
 
 \end{document}
