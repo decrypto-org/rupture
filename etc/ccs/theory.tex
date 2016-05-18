@@ -519,6 +519,9 @@ We now show that all reasonable compression function expose a compression-detect
 \subsection{Mitigation against BREACH}
 
 \subsubsection{Disabling compression}
+Compression is the basic assumption for property compressibility. Disabling
+compression would break the adaptive reflection game, since it removes
+the compression part of the encryption function.
 
 \subsubsection{SameSite cookies}
 
