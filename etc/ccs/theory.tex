@@ -246,11 +246,11 @@ and noise. Typically, $f$ will concatenate instances of the secret, the
 reflection, and the noise, between some context strings which constitute the
 static portions of the site.
 
-We assume that $f$ outputs a concatenation of various instances of
-$s$, $r$, and $v$ with arbitrary repetitions, in addition to concatenating with some
-constant context whose position is independent of the values of $s, r, v$.
-The number of repetitions of $s, r, v$ are also independent of the values of
-$s, r, v$.
+We assume that $f$ outputs a concatenation of various instances of $s$, $r$,
+and $v$ with arbitrary repetitions, in addition to concatenating with some
+constant context whose position is independent of the values of $s, r, v$.  The
+number of repetitions of $s, r, v$ are also independent of the values of $s, r,
+v$.
 
 Formally, assume that the symbols $\{\beta_1, \beta_2, \beta_3\}$ do not appear in the
 alphabet of the secret.
@@ -373,8 +373,8 @@ represented as a literal.
 
 \subsection{BREACH prefixes are compression-detectable}
 
-Let $startswith(v, s)$ be the $k$-length prefix checking predicate on a $\lambda$-bit
-secret $s$:
+Let $startswith(v, s)$ be the $k$-length prefix checking predicate on a
+$\lambda$-bit secret $s$:
 
 \begin{equation*}
     startswith(v, s) \defeq \exists w: s = v w
@@ -456,7 +456,8 @@ $s$.
     Pr[\text{Game}_{\text{REF-SIM}}^{\mathcal{PE},\mathcal{S}}(\lambda, f, \mathcal{V}, \mathcal{M}, g) = 1] \leq 0.5
 \end{equation}
 
-But the probability of success of $\mathcal{A}$ is $\frac{1}{2} + \alpha(\lambda)$ for some non-negligible function $\alpha$ (proof?).
+But the probability of success of $\mathcal{A}$ is $\frac{1}{2} +
+\alpha(\lambda)$ for some non-negligible function $\alpha$ (proof?).
 
 Therefore,
 
