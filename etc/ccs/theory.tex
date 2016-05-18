@@ -180,13 +180,17 @@ Stream ciphers can be treated as strictly monotonic to the bit level.
 
 \section{Property compressibility}
 
-We now define what it means for a property $Q$ of the plaintext $x$ chosen out of the distribution $\mathcal{M}$ to be \textit{compression-detectable} by plaintext $y$ under a compression function $Com$ rendered under some rendering function $f$ together with some noise chosen out of the noise distribution $\mathcal{V}$:
+We now define what it means for a property $Q$ of the plaintext $s$ chosen out
+of the distribution $\mathcal{M}$ to be \textit{compression-detectable} by
+plaintext $r$ under a compression function $Com$ rendered under some rendering
+function $f$ together with some noise chosen out of the noise distribution
+$\mathcal{V}$:
 
 \begin{equation*}
     \begin{split}
         \exists y \in Y\\
         Pr[
-            |Com(f(x_1, y, v_1))| < |Com(f(x_2, y, v_2))|
+            |Com(f(s_1, r, v_1))| < |Com(f(s_2, r, v_2))|
         ]
         \geq
         \frac{1}{2} + \alpha(\lambda)
@@ -197,25 +201,27 @@ Where $\alpha(\lambda)$ is a non-negligible function and
 the probability is taken over the following random variables:
 
 \begin{align*}
-    x_1 &\leftarrow \mathcal{M}|_Q\\
-    x_2 &\leftarrow \mathcal{M}|_{\lnot Q}\\
+    s_1 &\leftarrow \mathcal{M}|_Q\\
+    s_2 &\leftarrow \mathcal{M}|_{\lnot Q}\\
     v_1 &\leftarrow \mathcal{V}\\
     v_2 &\leftarrow \mathcal{V}
 \end{align*}
 
-Where $\mathcal{M}|_Q$ denotes the subset of $\mathcal{M}$ restricted
-over the elements for which $Q$ holds proportionally retaining measure.
+Where $\mathcal{M}|_Q$ denotes the subset of $\mathcal{M}$ restricted over the
+elements for which $Q$ holds proportionally retaining measure.
 
-Furthermore we require that such a $y$ is polynomially computable given
-the property $Q$, the functions $Com$ and $f$, the set $Y$ and the distributions
-$\mathcal{M}$ and $\mathcal{V}$ by a function denoted $\mathcal{O}_R(Com, f, Q, \mathcal{M}, \mathcal{V})$.
+Furthermore we require that such a $r$ is polynomially computable given the
+property $Q$, the functions $Com$ and $f$, the set $Y$ and the distributions
+$\mathcal{M}$ and $\mathcal{V}$ by a function denoted $\mathcal{O}_R(Com, f, Q,
+\mathcal{M}, \mathcal{V})$.
 
 Note that compression detectability implies that the distributions of lengths,
-$|Com(f(x_1, y, v_1))|$ and $|Com(f(x_2, y, v_2))|$, have non-negligible statistical
+$|Com(f(s_1, r, v_1))|$ and $|Com(f(s_2, r, v_2))|$, have non-negligible statistical
 distance with an efficiently computable distinguisher.
 
-The compression-detectibility property exists in all common compression function
-as long as $x$ and $y$ compress in the same context. We will illustrate such examples later in this work.
+The compression-detectibility property exists in all common compression
+function as long as $s$ and $r$ compress in the same context. We will
+illustrate such examples later in this work.
 
 \section{The BREACH model}
 We now turn our attention to the BREACH attack specifically, which utilizes
