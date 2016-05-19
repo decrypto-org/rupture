@@ -546,21 +546,24 @@ the compression part of the encryption function.
 
 \subsubsection{SameSite cookies}
 SameSite cookies \cite{c1} is a proposed draft for enhancing web security. This policy
-states that cookies may only be included in same origin requests. Enabling
-SameSite cookies would result in the elimination of cross-origin requests as a
-method of implementing the "play" oracle of the Reflection-Security Game.
+states that cookies may only be included in same origin requests.
+
+Enabling SameSite cookies would result in the elimination of cross-origin
+requests as a method of implementing the "play" oracle of the
+Reflection-Security Game.
 
 \subsubsection{Compress secrets in distinct contexts}
 Separating secrets in distinct contexts states that each is compressed
-in separate context from the rest of the secrets, reflection and noise. This
-functionality would break the property compressibility assumption by disallowing
-the reflection to be compressed in the same context as the secret.
+in a separate context from the rest of the secrets, reflection and noise.
+
+This functionality would break the property compressibility assumption by
+disallowing the reflection to be compressed in the same context as the secret.
 
 \subsubsection{Masking secrets}
 Masking is a method of hiding secrets' properties per request. A mask is a
-bitsteam equal in size with the secret. The masked text contains the result of
+bitstream equal in size with the secret. The masked text contains the result of
 the XOR operation between the secret and the mask concatenated with the mask.
-The secret can be obtaining by applying XOR between the first and the second
+The secret can be obtained by applying XOR between the first and the second
 half of the masked text. Masking results in the creation of a random permutation
 of the secret per request resulting in BREACH prefixes not being
 compression-detectable.
