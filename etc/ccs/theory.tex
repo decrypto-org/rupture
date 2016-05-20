@@ -1,7 +1,7 @@
 \documentclass{article}
 \usepackage[utf8]{inputenc}
 
-\title{Compression security theoretical underpinnings}
+\title{On the security of encryption and compression composition under reflection attacks}
 \author{
 Dimitris Karakostas
 \and
@@ -9,7 +9,7 @@ Aggelos Kiayias
 \and
 Dionysis Zindros
 }
-\date{April 2016}
+\date{May 2016}
 
 \usepackage{natbib}
 \usepackage{amsmath}
@@ -32,6 +32,8 @@ Dionysis Zindros
 
 \maketitle
 
+\section{Abstract}
+
 \section{Reflection security}
 
 \subsection{Adaptive reflection game}
@@ -45,19 +47,17 @@ $\text{Game}_{\text{REF-SEC}}^{\mathcal{PE},\mathcal{A}}(\lambda,  f,
 some function $g$ of the plaintext, and a distribution of secrets $\mathcal{M}$
 such that $\forall s \in \mathcal{M}: |s| = \lambda$.
 
-At the initialization phase of the game, the challenger produces a
-$\lambda$-bit key $(pk, sk) \leftarrow \mathcal{K}(\lambda)$. The adversary is
-given $pk$, $\mathcal{V}$, $g$ and $f$.  The challenger then chooses a secret
-$s \leftarrow \mathcal{M}$.
+The challenger produces a $\lambda$-bit key $(pk, sk) \leftarrow
+\mathcal{K}(\lambda)$. The adversary is given $pk$, $\mathcal{V}$, $g$ and $f$.
+The challenger then chooses a secret $s \leftarrow \mathcal{M}$.
 
-After the initialization phase of the game, the game is played in rounds. At
-the beginning of each round $i$, the adversary chooses a reflection string
-$r_i$ and sends it to the challenger. The challenger produces a noise string
+The adversary is then allowed to run and make arbitrary calls to a reflection
+oracle. The oracle is parameterized by $s$, the secret unknown to the
+adversary.  For the reflection oracle call, the adversary chooses a reflection
+string $r_i$ and sends it to the oracle. The oracle produces a noise string
 $v_i \leftarrow \mathcal{V}$ and computes $m_i = f(s, r_i, v_i)$.  Subsequently
 $m_i$ is encrypted as $c_i = \mathcal{E}_\kappa(m_i)$, and $c_i$ is sent back
-to the adversary. At the end of the round, the adversary  decides if more
-rounds are needed, and if so, more rounds are played at the discretion of the
-adversary.
+to the adversary.
 
 When the adversary decides to complete the game, they output a guess $y$. The
 adversary is successful if $g(s) = y$.
@@ -67,19 +67,22 @@ Formally, let the public key adversarial game be defined as follows:
 \begin{lstlisting}[texcl,mathescape]
 def $\text{Game}_{\text{REF-SEC}}^{\mathcal{PE},\mathcal{A}}(\lambda, f, \mathcal{V}, \mathcal{M}, g)$:
     $(pk, sk) \leftarrow \mathcal{K}(\lambda)$
-    $st \leftarrow \mathcal{A}(\text{"init"}, pk, f, \mathcal{V}, \mathcal{M}, g)$
     $s \leftarrow \mathcal{M}$
-    $y = \bot$
-    while $y = \bot$:
-        $(st, r) \leftarrow \mathcal{A}(\text{"reflect"}, st)$
-        $v \leftarrow V$
-        $m = f(s, r, v)$
-        $c = \mathcal{E}_{pk}(m)$
-        $(st, y) \leftarrow \mathcal{A}(\text{"play"}, st, c)$
+    $y \leftarrow \mathcal{A}^{\text{Reflect}^{\mathcal{E}_{pk}, \mathcal{V}}_s(r)}(\lambda, f, \mathcal{V}, \mathcal{M}, g)$
     if $y = g(s)$:
         return 1
     else:
         return 0
+\end{lstlisting}
+
+Where the reflection oracle provided to the adversary is as follows:
+
+\begin{lstlisting}[texcl,mathescape]
+def $\text{Reflect}^{\mathcal{E}_{pk}, \mathcal{V}}_s(r)$:
+    $v \leftarrow \mathcal{V}$
+    $m = f(s, r, v)$
+    $c \leftarrow \mathcal{E}_{pk}(m)$
+    return $c$
 \end{lstlisting}
 
 Let the simulator game be defined as follows:
@@ -104,16 +107,17 @@ Let
     Pr[\text{Game}_{\text{REF-SIM}}^{\mathcal{PE},\mathcal{S}}(\lambda, f, \mathcal{V}, \mathcal{M}, g) = 1]|.
 \end{equation*}
 
-The above game can be modified to deal with symmetric encryption. For this,
-the choice of key is changed to be limited to a secret key instead of a public and private key
-pair. The adversary is not given access to any key material. Instead,
-the adversary is given access to an encryption oracle which encrypts a given message
-using the secret key and returns the respective ciphertext. This oracle can be
-called an arbitrary number of times by the challenger.
+The above game can be modified to deal with symmetric encryption. For this, the
+choice of key is changed to be limited to a secret key instead of a public and
+private key pair. The adversary is not given access to any key material.
+Instead, the adversary is given access to an encryption oracle which encrypts a
+given message using the secret key and returns the respective ciphertext, in
+addition to the existing reflection oracle. Both oracles can be called an
+arbitrary number of times by the challenger.
 
-In the following proofs, we will assume that the game
-played is symmetrically. As the attack does not pertain to the key exchange mechanism,
-all theorems can be directly translated between the two versions of the game.
+In the following proofs, we will assume that the game is played symmetrically.
+As the attack does not pertain to the key exchange mechanism, all theorems can
+be directly translated between the two versions of the game.
 
 \subsection{Adaptive reflection security}
 
@@ -176,13 +180,17 @@ Stream ciphers can be treated as strictly monotonic to the bit level.
 
 \section{Property compressibility}
 
-We now define what it means for a property $Q$ of the plaintext $x$ chosen out of the distribution $\mathcal{M}$ to be \textit{compression-detectable} by plaintext $y$ under a compression function $Com$ rendered under some rendering function $f$ together with some noise chosen out of the noise distribution $\mathcal{V}$:
+We now define what it means for a property $Q$ of the plaintext $s$ chosen out
+of the distribution $\mathcal{M}$ to be \textit{compression-detectable} by
+plaintext $r$ under a compression function $Com$ rendered under some rendering
+function $f$ together with some noise chosen out of the noise distribution
+$\mathcal{V}$:
 
 \begin{equation*}
     \begin{split}
         \exists y \in Y\\
         Pr[
-            |Com(f(x_1, y, v_1))| < |Com(f(x_2, y, v_2))|
+            |Com(f(s_1, r, v_1))| < |Com(f(s_2, r, v_2))|
         ]
         \geq
         \frac{1}{2} + \alpha(\lambda)
@@ -193,25 +201,27 @@ Where $\alpha(\lambda)$ is a non-negligible function and
 the probability is taken over the following random variables:
 
 \begin{align*}
-    x_1 &\leftarrow \mathcal{M}|_Q\\
-    x_2 &\leftarrow \mathcal{M}|_{\lnot Q}\\
+    s_1 &\leftarrow \mathcal{M}|_Q\\
+    s_2 &\leftarrow \mathcal{M}|_{\lnot Q}\\
     v_1 &\leftarrow \mathcal{V}\\
     v_2 &\leftarrow \mathcal{V}
 \end{align*}
 
-Where $\mathcal{M}|_Q$ denotes the subset of $\mathcal{M}$ restricted
-over the elements for which $Q$ holds proportionally retaining measure.
+Where $\mathcal{M}|_Q$ denotes the subset of $\mathcal{M}$ restricted over the
+elements for which $Q$ holds proportionally retaining measure.
 
-Furthermore we require that such a $y$ is polynomially computable given
-the property $Q$, the functions $Com$ and $f$, the set $Y$ and the distributions
-$\mathcal{M}$ and $\mathcal{V}$ by a function denoted $\mathcal{O}_R(Com, f, Q, \mathcal{M}, \mathcal{V})$.
+Furthermore we require that such a $r$ is polynomially computable given the
+property $Q$, the functions $Com$ and $f$, the set $Y$ and the distributions
+$\mathcal{M}$ and $\mathcal{V}$ by a function denoted $\mathcal{O}_R(Com, f, Q,
+\mathcal{M}, \mathcal{V})$.
 
 Note that compression detectability implies that the distributions of lengths,
-$|Com(f(x_1, y, v_1))|$ and $|Com(f(x_2, y, v_2))|$, have non-negligible statistical
+$|Com(f(s_1, r, v_1))|$ and $|Com(f(s_2, r, v_2))|$, have non-negligible statistical
 distance with an efficiently computable distinguisher.
 
-The compression-detectibility property exists in all common compression function
-as long as $x$ and $y$ compress in the same context. We will illustrate such examples later in this work.
+The compression-detectibility property exists in all common compression
+function as long as $s$ and $r$ compress in the same context. We will
+illustrate such examples later in this work.
 
 \section{The BREACH model}
 We now turn our attention to the BREACH attack specifically, which utilizes
@@ -236,11 +246,11 @@ and noise. Typically, $f$ will concatenate instances of the secret, the
 reflection, and the noise, between some context strings which constitute the
 static portions of the site.
 
-We assume that $f$ outputs a concatenation of various instances of
-$s$, $r$, and $v$ with arbitrary repetitions, in addition to concatenating with some
-constant context whose position is independent of the values of $s, r, v$.
-The number of repetitions of $s, r, v$ are also independent of the values of
-$s, r, v$.
+We assume that $f$ outputs a concatenation of various instances of $s$, $r$,
+and $v$ with arbitrary repetitions, in addition to concatenating with some
+constant context whose position is independent of the values of $s, r, v$.  The
+number of repetitions of $s, r, v$ are also independent of the values of $s, r,
+v$.
 
 Formally, assume that the symbols $\{\beta_1, \beta_2, \beta_3\}$ do not appear in the
 alphabet of the secret.
@@ -363,8 +373,8 @@ represented as a literal.
 
 \subsection{BREACH prefixes are compression-detectable}
 
-Let $startswith(v, s)$ be the $k$-length prefix checking predicate on a $\lambda$-bit
-secret $s$:
+Let $startswith(v, s)$ be the $k$-length prefix checking predicate on a
+$\lambda$-bit secret $s$:
 
 \begin{equation*}
     startswith(v, s) \defeq \exists w: s = v w
@@ -416,14 +426,10 @@ Let $g$ be the boolean function $Q$ on the plaintext. Define the adversary
 $\mathcal{A}$ as follows:
 
 \begin{lstlisting}[texcl,mathescape]
-def $\mathcal{A}("init")$:
-    return $\bot$
-
-def $\mathcal{A}("reflect", Com, f, Q, \mathcal{M}, \mathcal{V})$:
+def $\mathcal{A}(Q, \mathcal{M}, c, y)$:
     $r \leftarrow \mathcal{O}_R(Com, f, Q, \mathcal{M}, \mathcal{V})$
-    return $r$
+    $c = \text{Reflect}^{\mathcal{E}_{pk}, \mathcal{V}}_s(r)$
 
-def $\mathcal{A}("play", Q, \mathcal{M}, c, y)$:
     $s_1 \leftarrow \mathcal{M}|_Q$
     $s_2 \leftarrow \mathcal{M}|_{\lnot Q}$
 
@@ -450,7 +456,8 @@ $s$.
     Pr[\text{Game}_{\text{REF-SIM}}^{\mathcal{PE},\mathcal{S}}(\lambda, f, \mathcal{V}, \mathcal{M}, g) = 1] \leq 0.5
 \end{equation}
 
-But the probability of success of $\mathcal{A}$ is $\frac{1}{2} + \alpha(\lambda)$ for some non-negligible function $\alpha$ (proof?).
+But the probability of success of $\mathcal{A}$ is $\frac{1}{2} +
+\alpha(\lambda)$ for some non-negligible function $\alpha$ (proof?).
 
 Therefore,
 
@@ -465,46 +472,37 @@ Which is non-negligible. This completes the proof.
 
 \end{proof}
 
-We can now amplify the attack to achieve a better probability of success by a small modification in our adversary. For readability, we make use of a global adversary state $st$. Formally, this global state would be carried between adversary invocations as a function argument. The amplification is parameterized by a parameter $k$.
+We can now amplify the attack to achieve a better probability of success by a
+small modification in our adversary. The amplification is parameterized by a
+parameter $k$.
 
 \begin{lstlisting}[texcl,mathescape]
-global $st$
-
-def $\mathcal{A}("init")$:
-    $st = \{i: 0, low: 0, high: 0\}$
-    return $\bot$
-
-def $\mathcal{A}("reflect", Com, f, Q, \mathcal{M}, \mathcal{V})$:
+def $\mathcal{A}(Q, \mathcal{M}, c, y)$:
     $r \leftarrow \mathcal{O}_R(Com, f, Q, \mathcal{M}, \mathcal{V})$
-    return $r$
 
-def $\mathcal{A}("play", Q, \mathcal{M}, c, y)$:
-    $\{i, low, high\} = st$
+    $low = 0$
+    $high = 0$
 
-    $s_1 \leftarrow \mathcal{M}|_Q$
-    $s_2 \leftarrow \mathcal{M}|_{\lnot Q}$
+    for $i$ = $0$ to $k$:
+        $s_1 \leftarrow \mathcal{M}|_Q$
+        $s_2 \leftarrow \mathcal{M}|_{\lnot Q}$
 
-    $v_1 \leftarrow \mathcal{V}$
-    $v_2 \leftarrow \mathcal{V}$
+        $v_1 \leftarrow \mathcal{V}$
+        $v_2 \leftarrow \mathcal{V}$
 
-    $l_1 = |Enc_\epsilon(Com(f(s_1, r, v_1)))|$
-    $l_2 = |Enc_\epsilon(Com(f(s_2, r, v_2)))|$
+        $l_1 = |Enc_\epsilon(Com(f(s_1, r, v_1)))|$
+        $l_2 = |Enc_\epsilon(Com(f(s_2, r, v_2)))|$
 
-    if $|c| < l_1$:
-        $low = low + 1$
-    else if $|c| > l_2$:
-        $high = high + 1$
+        if $|c| < l_1$:
+            $low = low + 1$
+        else if $|c| > l_2$:
+            $high = high + 1$
 
-    $i = i + 1$
-    if $i > k$:
-        if $low > high$:
-            return True
-        else if $high > low$:
-            return False
-        else:
-            return $\bot$
+    if $low > high$:
+        return True
+    else if $high > low$:
+        return False
     else:
-        $st = \{i, low, high\}$
         return $\bot$
 \end{lstlisting}
 
