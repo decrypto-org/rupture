@@ -19,7 +19,7 @@ Dionysis Zindros
 \usepackage{amsfonts}
 \usepackage{amsthm}
 \usepackage{amssymb}
-\usepackage[xetex,colorlinks=true,linkcolor=blue,citecolor=green]{hyperref}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=green]{hyperref}
 
 \DeclarePairedDelimiter{\ceil}{\lceil}{\rceil}
 \let\oldemptyset\emptyset
@@ -611,20 +611,19 @@ rendering function $f$ as:
 \begin{lstlisting}[texcl,mathescape]
 def apply_masking($m_i, s_i$):
     $s_i', m_i \leftarrow masking(s_i)$
-    return $Rep(m, s_i, \beta_1:s_i':\beta_2:m_i:\beta_3)$
+    return $Rep(m, s_i, \beta_1 s_i' \beta_2 m_i \beta_3)$
 \end{lstlisting}
 
 where $Rep$ is the string replacement function defined in
-\ref{subsec:rendering}, $\{\beta_1, \beta_2, \beta_3\}$ are symbols that do not
-appear in $m$ before masking and : denotes the concatenation between two
-strings.
+\ref{subsec:rendering} and $\{\beta_1, \beta_2, \beta_3\}$ are symbols that do not
+appear in $m$ before masking.
 
 Mask removal should be applied on all masked secrets, marked by the annotation
 symbols $\beta_1$, $\beta_2$, $\beta_3$, before the reversing of rendering function $f$:
 
 \begin{lstlisting}[texcl,mathescape]
 def remove_masking($m', \beta_1, \beta_2, \beta_3$):
-    return $Rep(m', \beta_1:s_i':\beta_2:m_i:\beta_3, s_i' \oplus m_i)$
+    return $Rep(m', \beta_1 s_i' \beta_2 m_i \beta_3, s_i' \oplus m_i)$
 \end{lstlisting}
 
 where $Rep$ is the string replacement function and $\{\beta_1, \beta_2,
@@ -640,13 +639,71 @@ Length hiding introduces artificial noise.
 %%% Attack time is bounded by security parameter $\lambda$
 \subsection{Rate limiting/monitoring}\label{subsec:monitoring}
 
-\begin{thebibliography}{2}
+\section{Application}\label{sec:application}
+
+BREACH \cite{c3} is an example of a side-channel attack, that uses reflection in
+order to steal plaintext compressed and encrypted in the web.
+
+\subsection{BREACH as a compression distinguishing
+attack}\label{subsec:breachapp}
+BREACH is an instance of the attack model described in \ref{sec:comattack}.
+
+A secret is defined as any string in the response plaintext of a web page, such
+as authentication tokens, private messages etc.
+
+The property $g$ of the secret that is being compromised is defined as: "What is
+the prefix $p$ of secret $s$, given a known prefix $p_s$, where $|p| - |p_s| =
+1$?".
+
+The distribution $\mathcal{M}$ is ${p_s:t}$, where $t \in \mathcal{T}$ and
+$\mathcal{T}$ is a known alphabet of ASCII symbols.
+
+The rendering function $f$ is the website response code rendering function. This
+function concatenates secret $s$ with static strings $u$, noise $v$ and the
+reflection string $r$.
+
+The compression function is gzip, which implements the DEFLATE algorithm, that
+is the combination of LZ77 and Huffman coding.
+
+The encryption function is any encryption algorithm used in communications over
+the Internet, most notably AES.
+
+The web application that is being attacked with BREACH offers an endpoint that
+allows requests via GET, where a GET parameter is included in the response. This
+endpoint constitutes the reflection oracle.
+
+The adversary should be able to issue requests to the given endpoint and monitor
+the traffic from and to the attacking browser. At this point, the adversary can
+issue requests on different elements of $T$ and compare the response lengths. As
+long as a difference in lengths across different requests is noticeable, the
+compression distinguishing attack is successful.
+
+\subsection{Rupture implementation}\label{subsec:rupture}
+Our contributions include the development of a production-grade framework for
+implementing this class of attacks called Rupture \cite{c4}.
+
+As long as a vulnerable endpoint, as described in \ref{sec:comattack}, is found,
+Rupture offers the ability to inject malicious code in any computer in the
+network, that issues requests to the endpoint.
+
+Furthermore, it enables the traffic inspection and analysis of packet lengths
+and automates the reflection string creation.
+
+Finally, it amplifies the attack by issuing multiple requests per $t \in
+\mathcal{T}$ in order to demonstrate better probability of success.
+
+\begin{thebibliography}{4}
 
 \bibitem{c1} M. West, First-Party-Only Cookies, RFC Internet-Draft, 2015.
 
 \bibitem{c2} [online] URL:
 \url{https://www.facebook.com/notes/protect-the-graph/preventing-a-breach-attack/1455331811373632}
 [cited May 2016]
+
+\bibitem{c3} Y. Gluck, N. Harris, A. Prado, BREACH: Reviving the CRIME attack,
+Black Hat USA, 2013.
+
+\bibitem{c4} [online] URL: \url{https://ruptureit.com} [cited May 2016]
 
 \end{thebibliography}
 
