@@ -33,7 +33,7 @@ Dionysis Zindros
 
 \maketitle
 
-\section{Abstract}
+\section{Abstract}\label{sec:abstract}
 When compression is composed with encryption, unexpected vulnerabilities can
 arise. Such vulnerabilities have been explored in practical attacks against TLS
 such as CRIME, TIME, BREACH, and HEIST. We introduce an abstract theoretical
@@ -45,9 +45,9 @@ functions. Finally, we provide a modular scalable open-source production-grade
 generic attack framework where these attacks are implemented in a robust
 manner.
 
-\section{Reflection security}
+\section{Reflection security}\label{sec:refsec}
 
-\subsection{Adaptive reflection game}
+\subsection{Adaptive reflection game}\label{subsec:refsecgame}
 
 Let $\mathcal{PE} = (\mathcal{K}, \mathcal{E}, \mathcal{D})$ be a public-key
 encryption scheme, $\mathcal{A}$ be an adversary and $\mathcal{S}$ be a
@@ -130,7 +130,7 @@ In the following proofs, we will assume that the game is played symmetrically.
 As the attack does not pertain to the key exchange mechanism, all theorems can
 be directly translated between the two versions of the game.
 
-\subsection{Adaptive reflection security}
+\subsection{Adaptive reflection security}\label{subsec:adaptiverefsec}
 
 Given a polynomially computable rendering function $f(\cdot, \cdot, \cdot)$ and
 a  noise distribution $\mathcal{V}$, a public-key encryption scheme
@@ -144,9 +144,9 @@ $\mathcal{PE}$ is \textit{reflection-secure} if:
 \text{Adv}_{\mathcal{PE}, \mathcal{A}, \mathcal{S}}(\lambda, f, \mathcal{V}, \mathcal{M}, g) = negl(\lambda)
 \end{equation*}
 
-\section{The security of compression}
+\section{The security of compression}\label{sec:comsec}
 
-\subsection{Compression functions}
+\subsection{Compression functions}\label{subsec:comfunc}
 
 A compression function $Com$ is a polynomial polynomially reversible $1 - 1$
 function that takes an input $x$ and outputs $y$. $x$ is a random variable that
@@ -154,7 +154,7 @@ follows the distribution $X$. $y = Com(x)$ will follow the
 distribution $Com(X)$.  $E(|y|) / E(|x|) < 1$ is the metric that defines the
 function's performance, where $E$ denotes expectation.
 
-\subsection{Composing with compression}
+\subsection{Composing with compression}\label{subsec:comcompose}
 
 We now shift our interest to algorithms which compose compression and
 encryption.  Therefore, we treat the public-key encryption scheme above as a
@@ -168,7 +168,7 @@ $Com$ denotes a compression function as defined above, while $Enc$ denotes an
 encryption function. We stress our important assumption that $Enc$ is defined
 on $\{0, 1\}^*$ and not on some fixed-length input.
 
-\subsection{Length monotonicity}
+\subsection{Length monotonicity}\label{subsec:lenmonotone}
 
 An important assumption for our attack is that the encryption function $Enc$ is
 \textit{length monotonic}. Specifically,
@@ -189,7 +189,7 @@ If the last inequality becomes strict, we call the encryption function
 A practical instance of a length monotonic encryption function is AES.
 Stream ciphers can be treated as strictly monotonic to the bit level.
 
-\section{Property compressibility}
+\section{Property compressibility}\label{sec:propertycom}
 
 We now define what it means for a property $Q$ of the plaintext $s$ chosen out
 of the distribution $\mathcal{M}$ to be \textit{compression-detectable} by
@@ -227,7 +227,7 @@ The compression-detectibility property exists in all common compression
 function as long as $s$ and $r$ compress in the same context. We will
 illustrate such examples later in this work.
 
-\section{The BREACH model}
+\section{The BREACH model}\label{sec:breachmodel}
 We now turn our attention to the BREACH attack specifically, which utilizes
 the properties explored above, and we show that, under ideal modeling,
 the above attack is instantiated when the TLS algorithms are in use.
@@ -242,7 +242,7 @@ practical details of the attack pertaining to the networking and particularities
 of the implementation that are of little significance to the cryptographic
 formalisms presented here.
 
-\subsection{The rendering context assumption}
+\subsection{The rendering context assumption}\label{subsec:rendering}
 
 In the modern web, function $f$ represents a specific attack target, which
 constitutes the renderer of a web page, given a specific secret, reflection,
@@ -285,7 +285,7 @@ Where $:$ denotes the concatenation of a symbol with a string.
 
 We call $f$ functions that exhibit such behavior \textit{concatenative}.
 
-\subsection{The compression function assumption}
+\subsection{The compression function assumption}\label{subsec:comfuncassumption}
 
 In BREACH, $Com$ is a variant of LZ77. In this compression algorithm,
 repetitions of strings are well-compressed. In our ideal model, we examine a
@@ -365,7 +365,7 @@ desired plaintext.
 
 % TODO: Prove that it is a compression function for some $\mathcal{M}$
 
-\subsection{The full-text predicate assumption}
+\subsection{The full-text predicate assumption}\label{subsec:fulltextassumption}
 
 The BREACH attack is a specific instance of reflection-based attacks in which
 the $Q$ property pertains to a prefix of the secret. It asks "Does the secret
@@ -382,7 +382,8 @@ In practical terms, this requires the secret that needs to be stolen to be at
 least 3 bytes so that it is better compressed rather than represented as a
 literal.
 
-\subsection{BREACH prefixes are compression-detectable}
+\subsection{BREACH prefixes are
+compression-detectable}\label{subsec:breachprefix}
 
 Let $startswith(v, s)$ be the $k$-length prefix checking predicate on a
 $\lambda$-bit secret $s$:
@@ -407,7 +408,7 @@ Where the probability randomness is taken uniformly over all $k$-bit prefixes $v
 ?
 \end{proof}
 
-\section{The compression distinguishing attack}
+\section{The compression distinguishing attack}\label{sec:comattack}
 
 \begin{lemma}
 
@@ -529,23 +530,23 @@ def $\mathcal{A}(Q, \mathcal{M})$:
 
 Proof that this amplifies?
 
-\subsection{Compression is insecure}
+\subsection{Compression is insecure}\label{subsec:cominsecure}
 
 We now show that all reasonable compression function expose a
 compression-detectable property $Q$. Indeed, if a compression function does not
 expose any compression-detectable properties $Q$, then the compression function
 does not cross-compress the data in $X$ with the data in $Y$ (Why?).
 
-\section{Defense}
+\section{Defense}\label{sec:defense}
 
 \subsection{Defenses against BREACH}
 
-\subsubsection{Disabling compression}
+\subsection{Disabling compression}\label{subsec:disablecom}
 Compression is the basic assumption for property compressibility. Disabling
 compression would break the adaptive reflection game, since it removes
 the compression part of the encryption function.
 
-\subsubsection{SameSite cookies}
+\subsection{SameSite cookies}\label{subsec:samesite}
 SameSite cookies \cite{c1} is a proposed draft for enhancing web security. This policy
 states that cookies may only be included in same origin requests.
 
@@ -553,14 +554,14 @@ Enabling SameSite cookies would result in the elimination of cross-origin
 requests as a method of implementing the reflection oracle of the
 Reflection-Security Game.
 
-\subsubsection{Compress secrets in distinct contexts}
+\subsection{Compress secrets in distinct contexts}\label{subsec:contexts}
 Separating secrets in distinct contexts states that each is compressed
 in a separate context from the rest of the secrets, reflection and noise.
 
 This functionality would break the property compressibility assumption by
 disallowing the reflection to be compressed in the same context as the secret.
 
-\subsubsection{Masking secrets}
+\subsection{Masking secrets}\label{subsec:masking}
 Masking is a method of hiding secrets' properties per request. A mask is a
 bitstream equal in size with the secret. The masked text contains the result of
 the XOR operation between the secret and the mask concatenated with the mask.
@@ -570,11 +571,11 @@ of the secret per request resulting in BREACH prefixes not being
 compression-detectable.
 
 %%% Noise is bounded by security parameter $\lambda$
-\subsubsection{Length hiding}
+\subsection{Length hiding}\label{subsec:noise}
 Length hiding introduces artificial noise.
 
 %%% Attack time is bounded by security parameter $\lambda$
-\subsubsection{Rate limiting/monitoring}
+\subsection{Rate limiting/monitoring}\label{subsec:monitoring}
 
 \begin{thebibliography}{1}
 
