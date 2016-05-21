@@ -618,6 +618,40 @@ Length hiding introduces artificial noise.
 BREACH \cite{c3} is an example of a side-channel attack, that uses reflection in
 order to steal plaintext compressed and encrypted in the web.
 
+\subsection{BREACH as a compression distinguishing
+attack}\label{subsec:breachapp}
+BREACH is an instance of the attack model described in \ref{sec:comattack}.
+
+A secret is defined as any string in the response plaintext of a web page, such
+as authentication tokens, private messages etc.
+
+The property $g$ of the secret that is being compromised is defined as: "What is
+the prefix $p$ of secret $s$, given a known prefix $p_s$, where $|p| - |p_s| =
+1$?".
+
+The distribution $\mathcal{M}$ is ${p_s:t}$, where $t \in \mathcal{T}$ and
+$\mathcal{T}$ is a known alphabet of ASCII symbols.
+
+The rendering function $f$ is the website response code rendering function. This
+function concatenates secret $s$ with static strings $u$, noise $v$ and the
+reflection string $r$.
+
+The compression function is gzip, which implements the DEFLATE algorithm, that
+is the combination of LZ77 and Huffman coding.
+
+The encryption function is any encryption algorithm used in communications over
+the Internet, most notably AES.
+
+The web application that is being attacked with BREACH offers an endpoint that
+allows requests via GET, where a GET parameter is included in the response. This
+endpoint constitutes the reflection oracle.
+
+The adversary should be able to issue requests to the given endpoint and monitor
+the traffic from and to the attacking browser. At this point, the adversary can
+issue requests on different elements of $T$ and compare the response lengths. As
+long as a difference in lengths across different requests is noticeable, the
+compression distinguishing attack is successful.
+
 \begin{thebibliography}{3}
 
 \bibitem{c1} M. West, First-Party-Only Cookies, RFC Internet-Draft, 2015.
