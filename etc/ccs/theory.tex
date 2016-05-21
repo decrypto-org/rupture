@@ -441,14 +441,15 @@ compressed with $Com$ under plaintext distribution $\mathcal{M}$, reflection
 alphabet $\mathcal{M}$ and noise distribution $\mathcal{V}$, then:
 
 \begin{align*}
-\forall Enc:
-\exists g:
-\exists PPT \mathcal{A}:
-\forall PPT \mathcal{S}:
-\text{Adv}_{\mathcal{SE}(Enc, Com), \mathcal{A}, \mathcal{S}}(\lambda, f, \mathcal{V}, \mathcal{M}, g) = P(\lambda)
+    \forall Enc:\\
+    \exists g:\\
+    \exists PPT \mathcal{A}:\\
+    \forall PPT \mathcal{S}:\\
+    \text{Adv}_{\mathcal{SE}(Enc, Com), \mathcal{A}, \mathcal{S}}(\lambda, f, \mathcal{V}, \mathcal{M}, g) = \alpha(\lambda)
 \end{align*}
 
-Where $P$ is a non-negligible function and $Enc$ is strictly length-monotonic.
+Where $\alpha$ is a non-negligible function and $Enc$ is strictly
+length-monotonic.
 
 \end{lemma}
 
