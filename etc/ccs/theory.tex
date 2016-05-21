@@ -445,13 +445,41 @@ def $\mathcal{A}(Q, \mathcal{M}, y)$:
         return False
 \end{lstlisting}
 
-Then let $\mathcal{S}$ be an arbitrary simulator. Since the probability of simulator
-success is bounded by $?$, since its output is independent of the choice of
-$s$.
+Then let $\mathcal{S}$ be an arbitrary simulator. Then due to the independence of the simulator's output with the choice of $x$ we have:
+
+\begin{align*}
+    Pr[\text{Game}_{\text{REF-SIM}}^{\mathcal{PE},\mathcal{S}}(\lambda, f, \mathcal{V}, \mathcal{M}, g) = 1] &=\\
+    Pr[Q(x) = b, x \leftarrow \mathcal{M}, b \leftarrow \mathcal{S}(f, \mathcal{V}, \mathcal{M}, g)]
+\end{align*}
+
+Letting the random variables $b$ and $x$:
+
+\begin{align*}
+    x &\leftarrow \mathcal{M}\\
+    b &\leftarrow \mathcal{S}(f, \mathcal{V}, \mathcal{M}, g)
+\end{align*}
+
+We have:
+
+\begin{align*}
+    Pr[b = Q(x)] &=\\
+    Pr[\lnot b|\lnot Q(x)]Pr[\lnot Q(x)] + Pr[b|Q(x)]Pr[Q(x)] &=\\
+    Pr[\lnot b]Pr[\lnot Q(x)] + Pr[b]Pr[Q(x)] &=\\
+    (1 - Pr[b])(1 - Pr[Q]) + Pr[b]Pr[Q(x)] &=\\
+    1 - Pr[Q(x)] - Pr[b] + 2Pr[b]Pr[Q(x)]
+\end{align*}
+
+For a given $Pr[Q]$, the maximum $Pr[b]$ of the simulator is then:
+
+\begin{align*}
+    Pr[b] = max(Pr[Q(x)], 1 - Pr[Q(x)])
+\end{align*}
+
+And therefore:
 
 \begin{equation}
     \forall \mathcal{S}:
-    Pr[\text{Game}_{\text{REF-SIM}}^{\mathcal{PE},\mathcal{S}}(\lambda, f, \mathcal{V}, \mathcal{M}, g) = 1] \leq 0.5
+    Pr[\text{Game}_{\text{REF-SIM}}^{\mathcal{PE},\mathcal{S}}(\lambda, f, \mathcal{V}, \mathcal{M}, g) = 1] \leq max(Pr[Q(x)], 1 - Pr[Q(x)])
 \end{equation}
 
 But the probability of success of $\mathcal{A}$ is $\frac{1}{2} +
