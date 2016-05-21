@@ -652,7 +652,21 @@ issue requests on different elements of $T$ and compare the response lengths. As
 long as a difference in lengths across different requests is noticeable, the
 compression distinguishing attack is successful.
 
-\begin{thebibliography}{3}
+\subsection{Rupture implementation}\label{subsec:rupture}
+Our contributions include the development of a production-grade framework for
+implementing this class of attacks called Rupture \cite{c4}.
+
+As long as a vulnerable endpoint, as described in \ref{sec:comattack}, is found,
+Rupture offers the ability to inject malicious code in any computer in the
+network, that issues requests to the endpoint.
+
+Furthermore, it enables the traffic inspection and analysis of packet lengths
+and automates the reflection string creation.
+
+Finally, it amplifies the attack by issuing multiple requests per $t \in
+\mathcal{T}$ in order to demonstrate better probability of success.
+
+\begin{thebibliography}{4}
 
 \bibitem{c1} M. West, First-Party-Only Cookies, RFC Internet-Draft, 2015.
 
@@ -662,6 +676,8 @@ compression distinguishing attack is successful.
 
 \bibitem{c3} Y. Gluck, N. Harris, A. Prado, BREACH: Reviving the CRIME attack,
 Black Hat USA, 2013.
+
+\bibitem{c4} [online] URL: \url{https://ruptureit.com} [cited May 2016]
 
 \end{thebibliography}
 
