@@ -101,7 +101,7 @@ Let the simulator game be defined as follows:
 def $\text{Game}_{\text{REF-SIM}}^{\mathcal{PE},\mathcal{S}}(\lambda, f, \mathcal{V}, \mathcal{M}, g)$:
     $y \leftarrow \mathcal{S}(f, \mathcal{V}, \mathcal{M}, g)$
     $s \leftarrow \mathcal{M}$
-    if $g(y) = s$:
+    if $y = g(s)$:
         return 1
     else:
         return 0
