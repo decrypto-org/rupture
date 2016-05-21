@@ -28,6 +28,7 @@ Dionysis Zindros
 \newtheorem*{lemma}{Lemma}
 
 \newcommand\defeq{\stackrel{\mathclap{\normalfont\mbox{def}}}{=}}
+\newcommand{\overbar}[1]{\mkern 1.5mu\overline{\mkern-1.5mu#1\mkern-1.5mu}\mkern 1.5mu}
 
 \begin{document}
 
@@ -113,9 +114,9 @@ Let
 \begin{equation*}
     \text{Adv}_{\mathcal{PE}, \mathcal{A}, \mathcal{S}}(\lambda, f, \mathcal{V}, \mathcal{M}, g)
     \defeq
-    |Pr[\text{Game}_{\text{REF-SEC}}^{\mathcal{PE},\mathcal{A}}(\lambda, f, \mathcal{V}, \mathcal{M}, g) = 1]
+    |\Pr[\text{Game}_{\text{REF-SEC}}^{\mathcal{PE},\mathcal{A}}(\lambda, f, \mathcal{V}, \mathcal{M}, g) = 1]
     -
-    Pr[\text{Game}_{\text{REF-SIM}}^{\mathcal{PE},\mathcal{S}}(\lambda, f, \mathcal{V}, \mathcal{M}, g) = 1]|.
+    \Pr[\text{Game}_{\text{REF-SIM}}^{\mathcal{PE},\mathcal{S}}(\lambda, f, \mathcal{V}, \mathcal{M}, g) = 1]|.
 \end{equation*}
 
 The above game can be modified to deal with symmetric encryption. For this, the
@@ -191,40 +192,63 @@ Stream ciphers can be treated as strictly monotonic to the bit level.
 
 \section{Property compressibility}\label{sec:propertycom}
 
-We now define what it means for a property $Q$ of the plaintext $s$ chosen out
-of the distribution $\mathcal{M}$ to be \textit{compression-detectable} by
-reflection string $r$ from $\mathcal{M}$ under a compression function $Com$
-rendered under some rendering function $f$ together with some noise chosen out
-of the noise distribution $\mathcal{V}$:
+Let $\mathcal{M}$ be a plaintext distribution and $Q(s)$ be a predicate on the
+plaintext $s \in \mathcal{M}$. Let us use $\mathcal{M}_Q$ to denote the subset
+of $\mathcal{M}$ restricted over the elements for which $Q$ holds
+proportionally retaining measure and assuming $\mathcal{M}_Q \neq \emptyset$
+and $\mathcal{M}_{\lnot Q} \neq \emptyset$.
+
+For the specific property $Q$ and plaintext distribution $\mathcal{M}$, define:
+
+\begin{equation*}
+    \pi \defeq max(\Pr_{s \leftarrow \mathcal{M}}[Q(s)], 1 - \Pr_{s \leftarrow \mathcal{M}}[Q(s)])
+\end{equation*}
+
+Let $\mathcal{V}$ be a noise distribution from which a pair of noises
+$\overbar{v} = (v_1, v_2) \leftarrow \mathcal{V}^2$ is drawn.  Let $\overbar{r}
+= (r_1, r_2) \in \mathcal{M}^2$ be a reflection string pair, $Com$ be a
+compression function, $f$ be a rendering function, and let $\alpha(\lambda)$ be
+a non-negligible function.
+
+The reflection pair $\overbar{r}$ \textit{detects} predicate $Q$ under
+compression $Com$ rendered with rendering function $f$ over the secret
+distribution $\mathcal{M}$ and the noise distribution $\mathcal{V}$ when:
 
 \begin{align*}
-    \exists r_1, r_2 \in \mathcal{M}:\\
-    Pr[|Com(f(s, r_1, v_1))| &< |Com(f(s, r_2, v_2))| \land\\
-       |Com(f(s', r_1, v_1))| &> |Com(f(s', r_2, v_2))|]
+    dct(Q, \overbar{r}, f, Com, \mathcal{M}, \mathcal{V})
+    \defeq\\
+    \exists \alpha \text{ non-negl}:\\
+    \Pr_{
+        s \leftarrow \mathcal{M}_Q,
+        s' \leftarrow \mathcal{M}_{\lnot Q},
+        v_1 \leftarrow \mathcal{V},
+        v_2 \leftarrow \mathcal{V}}
+       [|Com(f(s, r_1, v_1))| &< |Com(f(s, r_2, v_2))| \land\\
+       |Com(f(s', r_1, v_1))| &> |Com(f(s', r_2, v_2))|,\\
+       ]
     \geq
-    \frac{1}{2} + \alpha(\lambda)
+    \pi + \alpha(\lambda)
 \end{align*}
 
-Where $\alpha(\lambda)$ is a non-negligible function and
-the probability is taken over the following random variables:
+We call $Q$ \textit{compression-detectable} if a pair $\overbar{r}$ exists,
+such that:
+
+\begin{equation*}
+    \exists \overbar{r} = r_1, r_2 \in \mathcal{M}:
+    dct(Q, \overbar{r}, f, Com, \mathcal{M}, \mathcal{V})
+\end{equation*}
+
+Furthermore we require that such a pair $\overbar{r}$ is polynomially
+computable:
 
 \begin{align*}
-    s &\leftarrow \mathcal{M}|_Q\\
-    s' &\leftarrow \mathcal{M}|_{\lnot Q}\\
-    v_1 &\leftarrow \mathcal{V}\\
-    v_2 &\leftarrow \mathcal{V}
+    \exists \text{PPT } \mathcal{O}_R:\\
+    dct(Q, \overbar{r}, f, Com, \mathcal{M}, \mathcal{V}),\\
+    \overbar{r} \leftarrow \mathcal{O}_R(Com, f, Q, \mathcal{M}, \mathcal{V})
 \end{align*}
 
-Where $\mathcal{M}|_Q$ denotes the subset of $\mathcal{M}$ restricted over the
-elements for which $Q$ holds proportionally retaining measure.
-
-Furthermore we require that such a pair $(r_1, r_2)$ is polynomially computable
-given the property $Q$, the functions $Com$ and $f$, and the distributions
-$\mathcal{M}$ and $\mathcal{V}$ by a function denoted $\mathcal{O}_R(Com, f, Q,
-\mathcal{M}, \mathcal{V})$.
-
-The compression-detectibility property exists in all common compression
-function as long as $s$ and $r$ compress in the same context. We will
+The compression-detectability property exists in all common compression
+functions as long as $s$ and $r$ compress in the same context. We will
 illustrate such examples later in this work.
 
 \section{The BREACH model}\label{sec:breachmodel}
@@ -397,7 +421,7 @@ $\lambda$-bit secret $s$:
 Let $f$ be a concatenative rendering function and let $Com = LZ77$. Then:
 
 \begin{equation}
-Pr[startswith(v, \cdot) \textrm{ compression-detectable under } f, Com] = \text{non-negl}(\lambda - k)
+\Pr[startswith(v, \cdot) \textrm{ compression-detectable under } f, Com] = \text{non-negl}(\lambda - k)
 \end{equation}
 
 Where the probability randomness is taken uniformly over all $k$-bit prefixes $v \in \{0, 1\}^k$.
@@ -410,7 +434,7 @@ Where the probability randomness is taken uniformly over all $k$-bit prefixes $v
 
 \section{The compression distinguishing attack}\label{sec:comattack}
 
-\begin{lemma}
+\begin{lemma}[Compression attack]
 
 Let $Com$ be a compression function, $f$ be a rendering function and $Q$ be a
 plaintext predicate. If $Q$ is compression-detectable under a rendering of $f$
@@ -418,14 +442,15 @@ compressed with $Com$ under plaintext distribution $\mathcal{M}$, reflection
 alphabet $\mathcal{M}$ and noise distribution $\mathcal{V}$, then:
 
 \begin{align*}
-\forall Enc:
-\exists g:
-\exists PPT \mathcal{A}:
-\forall PPT \mathcal{S}:
-\text{Adv}_{\mathcal{SE}(Enc, Com), \mathcal{A}, \mathcal{S}}(\lambda, f, \mathcal{V}, \mathcal{M}, g) = P(\lambda)
+    \forall Enc:\\
+    \exists g:\\
+    \exists PPT \mathcal{A}:\\
+    \forall PPT \mathcal{S}:\\
+    \text{Adv}_{\mathcal{SE}(Enc, Com), \mathcal{A}, \mathcal{S}}(\lambda, f, \mathcal{V}, \mathcal{M}, g) = \alpha(\lambda)
 \end{align*}
 
-Where $P$ is a non-negligible function and $Enc$ is strictly length-monotonic.
+Where $\alpha$ is a non-negligible function and $Enc$ is strictly
+length-monotonic.
 
 \end{lemma}
 
@@ -447,11 +472,12 @@ def $\mathcal{A}(Q, \mathcal{M}, y)$:
         return False
 \end{lstlisting}
 
-Then let $\mathcal{S}$ be an arbitrary simulator. Then due to the independence of the simulator's output with the choice of $x$ we have:
+Then let $\mathcal{S}$ be an arbitrary simulator. Then due to the independence
+of the simulator's output with the choice of $x$ we have:
 
 \begin{align*}
-    Pr[\text{Game}_{\text{REF-SIM}}^{\mathcal{PE},\mathcal{S}}(\lambda, f, \mathcal{V}, \mathcal{M}, g) = 1] &=\\
-    Pr[Q(x) = b, x \leftarrow \mathcal{M}, b \leftarrow \mathcal{S}(f, \mathcal{V}, \mathcal{M}, g)]
+    \Pr[\text{Game}_{\text{REF-SIM}}^{\mathcal{PE},\mathcal{S}}(\lambda, f, \mathcal{V}, \mathcal{M}, g) = 1] &=\\
+    \Pr_{x \leftarrow \mathcal{M}, b \leftarrow \mathcal{S}(f, \mathcal{V}, \mathcal{M}, g)}[Q(x) = b]
 \end{align*}
 
 Letting the random variables $b$ and $x$:
@@ -464,26 +490,26 @@ Letting the random variables $b$ and $x$:
 We have:
 
 \begin{align*}
-    Pr[b = Q(x)] &=\\
-    Pr[\lnot b|\lnot Q(x)]Pr[\lnot Q(x)] + Pr[b|Q(x)]Pr[Q(x)] &=\\
-    Pr[\lnot b]Pr[\lnot Q(x)] + Pr[b]Pr[Q(x)] &=\\
-    (1 - Pr[b])(1 - Pr[Q]) + Pr[b]Pr[Q(x)] &=\\
-    1 - Pr[Q(x)] - Pr[b] + 2Pr[b]Pr[Q(x)]
+    \Pr[b = Q(x)] &=\\
+    \Pr[\lnot b|\lnot Q(x)]\Pr[\lnot Q(x)] + \Pr[b|Q(x)]\Pr[Q(x)] &=\\
+    \Pr[\lnot b]\Pr[\lnot Q(x)] + \Pr[b]\Pr[Q(x)] &=\\
+    (1 - \Pr[b])(1 - \Pr[Q(x)]) + \Pr[b]\Pr[Q(x)] &=\\
+    1 - \Pr[Q(x)] - \Pr[b] + 2\Pr[b]\Pr[Q(x)]
 \end{align*}
 
-For a given $Pr[Q]$, this function is monotonic in $Pr[b]$ and therefore has potential extrema
-at $Pr[b] = 0$ or $Pr[b] = 1$, for which cases the function takes the values $1 - Pr[Q(x)]$ and
-$Pr[Q(x)]$ respectively. Therefore, the maximum $Pr[b]$ of the simulator is then:
+For a given $\Pr[Q]$, this function is monotonic in $\Pr[b]$ and therefore has potential extrema
+at $\Pr[b] = 0$ or $\Pr[b] = 1$, for which cases the function takes the values $1 - \Pr[Q(x)]$ and
+$\Pr[Q(x)]$ respectively. Therefore, the maximum $\Pr[b]$ of the simulator is then:
 
-\begin{align*}
-    Pr[Q(x) = b] = max(Pr[Q(x)], 1 - Pr[Q(x)])
-\end{align*}
+\begin{equation*}
+    \Pr[Q(x) = b] = max(\Pr[Q(x)], 1 - \Pr[Q(x)])
+\end{equation*}
 
 And therefore:
 
 \begin{equation}
     \forall \mathcal{S}:
-    Pr[\text{Game}_{\text{REF-SIM}}^{\mathcal{PE},\mathcal{S}}(\lambda, f, \mathcal{V}, \mathcal{M}, g) = 1] \leq max(Pr[Q(x)], 1 - Pr[Q(x)])
+    \Pr[\text{Game}_{\text{REF-SIM}}^{\mathcal{PE},\mathcal{S}}(\lambda, f, \mathcal{V}, \mathcal{M}, g) = 1] \leq max(\Pr[Q(x)], 1 - \Pr[Q(x)])
 \end{equation}
 
 But the probability of success of $\mathcal{A}$ is $\frac{1}{2} +
