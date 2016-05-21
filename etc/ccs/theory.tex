@@ -469,10 +469,12 @@ We have:
     1 - Pr[Q(x)] - Pr[b] + 2Pr[b]Pr[Q(x)]
 \end{align*}
 
-For a given $Pr[Q]$, the maximum $Pr[b]$ of the simulator is then:
+For a given $Pr[Q]$, this function is monotonic in $Pr[b]$ and therefore has potential extrema
+at $Pr[b] = 0$ or $Pr[b] = 1$, for which cases the function takes the values $1 - Pr[Q(x)]$ and
+$Pr[Q(x)]$ respectively. Therefore, the maximum $Pr[b]$ of the simulator is then:
 
 \begin{align*}
-    Pr[b] = max(Pr[Q(x)], 1 - Pr[Q(x)])
+    Pr[Q(x) = b] = max(Pr[Q(x)], 1 - Pr[Q(x)])
 \end{align*}
 
 And therefore:
