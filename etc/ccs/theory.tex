@@ -114,9 +114,9 @@ Let
 \begin{equation*}
     \text{Adv}_{\mathcal{PE}, \mathcal{A}, \mathcal{S}}(\lambda, f, \mathcal{V}, \mathcal{M}, g)
     \defeq
-    |Pr[\text{Game}_{\text{REF-SEC}}^{\mathcal{PE},\mathcal{A}}(\lambda, f, \mathcal{V}, \mathcal{M}, g) = 1]
+    |\Pr[\text{Game}_{\text{REF-SEC}}^{\mathcal{PE},\mathcal{A}}(\lambda, f, \mathcal{V}, \mathcal{M}, g) = 1]
     -
-    Pr[\text{Game}_{\text{REF-SIM}}^{\mathcal{PE},\mathcal{S}}(\lambda, f, \mathcal{V}, \mathcal{M}, g) = 1]|.
+    \Pr[\text{Game}_{\text{REF-SIM}}^{\mathcal{PE},\mathcal{S}}(\lambda, f, \mathcal{V}, \mathcal{M}, g) = 1]|.
 \end{equation*}
 
 The above game can be modified to deal with symmetric encryption. For this, the
@@ -201,7 +201,7 @@ and $\mathcal{M}_{\lnot Q} \neq \emptyset$.
 For the specific property $Q$ and plaintext distribution $\mathcal{M}$, define:
 
 \begin{equation*}
-    \pi \defeq max(Pr[Q(s), s \leftarrow \mathcal{M}], 1 - Pr[Q(s), s \leftarrow \mathcal{M}])
+    \pi \defeq max(\Pr_{s \leftarrow \mathcal{M}}[Q(s)], 1 - \Pr_{s \leftarrow \mathcal{M}}[Q(s)])
 \end{equation*}
 
 Let $\mathcal{V}$ be a noise distribution from which a pair of noises
@@ -218,12 +218,13 @@ distribution $\mathcal{M}$ and the noise distribution $\mathcal{V}$ when:
     dct(Q, \overbar{r}, f, Com, \mathcal{M}, \mathcal{V})
     \defeq\\
     \exists \alpha \text{ non-negl}:\\
-    Pr[|Com(f(s, r_1, v_1))| &< |Com(f(s, r_2, v_2))| \land\\
+    \Pr_{
+        s \leftarrow \mathcal{M}_Q,
+        s' \leftarrow \mathcal{M}_{\lnot Q},
+        v_1 \leftarrow \mathcal{V},
+        v_2 \leftarrow \mathcal{V}}
+       [|Com(f(s, r_1, v_1))| &< |Com(f(s, r_2, v_2))| \land\\
        |Com(f(s', r_1, v_1))| &> |Com(f(s', r_2, v_2))|,\\
-        s &\leftarrow \mathcal{M}_Q,\\
-        s' &\leftarrow \mathcal{M}_{\lnot Q},\\
-        v_1 &\leftarrow \mathcal{V},\\
-        v_2 &\leftarrow \mathcal{V}
        ]
     \geq
     \pi + \alpha(\lambda)
@@ -420,7 +421,7 @@ $\lambda$-bit secret $s$:
 Let $f$ be a concatenative rendering function and let $Com = LZ77$. Then:
 
 \begin{equation}
-Pr[startswith(v, \cdot) \textrm{ compression-detectable under } f, Com] = \text{non-negl}(\lambda - k)
+\Pr[startswith(v, \cdot) \textrm{ compression-detectable under } f, Com] = \text{non-negl}(\lambda - k)
 \end{equation}
 
 Where the probability randomness is taken uniformly over all $k$-bit prefixes $v \in \{0, 1\}^k$.
@@ -475,8 +476,8 @@ Then let $\mathcal{S}$ be an arbitrary simulator. Then due to the independence
 of the simulator's output with the choice of $x$ we have:
 
 \begin{align*}
-    Pr[\text{Game}_{\text{REF-SIM}}^{\mathcal{PE},\mathcal{S}}(\lambda, f, \mathcal{V}, \mathcal{M}, g) = 1] &=\\
-    Pr[Q(x) = b, x \leftarrow \mathcal{M}, b \leftarrow \mathcal{S}(f, \mathcal{V}, \mathcal{M}, g)]
+    \Pr[\text{Game}_{\text{REF-SIM}}^{\mathcal{PE},\mathcal{S}}(\lambda, f, \mathcal{V}, \mathcal{M}, g) = 1] &=\\
+    \Pr_{x \leftarrow \mathcal{M}, b \leftarrow \mathcal{S}(f, \mathcal{V}, \mathcal{M}, g)}[Q(x) = b]
 \end{align*}
 
 Letting the random variables $b$ and $x$:
@@ -489,26 +490,26 @@ Letting the random variables $b$ and $x$:
 We have:
 
 \begin{align*}
-    Pr[b = Q(x)] &=\\
-    Pr[\lnot b|\lnot Q(x)]Pr[\lnot Q(x)] + Pr[b|Q(x)]Pr[Q(x)] &=\\
-    Pr[\lnot b]Pr[\lnot Q(x)] + Pr[b]Pr[Q(x)] &=\\
-    (1 - Pr[b])(1 - Pr[Q]) + Pr[b]Pr[Q(x)] &=\\
-    1 - Pr[Q(x)] - Pr[b] + 2Pr[b]Pr[Q(x)]
+    \Pr[b = Q(x)] &=\\
+    \Pr[\lnot b|\lnot Q(x)]\Pr[\lnot Q(x)] + \Pr[b|Q(x)]\Pr[Q(x)] &=\\
+    \Pr[\lnot b]\Pr[\lnot Q(x)] + \Pr[b]\Pr[Q(x)] &=\\
+    (1 - \Pr[b])(1 - \Pr[Q(x)]) + \Pr[b]\Pr[Q(x)] &=\\
+    1 - \Pr[Q(x)] - \Pr[b] + 2\Pr[b]\Pr[Q(x)]
 \end{align*}
 
-For a given $Pr[Q]$, this function is monotonic in $Pr[b]$ and therefore has potential extrema
-at $Pr[b] = 0$ or $Pr[b] = 1$, for which cases the function takes the values $1 - Pr[Q(x)]$ and
-$Pr[Q(x)]$ respectively. Therefore, the maximum $Pr[b]$ of the simulator is then:
+For a given $\Pr[Q]$, this function is monotonic in $\Pr[b]$ and therefore has potential extrema
+at $\Pr[b] = 0$ or $\Pr[b] = 1$, for which cases the function takes the values $1 - \Pr[Q(x)]$ and
+$\Pr[Q(x)]$ respectively. Therefore, the maximum $\Pr[b]$ of the simulator is then:
 
 \begin{equation*}
-    Pr[Q(x) = b] = max(Pr[Q(x)], 1 - Pr[Q(x)])
+    \Pr[Q(x) = b] = max(\Pr[Q(x)], 1 - \Pr[Q(x)])
 \end{equation*}
 
 And therefore:
 
 \begin{equation}
     \forall \mathcal{S}:
-    Pr[\text{Game}_{\text{REF-SIM}}^{\mathcal{PE},\mathcal{S}}(\lambda, f, \mathcal{V}, \mathcal{M}, g) = 1] \leq max(Pr[Q(x)], 1 - Pr[Q(x)])
+    \Pr[\text{Game}_{\text{REF-SIM}}^{\mathcal{PE},\mathcal{S}}(\lambda, f, \mathcal{V}, \mathcal{M}, g) = 1] \leq max(\Pr[Q(x)], 1 - \Pr[Q(x)])
 \end{equation}
 
 But the probability of success of $\mathcal{A}$ is $\frac{1}{2} +
