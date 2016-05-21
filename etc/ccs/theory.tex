@@ -564,9 +564,47 @@ Masking is a method of hiding secrets' properties per request. A mask is a
 bitstream equal in size with the secret. The masked text contains the result of
 the XOR operation between the secret and the mask concatenated with the mask.
 The secret can be obtained by applying XOR between the first and the second
-half of the masked text. Masking results in the creation of a random permutation
-of the secret per request resulting in BREACH prefixes not being
-compression-detectable.
+half of the masked text.
+
+Masked secret $s_i'$ and mask $m_i$ are uniformly random, resulting in BREACH
+prefixes not being compression-detectable.
+
+A masking function is defined:
+
+\begin{lstlisting}[texcl,mathescape]
+def masking($s_i$):
+    $l = |s_i|$
+    $m_i \xleftarrow{\$} \{0, 1\}^l\\$
+    $s_i' = m_i \oplus s$
+    return $s_i', m_i$
+\end{lstlisting}
+
+Masking can be applied on a rendered secret $s_i$ in the output $m$ of a
+rendering function $f$ as:
+
+\begin{lstlisting}[texcl,mathescape]
+def apply_masking($m_i, s_i$):
+    $s_i', m_i \leftarrow masking(s_i)$
+    return $Rep(m, s_i, \beta_1:s_i':\beta_2:m_i:\beta_3)$
+\end{lstlisting}
+
+where $Rep$ is the string replacement function defined in 5.1, $\{\beta_1,
+\beta_2, \beta_3\}$ are symbols that do not appear in $m$ before masking and :
+denotes the concatenation between two strings.
+
+Mask removal should be applied on all masked secrets, marked by the annotation
+symbols $\beta_1$, $\beta_2$, $\beta_3$, before the reversing of rendering function $f$:
+
+\begin{lstlisting}[texcl,mathescape]
+def remove_masking($m', \beta_1, \beta_2, \beta_3$):
+    return $Rep(m', \beta_1:s_i':\beta_2:m_i:\beta_3, s_i' \oplus m_i)$
+\end{lstlisting}
+
+where $Rep$ is the string replacement function and $\{\beta_1, \beta_2,
+\beta_3\}$ are the annotation symbols used in \texttt{apply\_masking}.
+
+Masking is a method used by Facebook \cite{c2} in order to protect CSRF tokens
+against BREACH attacks.
 
 %%% Noise is bounded by security parameter $\lambda$
 \subsection{Length hiding}\label{subsec:noise}
@@ -575,9 +613,13 @@ Length hiding introduces artificial noise.
 %%% Attack time is bounded by security parameter $\lambda$
 \subsection{Rate limiting/monitoring}\label{subsec:monitoring}
 
-\begin{thebibliography}{1}
+\begin{thebibliography}{2}
 
 \bibitem{c1} M. West, First-Party-Only Cookies, RFC Internet-Draft, 2015.
+
+\bibitem{c2} [online] URL:
+\url{https://www.facebook.com/notes/protect-the-graph/preventing-a-breach-attack/1455331811373632}
+[cited May 2016]
 
 \end{thebibliography}
 
