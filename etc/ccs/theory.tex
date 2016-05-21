@@ -458,21 +458,22 @@ Where the probability randomness is taken uniformly over all $k$-bit prefixes $v
 
 \begin{lemma}[Compression attack]
 
-Let $Com$ be a compression function, $f$ be a rendering function and $Q$ be a
-plaintext predicate. If $Q$ is compression-detectable under a rendering of $f$
-compressed with $Com$ under plaintext distribution $\mathcal{M}$, reflection
-alphabet $\mathcal{M}$ and noise distribution $\mathcal{V}$, then:
+Let $Com$ be a compression function, $Enc$ be a strictly length-monotonic
+encryption function, $f$ be a rendering function and $Q$ be a
+compression-detectable plaintext predicate over plaintext distribution
+$\mathcal{M}$ and noise distribution $\mathcal{V}$.
+
+Then:
 
 \begin{align*}
-    \forall Enc:\\
+    \exists \alpha \text{ non-negl}:
+    \forall Enc:
     \exists g:\\
-    \exists PPT \mathcal{A}:\\
+    \exists PPT \mathcal{A}:
     \forall PPT \mathcal{S}:\\
-    \text{Adv}_{\mathcal{SE}(Enc, Com), \mathcal{A}, \mathcal{S}}(\lambda, f, \mathcal{V}, \mathcal{M}, g) = \alpha(\lambda)
+    \text{Adv}_{\mathcal{SE}(Enc, Com), \mathcal{A}, \mathcal{S}}
+    (\lambda, f, \mathcal{V}, \mathcal{M}, g) = \alpha(\lambda)
 \end{align*}
-
-Where $\alpha$ is a non-negligible function and $Enc$ is strictly
-length-monotonic.
 
 \end{lemma}
 
@@ -494,12 +495,13 @@ def $\mathcal{A}(Q, \mathcal{M}, y)$:
         return False
 \end{lstlisting}
 
-Then let $\mathcal{S}$ be an arbitrary simulator. Then due to the independence
-of the simulator's output with the choice of $x$ we have:
+Let $\mathcal{S}$ be an arbitrary simulator. Then we have:
 
 \begin{align*}
-    \Pr[\text{Game}_{\text{REF-SIM}}^{\mathcal{PE},\mathcal{S}}(\lambda, f, \mathcal{V}, \mathcal{M}, g) = 1] &=\\
-    \Pr_{x \leftarrow \mathcal{M}, b \leftarrow \mathcal{S}(f, \mathcal{V}, \mathcal{M}, g)}[Q(x) = b]
+    \Pr[\text{Game}_{\text{REF-SIM}}^{\mathcal{PE},\mathcal{S}}
+        (\lambda, f, \mathcal{V}, \mathcal{M}, g) = 1] &=\\
+    \Pr_{x \leftarrow \mathcal{M}, b \leftarrow \mathcal{S}(f, \mathcal{V}, \mathcal{M}, g)}
+        [Q(x) = b]
 \end{align*}
 
 Letting the random variables $b$ and $x$:
@@ -509,44 +511,135 @@ Letting the random variables $b$ and $x$:
     b &\leftarrow \mathcal{S}(f, \mathcal{V}, \mathcal{M}, g)
 \end{align*}
 
-We have:
+Due to the independence of the simulator's output with the choice of $x$ we have:
 
 \begin{align*}
-    \Pr[b = Q(x)] &=\\
-    \Pr[\lnot b|\lnot Q(x)]\Pr[\lnot Q(x)] + \Pr[b|Q(x)]\Pr[Q(x)] &=\\
-    \Pr[\lnot b]\Pr[\lnot Q(x)] + \Pr[b]\Pr[Q(x)] &=\\
-    (1 - \Pr[b])(1 - \Pr[Q(x)]) + \Pr[b]\Pr[Q(x)] &=\\
-    1 - \Pr[Q(x)] - \Pr[b] + 2\Pr[b]\Pr[Q(x)]
+    Pr[b = Q(x)] &=\\
+    Pr[\lnot b|\lnot Q(x)]Pr[\lnot Q(x)] + Pr[b|Q(x)]Pr[Q(x)] &=\\
+    Pr[\lnot b]Pr[\lnot Q(x)] + Pr[b]Pr[Q(x)] &=\\
+    (1 - Pr[b])(1 - Pr[Q]) + Pr[b]Pr[Q(x)] &=\\
+    1 - Pr[Q(x)] - Pr[b] + 2Pr[b]Pr[Q(x)]
 \end{align*}
 
-For a given $\Pr[Q]$, this function is monotonic in $\Pr[b]$ and therefore has potential extrema
-at $\Pr[b] = 0$ or $\Pr[b] = 1$, for which cases the function takes the values $1 - \Pr[Q(x)]$ and
-$\Pr[Q(x)]$ respectively. Therefore, the maximum $\Pr[b]$ of the simulator is then:
+For a given $\Pr[Q]$, this function is monotonic in $\Pr[b]$ and therefore has
+potential extrema at $\Pr[b] = 0$ or $\Pr[b] = 1$, for which cases the function
+takes the values $1 - \Pr[Q(x)]$ and $\Pr[Q(x)]$ respectively. Therefore, the
+maximum $\Pr[b]$ of the simulator is:
 
 \begin{equation*}
-    \Pr[Q(x) = b] = max(\Pr[Q(x)], 1 - \Pr[Q(x)])
+    \Pr[Q(x) = b] = max(\Pr[Q(x)], 1 - \Pr[Q(x)]) = \pi
 \end{equation*}
 
 And therefore:
 
-\begin{equation}
+\begin{equation*}
     \forall \mathcal{S}:
-    \Pr[\text{Game}_{\text{REF-SIM}}^{\mathcal{PE},\mathcal{S}}(\lambda, f, \mathcal{V}, \mathcal{M}, g) = 1] \leq max(\Pr[Q(x)], 1 - \Pr[Q(x)])
-\end{equation}
+    \Pr[
+        \text{Game}_{\text{REF-SIM}}^{\mathcal{PE},\mathcal{S}}
+        (\lambda, f, \mathcal{V}, \mathcal{M}, g) = 1
+    ]
+    \leq max(Pr[Q(x)], 1 - Pr[Q(x)])
+\end{equation*}
 
-But the probability of success of $\mathcal{A}$ is $\frac{1}{2} +
-\alpha(\lambda)$ for some non-negligible function $\alpha$ (proof?).
+From the compression detectability of Q we know that:
+
+\begin{align*}
+    \exists \alpha \text{ non-negl}:\\
+    \Pr_{s \leftarrow \mathcal{M}_Q,
+         s' \leftarrow \mathcal{M}_{\lnot Q},
+         \overbar{v} \leftarrow \mathcal{V}^2}
+         [cpr^Q_{f, Com}(s, \overbar{r}, \overbar{v}) \land
+          cpr^Q_{f, Com}(s', \overbar{r}, \overbar{v})]
+    \geq
+    \pi + \alpha(\lambda)
+\end{align*}
+
+Therefore:
+
+\begin{align*}
+    \Pr_{s \leftarrow \mathcal{M}_Q,
+         \overbar{v} \leftarrow \mathcal{V}^2}
+         [cpr^Q_{f, Com}(s, \overbar{r}, \overbar{v})]
+    \geq
+    \pi + \alpha(\lambda) \land\\
+    \Pr_{s' \leftarrow \mathcal{M}_{\lnot Q},
+         \overbar{v} \leftarrow \mathcal{V}^2}
+         [cpr^Q_{f, Com}(s', \overbar{r}, \overbar{v})]
+    \geq
+    \pi + \alpha(\lambda)
+\end{align*}
+
+And so:
+
+\begin{align*}
+    \Pr_{s \leftarrow \mathcal{M},
+         \overbar{v} \leftarrow \mathcal{V}^2}
+         [cpr^Q_{f, Com}(s, \overbar{r}, \overbar{v})]
+    =\\
+    \Pr[cpr^Q_{f, Com}(s, \overbar{r}, \overbar{v})|Q(s)]\Pr[Q(s)]
+    +
+    \Pr[cpr^Q_{f, Com}(s, \overbar{r}, \overbar{v})|\lnot Q(s)]\Pr[\lnot Q(s)]
+    \geq\\
+    (\pi + \alpha(\lambda))(\Pr[Q(s)] + (1 - \Pr[Q(s)))
+    =\\
+    \pi + \alpha(\lambda)
+\end{align*}
+
+Let us now examine the event of $\mathcal{A}$ being successful, denoted Succ,
+when $cpr^Q_{f, Com}(s, \overbar{r}, \overbar{v})$. Indeed:
+
+\begin{align*}
+    \Pr[|Com(f(s, r_1, v_1))| < |Com(f(s, r_2, v_2))||Q(s)]
+    = \pi + \alpha(\lambda)
+\end{align*}
+
+And from the strict length monotonicity of $Enc$ it follows that:
+
+\begin{align*}
+    & \Pr[|Enc(Com(f(s, r_1, v_1)))| < |Enc(Com(f(s, r_2, v_2)))||Q(s)]
+        \geq \pi + \alpha(\lambda)\\
+    \Rightarrow& \Pr[
+        |\text{Reflect}^{\mathcal{E}_{pk}, \mathcal{V}}_s(r_1)|
+        <
+        |\text{Reflect}^{\mathcal{E}_{pk}, \mathcal{V}}_s(r_2)||Q(s)
+    ]
+        \geq \pi + \alpha(\lambda)\\
+    \Rightarrow& \Pr[l_1 < l_2|Q(s)]
+        \geq \pi + \alpha(\lambda)\\
+    \Rightarrow& \Pr[\text{Succ}|Q(s)]
+        \geq \pi + \alpha(\lambda)\\
+\end{align*}
+
+The case for $\lnot Q(s)$ is the same, but with a different inequality direction:
+
+\begin{align*}
+    & \Pr[|Com(f(s, r_1, v_1))| > |Com(f(s, r_2, v_2))||Q(s)]
+        \geq \pi + \alpha(\lambda)\\
+    \Rightarrow& \Pr[\text{Succ}|\lnot Q(s)] \geq \pi + \alpha(\lambda)\\
+\end{align*}
+
+And so the probability of success is given:
+
+\begin{align*}
+    \Pr[\text{Succ}] =
+    \Pr[\text{Succ}|Q(s)]\Pr[Q(s)]
+    +
+    \Pr[\text{Succ}|\lnot Q(s)]\Pr[\lnot Q(s)]
+    \geq \pi + \alpha(\lambda)
+\end{align*}
 
 Therefore,
 
 \begin{equation}
 \begin{split}
     \forall PPT \mathcal{S}:
-    \text{Adv}_{\mathcal{SE}(Enc, Com), \mathcal{A}, \mathcal{S}}(\lambda, f, \mathcal{V}, \mathcal{M}, g) \geq ?
+    \text{Adv}_{\mathcal{SE}(Enc, Com), \mathcal{A}, \mathcal{S}}
+        (\lambda, f, \mathcal{V}, \mathcal{M}, g)
+    \geq |\pi + \alpha(\lambda) - \pi| = \alpha(\lambda)
 \end{split}
 \end{equation}
 
-Which is non-negligible. This completes the proof.
+Which is non-negligible.
 
 \end{proof}
 
