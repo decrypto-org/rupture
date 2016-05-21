@@ -471,7 +471,8 @@ def $\mathcal{A}(Q, \mathcal{M}, y)$:
         return False
 \end{lstlisting}
 
-Then let $\mathcal{S}$ be an arbitrary simulator. Then due to the independence of the simulator's output with the choice of $x$ we have:
+Then let $\mathcal{S}$ be an arbitrary simulator. Then due to the independence
+of the simulator's output with the choice of $x$ we have:
 
 \begin{align*}
     Pr[\text{Game}_{\text{REF-SIM}}^{\mathcal{PE},\mathcal{S}}(\lambda, f, \mathcal{V}, \mathcal{M}, g) = 1] &=\\
@@ -499,9 +500,9 @@ For a given $Pr[Q]$, this function is monotonic in $Pr[b]$ and therefore has pot
 at $Pr[b] = 0$ or $Pr[b] = 1$, for which cases the function takes the values $1 - Pr[Q(x)]$ and
 $Pr[Q(x)]$ respectively. Therefore, the maximum $Pr[b]$ of the simulator is then:
 
-\begin{align*}
+\begin{equation*}
     Pr[Q(x) = b] = max(Pr[Q(x)], 1 - Pr[Q(x)])
-\end{align*}
+\end{equation*}
 
 And therefore:
 
