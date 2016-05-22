@@ -1,13 +1,24 @@
-\documentclass[a4paper, 11 pt, conference]{article}
+\documentclass{sig-alternate-05-2015}
+
 \usepackage[utf8]{inputenc}
 
 \title{On the security of encryption and compression composition under reflection attacks}
+
+\numberofauthors{3}
+
 \author{
-Dimitris Karakostas
-\and
-Aggelos Kiayias
-\and
-Dionysis Zindros
+\alignauthor
+Dimitris Karakostas\\
+       \affaddr{University of Athens}\\
+       \email{dimit.karakostas@gmail.com}
+\alignauthor
+Aggelos Kiayias\\
+       \affaddr{University of Athens}\\
+       \email{aggelos@di.uoa.gr}
+\alignauthor
+Dionysis Zindros\\
+       \affaddr{University of Athens}\\
+       \email{dionyziz@di.uoa.gr}
 }
 \date{May 2016}
 
@@ -17,7 +28,7 @@ Dionysis Zindros
 \usepackage{listings}
 \usepackage{mathtools}
 \usepackage{amsfonts}
-\usepackage{amsthm}
+% \usepackage{amsthm}
 \usepackage{amssymb}
 \usepackage[colorlinks=true,linkcolor=blue,citecolor=green]{hyperref}
 
@@ -25,7 +36,7 @@ Dionysis Zindros
 \let\oldemptyset\emptyset
 \let\emptyset\varnothing
 
-\newtheorem*{lemma}{Lemma}
+\newtheorem{lemma}{Lemma}
 
 \newcommand\defeq{\stackrel{\mathclap{\normalfont\mbox{def}}}{=}}
 \newcommand{\overbar}[1]{\mkern 1.5mu\overline{\mkern-1.5mu#1\mkern-1.5mu}\mkern 1.5mu}
