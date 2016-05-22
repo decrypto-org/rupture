@@ -818,6 +818,39 @@ and automates the reflection string creation.
 Finally, it amplifies the attack by issuing multiple requests per $t \in
 \mathcal{T}$ in order to demonstrate better probability of success.
 
+\section{Appendix}
+
+\subsection{Rupture architecture}\label{app:rupture}
+Rupture consists of multiple components that collaborate in executing
+compression-based attacks, such as BREACH.
+
+The client component is a Javascript code that issues requests towards a chosen
+endpoint. Client needs to be executed from the browser of the victim that the
+adversary is trying to steal secrets from.
+
+The injector component injects the client code in the plaintext of victim's
+HTTP responses. In order for the injection to be performed, the adversary should
+be able to view and alter the victim's network traffic.
+
+The sniffer component also needs access to the victim's network traffic. As long
+as this is possible, the sniffer keeps track of the encrypted communication
+between the victim and the endpoint and reports the packet lengths observer on
+the network.
+
+The backend component is a Python code that controls the attack execution. It
+initializes the attack, guides the client as to what requests need to be made at
+each stage of the attack and orders sniffer to listen and report network
+traffic. At each stage of the attack, the backend analyzes the sniffer reports
+and calculates the probability of success for the attack. At the end of each
+stage, a single character of the secret is stolen and the backend uses this
+finding to continue the attack against the rest of the secret.
+
+   \begin{figure}[thpb]
+      \centering
+      \includegraphics[width=0.48\textwidth]{architecture.png}
+      \caption{Rupture Architecture}
+   \end{figure}
+
 \begin{thebibliography}{4}
 
 \bibitem{c1} M. West, First-Party-Only Cookies, RFC Internet-Draft, 2015.
