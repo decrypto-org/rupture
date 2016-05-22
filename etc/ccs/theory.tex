@@ -868,6 +868,23 @@ finding to continue the attack against the rest of the secret.
 
 \subsection*{Practical optimization methods}\label{app:optimization}
 
+\subsubsection*{Block alignment}
+Block ciphers are \textit{length monotonic}, but not \textit{strictly length
+monotonic}, as described in section \ref{subsec:lenmonotone}. Specifically, the
+length of the encrypted text is rounded to a product of $\mu$-bits, where $\mu$
+is the block size, using added padding. The same applies for stream ciphers,
+whose functionality is similar to block ciphers with block size 1 byte. In this
+case, plaintext length difference between two messages does not always result in
+length difference between the respective encrypted ciphertext.
+
+It is possible to bypass this problem by using block alignment. Block alignment
+techniques have already been explored in the literature \cite{c14}.  This method
+demands issuing multiple requests to the reflection oracle while including
+artificial noise in the reflection string $r$.  That way, one out of
+$\ceil{\mu / |r^i|}$ requests, where $|r^i|$ is the length of one digit of
+$r$ in bits, will result in a block distinction between different reflection
+strings $r_i$.
+
 \begin{thebibliography}{13}
 
 \bibitem{c13} John Kelsey, "Compression and information leakage of plaintext", 2002.
@@ -904,6 +921,8 @@ cookies from compression side-channel attacks", 2014.
 
 \bibitem{c12} D. Karakostas and D. Zindros, "Practical New Developments on
 BREACH", Black Hat Asia, 2016.
+
+\bibitem{c14} B. Moller, T. Duong, K. Kotowicz, This POODLE Bites: Exploiting the SSL 3.0 Fallback, September 2014.
 
 \end{thebibliography}
 
