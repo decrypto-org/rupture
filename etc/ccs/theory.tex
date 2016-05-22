@@ -47,15 +47,16 @@ Dionysis Zindros\\
 
 \section{Abstract}\label{sec:abstract}
 When compression is composed with encryption, unexpected vulnerabilities can
-arise. Such vulnerabilities have been explored in practical attacks against TLS
-such as CRIME, TIME, BREACH, and HEIST. We introduce an abstract theoretical
-model for such attacks, the \textit{adaptive reflection security} model. We
-discuss what properties common compression function have, such as the
-\textit{compression-detectability} of predicates, and we show that all
-length-preserving encryption schemes are vulnerable when composed with such
-functions. Finally, we provide a modular scalable open-source production-grade
-generic attack framework where these attacks are implemented in a robust
-manner.
+arise. The information leakage through data compression was first described by
+Kelsey \cite{c13} and such vulnerabilities have been explored in practical
+attacks against TLS such as CRIME \cite{c1}, TIME\cite{c2} and BREACH\cite{c3}.
+We introduce an abstract theoretical model for such attacks, the
+\textit{adaptive reflection security} model. We discuss what properties common
+compression function have, such as the \textit{compression-detectability} of
+predicates, and we show that all length-preserving encryption schemes are
+vulnerable when composed with such functions. Finally, we provide a modular
+scalable open-source production-grade generic attack framework where these
+attacks are implemented in a robust manner.
 
 \section{Reflection security}\label{sec:refsec}
 
@@ -196,7 +197,7 @@ An important assumption for our attack is that the encryption function $Enc$ is
 If the last inequality becomes strict, we call the encryption function
 \textit{strictly length monotonic}.
 
-A practical instance of a length monotonic encryption function is AES.
+A practical instance of a length monotonic encryption function is AES \cite{c4}.
 Stream ciphers can be treated as strictly monotonic to the bit level.
 
 \section{Property compressibility}\label{sec:propertycom}
@@ -342,7 +343,7 @@ We call $f$ functions that exhibit such behavior \textit{concatenative}.
 
 \subsection{The compression function assumption}\label{subsec:comfuncassumption}
 
-In BREACH, $Com$ is a variant of LZ77. In this compression algorithm,
+In BREACH, $Com$ is a variant of LZ77 \cite{c5}. In this compression algorithm,
 repetitions of strings are well-compressed. In our ideal model, we examine a
 simplified version of LZ77 which we describe in this paragraph.
 
@@ -691,13 +692,17 @@ does not cross-compress the data in $X$ with the data in $Y$ (Why?).
 
 \section{Defense}\label{sec:defense}
 
+Defense against side-channel compression attacks and especially BREACH have been
+proposed in bibliography, including the original BREACH paper,
+\cite{c6} and \cite{c7}.
+
 \subsection{Disabling compression}\label{subsec:disablecom}
 Compression is the basic assumption for property compressibility. Disabling
 compression would break the adaptive reflection game, since it removes
 the compression part of the encryption function.
 
 \subsection{SameSite cookies}\label{subsec:samesite}
-SameSite cookies \cite{c1} is a proposed draft for enhancing web security. This policy
+SameSite cookies \cite{c8} is a proposed draft for enhancing web security. This policy
 states that cookies may only be included in same origin requests.
 
 Enabling SameSite cookies would result in the elimination of cross-origin
@@ -717,9 +722,6 @@ bitstream equal in size with the secret. The masked text contains the result of
 the XOR operation between the secret and the mask concatenated with the mask.
 The secret can be obtained by applying XOR between the first and the second
 half of the masked text.
-
-Masked secret $s_i'$ and mask $m_i$ are uniformly random, resulting in BREACH
-prefixes not being compression-detectable.
 
 A masking function is defined:
 
@@ -755,7 +757,16 @@ def remove_masking($m', \beta_1, \beta_2, \beta_3$):
 where $Rep$ is the string replacement function and $\{\beta_1, \beta_2,
 \beta_3\}$ are the annotation symbols used in \texttt{apply\_masking}.
 
-Masking is a method used by Facebook \cite{c2} in order to protect CSRF tokens
+Mask $m_i$ is chosen uniformly at random, so masked secret $s_i'$ is also
+random. This results in $s_i' m_i$ being indistinguishable from $r_1 r_2$ by a
+compression function $Com$, where $r_1$, $r_2$ are random nonces chosen
+uniformly at random.
+
+Masking renews the secret $s_i'$ each time the reflection oracle is called. That
+way, this method secures the secret's content against instances of the attack
+that require at least two calls to the reflection oracle.
+
+Masking is a method used by Facebook \cite{c9} in order to protect CSRF tokens
 against BREACH attacks.
 
 %%% Noise is bounded by security parameter $\lambda$
@@ -767,7 +778,7 @@ Length hiding introduces artificial noise.
 
 \section{Application}\label{sec:application}
 
-BREACH \cite{c3} is an example of a side-channel attack, that uses reflection in
+BREACH is an example of a side-channel attack, that uses reflection in
 order to steal plaintext compressed and encrypted in the web.
 
 \subsection{BREACH as a compression distinguishing
@@ -788,8 +799,8 @@ The rendering function $f$ is the website response code rendering function. This
 function concatenates secret $s$ with static strings $u$, noise $v$ and the
 reflection string $r$.
 
-The compression function is gzip, which implements the DEFLATE algorithm, that
-is the combination of LZ77 and Huffman coding.
+The compression function is gzip, which implements the DEFLATE algorithm
+\cite{c10}, that is the combination of LZ77 and Huffman coding.
 
 The encryption function is any encryption algorithm used in communications over
 the Internet, most notably AES.
@@ -806,7 +817,9 @@ compression distinguishing attack is successful.
 
 \subsection{Rupture implementation}\label{subsec:rupture}
 Our contributions include the development of a production-grade framework for
-implementing this class of attacks called Rupture \cite{c4}.
+implementing this class of attacks called Rupture \cite{c11}. Rupture was
+developed as part of the work on extending BREACH application against modern
+systems and block ciphers \cite{c12}.
 
 As long as a vulnerable endpoint, as described in \ref{sec:comattack}, is found,
 Rupture offers the ability to inject malicious code in any computer in the
@@ -818,9 +831,9 @@ and automates the reflection string creation.
 Finally, it amplifies the attack by issuing multiple requests per $t \in
 \mathcal{T}$ in order to demonstrate better probability of success.
 
-\section{Appendix}
+\section*{Appendix A}
 
-\subsection{Rupture architecture}\label{app:rupture}
+\subsection*{Rupture architecture}\label{app:rupture}
 Rupture consists of multiple components that collaborate in executing
 compression-based attacks, such as BREACH.
 
@@ -851,18 +864,65 @@ finding to continue the attack against the rest of the secret.
       \caption{Rupture Architecture}
    \end{figure}
 
-\begin{thebibliography}{4}
+\section*{Appendix B}
 
-\bibitem{c1} M. West, First-Party-Only Cookies, RFC Internet-Draft, 2015.
+\subsection*{Practical optimization methods}\label{app:optimization}
 
-\bibitem{c2} [online] URL:
+\subsubsection*{Block alignment}
+Block ciphers are \textit{length monotonic}, but not \textit{strictly length
+monotonic}, as described in section \ref{subsec:lenmonotone}. Specifically, the
+length of the encrypted text is rounded to a product of $\mu$-bits, where $\mu$
+is the block size, using added padding. The same applies for stream ciphers,
+whose functionality is similar to block ciphers with block size 1 byte. In this
+case, plaintext length difference between two messages does not always result in
+length difference between the respective encrypted ciphertext.
+
+It is possible to bypass this problem by using block alignment. Block alignment
+techniques have already been explored in the literature \cite{c14}.  This method
+demands issuing multiple requests to the reflection oracle while including
+artificial noise in the reflection string $r$.  That way, one out of
+$\ceil{\mu / |r^i|}$ requests, where $|r^i|$ is the length of one digit of
+$r$ in bits, will result in a block distinction between different reflection
+strings $r_i$.
+
+\begin{thebibliography}{13}
+
+\bibitem{c1} J. Rizzo and T. Duong, "The CRIME attack", Ekoparty, 2012.
+
+\bibitem{c2} Be'ery, T. and A. Shulman, "A Perfect CRIME? Only TIME Will Tell",
+Black Hat Europe 2013, 2013.
+
+\bibitem{c3} Y. Gluck, N. Harris and A. Prado, "BREACH: Reviving the CRIME attack",
+Black Hat USA, 2013.
+
+\bibitem{c4} NIST, "Announcing the ADVANCED ENCRYPTION STANDARD (AES)", 2001.
+
+\bibitem{c5} J. Ziv and A. Lempel, "A universal algorithm for sequential data
+compression", Information Theory, IEEE Transactions, vol. 23, 1977.
+
+\bibitem{c6} J. Alawatugoda, D. Stebila and C. Boyd, "Protecting encrypted
+cookies from compression side-channel attacks", 2014.
+
+\bibitem{c7} J. Kelley and R. Tamassia, "Secure Compression: Theory \& Practice",
+2014.
+
+\bibitem{c8} M. West, "First-Party-Only Cookies", RFC Internet-Draft, 2015.
+
+\bibitem{c9} [online] URL:
 \url{https://www.facebook.com/notes/protect-the-graph/preventing-a-breach-attack/1455331811373632}
 [cited May 2016]
 
-\bibitem{c3} Y. Gluck, N. Harris, A. Prado, BREACH: Reviving the CRIME attack,
-Black Hat USA, 2013.
+\bibitem{c10} P. Deutsch, "DEFLATE Compressed Data Format Specification version
+1.3", RFC 1951, 1996.
 
-\bibitem{c4} [online] URL: \url{https://ruptureit.com} [cited May 2016]
+\bibitem{c11} [online] URL: \url{https://ruptureit.com} [cited May 2016]
+
+\bibitem{c12} D. Karakostas and D. Zindros, "Practical New Developments on
+BREACH", Black Hat Asia, 2016.
+
+\bibitem{c13} John Kelsey, "Compression and information leakage of plaintext", 2002.
+
+\bibitem{c14} B. Moller, T. Duong, K. Kotowicz, This POODLE Bites: Exploiting the SSL 3.0 Fallback, September 2014.
 
 \end{thebibliography}
 
