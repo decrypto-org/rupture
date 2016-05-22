@@ -885,6 +885,32 @@ $\ceil{\mu / |r^i|}$ requests, where $|r^i|$ is the length of one digit of
 $r$ in bits, will result in a block distinction between different reflection
 strings $r_i$.
 
+\subsubsection*{Reflection computation methods}
+Reflection strings $r$ should be polynomially computable, as defined in
+\ref{sec:propertycom}. BREACH, defined in \ref{subsec:breachapp}, is
+parameterized with an alphabet of ASCII symbols $a$ for each character of the
+secret. A successful attack should distinguish a single character of the
+alphabet as the correct one through a series of requests to the reflection
+oracle.
+
+The first method of issuing requests is serial. Each request to the oracle
+corresponds to a single character of the alphabet. An attack phase is completed
+when requests have been issued for the entire alphabet. The complexity of the
+attack is $\mathcal{O}(|a|)$ and the round ends by finding a character of the
+secret.
+
+The second method of attack is divide and conquer. In each phase the alphabet is
+divided into two subsets $a_1$ and $a_2$, where $|a_1| = |a_2| = \ceil{|a| /
+2}$. The reflection string for $a_1$ composes of $|a_1|$ substrings divided by
+an annotation symbol $\beta$. Each substring consists of the known part of the
+secret concatenated with a character in $a_1$. The reflection string for $a_2$
+is constructed similarly. Each phase consists of one call to the reflection
+oracle per subset. As long as the prefix of the secret is
+\textit{compression-detectable} by each substring of the reflection, the end of
+each phase marks the choice of subset $a_i$ that contains the correct alphabet
+symbol, in which case $a = a_i$. The round is complete when $|a| = 1$. The
+complexity of the attack in this case is $\mathcal{O}(lg(|a|))$.
+
 \begin{thebibliography}{13}
 
 \bibitem{c1} J. Rizzo and T. Duong, "The CRIME attack", Ekoparty, 2012.
