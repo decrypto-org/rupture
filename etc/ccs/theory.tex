@@ -1,13 +1,24 @@
-\documentclass[a4paper, 11 pt, conference]{article}
+\documentclass{sig-alternate-05-2015}
+
 \usepackage[utf8]{inputenc}
 
 \title{On the security of encryption and compression composition under reflection attacks}
+
+\numberofauthors{3}
+
 \author{
-Dimitris Karakostas
-\and
-Aggelos Kiayias
-\and
-Dionysis Zindros
+\alignauthor
+Dimitris Karakostas\\
+       \affaddr{University of Athens}\\
+       \email{dimit.karakostas@gmail.com}
+\alignauthor
+Aggelos Kiayias\\
+       \affaddr{University of Athens}\\
+       \email{aggelos@di.uoa.gr}
+\alignauthor
+Dionysis Zindros\\
+       \affaddr{University of Athens}\\
+       \email{dionyziz@di.uoa.gr}
 }
 \date{May 2016}
 
@@ -17,7 +28,7 @@ Dionysis Zindros
 \usepackage{listings}
 \usepackage{mathtools}
 \usepackage{amsfonts}
-\usepackage{amsthm}
+% \usepackage{amsthm}
 \usepackage{amssymb}
 \usepackage[colorlinks=true,linkcolor=blue,citecolor=green]{hyperref}
 
@@ -25,7 +36,7 @@ Dionysis Zindros
 \let\oldemptyset\emptyset
 \let\emptyset\varnothing
 
-\newtheorem*{lemma}{Lemma}
+\newtheorem{lemma}{Lemma}
 
 \newcommand\defeq{\stackrel{\mathclap{\normalfont\mbox{def}}}{=}}
 \newcommand{\overbar}[1]{\mkern 1.5mu\overline{\mkern-1.5mu#1\mkern-1.5mu}\mkern 1.5mu}
@@ -109,15 +120,13 @@ def $\text{Game}_{\text{REF-SIM}}^{\mathcal{PE},\mathcal{S}}(\lambda, f, \mathca
         return 0
 \end{lstlisting}
 
-Let
+Let:
 
-\begin{equation*}
-    \text{Adv}_{\mathcal{PE}, \mathcal{A}, \mathcal{S}}(\lambda, f, \mathcal{V}, \mathcal{M}, g)
-    \defeq
-    |\Pr[\text{Game}_{\text{REF-SEC}}^{\mathcal{PE},\mathcal{A}}(\lambda, f, \mathcal{V}, \mathcal{M}, g) = 1]
-    -
-    \Pr[\text{Game}_{\text{REF-SIM}}^{\mathcal{PE},\mathcal{S}}(\lambda, f, \mathcal{V}, \mathcal{M}, g) = 1]|.
-\end{equation*}
+\begin{align*}
+    \text{Adv}_{\mathcal{PE}, \mathcal{A}, \mathcal{S}}&(\lambda, f, \mathcal{V}, \mathcal{M}, g) &\defeq\\
+    |\Pr[\text{Game}_{\text{REF-SEC}}^{\mathcal{PE},\mathcal{A}}(\lambda, f, \mathcal{V}, \mathcal{M}, g) = 1] &-\\
+    \Pr[\text{Game}_{\text{REF-SIM}}^{\mathcal{PE},\mathcal{S}}(\lambda, f, \mathcal{V}, \mathcal{M}, g) = 1]| &
+\end{align*}
 
 The above game can be modified to deal with symmetric encryption. For this, the
 choice of key is changed to be limited to a secret key instead of a public and
@@ -137,13 +146,13 @@ Given a polynomially computable rendering function $f(\cdot, \cdot, \cdot)$ and
 a  noise distribution $\mathcal{V}$, a public-key encryption scheme
 $\mathcal{PE}$ is \textit{reflection-secure} if:
 
-\begin{equation*}
+\begin{align*}
 \forall \mathcal{M}:
 \forall g:
 \forall PPT \mathcal{A}:
-\exists PPT \mathcal{S}:
+\exists PPT \mathcal{S}:\\
 \text{Adv}_{\mathcal{PE}, \mathcal{A}, \mathcal{S}}(\lambda, f, \mathcal{V}, \mathcal{M}, g) = negl(\lambda)
-\end{equation*}
+\end{align*}
 
 \section{The security of compression}\label{sec:comsec}
 
@@ -227,7 +236,7 @@ and noise pair, we say that $Q$ compares favourably under $\overbar{r},
 \begin{equation*}
 \begin{split}
     cpr^Q_{f, Com}(s, \overbar{r}, \overbar{v})
-    \defeq
+    \defeq\\
     \begin{cases}
         |Com(f(s, r_1, v_1))| < |Com(f(s, r_2, v_2))| &\text{ if } Q(s)\\
         |Com(f(s, r_1, v_1))| > |Com(f(s, r_2, v_2))| &\text{ otherwise}
@@ -248,7 +257,7 @@ distribution $\mathcal{M}$ and the noise distribution $\mathcal{V}$ when:
         \overbar{v} \leftarrow \mathcal{V}^2}
         [cpr^Q_{f, Com}(s, \overbar{r}, \overbar{v}) \land
          cpr^Q_{f, Com}(s', \overbar{r}, \overbar{v})]
-    \geq
+    \geq\\
     \pi + \alpha(\lambda)
 \end{align*}
 
@@ -378,23 +387,23 @@ def $\text{LZ77}^{-1}(c)$:
     parts = c.split("$\$$")
     plaintextLength = parse_int(parts[0])
     bitsPerSymbol = $\ceil{lg(\text{plaintextLength}) + 2}$
-    encodedPlaintext = stringToBinaryArray("".join(parts[1:]))
+    enc = strToBinArray("".join(parts[1:]))
 
     plaintext = ''
-    for i in range(0, len(encodedPlaintext), bitsPerSymbol):
-        symbol = binaryToInt(encodedPlaintext[i:bitsPerSymbol])
+    for i in range(0, len(enc), bits):
+        symbol = binaryToInt(enc[i:bits])
         if symbol = 0:
             plaintext += '0'
         else if symbol = 1:
             plaintext += '1'
         else:
-            distance = symbol - 1
-            i += bitsPerSymbol
-            length = int(encodedPlaintext[i:bitsPerSymbol])
-            if distance > len(plaintext):
+            d = symbol - 1
+            i += bits
+            length = int(enc[i:bits])
+            if d > len(plaintext):
                 return $\bot$
             while length:
-                plaintext += plaintext[-distance]
+                plaintext += plaintext[-d]
                 length -= 1
     if len(plaintext) != plaintextLength:
         return $\bot$
@@ -428,7 +437,7 @@ In practical terms, this requires the secret that needs to be stolen to be at
 least 3 bytes so that it is better compressed rather than represented as a
 literal.
 
-\subsection{BREACH prefixes are
+\subsection{Prefixes are
 compression-detectable}\label{subsec:breachprefix}
 
 Let $startswith(v, s)$ be the $k$-length prefix checking predicate on a
@@ -442,9 +451,9 @@ $\lambda$-bit secret $s$:
 
 Let $f$ be a concatenative rendering function and let $Com = LZ77$. Then:
 
-\begin{equation}
-\Pr[startswith(v, \cdot) \textrm{ compression-detectable under } f, Com] = \text{non-negl}(\lambda - k)
-\end{equation}
+\begin{align*}
+\Pr[startswith(v, \cdot) \textrm{ compression-detectable under } f, Com] =\\ \text{non-negl}(\lambda - k)
+\end{align*}
 
 Where the probability randomness is taken uniformly over all $k$-bit prefixes $v \in \{0, 1\}^k$.
 
@@ -454,7 +463,7 @@ Where the probability randomness is taken uniformly over all $k$-bit prefixes $v
 ?
 \end{proof}
 
-\section{The compression distinguishing attack}\label{sec:comattack}
+\section{Compression distinguishing attacks}\label{sec:comattack}
 
 \begin{lemma}[Compression attack]
 
@@ -532,14 +541,15 @@ maximum $\Pr[b]$ of the simulator is:
 
 And therefore:
 
-\begin{equation*}
-    \forall \mathcal{S}:
+\begin{align*}
+    \forall \mathcal{S}:\\
     \Pr[
         \text{Game}_{\text{REF-SIM}}^{\mathcal{PE},\mathcal{S}}
         (\lambda, f, \mathcal{V}, \mathcal{M}, g) = 1
     ]
-    \leq max(Pr[Q(x)], 1 - Pr[Q(x)])
-\end{equation*}
+    \leq\\
+    max(Pr[Q(x)], 1 - Pr[Q(x)])
+\end{align*}
 
 From the compression detectability of Q we know that:
 
@@ -550,7 +560,7 @@ From the compression detectability of Q we know that:
          \overbar{v} \leftarrow \mathcal{V}^2}
          [cpr^Q_{f, Com}(s, \overbar{r}, \overbar{v}) \land
           cpr^Q_{f, Com}(s', \overbar{r}, \overbar{v})]
-    \geq
+    \geq\\
     \pi + \alpha(\lambda)
 \end{align*}
 
@@ -577,7 +587,7 @@ And so:
          [cpr^Q_{f, Com}(s, \overbar{r}, \overbar{v})]
     =\\
     \Pr[cpr^Q_{f, Com}(s, \overbar{r}, \overbar{v})|Q(s)]\Pr[Q(s)]
-    +
+    +\\
     \Pr[cpr^Q_{f, Com}(s, \overbar{r}, \overbar{v})|\lnot Q(s)]\Pr[\lnot Q(s)]
     \geq\\
     (\pi + \alpha(\lambda))(\Pr[Q(s)] + (1 - \Pr[Q(s)))
@@ -596,48 +606,49 @@ when $cpr^Q_{f, Com}(s, \overbar{r}, \overbar{v})$. Indeed:
 And from the strict length monotonicity of $Enc$ it follows that:
 
 \begin{align*}
-    & \Pr[|Enc(Com(f(s, r_1, v_1)))| < |Enc(Com(f(s, r_2, v_2)))||Q(s)]
+    \Pr[&|Enc(Com(f(s, r_1, v_1)))| <\\&|Enc(Com(f(s, r_2, v_2)))||Q(s)]
         \geq \pi + \alpha(\lambda)\\
-    \Rightarrow& \Pr[
+    \Rightarrow \Pr[&
         |\text{Reflect}^{\mathcal{E}_{pk}, \mathcal{V}}_s(r_1)|
         <
         |\text{Reflect}^{\mathcal{E}_{pk}, \mathcal{V}}_s(r_2)||Q(s)
     ]
         \geq \pi + \alpha(\lambda)\\
-    \Rightarrow& \Pr[l_1 < l_2|Q(s)]
+    \Rightarrow \Pr[&l_1 < l_2|Q(s)]
         \geq \pi + \alpha(\lambda)\\
-    \Rightarrow& \Pr[\text{Succ}|Q(s)]
+    \Rightarrow \Pr[&\text{Succ}|Q(s)]
         \geq \pi + \alpha(\lambda)\\
 \end{align*}
 
 The case for $\lnot Q(s)$ is the same, but with a different inequality direction:
 
 \begin{align*}
-    & \Pr[|Com(f(s, r_1, v_1))| > |Com(f(s, r_2, v_2))||Q(s)]
-        \geq \pi + \alpha(\lambda)\\
-    \Rightarrow& \Pr[\text{Succ}|\lnot Q(s)] \geq \pi + \alpha(\lambda)\\
+    \Pr[|Com(f(s, r_1, v_1))| > |Com(f(s, r_2, v_2))||Q(s)]
+        \geq\\
+        \pi + \alpha(\lambda)\\
+    \Rightarrow \Pr[\text{Succ}|\lnot Q(s)] \geq\\
+    \pi + \alpha(\lambda)\\
 \end{align*}
 
 And so the probability of success is given:
 
 \begin{align*}
-    \Pr[\text{Succ}] =
+    \Pr[\text{Succ}] =\\
     \Pr[\text{Succ}|Q(s)]\Pr[Q(s)]
     +
-    \Pr[\text{Succ}|\lnot Q(s)]\Pr[\lnot Q(s)]
-    \geq \pi + \alpha(\lambda)
+    \Pr[\text{Succ}|\lnot Q(s)]\Pr[\lnot Q(s)] \geq\\
+    \pi + \alpha(\lambda)
 \end{align*}
 
 Therefore,
 
-\begin{equation}
-\begin{split}
+\begin{align*}
     \forall PPT \mathcal{S}:
     \text{Adv}_{\mathcal{SE}(Enc, Com), \mathcal{A}, \mathcal{S}}
         (\lambda, f, \mathcal{V}, \mathcal{M}, g)
-    \geq |\pi + \alpha(\lambda) - \pi| = \alpha(\lambda)
-\end{split}
-\end{equation}
+    \geq\\
+    |\pi + \alpha(\lambda) - \pi| = \alpha(\lambda)
+\end{align*}
 
 Which is non-negligible.
 
