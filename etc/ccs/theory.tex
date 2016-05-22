@@ -723,9 +723,6 @@ the XOR operation between the secret and the mask concatenated with the mask.
 The secret can be obtained by applying XOR between the first and the second
 half of the masked text.
 
-Masked secret $s_i'$ and mask $m_i$ are uniformly random, resulting in BREACH
-prefixes not being compression-detectable.
-
 A masking function is defined:
 
 \begin{lstlisting}[texcl,mathescape]
@@ -759,6 +756,15 @@ def remove_masking($m', \beta_1, \beta_2, \beta_3$):
 
 where $Rep$ is the string replacement function and $\{\beta_1, \beta_2,
 \beta_3\}$ are the annotation symbols used in \texttt{apply\_masking}.
+
+Mask $m_i$ is chosen uniformly at random, so masked secret $s_i'$ is also
+random. This results in $s_i' m_i$ being indistinguishable from $r_1 r_2$ by a
+compression function $Com$, where $r_1$, $r_2$ are random nonces chosen
+uniformly at random.
+
+Masking renews the secret $s_i'$ each time the reflection oracle is called. That
+way, this method secures the secret's content against instances of the attack
+that require at least two calls to the reflection oracle.
 
 Masking is a method used by Facebook \cite{c9} in order to protect CSRF tokens
 against BREACH attacks.
