@@ -210,22 +210,44 @@ $\overbar{v} = (v_1, v_2) \leftarrow \mathcal{V}^2$ is drawn.  Let $\overbar{r}
 compression function, $f$ be a rendering function, and let $\alpha(\lambda)$ be
 a non-negligible function.
 
+We now examine how the lengths of compressing a secret $s$ rendered with
+reflection strings $r_1$ and $r_2$ respectively compare.
+
+The predicate $Q$ partitions the set $\mathcal{M}$ into two partitions
+$\mathcal{M}_Q$ and $\mathcal{M}_{\lnot Q}$. We are interested in reflection
+string pairs $\overbar{r} = (r_1, r_2)$ for which the comparison direction
+depends on which partition $s$ belongs to.  The direction of comparison can
+also depend on a noise vector $\overbar{v}$.  If $s \in \mathcal{M}_Q$, it
+should compress better when reflection $r_1$ is used as compared to when $r_2$
+is used. On the contrary, if $s \in \mathcal{M}_{\lnot Q}$, the opposite
+direction should occur.  If this is the case for the selected reflection pair
+and noise pair, we say that $Q$ compares favourably under $\overbar{r},
+\overbar{v}$:
+
+\begin{equation*}
+\begin{split}
+    cpr^Q_{f, Com}(s, \overbar{r}, \overbar{v})
+    \defeq
+    \begin{cases}
+        |Com(f(s, r_1, v_1))| < |Com(f(s, r_2, v_2))| &\text{ if } Q(s)\\
+        |Com(f(s, r_1, v_1))| > |Com(f(s, r_2, v_2))| &\text{ otherwise}
+    \end{cases}
+\end{split}
+\end{equation*}
+
 The reflection pair $\overbar{r}$ \textit{detects} predicate $Q$ under
 compression $Com$ rendered with rendering function $f$ over the secret
 distribution $\mathcal{M}$ and the noise distribution $\mathcal{V}$ when:
 
 \begin{align*}
-    dct(Q, \overbar{r}, f, Com, \mathcal{M}, \mathcal{V})
+    dtc(Q, \overbar{r}, f, Com, \mathcal{M}, \mathcal{V})
     \defeq\\
     \exists \alpha \text{ non-negl}:\\
-    \Pr_{
-        s \leftarrow \mathcal{M}_Q,
+    \Pr_{s \leftarrow \mathcal{M}_Q,
         s' \leftarrow \mathcal{M}_{\lnot Q},
-        v_1 \leftarrow \mathcal{V},
-        v_2 \leftarrow \mathcal{V}}
-       [|Com(f(s, r_1, v_1))| &< |Com(f(s, r_2, v_2))| \land\\
-       |Com(f(s', r_1, v_1))| &> |Com(f(s', r_2, v_2))|,\\
-       ]
+        \overbar{v} \leftarrow \mathcal{V}^2}
+        [cpr^Q_{f, Com}(s, \overbar{r}, \overbar{v}) \land
+         cpr^Q_{f, Com}(s', \overbar{r}, \overbar{v})]
     \geq
     \pi + \alpha(\lambda)
 \end{align*}
