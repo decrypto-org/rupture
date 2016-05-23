@@ -117,32 +117,41 @@ simulator of $\mathcal{A}$.  The game
 $\text{Game}_{\text{REF-SEC}}^{\mathcal{PE},\mathcal{A}}(\lambda,  f,
 \mathcal{V}, g)$ is parameterized with a rendering function $f(\cdot, \cdot,
 \cdot)$, a noise distribution $\mathcal{V}$, the security parameter $\lambda$,
-some function $g$ of the plaintext, and a distribution of secrets $\mathcal{M}$
-such that $\forall s \in \mathcal{M}: |s| = \lambda$.
+some function $g$ of the plaintext vector, and a distribution of secrets $\mathcal{M}_\omega$
+such that $\forall \omega \forall s \in \mathcal{M}_\omega: |s| = \lambda$. Notice
+that the distribution of secrets is parameterized with the history of execution
+$\omega$.
 
 The challenger produces a $\lambda$-bit key $(pk, sk) \leftarrow
 \mathcal{K}(\lambda)$. The adversary is given $pk$, $\mathcal{V}$, $g$ and $f$.
-The challenger then chooses a secret $s \leftarrow \mathcal{M}$.
+Setting $\omega = ()$, the empty vector, the challenger initially chooses
+a secret $s_0 \leftarrow \mathcal{M}_\omega$.
 
 The adversary is then allowed to run and make arbitrary calls to a reflection
-oracle. The oracle is parameterized by $s$, the secret unknown to the
+oracle, which responds potentially differently to every round $i$. The oracle
+is parameterized by $s_i$, the secret unknown to the
 adversary.  For the reflection oracle call, the adversary chooses a reflection
-string $r_i$ and sends it to the oracle. The oracle produces a noise string
-$v_i \leftarrow \mathcal{V}$ and computes $m_i = f(s, r_i, v_i)$.  Subsequently
+string $r$ and sends it to the oracle. The oracle produces a noise string
+$v \leftarrow \mathcal{V}$ and computes $m_i = f(s_i, r, v)$. Subsequently
 $m_i$ is encrypted as $c_i = \mathcal{E}_\kappa(m_i)$, and $c_i$ is sent back
-to the adversary.
+to the adversary. Once $m_i$ is computed, the history vector $\omega$ is updated
+with the rendered message as $\omega = \omega : m_i$ where $:$ denotes appending
+a vector element to an existing vector, and the next secret $s_{i+1} \leftarrow \mathcal{M}_\omega$
+is chosen.
 
 When the adversary decides to complete the game, they output a guess $y$. The
-adversary is successful if $g(s) = y$.
+adversary is successful if $g(s_0, s_1, ..., s_i) = y$.
 
 Formally, let the public key adversarial game be defined as follows:
 
 \begin{lstlisting}[texcl,mathescape]
 def $\text{Game}_{\text{REF-SEC}}^{\mathcal{PE},\mathcal{A}}(\lambda, f, \mathcal{V}, \mathcal{M}, g)$:
     $(pk, sk) \leftarrow \mathcal{K}(\lambda)$
-    $s \leftarrow \mathcal{M}$
-    $y \leftarrow \mathcal{A}^{\text{Reflect}^{\mathcal{E}_{pk}, \mathcal{V}}_s(r)}(\lambda, f, \mathcal{V}, \mathcal{M}, g)$
-    if $y = g(s)$:
+    $\omega = ()$
+    $i = 0$
+    $y \leftarrow \mathcal{A}^{\text{Reflect}^{\mathcal{E}_{pk}, \mathcal{V}}}
+     (\lambda, f, \mathcal{V}, \mathcal{M}, g)$
+    if $y = g(s_0, s_1, ..., s_i)$:
         return 1
     else:
         return 0
@@ -151,9 +160,11 @@ def $\text{Game}_{\text{REF-SEC}}^{\mathcal{PE},\mathcal{A}}(\lambda, f, \mathca
 Where the reflection oracle provided to the adversary is as follows:
 
 \begin{lstlisting}[texcl,mathescape]
-def $\text{Reflect}^{\mathcal{E}_{pk}, \mathcal{V}}_s(r)$:
+def $\text{Reflect}^{\mathcal{E}_{pk}, \mathcal{V}}(r)$:
+    $s_i \leftarrow \mathcal{M}_\omega$
     $v \leftarrow \mathcal{V}$
     $m = f(s, r, v)$
+    $\omega = \omega : m$
     $c \leftarrow \mathcal{E}_{pk}(m)$
     return $c$
 \end{lstlisting}
@@ -162,33 +173,36 @@ Let the simulator game be defined as follows:
 
 \begin{lstlisting}[texcl,mathescape]
 def $\text{Game}_{\text{REF-SIM}}^{\mathcal{PE},\mathcal{S}}(\lambda, f, \mathcal{V}, \mathcal{M}, g)$:
-    $y \leftarrow \mathcal{S}(f, \mathcal{V}, \mathcal{M}, g)$
-    $s \leftarrow \mathcal{M}$
-    if $y = g(s)$:
+    $\omega = ()$
+    $i = 0$
+    $y \leftarrow \mathcal{A}^{\text{ReflectSim}^{\mathcal{E}_{pk}, \mathcal{V}}}
+     (\lambda, f, \mathcal{V}, \mathcal{M}, g)$
+    if $y = g(s_0, s_1, ..., s_i)$:
         return 1
     else:
         return 0
 \end{lstlisting}
 
-Let:
+Where the simulator reflection oracle is configured to not answer:
+
+\begin{lstlisting}[texcl,mathescape]
+def $\text{ReflectSim}^{\mathcal{E}_{pk}, \mathcal{V}}(r)$:
+    $s_i \leftarrow \mathcal{M}_\omega$
+    $v \leftarrow \mathcal{V}$
+    $m = f(s, r, v)$
+    $\omega = \omega : m$
+    return $\bot$
+\end{lstlisting}
+
+\subsection{Adversarial advantage}\label{subsec:refsecadv}
+
+Let us now define the advantage of the adversary against a simulator:
 
 \begin{align*}
     \text{Adv}_{\mathcal{PE}, \mathcal{A}, \mathcal{S}}&(\lambda, f, \mathcal{V}, \mathcal{M}, g) &\defeq\\
     |\Pr[\text{Game}_{\text{REF-SEC}}^{\mathcal{PE},\mathcal{A}}(\lambda, f, \mathcal{V}, \mathcal{M}, g) = 1] &-\\
     \Pr[\text{Game}_{\text{REF-SIM}}^{\mathcal{PE},\mathcal{S}}(\lambda, f, \mathcal{V}, \mathcal{M}, g) = 1]| &
 \end{align*}
-
-The above game can be modified to deal with symmetric encryption. For this, the
-choice of key is changed to be limited to a secret key instead of a public and
-private key pair. The adversary is not given access to any key material.
-Instead, the adversary is given access to an encryption oracle which encrypts a
-given message using the secret key and returns the respective ciphertext, in
-addition to the existing reflection oracle. Both oracles can be called an
-arbitrary number of times by the challenger.
-
-In the following proofs, we will assume that the game is played symmetrically.
-As the attack does not pertain to the key exchange mechanism, all theorems can
-be directly translated between the two versions of the game.
 
 \subsection{Adaptive reflection security}\label{subsec:adaptiverefsec}
 
@@ -203,6 +217,62 @@ $\mathcal{PE}$ is \textit{reflection-secure} if:
 \exists PPT \mathcal{S}:\\
 \text{Adv}_{\mathcal{PE}, \mathcal{A}, \mathcal{S}}(\lambda, f, \mathcal{V}, \mathcal{M}, g) = negl(\lambda)
 \end{align*}
+
+\subsection{Non-adaptive secrets}\label{subsec:refsecnonadapt}
+
+For the rest of this paper, we assume that the distribution $\mathcal{M}$ is
+independent of history $\omega$. Specifically, we assume that $\mathcal{M}_{()}$
+is a distribution of secrets which we denote simply $\mathcal{M}$, and subsequent
+random choices from $\mathcal{M}_\omega$ always return the initial secret $s$.
+
+This simplifies the game as follows:
+
+\begin{lstlisting}[texcl,mathescape]
+def $\text{Game}_{\text{REF-SEC}}^{\mathcal{PE},\mathcal{A}}(\lambda, f, \mathcal{V}, \mathcal{M}, g)$:
+    $(pk, sk) \leftarrow \mathcal{K}(\lambda)$
+    $s \leftarrow \mathcal{M}$
+    $y \leftarrow \mathcal{A}^{\text{Reflect}^{\mathcal{E}_{pk}, \mathcal{V}}_s(r)}(\lambda, f, \mathcal{V}, \mathcal{M}, g)$
+    if $y = g(s)$:
+        return 1
+    else:
+        return 0
+\end{lstlisting}
+
+The adversary reflection oracle is also simplified:
+
+\begin{lstlisting}[texcl,mathescape]
+def $\text{Reflect}^{\mathcal{E}_{pk}, \mathcal{V}}_s(r)$:
+    $v \leftarrow \mathcal{V}$
+    $m = f(s, r, v)$
+    $c \leftarrow \mathcal{E}_{pk}(m)$
+    return $c$
+\end{lstlisting}
+
+And the simulator does not require an oracle for its execution:
+
+\begin{lstlisting}[texcl,mathescape]
+def $\text{Game}_{\text{REF-SIM}}^{\mathcal{PE},\mathcal{S}}(\lambda, f, \mathcal{V}, \mathcal{M}, g)$:
+    $y \leftarrow \mathcal{S}(f, \mathcal{V}, \mathcal{M}, g)$
+    $s \leftarrow \mathcal{M}$
+    if $y = g(s)$:
+        return 1
+    else:
+        return 0
+\end{lstlisting}
+
+\subsection{Symmetric version}\label{subsec:refsecsym}
+
+The above game can be modified to deal with symmetric encryption. For this, the
+choice of key is changed to be limited to a secret key instead of a public and
+private key pair. The adversary is not given access to any key material.
+Instead, the adversary is given access to an encryption oracle which encrypts a
+given message using the secret key and returns the respective ciphertext, in
+addition to the existing reflection oracle. Both oracles can be called an
+arbitrary number of times by the challenger.
+
+In the following proofs, we will assume that the game is played symmetrically.
+As the attack does not pertain to the key exchange mechanism, all theorems can
+be directly translated between the two versions of the game.
 
 \section{The security of compression}\label{sec:comsec}
 
