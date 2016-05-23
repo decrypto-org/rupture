@@ -836,7 +836,7 @@ Rupture \cite{c11}, for implementing this class of attacks. Rupture was
 developed as part of the work on extending BREACH application against modern
 systems and block ciphers \cite{c12}.
 
-As long as a vulnerable endpoint, as described in \ref{sec:comattack}, is found,
+As long as a vulnerable endpoint described in \ref{sec:comattack} is found,
 Rupture offers the ability to inject malicious code in any computer in the
 network. This code would issue requests to the endpoint and serve as a caller of
 the reflection oracle that is the endpoint.
@@ -910,33 +910,41 @@ strings $r_i$.
 \subsection{Reflection computation methods}
 Reflection strings $r$ should be polynomially computable, as defined in
 \ref{sec:propertycom}. BREACH, defined in \ref{subsec:breachapp}, is
-parameterized with an alphabet of ASCII symbols $\mathcal{A}$ for each character of the
+parameterized with an alphabet of ASCII symbols $\mathcal{S}$ for each character of the
 secret. A successful attack should distinguish a single character of the
 alphabet as the correct one through a series of requests to the reflection
 oracle.
 
 The first method of issuing requests is serial. Each request to the oracle
 corresponds to a single character of the alphabet. An attack phase is completed
-when requests have been issued for the entire alphabet. The complexity of the
-attack is $\mathcal{O}(|\mathcal{A}|)$ and the round ends by finding a character of the
-secret.
+when requests have been issued for the entire alphabet.
+
+In this case, $Q$ is the property described in \ref{subsec:breachapp}, $\exists
+s_i \in \mathcal{S}: Q(s_i)$ and $\forall s_j \in \mathcal{S} \setminus \{s_i\}:
+\lnot Q(s_j)$. The complexity of the attack is $\mathcal{O}(|\mathcal{S}|)$ and
+the round ends by finding a character of the secret.
 
 The second method of attack is divide and conquer. In each phase the alphabet is
-divided into two subsets $\mathcal{A}_1$ and $\mathcal{A}_2$, where
-$|\mathcal{A}_1| = |\mathcal{A}_2| = \ceil{|\mathcal{A}| / 2}$. The reflection
-string for $\mathcal{A}_1$ composes of $|\mathcal{A}_1|$ substrings divided by
-an annotation symbol $\beta$. Each substring consists of the known part of the
-secret concatenated with a character in $\mathcal{A}_1$. The reflection string
-for $\mathcal{A}a_2$ is constructed similarly. Each phase consists of one call
-to the reflection oracle per subset. As long as the prefix of the secret is
-\textit{compression-detectable} by each substring of the reflection, the end
-of each phase marks the choice of subset $\mathcal{A}_i$ that contains the
-correct alphabet symbol, in which case $\mathcal{A} = \mathcal{A}_i$. The
-round is complete when $|\mathcal{A}| = 1$. The complexity of the attack in
-this case is $\mathcal{O}(lg(|\mathcal{A}|))$.
+divided into two subsets $\mathcal{S}_1$ and $\mathcal{S}_2 = \mathcal{S}
+\setminus \mathcal{S}_1$, where $|\mathcal{S}_1| = |\mathcal{S}_2| =
+\ceil{|\mathcal{S}| / 2}$. The reflection string for $\mathcal{S}_1$ composes of
+$|\mathcal{S}_1|$ substrings divided by an annotation symbol $\beta$. Each
+substring consists of the known part of the secret concatenated with a character
+in $\mathcal{S}_1$. The reflection string for $\mathcal{S}_2$ is constructed
+similarly. Each phase consists of one call to the reflection oracle per subset.
 
-\subsection{Request parallelization}
-Reflection oracle is generally considered as synchronous. However, this is not
+Property $Q$ is defined "Given a known prefix $p_s$ of secret $s$, is $p_s:t$ a
+prefix of $s$, where $t \in \mathcal{S}_1$?". As long as the prefix of the
+secret is \textit{compression-detectable} by each substring of the reflection,
+the end of each phase marks the choice of subset $\mathcal{S}_i$ that contains
+the correct alphabet symbol and the same method is applied using chosen
+$\mathcal{S}_i$ as the alphabet $\mathcal{S}$. The round is complete when
+$|\mathcal{S}| = 1$. Each round reduces the alphabet by half, so the complexity
+of the attack with the divide and conquer method  is
+$\mathcal{O}(log_2|\mathcal{S}|)$.
+
+\subsection{Request parallelization}\label{subsec:parallel}
+The reflection oracle is generally considered as synchronous. However, this is not
 always the case, since it may be able to handle multiple parallel requests from
 the adversary.
 
@@ -945,8 +953,8 @@ in \ref{subsec:breachapp}. In that case the reflection oracle is an endpoint
 offered by a web application and the communication channel between the adversary
 and the oracle is the end-to-end browser-server network channel.
 
-Modern web servers are able to handle multiple requests per millisecond and
-browsers offer a certain amount of parallel requests per domain. This
+Modern web servers are able to handle multiple parallel requests and
+browsers can issue a certain amount of parallel requests per domain. This
 functionality enables the adversary to issue multiple parallel requests per
 symbol in alphabet $\mathcal{S}$ and efficiently reduce the execution time of
 the attack.
