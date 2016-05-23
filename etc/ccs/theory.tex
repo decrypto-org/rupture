@@ -928,7 +928,8 @@ The first method of issuing requests is serial. Each request to the oracle
 corresponds to a single character of the alphabet. An attack phase is completed
 when requests have been issued for the entire alphabet.
 
-In this case, $Q$ is the property described in \ref{subsec:breachapp}, $\exists
+In this case, $Q$ is the property "Given a known prefix $p_s$ of secret $s$ and
+a symbol $t \in \mathcal{S}$, is $p_s:t$ a prefix of $s$?" and $\exists
 s_i \in \mathcal{S}: Q(s_i)$ and $\forall s_j \in \mathcal{S} \setminus \{s_i\}:
 \lnot Q(s_j)$. The complexity of the attack is $\mathcal{O}(|\mathcal{S}|)$ and
 the round ends by finding a character of the secret.
