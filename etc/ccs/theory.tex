@@ -807,8 +807,8 @@ The property $g$ of the secret that is being compromised is defined as: "What is
 the prefix $p$ of secret $s$, given a known prefix $p_s$, where $|p| - |p_s| =
 1$?".
 
-The distribution $\mathcal{M}$ is ${p_s:t}$, where $t \in \mathcal{A}$ and
-$\mathcal{A}$ is a known alphabet of ASCII symbols.
+The distribution $\mathcal{M}$ is ${p_s:t}$, where $t \in \mathcal{S}$ and
+$\mathcal{S}$ is a known alphabet of ASCII symbols.
 
 The rendering function $f$ is the website response code rendering function. This
 function concatenates secret $s$ with static strings $u$, noise $v$ and the
@@ -826,7 +826,7 @@ endpoint constitutes the reflection oracle.
 
 The adversary should be able to issue requests to the given endpoint and monitor
 the traffic from and to the attacking browser. At this point, the adversary can
-issue requests on different elements of $A$ and compare the response lengths. As
+issue requests on different elements of $\mathcal{S}$ and compare the response lengths. As
 long as a difference in lengths across different requests is noticeable, the
 compression distinguishing attack is successful.
 
@@ -846,13 +846,16 @@ lengths. Encrypted network packets serve as the response $c_i$ from the
 reflection oracle and the length of each packet is visible on the network and
 captured.
 
-In addition, Rupture offers multiple instances of oracle $\mathcal{O}_R$ and
-enables the automated computation of the reflection strings in each stage of the
-attack.
+In addition, Rupture offers multiple instances of oracle $\mathcal{O}_R$, based
+on various $Q$ described in \ref{subsec:parallel}, and enables the automated
+computation of the reflection strings in each stage of the attack.
 
 Finally, it amplifies the attack by issuing multiple requests per candidate
-symbol in alphabet $\mathcal{A}$ in order to demonstrate better probability of
-success.
+symbol in alphabet $\mathcal{S}$ in order to demonstrate better probability of
+success. This is achieved by grouping requests in samplesets, where each
+sampleset contains requests on a symbol in alphabet $\mathcal{S}$. Requests in a
+sampleset may be constructed to enable optimization methods described in
+\ref{subsec:blockalign} and \ref{subsec:parallel}.
 
 \subsection{Rupture architecture}\label{app:rupture}
 Rupture consists of multiple components that collaborate in executing
@@ -945,7 +948,7 @@ and the oracle is the end-to-end browser-server network channel.
 Modern web servers are able to handle multiple requests per millisecond and
 browsers offer a certain amount of parallel requests per domain. This
 functionality enables the adversary to issue multiple parallel requests per
-symbol in alphabet $\mathcal{A}$ and efficiently reduce the execution time of
+symbol in alphabet $\mathcal{S}$ and efficiently reduce the execution time of
 the attack.
 
 \begin{thebibliography}{13}
