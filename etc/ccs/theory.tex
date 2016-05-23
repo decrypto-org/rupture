@@ -701,20 +701,23 @@ Compression is the basic assumption for property compressibility. Disabling
 compression would break the adaptive reflection game, since it removes
 the compression part of the encryption function.
 
+However, this method is not viable, since the performance overhead should it be
+applied overrules the benefits of the defense.
+
 \subsection{SameSite cookies}\label{subsec:samesite}
-SameSite cookies \cite{c8} is a proposed draft for enhancing web security. This policy
-states that cookies may only be included in same origin requests.
+SameSite cookies \cite{c8} is a proposed draft for enhancing web security. The
+main puprose of this technique is to mitigate cross-site request forgery
+attacks, although it also mitigates other kinds of cross-origin leakages.
 
-Enabling SameSite cookies would result in the elimination of cross-origin
-requests as a method of implementing the reflection oracle of the
-Reflection-Security Game.
+This policy introduces a new attribute for web cookies that web servers may
+opt-in. This attribute states that cookies may only be included in a
+"first-party" context, i.e. in same origin requests.
 
-\subsection{Compress secrets in distinct contexts}\label{subsec:contexts}
-Separating secrets in distinct contexts states that each is compressed
-in a separate context from the rest of the secrets, reflection and noise.
-
-This functionality would break the property compressibility assumption by
-disallowing the reflection to be compressed in the same context as the secret.
+However, the current BREACH application depends on cross-origin requests in
+order to call the reflection oracle, as defined in \ref{subsec:breachapp}.
+Enabling SameSite cookies would result in the elimination of this reflection
+oracle of the Reflection-Security Game and the effective mitigation of the
+attack.
 
 \subsection{Masking secrets}\label{subsec:masking}
 Masking is a method of hiding secrets' properties per request. A mask is a
@@ -766,15 +769,13 @@ Masking renews the secret $s_i'$ each time the reflection oracle is called. That
 way, this method secures the secret's content against instances of the attack
 that require at least two calls to the reflection oracle.
 
+Masking doubles the size of the secret that is being protected. Furthermore,
+$m_i$ and $s_i'$ are random, so the compression performance is poor. Therefore,
+masking should be applied with limitation on high value secrets only, in order
+to avoid significant performance drop.
+
 Masking is a method used by Facebook \cite{c9} in order to protect CSRF tokens
 against BREACH attacks.
-
-%%% Noise is bounded by security parameter $\lambda$
-\subsection{Length hiding}\label{subsec:noise}
-Length hiding introduces artificial noise.
-
-%%% Attack time is bounded by security parameter $\lambda$
-\subsection{Rate limiting/monitoring}\label{subsec:monitoring}
 
 \section{Application}\label{sec:application}
 
@@ -792,8 +793,8 @@ The property $g$ of the secret that is being compromised is defined as: "What is
 the prefix $p$ of secret $s$, given a known prefix $p_s$, where $|p| - |p_s| =
 1$?".
 
-The distribution $\mathcal{M}$ is ${p_s:t}$, where $t \in \mathcal{T}$ and
-$\mathcal{T}$ is a known alphabet of ASCII symbols.
+The distribution $\mathcal{M}$ is ${p_s:t}$, where $t \in \mathcal{S}$ and
+$\mathcal{S}$ is a known alphabet of ASCII symbols.
 
 The rendering function $f$ is the website response code rendering function. This
 function concatenates secret $s$ with static strings $u$, noise $v$ and the
@@ -811,52 +812,84 @@ endpoint constitutes the reflection oracle.
 
 The adversary should be able to issue requests to the given endpoint and monitor
 the traffic from and to the attacking browser. At this point, the adversary can
-issue requests on different elements of $T$ and compare the response lengths. As
+issue requests on different elements of $\mathcal{S}$ and compare the response lengths. As
 long as a difference in lengths across different requests is noticeable, the
 compression distinguishing attack is successful.
 
 \subsection{Rupture implementation}\label{subsec:rupture}
-Our contributions include the development of a production-grade framework for
-implementing this class of attacks called Rupture \cite{c11}. Rupture was
-developed as part of the work on extending BREACH application against modern
-systems and block ciphers \cite{c12}.
+Our contributions include the development development of a production-grade
+framework for implementing this class of attacks called Rupture \cite{c11}.
+Rupture was developed as part of the work on extending the BREACH attack against
+modern systems and block ciphers and was first discussed as an attack mechanism
+in \cite{c12}.
 
-As long as a vulnerable endpoint, as described in \ref{sec:comattack}, is found,
+As long as a vulnerable endpoint described in \ref{sec:comattack} is found,
 Rupture offers the ability to inject malicious code in any computer in the
-network, that issues requests to the endpoint.
+network. This code would issue requests to the endpoint and serve as a caller of
+the reflection oracle that is the endpoint.
 
-Furthermore, it enables the traffic inspection and analysis of packet lengths
-and automates the reflection string creation.
+Furthermore, it enables the traffic inspection and analysis of packet
+lengths. Encrypted network packets serve as the response $c_i$ from the
+reflection oracle and the length of each packet is visible on the network and
+captured.
 
-Finally, it amplifies the attack by issuing multiple requests per $t \in
-\mathcal{T}$ in order to demonstrate better probability of success.
+In addition, Rupture offers multiple instances of oracle $\mathcal{O}_R$, based
+on various $Q$ described in \ref{subsec:parallel}, and enables the automated
+computation of the reflection strings in each stage of the attack.
 
-\section*{Appendix A}
+Finally, it amplifies the attack by issuing multiple requests per candidate
+symbol in alphabet $\mathcal{S}$ in order to demonstrate better probability of
+success. This is achieved by grouping requests in samplesets, where each
+sampleset contains requests on a symbol in alphabet $\mathcal{S}$. Requests in a
+sampleset may be constructed to enable optimization methods described in
+\ref{subsec:blockalign} and \ref{subsec:parallel}.
 
-\subsection*{Rupture architecture}\label{app:rupture}
+Rupture issues the attack in rounds. Each round consists of phases, whose result
+leads to the detection of property $Q$, where $Q$ is specified by the method of
+attack described in \ref{subsec:parallel}, with some confidence $n$. Confidence
+is a metric calculated in bytes, that depicts the length difference between a
+pair $r_1, r_2$ of requests that make property $Q$ of secret $s$ compression
+detectable.
+
+\subsection{Rupture architecture}\label{app:rupture}
 Rupture consists of multiple components that collaborate in executing
-compression-based attacks, such as BREACH.
+compression-based attacks, such as BREACH. Each component is autonomous and
+communicates with the rest over the network.
 
 The client component is a Javascript code that issues requests towards a chosen
-endpoint. Client needs to be executed from the browser of the victim that the
-adversary is trying to steal secrets from.
+endpoint. This endpoint should offer the functionality described in
+{subsec:breachapp} and serve as the reflection oracle of the attack. The client
+needs to be executed from the browser of the victim that the adversary is trying
+to steal secrets from. That way, the victim's authentication cookies will be
+included in the request and lead to the endpoint including secrets in the
+response.
 
-The injector component injects the client code in the plaintext of victim's
-HTTP responses. In order for the injection to be performed, the adversary should
-be able to view and alter the victim's network traffic.
+In order for the client code to run in the victim's browser, the victim should
+run HTML code that includes the client script. One way is to visit a website
+controlled by the adversary that has added the code. The injector component of
+Rupture offers a second way. It injects the client code in the plaintext of
+victim's unencrypted, unauthenticated HTTP responses and attack requests are
+issued any time the victim visits a plain HTTP website and the malicious code is
+injected. In order for the injection to be performed, the adversary should be
+able to view and alter the victim's network traffic.
 
-The sniffer component also needs access to the victim's network traffic. As long
-as this is possible, the sniffer keeps track of the encrypted communication
-between the victim and the endpoint and reports the packet lengths observer on
-the network.
+The response packets from the endpoint to the victim contain the encrypted
+compressed rendering of the web page that contains both the secret and the
+reflection. The sniffer component has access to the victim's network traffic and
+keeps track of the encrypted communication between the victim and the endpoint.
+The length of the packets is unencrypted, so the sniffer is able to collenct and
+report the observations on the network to the backend component.
 
 The backend component is a Python code that controls the attack execution. It
-initializes the attack, guides the client as to what requests need to be made at
-each stage of the attack and orders sniffer to listen and report network
-traffic. At each stage of the attack, the backend analyzes the sniffer reports
-and calculates the probability of success for the attack. At the end of each
-stage, a single character of the secret is stolen and the backend uses this
-finding to continue the attack against the rest of the secret.
+initializes the attack and calculates the initial request sets that should be
+collected. It communicates with the realtime component in order to guide the
+client as to what requests need to be made at each stage of the attack.
+Meanwhile, it orders the sniffer to listen and report network traffic, which is
+collected and stored at the end of each phase of the attack. At each round, the
+backend analyzes the sniffer reports and calculates the probability of success
+for the attack. At the end of each round, property $Q$, which depends on the
+method of attack described in \ref{subsec:reflectionmethods}, is detected, until
+the entire secret is calculated.
 
    \begin{figure}[thpb]
       \centering
@@ -864,11 +897,9 @@ finding to continue the attack against the rest of the secret.
       \caption{Rupture Architecture}
    \end{figure}
 
-\section*{Appendix B}
+\section{Practical optimization methods}\label{app:optimization}
 
-\subsection*{Practical optimization methods}\label{app:optimization}
-
-\subsubsection*{Block alignment}
+\subsection{Block alignment}\label{subsec:blockalign}
 Block ciphers are \textit{length monotonic}, but not \textit{strictly length
 monotonic}, as described in section \ref{subsec:lenmonotone}. Specifically, the
 length of the encrypted text is rounded to a product of $\mu$-bits, where $\mu$
@@ -884,6 +915,79 @@ artificial noise in the reflection string $r$.  That way, one out of
 $\ceil{\mu / |r^i|}$ requests, where $|r^i|$ is the length of one digit of
 $r$ in bits, will result in a block distinction between different reflection
 strings $r_i$.
+
+\subsection{Reflection computation methods}\label{subsec:reflectionmethods}
+Reflection strings $r$ should be polynomially computable, as defined in
+\ref{sec:propertycom}. BREACH, defined in \ref{subsec:breachapp}, is
+parameterized with an alphabet of ASCII symbols $\mathcal{S}$ for each character of the
+secret. A successful attack should distinguish a single character of the
+alphabet as the correct one through a series of requests to the reflection
+oracle.
+
+The first method of issuing requests is serial. Each request to the oracle
+corresponds to a single character of the alphabet. An attack phase is completed
+when requests have been issued for the entire alphabet.
+
+In this case, $Q$ is the property "Given a known prefix $p_s$ of secret $s$ and
+a symbol $t \in \mathcal{S}$, is $p_s:t$ a prefix of $s$?" and $\exists
+s_i \in \mathcal{S}: Q(s_i)$ and $\forall s_j \in \mathcal{S} \setminus \{s_i\}:
+\lnot Q(s_j)$. The complexity of the attack is $\mathcal{O}(|\mathcal{S}|)$ and
+the round ends by finding a character of the secret.
+
+The second method of attack is divide and conquer. In each phase the alphabet is
+divided into two subsets $\mathcal{S}_1$ and $\mathcal{S}_2 = \mathcal{S}
+\setminus \mathcal{S}_1$, where $|\mathcal{S}_1| = |\mathcal{S}_2| =
+\ceil{|\mathcal{S}| / 2}$. The reflection string for $\mathcal{S}_1$ composes of
+$|\mathcal{S}_1|$ substrings divided by an annotation symbol $\beta$. Each
+substring consists of the known part of the secret concatenated with a character
+in $\mathcal{S}_1$. The reflection string for $\mathcal{S}_2$ is constructed
+similarly. Each phase consists of one call to the reflection oracle per subset.
+
+Property $Q$ is defined "Given a known prefix $p_s$ of secret $s$, is $p_s:t$ a
+prefix of $s$, where $t \in \mathcal{S}_1$?". As long as the prefix of the
+secret is \textit{compression-detectable} by each substring of the reflection,
+the end of each phase marks the choice of subset $\mathcal{S}_i$ that contains
+the correct alphabet symbol and the same method is applied using chosen
+$\mathcal{S}_i$ as the alphabet $\mathcal{S}$. The round is complete when
+$|\mathcal{S}| = 1$. Each round reduces the alphabet by half, so the complexity
+of the attack with the divide and conquer method  is
+$\mathcal{O}(log_2|\mathcal{S}|)$.
+
+\subsection{Request parallelization}\label{subsec:parallel}
+The reflection oracle is generally considered as synchronous. However, this is not
+always the case, since it may be able to handle multiple parallel requests from
+the adversary.
+
+This is the case for the oracle in the practical BREACH application, described
+in \ref{subsec:breachapp}. In that case the reflection oracle is an endpoint
+offered by a web application and the communication channel between the adversary
+and the oracle is the end-to-end browser-server network channel.
+
+Modern web servers are able to handle multiple parallel requests and
+browsers can issue a certain amount of parallel requests per domain. This
+functionality enables the adversary to issue multiple parallel requests per
+symbol in alphabet $\mathcal{S}$ and efficiently reduce the execution time of
+the attack.
+
+\subsection{Request soup}
+Previous sections demonstrated the need for multiple requests per reflection
+string $r_i$. However, it is often the case that communication with the
+reflection oracle given consequent analysis of each single request is time
+expensive. In this case, it is preferable to issue multiple indistinguishable
+requests and treat them as a set for the relative symbol.
+
+This technique is useful in the case of the BREACH attack described in
+{subsec:breachapp}. In this case, communication between the browser and the
+endpoint that serves as the reflection oracle is encrypted, so the analysis of
+the captured packets is time expensive per request set.
+
+A request set consists of requests for a symbol $s_i$ in alphabet $\mathcal{S}$,
+so bigger request sets result in less time delay. Length calculation per request
+can then be measured as the mean length over the number of requests in the set.
+
+This method can be combined with the methods described in \ref{subsec:parallel}
+in order to utilize the parallelization and reduce the time cost of the
+necessary multiple requests.
 
 \begin{thebibliography}{13}
 
