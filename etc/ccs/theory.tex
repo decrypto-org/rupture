@@ -719,13 +719,6 @@ Enabling SameSite cookies would result in the elimination of this reflection
 oracle of the Reflection-Security Game and the effective mitigation of the
 attack.
 
-\subsection{Compress secrets in distinct contexts}\label{subsec:contexts}
-Separating secrets in distinct contexts states that each is compressed
-in a separate context from the rest of the secrets, reflection and noise.
-
-This functionality would break the property compressibility assumption by
-disallowing the reflection to be compressed in the same context as the secret.
-
 \subsection{Masking secrets}\label{subsec:masking}
 Masking is a method of hiding secrets' properties per request. A mask is a
 bitstream equal in size with the secret. The masked text contains the result of
@@ -783,13 +776,6 @@ to avoid significant performance drop.
 
 Masking is a method used by Facebook \cite{c9} in order to protect CSRF tokens
 against BREACH attacks.
-
-%%% Noise is bounded by security parameter $\lambda$
-\subsection{Length hiding}\label{subsec:noise}
-Length hiding introduces artificial noise.
-
-%%% Attack time is bounded by security parameter $\lambda$
-\subsection{Rate limiting/monitoring}\label{subsec:monitoring}
 
 \section{Application}\label{sec:application}
 
