@@ -50,18 +50,20 @@
 
 \maketitle
 
-\section{Abstract}\label{sec:abstract}
+\begin{abstract}
 When compression is composed with encryption, unexpected vulnerabilities can
-arise. The information leakage through data compression was first described by
-Kelsey \cite{c13} and such vulnerabilities have been explored in practical
-attacks against web applications that use TLS such as CRIME \cite{c1}, TIME\cite{c2} and BREACH\cite{c3}.
-We introduce an abstract theoretical model for such attacks, the
+arise. Such vulnerabilities have been explored in practical
+attacks against TLS such as CRIME, TIME and BREACH.
+Our contributions are two-fold.
+First, we introduce an abstract theoretical model for such attacks, the
 \textit{adaptive reflection security} model. We discuss what properties common
 compression function have, such as the \textit{compression-detectability} of
 predicates, and we show that all length-preserving encryption schemes are
-vulnerable when composed with such functions. Finally, we provide a modular
+vulnerable when composed with such functions.
+Second, we provide a modular
 scalable open-source production-grade generic attack framework where these
 attacks are implemented in a robust manner.
+\end{abstract}
 
 \section{Introduction}\label{sec:prev}
 
