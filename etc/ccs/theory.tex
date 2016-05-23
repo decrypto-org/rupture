@@ -766,6 +766,11 @@ Masking renews the secret $s_i'$ each time the reflection oracle is called. That
 way, this method secures the secret's content against instances of the attack
 that require at least two calls to the reflection oracle.
 
+Masking doubles the size of the secret that is being protected. Furthermore,
+$m_i$ and $s_i'$ are random, so the compression performance is poor. Therefore,
+masking should be applied with limitation on high value secrets only, in order
+to avoid significant performance drop.
+
 Masking is a method used by Facebook \cite{c9} in order to protect CSRF tokens
 against BREACH attacks.
 
