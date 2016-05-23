@@ -932,6 +932,22 @@ correct alphabet symbol, in which case $\mathcal{A} = \mathcal{A}_i$. The
 round is complete when $|\mathcal{A}| = 1$. The complexity of the attack in
 this case is $\mathcal{O}(lg(|\mathcal{A}|))$.
 
+\subsection{Request parallelization}
+Reflection oracle is generally considered as synchronous. However, this is not
+always the case, since it may be able to handle multiple parallel requests from
+the adversary.
+
+This is the case for the oracle in the practical BREACH application, described
+in \ref{subsec:breachapp}. In that case the reflection oracle is an endpoint
+offered by a web application and the communication channel between the adversary
+and the oracle is the end-to-end browser-server network channel.
+
+Modern web servers are able to handle multiple requests per millisecond and
+browsers offer a certain amount of parallel requests per domain. This
+functionality enables the adversary to issue multiple parallel requests per
+symbol in alphabet $\mathcal{A}$ and efficiently reduce the execution time of
+the attack.
+
 \begin{thebibliography}{13}
 
 \bibitem{c1} J. Rizzo and T. Duong, "The CRIME attack", Ekoparty, 2012.
