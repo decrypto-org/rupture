@@ -831,10 +831,11 @@ long as a difference in lengths across different requests is noticeable, the
 compression distinguishing attack is successful.
 
 \subsection{Rupture implementation}\label{subsec:rupture}
-Our contributions include the development of a production-grade framework,
-Rupture \cite{c11}, for implementing this class of attacks. Rupture was
-developed as part of the work on extending BREACH application against modern
-systems and block ciphers \cite{c12}.
+Our contributions include the development development of a production-grade
+framework for implementing this class of attacks called Rupture \cite{c11}.
+Rupture was developed as part of the work on extending the BREACH attack against
+modern systems and block ciphers and was first discussed as an attack mechanism
+in \cite{c12}.
 
 As long as a vulnerable endpoint described in \ref{sec:comattack} is found,
 Rupture offers the ability to inject malicious code in any computer in the
@@ -857,30 +858,52 @@ sampleset contains requests on a symbol in alphabet $\mathcal{S}$. Requests in a
 sampleset may be constructed to enable optimization methods described in
 \ref{subsec:blockalign} and \ref{subsec:parallel}.
 
+Rupture issues the attack in rounds. Each round consists of phases, whose result
+leads to the detection of property $Q$, where $Q$ is specified by the method of
+attack described in \ref{subsec:parallel}, with some confidence $n$. Confidence
+is a metric calculated in bytes, that depicts the length difference between a
+pair $r_1, r_2$ of requests that make property $Q$ of secret $s$ compression
+detectable.
+
 \subsection{Rupture architecture}\label{app:rupture}
 Rupture consists of multiple components that collaborate in executing
-compression-based attacks, such as BREACH.
+compression-based attacks, such as BREACH. Each component is autonomous and
+communicates with the rest over the network.
 
 The client component is a Javascript code that issues requests towards a chosen
-endpoint. Client needs to be executed from the browser of the victim that the
-adversary is trying to steal secrets from.
+endpoint. This endpoint should offer the functionality described in
+{subsec:breachapp} and serve as the reflection oracle of the attack. The client
+needs to be executed from the browser of the victim that the adversary is trying
+to steal secrets from. That way, the victim's authentication cookies will be
+included in the request and lead to the endpoint including secrets in the
+response.
 
-The injector component injects the client code in the plaintext of victim's
-HTTP responses. In order for the injection to be performed, the adversary should
-be able to view and alter the victim's network traffic.
+In order for the client code to run in the victim's browser, the victim should
+run HTML code that includes the client script. One way is to visit a website
+controlled by the adversary that has added the code. The injector component of
+Rupture offers a second way. It injects the client code in the plaintext of
+victim's unencrypted, unauthenticated HTTP responses and attack requests are
+issued any time the victim visits a plain HTTP website and the malicious code is
+injected. In order for the injection to be performed, the adversary should be
+able to view and alter the victim's network traffic.
 
-The sniffer component also needs access to the victim's network traffic. As long
-as this is possible, the sniffer keeps track of the encrypted communication
-between the victim and the endpoint and reports the packet lengths observer on
-the network.
+The response packets from the endpoint to the victim contain the encrypted
+compressed rendering of the web page that contains both the secret and the
+reflection. The sniffer component has access to the victim's network traffic and
+keeps track of the encrypted communication between the victim and the endpoint.
+The length of the packets is unencrypted, so the sniffer is able to collenct and
+report the observations on the network to the backend component.
 
 The backend component is a Python code that controls the attack execution. It
-initializes the attack, guides the client as to what requests need to be made at
-each stage of the attack and orders sniffer to listen and report network
-traffic. At each stage of the attack, the backend analyzes the sniffer reports
-and calculates the probability of success for the attack. At the end of each
-stage, a single character of the secret is stolen and the backend uses this
-finding to continue the attack against the rest of the secret.
+initializes the attack and calculates the initial request sets that should be
+collected. It communicates with the realtime component in order to guide the
+client as to what requests need to be made at each stage of the attack.
+Meanwhile, it orders the sniffer to listen and report network traffic, which is
+collected and stored at the end of each phase of the attack. At each round, the
+backend analyzes the sniffer reports and calculates the probability of success
+for the attack. At the end of each round, property $Q$, which depends on the
+method of attack described in \ref{subsec:reflectionmethods}, is detected, until
+the entire secret is calculated.
 
    \begin{figure}[thpb]
       \centering
@@ -907,7 +930,7 @@ $\ceil{\mu / |r^i|}$ requests, where $|r^i|$ is the length of one digit of
 $r$ in bits, will result in a block distinction between different reflection
 strings $r_i$.
 
-\subsection{Reflection computation methods}
+\subsection{Reflection computation methods}\label{subsec:reflectionmethods}
 Reflection strings $r$ should be polynomially computable, as defined in
 \ref{sec:propertycom}. BREACH, defined in \ref{subsec:breachapp}, is
 parameterized with an alphabet of ASCII symbols $\mathcal{S}$ for each character of the
