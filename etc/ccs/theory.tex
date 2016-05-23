@@ -982,6 +982,26 @@ functionality enables the adversary to issue multiple parallel requests per
 symbol in alphabet $\mathcal{S}$ and efficiently reduce the execution time of
 the attack.
 
+\subsection{Request soup}
+Previous sections demonstrated the need for multiple requests per reflection
+string $r_i$. However, it is often the case that communication with the
+reflection oracle given consequent analysis of each single request is time
+expensive. In this case, it is preferable to issue multiple indistinguishable
+requests and treat them as a set for the relative symbol.
+
+This technique is useful in the case of the BREACH attack described in
+{subsec:breachapp}. In this case, communication between the browser and the
+endpoint that serves as the reflection oracle is encrypted, so the analysis of
+the captured packets is time expensive per request set.
+
+A request set consists of requests for a symbol $s_i$ in alphabet $\mathcal{S}$,
+so bigger request sets result in less time delay. Length calculation per request
+can then be measured as the mean length over the number of requests in the set.
+
+This method can be combined with the methods described in \ref{subsec:parallel}
+in order to utilize the parallelization and reduce the time cost of the
+necessary multiple requests.
+
 \begin{thebibliography}{13}
 
 \bibitem{c1} J. Rizzo and T. Duong, "The CRIME attack", Ekoparty, 2012.
