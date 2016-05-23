@@ -49,7 +49,7 @@ Dionysis Zindros\\
 When compression is composed with encryption, unexpected vulnerabilities can
 arise. The information leakage through data compression was first described by
 Kelsey \cite{c13} and such vulnerabilities have been explored in practical
-attacks against TLS such as CRIME \cite{c1}, TIME\cite{c2} and BREACH\cite{c3}.
+attacks against web applications that use TLS such as CRIME \cite{c1}, TIME\cite{c2} and BREACH\cite{c3}.
 We introduce an abstract theoretical model for such attacks, the
 \textit{adaptive reflection security} model. We discuss what properties common
 compression function have, such as the \textit{compression-detectability} of
@@ -57,6 +57,55 @@ predicates, and we show that all length-preserving encryption schemes are
 vulnerable when composed with such functions. Finally, we provide a modular
 scalable open-source production-grade generic attack framework where these
 attacks are implemented in a robust manner.
+
+\section{Introduction}\label{sec:prev}
+
+Compression and encryption composition has caused serious security problems
+in practical systems such as TLS over the years. These
+attack are CRIME \cite{c1}, TIME \cite{c2}, and BREACH \cite{c3}.
+
+However, the theoretical models for these classes of attacks has been limited.
+The compression side-channel attack was first studied by Kelsey \cite{c13} in 2002. 
+Kelley and Tamassia\cite{c7}  discuss the notion of \textit{entropy-restricted} semantic
+security, but this only models the case where two secrets compress to the same
+length, and so it is difficult to capture practical techniques used in attacks
+such as BREACH.
+
+Alawatugoda etc. \cite{c6} introduce a model for \textit{Cookie recovery},
+\textit{Random cookie indistinguishability}, as well as \textit{Chosen cookie indistinguishability}.
+Nevertheless, their security models are limited in classes of rendering functions
+that are very specific. In their models, the attacker is able to directly influence
+the output of the rendering function through concatenation. While their results
+have significant value in analyzing the security of compression, we believe
+a generalization and abstraction of the rendering process is essential to
+theoretically analyzing the security of generic compression and rendering functions.
+Furthermore, generalized rendering and compression functions help better
+capture and model specific attacks such as BREACH in the context of
+realistic instances, like the rendering of real web pages.
+
+Our contributions are two-fold. Firstly, we introduce a novel model for discussing
+compression and encryption composition attacks, the \textit{adaptive reflection
+game} with an accompanying security definition. This model is quite general in
+that it does not describe specific instances of the rendering function $f$ or
+the compression function $Com$. Furthermore, it allows for general distributions
+of secret $\mathcal{M}$ and distributions of noise $\mathcal{V}$ which can
+affect the rendering. Additionally, the model describes an adaptive attack,
+but also allows for adaptive rendering based on the adversary behavior in the
+general case. We then introduce the abstract property of \textit{compression detectability}
+which we argue is a property commonly attained by compression functions when
+composed with real-world rendering functions. Finally, we show that this somewhat
+innocent property directly allows the construction of an attacker, which we
+prove breaks the security of the scheme. We also prove that such
+attacks can be amplified to achieve better confidence.
+
+Secondly, we implement a production-grade general implementation of compression
+and encryption composition attacks in the form of an open source framework and
+tool which we call Rupture \cite{c12}. This generic framework provides an
+extensible mechanism for experimentally testing attack and defense techniques
+in a modular setting. We implement specific compression attack instances such
+as BREACH. While limited proof-of-concept source code has been released for
+compression side-channel attacks, as far as we know this is the first time
+a working tool is provided for this class of attacks.
 
 \section{Reflection security}\label{sec:refsec}
 
