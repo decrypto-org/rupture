@@ -702,12 +702,19 @@ compression would break the adaptive reflection game, since it removes
 the compression part of the encryption function.
 
 \subsection{SameSite cookies}\label{subsec:samesite}
-SameSite cookies \cite{c8} is a proposed draft for enhancing web security. This policy
-states that cookies may only be included in same origin requests.
+SameSite cookies \cite{c8} is a proposed draft for enhancing web security. The
+main puprose of this technique is to mitigate cross-site request forgery
+attacks, although it also mitigates other kinds of cross-origin leakages.
 
-Enabling SameSite cookies would result in the elimination of cross-origin
-requests as a method of implementing the reflection oracle of the
-Reflection-Security Game.
+This policy introduces a new attribute for web cookies that web servers may
+opt-in. This attribute states that cookies may only be included in a
+"first-party" context, i.e. in same origin requests.
+
+However, the current BREACH application depends on cross-origin requests in
+order to call the reflection oracle, as defined in \ref{subsec:breachapp}.
+Enabling SameSite cookies would result in the elimination of this reflection
+oracle of the Reflection-Security Game and the effective mitigation of the
+attack.
 
 \subsection{Compress secrets in distinct contexts}\label{subsec:contexts}
 Separating secrets in distinct contexts states that each is compressed
