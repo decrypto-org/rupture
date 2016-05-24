@@ -578,7 +578,9 @@ Due to the complexity of the $LZ77$ algorithm, we do not provide a proof of this
 result has been experimentally verified against various end-points by our open-source Rupture implementation.
 This result is also supported by the feasibility of BREACH and CRIME.
 
-\section{Compression distinguishing attacks}\label{sec:comattack}
+\section{Compression attacks}\label{sec:comattack}
+
+\subsection{One-shot attack}
 
 \begin{lemma}[Compression attack]
 
@@ -769,7 +771,7 @@ Which is non-negligible.
 
 \end{proof}
 
-\subsection*{Attack amplification}
+\subsection{Amplified attack}
 
 We can now amplify the attack to achieve a better probability of success by a small modification in our adversary.
 The amplification is parameterized by an odd parameter $k$.
@@ -1203,7 +1205,7 @@ light-weight and stateless. It can easily be deployed on a small machine and
 used for massive attacks. Multiple injectors can be deployed to different
 networks, all controlled by the same central command-and-control channel.
 
-\subsection{Realtime}
+\subsubsection{Realtime}
 
 The realtime service is a service which awaits for work requests by clients. It
 can handle multiple targets and victims. It receives command-and-control
@@ -1214,7 +1216,7 @@ will receive work, enabling one client per victim.
 It maintains open web socket command-and-control connections with clients and
 connects to the backend service, facilitating the communication between the two.
 
-\subsection{Sniffer}
+\subsubsection{Sniffer}
 
 The sniffer component is responsible for collecting data directly from the
 victim's network. As the client issues chosen plaintext requests, the sniffer
@@ -1231,7 +1233,7 @@ The sniffer exposes an HTTP API which is utilized by the backend for controlling
 when sniffing starts, when it is completed, and to retrieve the data that was
 sniffed.
 
-\subsection{Backend}
+\subsubsection{Backend}
 
 The backend component is a Python code that controls the attack execution. It
 initializes the attack and calculates the initial request sets that should be
