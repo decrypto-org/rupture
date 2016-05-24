@@ -5,6 +5,7 @@ ruptureit:
     secretlength: 9
     alignmentalphabet: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
     recordscardinality: 1
+    method: 'serial'
 dionyziz:
     endpoint: 'https://dionyziz.com/breach-test/reflect.php?ref=%s'
     prefix: 'imper'
@@ -12,6 +13,7 @@ dionyziz:
     secretlength: 9
     alignmentalphabet: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
     recordscardinality: 1
+    method: 'divide&conquer'
 dimkarakostas:
     endpoint: 'https://dimkarakostas.com/rupture/test.php?ref=%s'
     prefix: 'imper'
@@ -19,3 +21,4 @@ dimkarakostas:
     secretlength: 9
     alignmentalphabet: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
     recordscardinality: 1
+    method: 'serial'

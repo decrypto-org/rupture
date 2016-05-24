@@ -99,6 +99,8 @@ rupture $ ./rupture sniffer
 rupture/ $ sudo ./rupture attack
 ```
 
+**Note: Sniffer deployment - either standalone or all together with 'attack' - may need elevated privileges, since it requires access to network interface.**
+
 #### Client
  - Client code is in following directory:
     - rupture/client/client_<id>

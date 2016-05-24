@@ -1,7 +1,6 @@
 from django import setup
 import os
 import yaml
-from django.core.exceptions import ObjectDoesNotExist
 from backend.settings import BASE_DIR
 import subprocess
 
@@ -14,10 +13,10 @@ from breach.models import Target, Victim
 def select_victim(victims):
     print '[*] Victims:'
     for i, v in enumerate(victims):
-        print '\tID: {}  -  Victim: {} ({})'.format(i, v[0], v[1]['sourceip'])
+        print '\tID: {}  -  {} ({} {})'.format(i, v[0], v[1]['target'], v[1]['sourceip'])
 
     try:
-        vic_ids = str(input('[*] Choose victim ids separated by commas, or leave empty to select all: '))
+        vic_ids = str(input('[*] Choose victim IDs separated by commas or leave empty to select all: '))
     except SyntaxError:
         return [vic[1] for vic in victims]
 
@@ -35,42 +34,23 @@ def select_victim(victims):
     return victim_list
 
 
-def select_target():
-    print '[*] Targets:'
-    for t in Target.objects.all():
-        print '\tID: {}  -  Target: {}'.format(t.id, t.host)
+def create_victim(victim):
     try:
-        tids = str(input('[*] Choose target ids separated by commas, or leave empty to select all: '))
-    except SyntaxError:
-        return Target.objects.all()
+        target = Target.objects.filter(name=victim['target'])[0]
+    except IndexError:
+        print '[!] Invalid target for victim ({}, {}).'.format(victim['target'], victim['sourceip'])
+        return
 
-    tids = [i.strip() for i in tids.split(',')]
-    if '' in tids:
-        tids.remove('')
+    victim_args = {
+        'target': target,
+        'snifferendpoint': victim['snifferendpoint'],
+        'sourceip': victim['sourceip'],
+        'realtimeurl': victim['realtimeurl']
+    }
+    if 'interface' in victim:
+        victim_args['interface'] = victim['interface']
 
-    try:
-        target_list = []
-        for t in tids:
-            target_list.append(Target.objects.get(id=int(t)))
-    except ObjectDoesNotExist:
-        print '[!] Invalid target id.'
-        exit(1)
-    return target_list
-
-
-def create_victim(target, victim):
-    for m in Victim.METHOD_CHOICES:
-        if victim['method'] == m[1]:
-            victim['method'] = m[0]
-            break
-
-    v = Victim(
-        target=target,
-        snifferendpoint=victim['snifferendpoint'],
-        sourceip=victim['sourceip'],
-        method=victim['method'],
-        realtimeurl=victim['realtimeurl']
-    )
+    v = Victim(**victim_args)
     v.save()
 
     print '''Created Victim:
@@ -78,13 +58,13 @@ def create_victim(target, victim):
              \ttarget: {}
              \tsnifferendpoint: {}
              \tsourceip: {}
-             \tmethod: {}
+             \tinterface: {}
              \trealtimeurl: {}'''.format(
                 v.id,
-                v.target.host,
+                v.target.name,
                 v.snifferendpoint,
                 v.sourceip,
-                v.method,
+                v.interface,
                 v.realtimeurl
             )
 
@@ -142,10 +122,11 @@ if __name__ == '__main__':
     victims = get_victims()
     try:
         victim_list = select_victim(victims)
-        target_list = select_target()
         for victim in victim_list:
-            for target in target_list:
-                create_victim(target, victim)
+            try:
+                create_victim(victim)
+            except ValueError:
+                print '[!] Invalid parameters for victim ({}, {}).'.format(victim['target'], victim['sourceip'])
     except KeyboardInterrupt:
         print ''
         exit(1)
