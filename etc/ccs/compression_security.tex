@@ -403,15 +403,15 @@ illustrate such examples later in this work.
 
 \section{The BREACH model}\label{sec:breachmodel}
 We now turn our attention to the BREACH attack specifically, which utilizes
-the properties explored above, and we show that, under ideal modeling,
-the above attack is instantiated when the TLS algorithms are in use.
+the properties explored above, and we describe that BREACH is a specific
+instance of the general attack.
 
 In the BREACH model, we deal with a specific function $f$, property $Q$,
 compression function $Com$, length-leaking $Enc$, and secret distribution
 $\mathcal{M}$.
 
 In the next paragraphs, we describe a simplified model of the attack that
-lends itself to formal theoretical proofs, while abstracting away the complex
+lends itself to the formal model, while abstracting away the complex
 practical details of the attack pertaining to the networking and particularities
 of the implementation that are of little significance to the cryptographic
 formalisms presented here.
@@ -424,11 +424,11 @@ and noise. Typically, $f$ will concatenate instances of the secret, the
 reflection, and the noise, between some context strings which constitute the
 static portions of the site.
 
-We assume that $f$ outputs a concatenation of various instances of $s$, $r$,
-and $v$ with arbitrary repetitions, in addition to concatenating with some
-constant context whose position is independent of the values of $s, r, v$.  The
-number of repetitions of $s, r, v$ are also independent of the values of $s, r,
-v$.
+In the case of BREACH, it is typically assumed that $f$ outputs a concatenation
+of various instances of $s$, $r$, and $v$ with arbitrary repetitions, in
+addition to concatenating with some constant context whose position is
+independent of the values of $s, r, v$. The number of repetitions of $s, r, v$
+are also independent of the values of $s, r, v$.
 
 Formally, assume that the symbols $\{\beta_1, \beta_2, \beta_3\}$ do not appear
 in the alphabet of the secret.
@@ -713,7 +713,7 @@ And so:
 \end{align*}
 
 Let us now examine the event of $\mathcal{A}$ being successful, denoted Succ,
-when $cpr^Q_{f, Com}(s, \overbar{r}, \overbar{v})$. Indeed:
+when $cpr^Q_{f, Com}(s, \overbar{r}, \overbar{v})$. Assuming $Q(s)$:
 
 \begin{align*}
     \Pr[|Com(f(s, r_1, v_1))| < |Com(f(s, r_2, v_2))||Q(s)]
@@ -740,7 +740,7 @@ And from the strict length monotonicity of $Enc$ it follows that:
 The case for $\lnot Q(s)$ is the same, but with a different inequality direction:
 
 \begin{align*}
-    \Pr[|Com(f(s, r_1, v_1))| > |Com(f(s, r_2, v_2))||Q(s)]
+    \Pr[|Com(f(s, r_1, v_1))| > |Com(f(s, r_2, v_2))||\lnot Q(s)]
         \geq\\
         \pi + \alpha(\lambda)\\
     \Rightarrow \Pr[\text{Succ}|\lnot Q(s)] \geq\\
