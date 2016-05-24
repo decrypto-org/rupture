@@ -566,8 +566,6 @@ $\lambda$-bit secret $s$:
     startswith(v, s) \defeq \exists w: s = v w
 \end{equation*}
 
-\begin{lemma}
-
 Let $f$ be a concatenative rendering function and let $Com = LZ77$. Then:
 
 \begin{align*}
@@ -576,11 +574,9 @@ Let $f$ be a concatenative rendering function and let $Com = LZ77$. Then:
 
 Where the probability randomness is taken uniformly over all $k$-bit prefixes $v \in \{0, 1\}^k$.
 
-\end{lemma}
-
-\begin{proof}
-?
-\end{proof}
+Due to the complexity of the $LZ77$ algorithm, we do not provide a proof of this result. However, the
+result has been experimentally verified against various end-points by our open-source Rupture implementation.
+This result is also supported by the feasibility of BREACH and CRIME.
 
 \section{Compression distinguishing attacks}\label{sec:comattack}
 
