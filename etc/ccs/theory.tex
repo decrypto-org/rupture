@@ -1161,6 +1161,8 @@ Rupture consists of multiple components that collaborate in executing
 compression-based attacks, such as BREACH. Each component is autonomous and
 communicates with the rest over the network.
 
+\subsubsection{Client}
+
 The client component is a Javascript code that issues requests towards a chosen
 endpoint. This endpoint should offer the functionality described in
 {subsec:breachapp} and serve as the reflection oracle of the attack. The client
@@ -1169,32 +1171,82 @@ to steal secrets from. That way, the victim's authentication cookies will be
 included in the request and lead to the endpoint including secrets in the
 response.
 
-In order for the client code to run in the victim's browser, the victim should
-run HTML code that includes the client script. One way is to visit a website
-controlled by the adversary that has added the code. The injector component of
-Rupture offers a second way. It injects the client code in the plaintext of
-victim's unencrypted, unauthenticated HTTP responses and attack requests are
-issued any time the victim visits a plain HTTP website and the malicious code is
-injected. In order for the injection to be performed, the adversary should be
-able to view and alter the victim's network traffic.
+The client contains minimal logic. It connects to the real-time service through
+a command-and-control channel and registers itself there. Afterwards, it waits
+for work instructions by the command-and-control channel, which it executes. The
+client does not take any decisions or receive data about the progress of the
+attack other than the work it is requested to do. This is intentional so as
+to conceal the workings of the adversary analysis mechanisms from the victim
+in case the victim attempts to reverse engineer what the adversary is doing.
+Furthermore, it allows the system to be upgraded without having to deploy a
+new client at the victim's network, which can be a difficult process.
 
-The response packets from the endpoint to the victim contain the encrypted
-compressed rendering of the web page that contains both the secret and the
-reflection. The sniffer component has access to the victim's network traffic and
+As a regular user is browsing the Internet, multiple clients will be
+injected in insecure pages and they will run under various contexts. All of
+them will register and maintain an open connection through a
+command-and-control channel with the real-time service. The real-time
+service will enable one of them for this victim, while keeping the others
+dormant. The one enabled will then receive work instructions to perform the
+required requests. If the enabled client dies for whatever reason, such as a
+closed tab, one of the rest of the clients will be waken up to take over the
+attack.
+
+\subsubsection{Injector}
+
+The injector component is responsible for injecting code to the victim's
+computer for execution. The injection is performed by ARP spoofing the local
+network and forwarding all traffic in a Man-in-the-Middle manner. Since all HTTP
+responses are infected, this provides for greatly increased robustness.
+
+The injector component needs to run on the victim network and as such is
+light-weight and stateless. It can easily be deployed on a small machine and
+used for massive attacks. Multiple injectors can be deployed to different
+networks, all controlled by the same central command-and-control channel.
+
+\subsection{Realtime}
+
+The realtime service is a service which awaits for work requests by clients. It
+can handle multiple targets and victims. It receives command-and-control
+connections from various clients which can live on different networks,
+orchestrates them, and tells them which ones will remain dormant and which ones
+will receive work, enabling one client per victim.
+
+It maintains open web socket command-and-control connections with clients and
+connects to the backend service, facilitating the communication between the two.
+
+\subsection{Sniffer}
+
+The sniffer component is responsible for collecting data directly from the
+victim's network. As the client issues chosen plaintext requests, the sniffer
+collects the respective ciphertext requests and ciphertext responses as they
+travel on the network. These encrypted data are then transmitted to the backend
+for further analysis and decryption.
+
+The sniffer component has access to the victim's network traffic and
 keeps track of the encrypted communication between the victim and the endpoint.
 The length of the packets is unencrypted, so the sniffer is able to collenct and
 report the observations on the network to the backend component.
 
+The sniffer exposes an HTTP API which is utilized by the backend for controlling
+when sniffing starts, when it is completed, and to retrieve the data that was
+sniffed.
+
+\subsection{Backend}
+
 The backend component is a Python code that controls the attack execution. It
 initializes the attack and calculates the initial request sets that should be
-collected. It communicates with the realtime component in order to guide the
-client as to what requests need to be made at each stage of the attack.
-Meanwhile, it orders the sniffer to listen and report network traffic, which is
-collected and stored at the end of each phase of the attack. At each round, the
-backend analyzes the sniffer reports and calculates the probability of success
-for the attack. At the end of each round, property $Q$, which depends on the
-method of attack described in \ref{subsec:reflectionmethods}, is detected, until
-the entire secret is calculated.
+collected. It is responsible for strategic decision taking, statistical
+analysis of samples collected, adaptively advancing the attack, and storing
+persistent data about the attacks in progress for future analysis.
+
+It communicates with the realtime component in order to guide the client as to
+what requests need to be made at each stage of the attack. Meanwhile, it orders
+the sniffer to listen and report network traffic, which is collected and stored
+at the end of each phase of the attack. At each round, the backend analyzes the
+sniffer reports and calculates the probability of success for the attack. At the
+end of each round, property $Q$, which depends on the method of attack described
+in \ref{subsec:reflectionmethods}, is detected, until the entire secret is
+calculated.
 
    \begin{figure}[thpb]
       \centering
