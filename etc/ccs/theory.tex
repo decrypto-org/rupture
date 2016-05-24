@@ -72,8 +72,8 @@ in practical systems such as TLS over the years. These
 attack are CRIME \cite{c1}, TIME \cite{c2}, and BREACH \cite{c3}.
 
 However, the theoretical models for these classes of attacks has been limited.
-The compression side-channel attack was first studied by Kelsey \cite{c13} in 2002. 
-Kelley and Tamassia\cite{c7}  discuss the notion of \textit{entropy-restricted} semantic
+The compression side-channel attack was first studied by Kelsey \cite{c4} in 2002.
+Kelley and Tamassia\cite{c5}  discuss the notion of \textit{entropy-restricted} semantic
 security, but this only models the case where two secrets compress to the same
 length, and so it is difficult to capture practical techniques used in attacks
 such as BREACH.
@@ -107,7 +107,7 @@ attacks can be amplified to achieve better confidence.
 
 Secondly, we implement a production-grade general implementation of compression
 and encryption composition attacks in the form of an open source framework and
-tool which we call Rupture \cite{c12}. This generic framework provides an
+tool which we call Rupture \cite{c7}. This generic framework provides an
 extensible mechanism for experimentally testing attack and defense techniques
 in a modular setting. We implement specific compression attack instances such
 as BREACH. While limited proof-of-concept source code has been released for
@@ -315,7 +315,7 @@ An important assumption for our attack is that the encryption function $Enc$ is
 If the last inequality becomes strict, we call the encryption function
 \textit{strictly length monotonic}.
 
-A practical instance of a length monotonic encryption function is AES \cite{c4}.
+A practical instance of a length monotonic encryption function is AES \cite{c8}.
 Stream ciphers can be treated as strictly monotonic to the bit level.
 
 \section{Property compressibility}\label{sec:propertycom}
@@ -461,7 +461,7 @@ We call $f$ functions that exhibit such behavior \textit{concatenative}.
 
 \subsection{The compression function assumption}\label{subsec:comfuncassumption}
 
-In BREACH, $Com$ is a variant of LZ77 \cite{c5}. In this compression algorithm,
+In BREACH, $Com$ is a variant of LZ77 \cite{c9}. In this compression algorithm,
 repetitions of strings are well-compressed. In our ideal model, we examine a
 simplified version of LZ77 which we describe in this paragraph.
 
@@ -811,8 +811,7 @@ does not cross-compress the data in $X$ with the data in $Y$ (Why?).
 \section{Defense}\label{sec:defense}
 
 Defense against side-channel compression attacks and especially BREACH have been
-proposed in bibliography, including the original BREACH paper,
-\cite{c6} and \cite{c7}.
+proposed in bibliography, including \cite{c3}, \cite{c5} and \cite{c6}.
 
 \subsection{Disabling compression}\label{subsec:disablecom}
 Compression is the basic assumption for property compressibility. Disabling
@@ -823,7 +822,7 @@ However, this method is not viable, since the performance overhead should it be
 applied overrules the benefits of the defense.
 
 \subsection{SameSite cookies}\label{subsec:samesite}
-SameSite cookies \cite{c8} is a proposed draft for enhancing web security. The
+SameSite cookies \cite{c10} is a proposed draft for enhancing web security. The
 main puprose of this technique is to mitigate cross-site request forgery
 attacks, although it also mitigates other kinds of cross-origin leakages.
 
@@ -892,7 +891,7 @@ $m_i$ and $s_i'$ are random, so the compression performance is poor. Therefore,
 masking should be applied with limitation on high value secrets only, in order
 to avoid significant performance drop.
 
-Masking is a method used by Facebook \cite{c9} in order to protect CSRF tokens
+Masking is a method used by Facebook \cite{c11} in order to protect CSRF tokens
 against BREACH attacks.
 
 \section{Application}\label{sec:application}
@@ -919,7 +918,7 @@ function concatenates secret $s$ with static strings $u$, noise $v$ and the
 reflection string $r$.
 
 The compression function is gzip, which implements the DEFLATE algorithm
-\cite{c10}, that is the combination of LZ77 and Huffman coding.
+\cite{c12}, that is the combination of LZ77 and Huffman coding.
 
 The encryption function is any encryption algorithm used in communications over
 the Internet, most notably AES.
@@ -936,10 +935,10 @@ compression distinguishing attack is successful.
 
 \subsection{Rupture implementation}\label{subsec:rupture}
 Our contributions include the development development of a production-grade
-framework for implementing this class of attacks called Rupture \cite{c11}.
+framework for implementing this class of attacks called Rupture \cite{c13}.
 Rupture was developed as part of the work on extending the BREACH attack against
 modern systems and block ciphers and was first discussed as an attack mechanism
-in \cite{c12}.
+in \cite{c7}.
 
 As long as a vulnerable endpoint described in \ref{sec:comattack} is found,
 Rupture offers the ability to inject malicious code in any computer in the
@@ -1117,32 +1116,32 @@ Black Hat Europe 2013, 2013.
 \bibitem{c3} Y. Gluck, N. Harris and A. Prado, "BREACH: Reviving the CRIME attack",
 Black Hat USA, 2013.
 
-\bibitem{c4} NIST, "Announcing the ADVANCED ENCRYPTION STANDARD (AES)", 2001.
+\bibitem{c4} John Kelsey, "Compression and information leakage of plaintext", 2002.
 
-\bibitem{c5} J. Ziv and A. Lempel, "A universal algorithm for sequential data
-compression", Information Theory, IEEE Transactions, vol. 23, 1977.
+\bibitem{c5} J. Kelley and R. Tamassia, "Secure Compression: Theory \& Practice",
+2014.
 
 \bibitem{c6} J. Alawatugoda, D. Stebila and C. Boyd, "Protecting encrypted
 cookies from compression side-channel attacks", 2014.
 
-\bibitem{c7} J. Kelley and R. Tamassia, "Secure Compression: Theory \& Practice",
-2014.
+\bibitem{c7} D. Karakostas and D. Zindros, "Practical New Developments on
+BREACH", Black Hat Asia, 2016.
 
-\bibitem{c8} M. West, "First-Party-Only Cookies", RFC Internet-Draft, 2015.
+\bibitem{c8} NIST, "Announcing the ADVANCED ENCRYPTION STANDARD (AES)", 2001.
 
-\bibitem{c9} [online] URL:
+\bibitem{c9} J. Ziv and A. Lempel, "A universal algorithm for sequential data
+compression", Information Theory, IEEE Transactions, vol. 23, 1977.
+
+\bibitem{c10} M. West, "First-Party-Only Cookies", RFC Internet-Draft, 2015.
+
+\bibitem{c11} [online] URL:
 \url{https://www.facebook.com/notes/protect-the-graph/preventing-a-breach-attack/1455331811373632}
 [cited May 2016]
 
-\bibitem{c10} P. Deutsch, "DEFLATE Compressed Data Format Specification version
+\bibitem{c12} P. Deutsch, "DEFLATE Compressed Data Format Specification version
 1.3", RFC 1951, 1996.
 
-\bibitem{c11} [online] URL: \url{https://ruptureit.com} [cited May 2016]
-
-\bibitem{c12} D. Karakostas and D. Zindros, "Practical New Developments on
-BREACH", Black Hat Asia, 2016.
-
-\bibitem{c13} John Kelsey, "Compression and information leakage of plaintext", 2002.
+\bibitem{c13} [online] URL: \url{https://ruptureit.com} [cited May 2016]
 
 \bibitem{c14} B. Moller, T. Duong, K. Kotowicz, This POODLE Bites: Exploiting the SSL 3.0 Fallback, September 2014.
 
