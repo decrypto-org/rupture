@@ -773,9 +773,12 @@ Which is non-negligible.
 
 \end{proof}
 
-We can now amplify the attack to achieve a better probability of success by a
-small modification in our adversary. The amplification is parameterized by a
-parameter $k$.
+\subsection*{Attack amplification}
+
+We can now amplify the attack to achieve a better probability of success by a small modification in our adversary.
+The amplification is parameterized by an odd parameter $k$.
+
+Let the amplification adversary be defined as follows:
 
 \begin{lstlisting}[texcl,mathescape]
 def $\mathcal{A}(Q, \mathcal{M})$:
@@ -799,7 +802,149 @@ def $\mathcal{A}(Q, \mathcal{M})$:
         return False
 \end{lstlisting}
 
-Proof that this amplifies?
+\begin{lemma}[Amplification]
+
+Under the assumptions of the Compression Attack Theorem against $f, Com$
+and compression-detectable predicate $Q$ with non-negligible
+detectability margin $\alpha(\lambda)$,
+the amplified adversary achieves an arbitrarily large advantage
+against a non-negligible subset of elements, the
+\textit{amplifiable elements} distinguished by predicate $Amp$.
+
+\begin{align*}
+    \forall Enc:
+    \exists g:\\
+    \exists PPT \mathcal{A}:
+    \forall PPT \mathcal{S}:\\
+    \exists Amp:
+    \exists B \text{ non-negl}:
+    \exists C \text{ negl}:\\
+    \Pr_{s \leftarrow \mathcal{M}}[Amp(s)] = B(\lambda) \land\\
+    \text{Adv}_{\mathcal{SE}(Enc, Com), \mathcal{A}, \mathcal{S}_{Amp}}
+    (\lambda, f, \mathcal{V}, \mathcal{M}, g) = 1 - \pi - C(k)
+\end{align*}
+
+\end{lemma}
+
+\begin{proof}
+
+From the fact that $Q$ is compression-detectable and from the Compression Attack Theorem, we have that:
+
+\begin{align*}
+    \Pr_{s \leftarrow \mathcal{M},
+         \overbar{v} \leftarrow \mathcal{V}^2}
+         [cpr^Q_{f, Com}(s, \overbar{r}, \overbar{v})]
+    =\\
+    \pi + \alpha(\lambda)
+\end{align*}
+
+Some elements $s \in \mathcal{M}$ allow for better compression-detectability than others under the fixed
+reflection vector $\overbar{r}$. Call these elements \textit{amplifiable} and define predicate:
+
+\begin{align*}
+    Amp(s) \defeq
+    \Pr_{\overbar{v} \leftarrow \mathcal{V}^2}
+    [cpr^Q_{f, Com}
+     (s, \overbar{r}, \overbar{v})]
+    \geq
+    \frac{1}{2} + \frac{\alpha(\lambda)}{2}
+\end{align*}
+
+We will now obtain a lower bound on the probability of an element being amplifiable.
+
+Let:
+
+% B derivation: (where \beta(\lambda) = \alpha(\lambda) / 2)
+% B + (\frac{1}{2} + \alpha(\lambda)/2)(1 - B) = \pi + \alpha(\lambda)
+% B + \frac{1}{2} + \alpha(\lambda)/2 - B(\frac{1}{2} + \beta(\lambda)) = \pi + \alpha(\lambda)
+% \frac{1}{2} + \beta(\lambda) + B(\frac{1}{2} - \beta(\lambda)) = \pi + \alpha(\lambda)
+% B(\frac{1}{2} - \beta(\lambda)) = \pi + \alpha(\lambda) - \frac{1}{2} - \beta(\lambda)
+% B = (\pi + \alpha(\lambda) - \frac{1}{2} - \beta(\lambda)) / (\frac{1}{2} - \beta(\lambda))
+% B = (\pi + \alpha(\lambda) - \frac{1}{2} - \frac{\alpha(\lambda)}{2}) / (\frac{1}{2} - \frac{\alpha(\lambda)}{2})
+% B = (\pi - \frac{1}{2} + \frac{\alpha(\lambda)}{2}) / (\frac{1}{2} - \frac{\alpha(\lambda)}{2})
+% B = \pi / (\frac{1}{2} - \frac{\alpha(\lambda)}{2}) - (\frac{1}{2} - \frac{\alpha(\lambda)}{2}) / (\frac{1}{2} - \frac{\alpha(\lambda)}{2})
+% B = \pi / (\frac{1}{2} - \frac{\alpha(\lambda)}{2}) - 1
+
+\begin{align*}
+    B = \frac{\pi}{\frac{1}{2} - \frac{\alpha(\lambda)}{2}} - 1
+\end{align*}
+
+$B$ is non-negligible in $\lambda$.
+
+Assume, for the sake of contradiction, that:
+
+\begin{align*}
+    \Pr_{s \leftarrow \mathcal{M}}
+    [Amp(s)] < B
+\end{align*}
+
+Then we have:
+
+\begin{align*}
+    \Pr_{s \leftarrow \mathcal{M},
+         \overbar{v} \leftarrow \mathcal{V}^2}
+         [cpr^Q_{f, Com}(s, \overbar{r}, \overbar{v})]
+    =\\
+    \Pr_{s \leftarrow \mathcal{M},
+         \overbar{v} \leftarrow \mathcal{V}^2}
+         [cpr^Q_{f, Com}(s, \overbar{r}, \overbar{v})|Amp(s)]\Pr[Amp(s)]
+    +\\
+    \Pr_{s \leftarrow \mathcal{M},
+         \overbar{v} \leftarrow \mathcal{V}^2}
+         [cpr^Q_{f, Com}(s, \overbar{r}, \overbar{v})|\lnot Amp(s)]\Pr[\lnot Amp(s)]
+    <\\
+    B + (\frac{1}{2} + \frac{\alpha}{2})(1 - B)
+\end{align*}
+
+But then:
+
+\begin{align*}
+    B + (\frac{1}{2} + \frac{\alpha(\lambda)}{2})(1 - B) =
+    \pi + \alpha(\lambda)
+\end{align*}
+
+And this contradicts the assumption that $Q$ is compression-detectable. Therefore:
+
+\begin{align*}
+    \Pr_{s \leftarrow \mathcal{M}}
+    [Amp(s)] \geq B
+\end{align*}
+
+It remains to show that the advantage of the adversary can be
+arbitrarily large, i.e. that for some negligible $C$ we have:
+
+\begin{align*}
+    \text{Adv}_{\mathcal{SE}(Enc, Com), \mathcal{A}, \mathcal{S}_{Amp}}
+    (\lambda, f, \mathcal{V}, \mathcal{M}, g) = 1 - \pi - C
+\end{align*}
+
+Indeed, observe that the amplifying adversary performs a repeated Bernoulli
+trial with $k$ repetitions and extracts a majority. Let $X$ be the number of
+repetitions that are successful for the adversary. Letting $\overbar{v}_i$
+be the noise chosen from $\mathcal{V}^2$ during the $i$-th round, $X$ is defined:
+
+\begin{align*}
+    X \defeq |\{ i: cpr^Q_{f, Com}(s, \overbar{r}, \overbar{v}_i) \}|
+\end{align*}
+
+$X$ follows the binomial distribution, and therefore its expected value is:
+
+\begin{align*}
+    E[X] = \frac{k}{2} + \frac{\alpha k}{2}
+\end{align*}
+
+Let Succ denote the event of the amplified adversary succeeding. Then Succ
+is equivalent to $X > \frac{k}{2}$.
+
+Because $\alpha$ is non-negligible and due to the tail bounds of the binomial
+distribution, we have:
+
+\begin{align*}
+    Pr[Succ] = 1 - C(k)
+\end{align*}
+
+Where $C$ is a negligible function.
+\end{proof}
 
 \subsection{Compression is insecure}\label{subsec:cominsecure}
 
