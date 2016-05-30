@@ -138,6 +138,13 @@ class Round(models.Model):
     class Meta:
         unique_together = (('victim', 'index'),)
 
+    def check_block_align(self):
+        try:
+            return self.block_align
+        except AttributeError:
+            self.block_align = self.victim.target.block_align
+            return self.block_align
+
     victim = models.ForeignKey(Victim)
 
     index = models.IntegerField(
