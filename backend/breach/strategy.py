@@ -107,9 +107,12 @@ class Strategy(object):
 
         return reflection
 
+    def _url(self, alphabet):
+        return self._victim.target.endpoint % self._reflection(alphabet)
+
     def _sampleset_to_work(self, sampleset):
         return {
-            'url': self._victim.target.endpoint % self._reflection(sampleset.candidatealphabet),
+            'url': self._url(sampleset.candidatealphabet),
             'amount': SAMPLES_PER_SAMPLESET,
             'alignmentalphabet': sampleset.alignmentalphabet,
             'timeout': 0
