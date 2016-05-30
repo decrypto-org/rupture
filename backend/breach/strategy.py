@@ -124,6 +124,9 @@ class Strategy(object):
 
         Pre-condition: There is already work to do.'''
 
+        if self._analyzed:
+            return {}
+
         try:
             self._sniffer.start()
         except (requests.HTTPError, requests.exceptions.ConnectionError), err:
