@@ -35,6 +35,8 @@ def create_target(target):
 
     if 'maxreflectionlength' in target:
         target_args['maxreflectionlength'] = target['maxreflectionlength']
+    if 'block_align' in target:
+        target_args['block_align'] = target['block_align']
 
     t = Target(**target_args)
     t.save()
