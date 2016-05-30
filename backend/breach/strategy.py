@@ -276,7 +276,7 @@ class Strategy(object):
         except ValueError, err:
             self._round.delete()
             self._analyzed = True
-            logger.debug(err)
+            logger.info(err)
             raise err
 
         candidate_alphabets = self._build_candidates(state)
