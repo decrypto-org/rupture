@@ -254,22 +254,22 @@ class Strategy(object):
 
         assert(self._analyzed)
 
-        candidate_alphabets = self._build_candidates(state)
-
         # This next round could potentially be the final round.
         # A final round has the complete secret stored in knownsecret.
         next_round = Round(
             victim=self._victim,
             index=self._round.index + 1 if hasattr(self, '_round') else 1,
-            maxroundcardinality=max(map(len, candidate_alphabets)),
-            minroundcardinality=min(map(len, candidate_alphabets)),
             amount=SAMPLES_PER_SAMPLESET,
             knownalphabet=state['knownalphabet'],
             knownsecret=state['knownsecret']
         )
         next_round.save()
-
         self._round = next_round
+
+        candidate_alphabets = self._build_candidates(state)
+
+        self._round.maxroundcardinality = max(map(len, candidate_alphabets))
+        self._round.minroundcardinality = min(map(len, candidate_alphabets))
 
         logger.debug('Created new round:')
         logger.debug('\tKnown secret: {}'.format(next_round.knownsecret))
