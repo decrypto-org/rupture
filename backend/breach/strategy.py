@@ -49,7 +49,7 @@ class Strategy(object):
             Target.SERIAL: self._build_candidates_serial,
             Target.DIVIDE_CONQUER: self._build_candidates_divide_conquer
         }
-        return methods[self._victim.target.method](state)
+        return methods[self._round.get_method()](state)
 
     def _get_first_round_state(self):
         return {
