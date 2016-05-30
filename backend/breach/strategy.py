@@ -257,9 +257,12 @@ class Strategy(object):
 
         candidate_alphabets = self._build_candidates(state)
 
-        alignmentalphabet = list(self._round.victim.target.alignmentalphabet)
-        random.shuffle(alignmentalphabet)
-        alignmentalphabet = ''.join(alignmentalphabet)
+        alignmentalphabet = ''
+        if self._round.check_block_align():
+            alignmentalphabet = list(self._round.victim.target.alignmentalphabet)
+            random.shuffle(alignmentalphabet)
+            alignmentalphabet = ''.join(alignmentalphabet)
+
         logger.debug('\tAlignment alphabet: {}'.format(alignmentalphabet))
 
         for candidate in candidate_alphabets:
