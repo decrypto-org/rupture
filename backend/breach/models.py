@@ -86,6 +86,12 @@ class Target(models.Model):
         help_text='Method of building candidate samplesets.'
     )
 
+    block_align = models.BooleanField(
+        default=True,
+        help_text=('Whether to use block alignment or not, in case '
+                   'maxreflectionlength does not allow it')
+    )
+
 
 class Victim(models.Model):
     '''
