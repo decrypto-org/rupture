@@ -92,6 +92,12 @@ class Target(models.Model):
                    'maxreflectionlength does not allow it')
     )
 
+    huffman_pool = models.BooleanField(
+        default=True,
+        help_text=('Whether to use Huffman pool or not, in case '
+                   'maxreflectionlength does not allow it')
+    )
+
 
 class Victim(models.Model):
     '''
