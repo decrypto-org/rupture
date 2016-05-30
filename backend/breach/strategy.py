@@ -380,7 +380,11 @@ class Strategy(object):
 
         if self._round_is_completed():
             # Advance to the next round.
-            self._create_next_round()
+            try:
+                self._create_next_round()
+            except ValueError:
+                # If a new round cannot be created, end the attack
+                return True
 
             if self._attack_is_completed():
                 return True
