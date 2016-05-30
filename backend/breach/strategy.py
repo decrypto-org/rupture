@@ -89,19 +89,20 @@ class Strategy(object):
         assert(len(knownalphabet_complement) > candidate_balance)
         candidate_balance = [self._round.knownsecret + c for c in knownalphabet_complement[0:candidate_balance]]
 
-        # Huffman complement indicates the knownalphabet symbols that are not currently being tested
-        huffman_complement = set(self._round.knownalphabet) - set(sampleset.candidatealphabet)
-
-        huffman_balance = added_symbols - len(candidate_balance)
-        assert(len(knownalphabet_complement) > len(candidate_balance) + huffman_balance)
-        huffman_balance = knownalphabet_complement[len(candidate_balance):huffman_balance]
-
         reflected_data = [
             '',
             sentinel.join(list(candidate_secrets) + candidate_balance),
-            sentinel.join(list(huffman_complement) + huffman_balance),
             ''
         ]
+
+        if self._round.check_huffman_pool():
+            # Huffman complement indicates the knownalphabet symbols that are not currently being tested
+            huffman_complement = set(self._round.knownalphabet) - set(alphabet)
+
+            huffman_balance = added_symbols - len(candidate_balance)
+            assert(len(knownalphabet_complement) > len(candidate_balance) + huffman_balance)
+            huffman_balance = knownalphabet_complement[len(candidate_balance):huffman_balance]
+            reflected_data.insert(1, sentinel.join(list(huffman_complement) + huffman_balance))
 
         reflection = sentinel.join(reflected_data)
 
