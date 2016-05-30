@@ -271,6 +271,14 @@ class Strategy(object):
         next_round.save()
         self._round = next_round
 
+        try:
+            self._check_reflection_length(state)
+        except ValueError, err:
+            self._round.delete()
+            self._analyzed = True
+            logger.debug(err)
+            raise err
+
         candidate_alphabets = self._build_candidates(state)
 
         self._round.maxroundcardinality = max(map(len, candidate_alphabets))
