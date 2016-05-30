@@ -145,6 +145,13 @@ class Round(models.Model):
             self.block_align = self.victim.target.block_align
             return self.block_align
 
+    def check_huffman_pool(self):
+        try:
+            return self.huffman_pool
+        except AttributeError:
+            self.huffman_pool = self.victim.target.huffman_pool
+            return self.huffman_pool
+
     victim = models.ForeignKey(Victim)
 
     index = models.IntegerField(
