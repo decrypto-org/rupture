@@ -33,6 +33,9 @@ def create_target(target):
         'method': target['method']
     }
 
+    if 'maxreflectionlength' in target:
+        target_args['maxreflectionlength'] = target['maxreflectionlength']
+
     t = Target(**target_args)
     t.save()
     print '''Created Target:
