@@ -225,6 +225,30 @@ class Strategy(object):
 
         self._create_round(self._decision['state'])
 
+    def _check_reflection_length(self, state):
+        if self._round.victim.target.maxreflectionlength == 0:
+            return
+
+        logger.debug('Checking max reflection length...')
+
+        while True:
+            alphabet = self._build_candidates(state)[0]
+            reflection = self._reflection(alphabet)
+            if len(reflection) > self._round.victim.target.maxreflectionlength:
+                if self._round.get_method() == Target.DIVIDE_CONQUER:
+                    self._round.method = Target.SERIAL
+                    logger.debug('Divide & conquer method cannot be used, falling back to serial.')
+                elif self._round.check_huffman_pool():
+                    self._round.huffman_pool = False
+                    logger.debug('Huffman pool cannot be used, removing it.')
+                elif self._round.check_block_align():
+                    self._round.block_align = False
+                    logger.debug('Block alignment cannot be used, removing it.')
+                else:
+                    raise ValueError('Cannot attack, specified maxreflectionlength is too short')
+            else:
+                return
+
     def _create_round(self, state):
         '''Creates a new round based on the analysis of the current round.'''
 
