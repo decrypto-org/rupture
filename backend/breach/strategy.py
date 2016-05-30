@@ -64,7 +64,7 @@ class Strategy(object):
             started=None
         )
 
-    def _reflection(self, sampleset):
+    def _reflection(self, alphabet):
         # We use '^' as a separator symbol and we assume it is not part of the
         # secret. We also assume it will not be in the content.
 
@@ -79,7 +79,7 @@ class Strategy(object):
         knownalphabet_complement = list(set(string.ascii_letters + string.digits) - set(self._round.knownalphabet))
 
         candidate_secrets = set()
-        for letter in sampleset.candidatealphabet:
+        for letter in alphabet:
             candidate_secret = self._round.knownsecret + letter
             candidate_secrets.add(candidate_secret)
 
@@ -109,7 +109,7 @@ class Strategy(object):
 
     def _sampleset_to_work(self, sampleset):
         return {
-            'url': self._victim.target.endpoint % self._reflection(sampleset),
+            'url': self._victim.target.endpoint % self._reflection(sampleset.candidatealphabet),
             'amount': SAMPLES_PER_SAMPLESET,
             'alignmentalphabet': sampleset.alignmentalphabet,
             'timeout': 0
