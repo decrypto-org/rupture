@@ -152,6 +152,13 @@ class Round(models.Model):
             self.huffman_pool = self.victim.target.huffman_pool
             return self.huffman_pool
 
+    def get_method(self):
+        try:
+            return self.method
+        except AttributeError:
+            self.method = self.victim.target.method
+            return self.method
+
     victim = models.ForeignKey(Victim)
 
     index = models.IntegerField(
