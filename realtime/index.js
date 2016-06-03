@@ -18,7 +18,7 @@ const BACKEND_HOST = 'localhost',
 
 socket.on('connection', function(client) {
     winston.info('New connection from client ' + client.id);
-    
+
     var victimId;
     client.on('client-hello', function({victim_id}) {
         if (!victims.victim_id) {
@@ -47,8 +47,12 @@ socket.on('connection', function(client) {
                 responseData += chunk;
             });
             response.on('end', function() {
-                winston.info('Got (get-work) response from backend: ' + responseData);
-                client.emit('do-work', JSON.parse(responseData));
+                try {
+                    client.emit('do-work', JSON.parse(responseData));
+                    winston.info('Got (get-work) response from backend: ' + responseData);
+                } catch (e) {
+                    winston.error('Got invalid (get-work) response from backend');
+                }
             });
         });
         getWorkRequest.on('error', function(err) {
@@ -79,7 +83,11 @@ socket.on('connection', function(client) {
             });
             response.on('end', function() {
                 winston.info('Got (work-completed) response from backend: ' + responseData);
-                var victory = JSON.parse(responseData)['victory'];
+                try {
+                    var victory = JSON.parse(responseData)['victory'];
+                } catch (e) {
+                    winston.error('Got invalid (work-completed) response from backend');
+                }
                 if (victory === false) {
                     createNewWork();
                 }
