@@ -246,6 +246,10 @@ class Strategy(object):
             self._set_round_cardinalities(candidate_alphabets)
             return candidate_alphabets
 
+        def _get_first_reflection():
+            alphabet = _build_candidate_alphabets[0]
+            return self._reflection(alphabet)
+
         if self._round.victim.target.maxreflectionlength == 0:
             return
 
