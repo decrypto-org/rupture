@@ -238,7 +238,9 @@ class Strategy(object):
         logger.debug('Checking max reflection length...')
 
         while True:
-            alphabet = self._build_candidates(state)[0]
+            candidate_alphabets = self._build_candidates(state)
+            self._set_round_cardinalities(candidate_alphabets)
+            alphabet = candidate_alphabets[0]
             reflection = self._reflection(alphabet)
             if len(reflection) > self._round.victim.target.maxreflectionlength:
                 if self._round.get_method() == Target.DIVIDE_CONQUER:
@@ -279,10 +281,6 @@ class Strategy(object):
             self._analyzed = True
             logger.info(err)
             raise err
-
-        candidate_alphabets = self._build_candidates(state)
-
-        self._set_round_cardinalities = (candidate_alphabets)
 
         logger.debug('Created new round:')
         logger.debug('\tKnown secret: {}'.format(next_round.knownsecret))
