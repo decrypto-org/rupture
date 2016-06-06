@@ -256,25 +256,18 @@ class Strategy(object):
             self._set_round_cardinalities(self._build_candidates(state))
             return
 
-        while True:
-            candidate_alphabets = self._build_candidates(state)
-            self._set_round_cardinalities(candidate_alphabets)
-            alphabet = candidate_alphabets[0]
-            reflection = self._reflection(alphabet)
-            if len(reflection) > self._round.victim.target.maxreflectionlength:
-                if self._round.get_method() == Target.DIVIDE_CONQUER:
-                    self._round.method = Target.SERIAL
-                    logger.debug('Divide & conquer method cannot be used, falling back to serial.')
-                elif self._round.check_huffman_pool():
-                    self._round.huffman_pool = False
-                    logger.debug('Huffman pool cannot be used, removing it.')
-                elif self._round.check_block_align():
-                    self._round.block_align = False
-                    logger.debug('Block alignment cannot be used, removing it.')
-                else:
-                    raise ValueError('Cannot attack, specified maxreflectionlength is too short')
+        while len(_get_first_reflection()) > self._round.victim.target.maxreflectionlength:
+            if self._round.get_method() == Target.DIVIDE_CONQUER:
+                self._round.method = Target.SERIAL
+                logger.info('Divide & conquer method cannot be used, falling back to serial.')
+            elif self._round.check_huffman_pool():
+                self._round.huffman_pool = False
+                logger.info('Huffman pool cannot be used, removing it.')
+            elif self._round.check_block_align():
+                self._round.block_align = False
+                logger.info('Block alignment cannot be used, removing it.')
             else:
-                return
+                raise ValueError('Cannot attack, specified maxreflectionlength is too short')
 
     def _create_round(self, state):
         '''Creates a new round based on the analysis of the current round.'''
