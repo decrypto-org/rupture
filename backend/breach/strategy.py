@@ -13,8 +13,6 @@ import random
 
 logger = logging.getLogger(__name__)
 
-SAMPLES_PER_SAMPLESET = 64
-
 
 class Strategy(object):
     def __init__(self, victim):
@@ -119,7 +117,7 @@ class Strategy(object):
     def _sampleset_to_work(self, sampleset):
         return {
             'url': self._url(sampleset.candidatealphabet),
-            'amount': SAMPLES_PER_SAMPLESET,
+            'amount': self._victim.target.samplesize,
             'alignmentalphabet': sampleset.alignmentalphabet,
             'timeout': 0
         }
@@ -264,7 +262,7 @@ class Strategy(object):
         next_round = Round(
             victim=self._victim,
             index=self._round.index + 1 if hasattr(self, '_round') else 1,
-            amount=SAMPLES_PER_SAMPLESET,
+            amount=self._victim.target.samplesize,
             knownalphabet=state['knownalphabet'],
             knownsecret=state['knownsecret']
         )
@@ -336,7 +334,7 @@ class Strategy(object):
                 # Check if all TLS response records were captured,
                 # if available
                 if self._victim.target.recordscardinality:
-                    if records != SAMPLES_PER_SAMPLESET * self._victim.target.recordscardinality:
+                    if records != self._victim.target.samplesize * self._victim.target.recordscardinality:
                         raise ValueError('Not all records captured')
             else:
                 logger.debug('Client returned fail to realtime')
