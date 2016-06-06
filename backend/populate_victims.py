@@ -26,6 +26,8 @@ def select_victim(victims):
             print '[!] Invalid victim id.'
             exit(1)
 
+    assert(isinstance(vic_ids, tuple))
+
     try:
         victim_list = []
         for vid in vic_ids:
