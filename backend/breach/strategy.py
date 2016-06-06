@@ -250,10 +250,11 @@ class Strategy(object):
             alphabet = _build_candidate_alphabets[0]
             return self._reflection(alphabet)
 
-        if self._round.victim.target.maxreflectionlength == 0:
-            return
-
         logger.debug('Checking max reflection length...')
+
+        if self._round.victim.target.maxreflectionlength == 0:
+            self._set_round_cardinalities(self._build_candidates(state))
+            return
 
         while True:
             candidate_alphabets = self._build_candidates(state)
