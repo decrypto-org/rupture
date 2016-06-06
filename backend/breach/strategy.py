@@ -227,6 +227,10 @@ class Strategy(object):
 
         self._create_round(self._decision['state'])
 
+    def _set_round_cardinalities(self, candidate_alphabets):
+        self._round.maxroundcardinality = max(map(len, candidate_alphabets))
+        self._round.minroundcardinality = min(map(len, candidate_alphabets))
+
     def _check_reflection_length(self, state):
         if self._round.victim.target.maxreflectionlength == 0:
             return
@@ -278,8 +282,7 @@ class Strategy(object):
 
         candidate_alphabets = self._build_candidates(state)
 
-        self._round.maxroundcardinality = max(map(len, candidate_alphabets))
-        self._round.minroundcardinality = min(map(len, candidate_alphabets))
+        self._set_round_cardinalities = (candidate_alphabets)
 
         logger.debug('Created new round:')
         logger.debug('\tKnown secret: {}'.format(next_round.knownsecret))
