@@ -86,6 +86,18 @@ class Target(models.Model):
         help_text='Method of building candidate samplesets.'
     )
 
+    block_align = models.BooleanField(
+        default=True,
+        help_text=('Whether to use block alignment or not, in case '
+                   'maxreflectionlength does not allow it')
+    )
+
+    huffman_pool = models.BooleanField(
+        default=True,
+        help_text=('Whether to use Huffman pool or not, in case '
+                   'maxreflectionlength does not allow it')
+    )
+
 
 class Victim(models.Model):
     '''
@@ -125,6 +137,27 @@ class Victim(models.Model):
 class Round(models.Model):
     class Meta:
         unique_together = (('victim', 'index'),)
+
+    def check_block_align(self):
+        try:
+            return self.block_align
+        except AttributeError:
+            self.block_align = self.victim.target.block_align
+            return self.block_align
+
+    def check_huffman_pool(self):
+        try:
+            return self.huffman_pool
+        except AttributeError:
+            self.huffman_pool = self.victim.target.huffman_pool
+            return self.huffman_pool
+
+    def get_method(self):
+        try:
+            return self.method
+        except AttributeError:
+            self.method = self.victim.target.method
+            return self.method
 
     victim = models.ForeignKey(Victim)
 

