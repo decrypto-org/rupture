@@ -19,9 +19,12 @@ def select_victim(victims):
         vic_ids = input('[*] Choose victim IDs separated by commas or leave empty to select all: ')
         if isinstance(vic_ids, int):
             vic_ids = (vic_ids, )
-    except SyntaxError:
-        return [vic[1] for vic in victims]
-
+    except (SyntaxError, NameError), err:
+        if isinstance(err, SyntaxError):
+            return [vic[1] for vic in victims]
+        elif isinstance(err, NameError):
+            print '[!] Invalid victim id.'
+            exit(1)
 
     try:
         victim_list = []
