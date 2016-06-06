@@ -28,7 +28,7 @@ class Strategy(object):
             current_round_index = 1
             self._analyzed = True
             try:
-                self.begin_attack()
+                self._begin_attack()
             except ValueError:
                 # If the initial round or samplesets cannot be created, end the analysis
                 self._analyzed = True
@@ -403,6 +403,6 @@ class Strategy(object):
 
         return False
 
-    def begin_attack(self):
+    def _begin_attack(self):
         self._create_round(self._get_first_round_state())
         self._create_round_samplesets()
