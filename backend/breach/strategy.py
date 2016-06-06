@@ -29,7 +29,6 @@ class Strategy(object):
                 self._begin_attack()
             except ValueError:
                 # If the initial round or samplesets cannot be created, end the analysis
-                self._analyzed = True
                 return
 
         self._round = Round.objects.filter(victim=self._victim, index=current_round_index)[0]
