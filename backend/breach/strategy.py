@@ -231,7 +231,21 @@ class Strategy(object):
         self._round.maxroundcardinality = max(map(len, candidate_alphabets))
         self._round.minroundcardinality = min(map(len, candidate_alphabets))
 
-    def _check_reflection_length(self, state):
+    def _adapt_reflection_length(self, state):
+        '''Check reflection length compared to maxreflectionlength.
+
+        If current reflection length is bigger, downgrade various attack aspects
+        until reflection length <= maxreflectionlength.
+
+        If all downgrade attempts fail, raise a ValueError.
+
+        Condition: Reflection returns strings of same length for all candidates in
+        candidate alphabet.'''
+        def _build_candidate_alphabets():
+            candidate_alphabets = self._build_candidates(state)
+            self._set_round_cardinalities(candidate_alphabets)
+            return candidate_alphabets
+
         if self._round.victim.target.maxreflectionlength == 0:
             return
 
@@ -275,7 +289,7 @@ class Strategy(object):
         self._round = next_round
 
         try:
-            self._check_reflection_length(state)
+            self._adapt_reflection_length(state)
         except ValueError, err:
             self._round.delete()
             self._analyzed = True
