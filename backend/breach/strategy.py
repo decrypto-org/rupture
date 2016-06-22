@@ -126,9 +126,14 @@ class Strategy(object):
 
         Pre-condition: There is already work to do.'''
 
+        # If analysis is complete or maxreflectionlength cannot be overcome
+        # then execution should abort
         if self._analyzed:
             return {}
 
+        # Reaps a hanging sampleset that may exist from previous framework execution
+        # Hanging sampleset condition: backend or realtime crash
+        hanging_samplesets = self._get_started_samplesets()
         for s in hanging_samplesets:
             logger.warning('Reaping hanging set for: {}'.format(s.candidatealphabet))
             self._mark_current_work_completed('', s)
