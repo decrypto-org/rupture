@@ -129,6 +129,10 @@ class Strategy(object):
         if self._analyzed:
             return {}
 
+        for s in hanging_samplesets:
+            logger.warning('Reaping hanging set for: {}'.format(s.candidatealphabet))
+            self._mark_current_work_completed('', s)
+
         try:
             self._sniffer.start()
         except (requests.HTTPError, requests.exceptions.ConnectionError), err:
