@@ -183,8 +183,10 @@ class Strategy(object):
 
         return sampleset
 
-    def _mark_current_work_completed(self, capture=None):
-        sampleset = self._get_current_sampleset()
+    def _mark_current_work_completed(self, capture=None, sampleset=None):
+        if not sampleset:
+            sampleset = self._get_current_sampleset()
+
         sampleset.completed = timezone.now()
 
         if capture:
