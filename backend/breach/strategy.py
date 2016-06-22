@@ -168,8 +168,14 @@ class Strategy(object):
 
         return work
 
+    def _get_started_samplesets(self):
+        return SampleSet.objects.filter(
+            round=self._round,
+            completed=None
+        ).exclude(started=None)
+
     def _get_current_sampleset(self):
-        started_samplesets = SampleSet.objects.filter(round=self._round, completed=None).exclude(started=None)
+        started_samplesets = self._get_started_samplesets()
 
         assert(len(started_samplesets) == 1)
 
