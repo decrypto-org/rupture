@@ -192,18 +192,14 @@ class Strategy(object):
 
         return sampleset
 
-    def _mark_current_work_completed(self, capture=None, sampleset=None):
-        if not sampleset:
-            sampleset = self._get_current_sampleset()
-
-        sampleset.completed = timezone.now()
-
+    def _handle_sampleset_success(self, capture, sampleset):
+        '''Save capture of successful sampleset
+        or mark sampleset as failed and create new sampleset for the same element that failed.'''
         if capture:
             sampleset.success = True
             sampleset.data = capture
+            sampleset.save()
         else:
-            # Sampleset data collection failed,
-            # create a new sampleset for the same attack element
             s = SampleSet(
                 round=sampleset.round,
                 candidatealphabet=sampleset.candidatealphabet,
@@ -211,7 +207,14 @@ class Strategy(object):
             )
             s.save()
 
+    def _mark_current_work_completed(self, capture=None, sampleset=None):
+        if not sampleset:
+            sampleset = self._get_current_sampleset()
+
+        sampleset.completed = timezone.now()
         sampleset.save()
+
+        self._handle_sampleset_success(capture, sampleset)
 
     def _collect_capture(self):
         captured_data = self._sniffer.read()
