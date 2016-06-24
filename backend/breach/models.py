@@ -98,6 +98,11 @@ class Target(models.Model):
                    'maxreflectionlength does not allow it')
     )
 
+    samplesize = models.IntegerField(
+        default=64,
+        help_text=('The amount of samples per sampleset.')
+    )
+
 
 class Victim(models.Model):
     '''

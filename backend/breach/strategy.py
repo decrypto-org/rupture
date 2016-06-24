@@ -13,8 +13,6 @@ import random
 
 logger = logging.getLogger(__name__)
 
-SAMPLES_PER_SAMPLESET = 64
-
 
 class Strategy(object):
     def __init__(self, victim):
@@ -28,10 +26,9 @@ class Strategy(object):
             current_round_index = 1
             self._analyzed = True
             try:
-                self.begin_attack()
+                self._begin_attack()
             except ValueError:
                 # If the initial round or samplesets cannot be created, end the analysis
-                self._analyzed = True
                 return
 
         self._round = Round.objects.filter(victim=self._victim, index=current_round_index)[0]
@@ -119,7 +116,7 @@ class Strategy(object):
     def _sampleset_to_work(self, sampleset):
         return {
             'url': self._url(sampleset.candidatealphabet),
-            'amount': SAMPLES_PER_SAMPLESET,
+            'amount': self._victim.target.samplesize,
             'alignmentalphabet': sampleset.alignmentalphabet,
             'timeout': 0
         }
@@ -129,8 +126,17 @@ class Strategy(object):
 
         Pre-condition: There is already work to do.'''
 
+        # If analysis is complete or maxreflectionlength cannot be overcome
+        # then execution should abort
         if self._analyzed:
             return {}
+
+        # Reaps a hanging sampleset that may exist from previous framework execution
+        # Hanging sampleset condition: backend or realtime crash
+        hanging_samplesets = self._get_started_samplesets()
+        for s in hanging_samplesets:
+            logger.warning('Reaping hanging set for: {}'.format(s.candidatealphabet))
+            self._mark_current_work_completed('', s)
 
         try:
             self._sniffer.start()
@@ -171,8 +177,14 @@ class Strategy(object):
 
         return work
 
+    def _get_started_samplesets(self):
+        return SampleSet.objects.filter(
+            round=self._round,
+            completed=None
+        ).exclude(started=None)
+
     def _get_current_sampleset(self):
-        started_samplesets = SampleSet.objects.filter(round=self._round, completed=None).exclude(started=None)
+        started_samplesets = self._get_started_samplesets()
 
         assert(len(started_samplesets) == 1)
 
@@ -180,16 +192,14 @@ class Strategy(object):
 
         return sampleset
 
-    def _mark_current_work_completed(self, capture=None):
-        sampleset = self._get_current_sampleset()
-        sampleset.completed = timezone.now()
-
+    def _handle_sampleset_success(self, capture, sampleset):
+        '''Save capture of successful sampleset
+        or mark sampleset as failed and create new sampleset for the same element that failed.'''
         if capture:
             sampleset.success = True
             sampleset.data = capture
+            sampleset.save()
         else:
-            # Sampleset data collection failed,
-            # create a new sampleset for the same attack element
             s = SampleSet(
                 round=sampleset.round,
                 candidatealphabet=sampleset.candidatealphabet,
@@ -197,7 +207,14 @@ class Strategy(object):
             )
             s.save()
 
+    def _mark_current_work_completed(self, capture=None, sampleset=None):
+        if not sampleset:
+            sampleset = self._get_current_sampleset()
+
+        sampleset.completed = timezone.now()
         sampleset.save()
+
+        self._handle_sampleset_success(capture, sampleset)
 
     def _collect_capture(self):
         captured_data = self._sniffer.read()
@@ -230,29 +247,47 @@ class Strategy(object):
 
         self._create_round(self._decision['state'])
 
-    def _check_reflection_length(self, state):
-        if self._round.victim.target.maxreflectionlength == 0:
-            return
+    def _set_round_cardinalities(self, candidate_alphabets):
+        self._round.maxroundcardinality = max(map(len, candidate_alphabets))
+        self._round.minroundcardinality = min(map(len, candidate_alphabets))
+
+    def _adapt_reflection_length(self, state):
+        '''Check reflection length compared to maxreflectionlength.
+
+        If current reflection length is bigger, downgrade various attack aspects
+        until reflection length <= maxreflectionlength.
+
+        If all downgrade attempts fail, raise a ValueError.
+
+        Condition: Reflection returns strings of same length for all candidates in
+        candidate alphabet.'''
+        def _build_candidate_alphabets():
+            candidate_alphabets = self._build_candidates(state)
+            self._set_round_cardinalities(candidate_alphabets)
+            return candidate_alphabets
+
+        def _get_first_reflection():
+            alphabet = _build_candidate_alphabets[0]
+            return self._reflection(alphabet)
 
         logger.debug('Checking max reflection length...')
 
-        while True:
-            alphabet = self._build_candidates(state)[0]
-            reflection = self._reflection(alphabet)
-            if len(reflection) > self._round.victim.target.maxreflectionlength:
-                if self._round.get_method() == Target.DIVIDE_CONQUER:
-                    self._round.method = Target.SERIAL
-                    logger.debug('Divide & conquer method cannot be used, falling back to serial.')
-                elif self._round.check_huffman_pool():
-                    self._round.huffman_pool = False
-                    logger.debug('Huffman pool cannot be used, removing it.')
-                elif self._round.check_block_align():
-                    self._round.block_align = False
-                    logger.debug('Block alignment cannot be used, removing it.')
-                else:
-                    raise ValueError('Cannot attack, specified maxreflectionlength is too short')
+        if self._round.victim.target.maxreflectionlength == 0:
+            self._set_round_cardinalities(self._build_candidates(state))
+            return
+
+        while len(_get_first_reflection()) > self._round.victim.target.maxreflectionlength:
+            if self._round.get_method() == Target.DIVIDE_CONQUER:
+                self._round.method = Target.SERIAL
+                logger.info('Divide & conquer method cannot be used, falling back to serial.')
+            elif self._round.check_huffman_pool():
+                self._round.huffman_pool = False
+                logger.info('Huffman pool cannot be used, removing it.')
+            elif self._round.check_block_align():
+                self._round.block_align = False
+                logger.info('Block alignment cannot be used, removing it.')
             else:
-                return
+                raise ValueError('Cannot attack, specified maxreflectionlength is too short')
 
     def _create_round(self, state):
         '''Creates a new round based on the analysis of the current round.'''
@@ -264,7 +299,7 @@ class Strategy(object):
         next_round = Round(
             victim=self._victim,
             index=self._round.index + 1 if hasattr(self, '_round') else 1,
-            amount=SAMPLES_PER_SAMPLESET,
+            amount=self._victim.target.samplesize,
             knownalphabet=state['knownalphabet'],
             knownsecret=state['knownsecret']
         )
@@ -272,17 +307,12 @@ class Strategy(object):
         self._round = next_round
 
         try:
-            self._check_reflection_length(state)
+            self._adapt_reflection_length(state)
         except ValueError, err:
             self._round.delete()
             self._analyzed = True
-            logger.debug(err)
+            logger.info(err)
             raise err
-
-        candidate_alphabets = self._build_candidates(state)
-
-        self._round.maxroundcardinality = max(map(len, candidate_alphabets))
-        self._round.minroundcardinality = min(map(len, candidate_alphabets))
 
         logger.debug('Created new round:')
         logger.debug('\tKnown secret: {}'.format(next_round.knownsecret))
@@ -336,7 +366,7 @@ class Strategy(object):
                 # Check if all TLS response records were captured,
                 # if available
                 if self._victim.target.recordscardinality:
-                    if records != SAMPLES_PER_SAMPLESET * self._victim.target.recordscardinality:
+                    if records != self._victim.target.samplesize * self._victim.target.recordscardinality:
                         raise ValueError('Not all records captured')
             else:
                 logger.debug('Client returned fail to realtime')
@@ -403,6 +433,6 @@ class Strategy(object):
 
         return False
 
-    def begin_attack(self):
+    def _begin_attack(self):
         self._create_round(self._get_first_round_state())
         self._create_round_samplesets()
