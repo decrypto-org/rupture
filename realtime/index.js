@@ -88,6 +88,7 @@ socket.on('connection', function(client) {
                     var victory = JSON.parse(responseData)['victory'];
                 } catch (e) {
                     winston.error('Got invalid (work-completed) response from backend');
+                    doNoWork();
                 }
                 if (victory === false) {
                     createNewWork();
