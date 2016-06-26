@@ -33,7 +33,7 @@ class Strategy(object):
             self._analyzed = True
             try:
                 self._begin_attack()
-            except ValueError:
+            except MaxReflectionLengthError:
                 # If the initial round or samplesets cannot be created, end the analysis
                 return
 
@@ -263,7 +263,7 @@ class Strategy(object):
         If current reflection length is bigger, downgrade various attack aspects
         until reflection length <= maxreflectionlength.
 
-        If all downgrade attempts fail, raise a ValueError.
+        If all downgrade attempts fail, raise a MaxReflectionLengthError.
 
         Condition: Reflection returns strings of same length for all candidates in
         candidate alphabet.'''
@@ -293,7 +293,7 @@ class Strategy(object):
                 self._round.block_align = False
                 logger.info('Block alignment cannot be used, removing it.')
             else:
-                raise ValueError('Cannot attack, specified maxreflectionlength is too short')
+                raise MaxReflectionLengthError('Cannot attack, specified maxreflectionlength is too short')
 
     def _create_round(self, state):
         '''Creates a new round based on the analysis of the current round.'''
@@ -314,7 +314,7 @@ class Strategy(object):
 
         try:
             self._adapt_reflection_length(state)
-        except ValueError, err:
+        except MaxReflectionLengthError, err:
             self._round.delete()
             self._analyzed = True
             logger.info(err)
@@ -426,7 +426,7 @@ class Strategy(object):
             # Advance to the next round.
             try:
                 self._create_next_round()
-            except ValueError:
+            except MaxReflectionLengthError:
                 # If a new round cannot be created, end the attack
                 return True
 
