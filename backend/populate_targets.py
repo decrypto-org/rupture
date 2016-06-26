@@ -25,7 +25,7 @@ def create_target(target):
     if method:
         target['method'] = method
     else:
-        print '[!] Invalid method for target "{}".'.format(target['name'])
+        logger.info('[!] Invalid method for target "{}".'.format(target['name']))
         return
 
     target_args = {
@@ -48,31 +48,32 @@ def create_target(target):
 
     t = Target(**target_args)
     t.save()
-    print '''Created Target:
-             \tname: {}
-             \tendpoint: {}
-             \tprefix: {}
-             \talphabet: {}
-             \tsecretlength: {}
-             \talignmentalphabet: {}
-             \trecordscardinality: {}
-             \tmethod: {}'''.format(
-                t.name,
-                t.endpoint,
-                t.prefix,
-                t.alphabet,
-                t.secretlength,
-                t.alignmentalphabet,
-                t.recordscardinality,
-                t.method
-            )
+    logger.info('''Created Target:
+         \tname: {}
+         \tendpoint: {}
+         \tprefix: {}
+         \talphabet: {}
+         \tsecretlength: {}
+         \talignmentalphabet: {}
+         \trecordscardinality: {}
+         \tmethod: {}'''.format(
+            t.name,
+            t.endpoint,
+            t.prefix,
+            t.alphabet,
+            t.secretlength,
+            t.alignmentalphabet,
+            t.recordscardinality,
+            t.method
+        )
+    )
 
 if __name__ == '__main__':
     try:
         with open(os.path.join(BASE_DIR, 'target_config.yml'), 'r') as ymlconf:
             cfg = yaml.load(ymlconf)
     except IOError, err:
-        print 'IOError: %s' % err
+        logger.info('IOError: %s' % err)
         exit(1)
     targets = cfg.items()
 
@@ -83,6 +84,6 @@ if __name__ == '__main__':
             create_target(target)
         except (IntegrityError, ValueError), err:
             if isinstance(err, IntegrityError):
-                print '[!] Target "{}" already exists.'.format(target['name'])
+                logger.info('[!] Target "{}" already exists.'.format(target['name']))
             elif isinstance(err, ValueError):
-                print '[!] Invalid parameters for target "{}".'.format(target['name'])
+                logger.info('[!] Invalid parameters for target "{}".'.format(target['name']))
