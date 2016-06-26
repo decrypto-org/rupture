@@ -273,7 +273,7 @@ class Strategy(object):
             return candidate_alphabets
 
         def _get_first_reflection():
-            alphabet = _build_candidate_alphabets[0]
+            alphabet = _build_candidate_alphabets()[0]
             return self._reflection(alphabet)
 
         logger.debug('Checking max reflection length...')
