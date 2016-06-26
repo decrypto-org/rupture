@@ -56,20 +56,21 @@ class Sniffer(threading.Thread):
             self.destination_host = str(arg['destination_host'])
             self.destination_port = int(arg['destination_port'])
         except KeyError:
-            assert False, 'Invalid argument dictionary - Not enough parameters'
+            raise ValueError('Invalid argument dictionary - Not enough parameters')
 
         try:
             self.destination_ip = socket.gethostbyaddr(self.destination_host)[-1][0]
         except socket.herror, err:
-            assert False, 'socket.herror - ' + str(err)
+            raise ValueError('socket.herror - {}'.format(str(err)))
 
-        # If either of the parameters is None, assert error
-        assert all([
+        # If either of the parameters is None, raise ValueError
+        if not all([
             self.interface,
             self.source_ip,
             self.destination_host,
             self.destination_port]
-        ), 'Invalid argument dictionary - Invalid parameters'
+        ):
+            raise ValueError('Invalid argument dictionary - Invalid parameters')
 
         # Dictionary with keys the destination (victim's) port
         # and value the data stream corresponding to that port
@@ -191,7 +192,7 @@ class Sniffer(threading.Thread):
                 logger.warning('Invalid payload data.')
 
                 # Flush invalid captured packets
-                assert False, 'Captured packets were not properly constructed'
+                raise ValueError('Captured packets were not properly constructed')
 
             # Keep only TLS application data payload
             if content_type == TLS_APPLICATION_DATA:

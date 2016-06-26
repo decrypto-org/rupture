@@ -57,7 +57,7 @@ def start():
     # Check if parameters are invalid
     try:
         sniffer = Sniffer(params)
-    except AssertionError, err:
+    except ValueError, err:
         logger.warning(err)
         return str(err), 400
 
@@ -101,7 +101,7 @@ def read():
     # Use the sniffer's get_capture() method to get the captured packets
     try:
         capture = sniffer.get_capture()
-    except AssertionError, err:
+    except ValueError, err:
         logger.warning(err)
         return str(err), 422
 
