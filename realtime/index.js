@@ -83,15 +83,17 @@ socket.on('connection', function(client) {
                 responseData += chunk;
             });
             response.on('end', function() {
-                winston.info('Got (work-completed) response from backend: ' + responseData);
                 try {
                     var victory = JSON.parse(responseData)['victory'];
+
+                    winston.info('Got (work-completed) response from backend: ' + responseData);
+
+                    if (victory === false) {
+                        createNewWork();
+                    }
                 } catch (e) {
                     winston.error('Got invalid (work-completed) response from backend');
                     doNoWork();
-                }
-                if (victory === false) {
-                    createNewWork();
                 }
             });
         });
