@@ -52,6 +52,7 @@ socket.on('connection', function(client) {
                     winston.info('Got (get-work) response from backend: ' + responseData);
                 } catch (e) {
                     winston.error('Got invalid (get-work) response from backend');
+                    doNoWork();
                 }
             });
         });
