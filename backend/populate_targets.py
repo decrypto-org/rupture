@@ -1,4 +1,5 @@
 import django
+import logging
 import os
 import yaml
 from backend.settings import BASE_DIR
@@ -8,6 +9,11 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'backend.settings')
 django.setup()
 
 from breach.models import Target
+
+level = logging.DEBUG
+logger = logging.getLogger(__name__)
+logger.setLevel(level)
+logging.basicConfig(format='%(message)s')
 
 
 def create_target(target):
