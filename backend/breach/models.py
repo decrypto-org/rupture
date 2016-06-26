@@ -182,7 +182,6 @@ class Round(models.Model):
                    'occurs when the target alphabet is not a perfect power of '
                    '2.')
     )
-    # assert(self.maxroundcardinality >= len(self.candidatealphabet))
 
     minroundcardinality = models.IntegerField(
         default=1,
@@ -203,19 +202,11 @@ class Round(models.Model):
         max_length=255,
         help_text='Known secret before the sample set was collected'
     )
-    # assert(
-    #     self.knownsecret[0:len(self.victim.target.prefix)]
-    #     ==
-    #     self.victim.target.prefix
-    # )
 
     knownalphabet = models.CharField(
         max_length=255,
         help_text='The candidate alphabet for the next unknown character'
     )
-    # assert(
-    #     all([c in self.victim.target.alphabet for c in self.knownalphabet])
-    # )
 
 
 class SampleSet(models.Model):
@@ -233,7 +224,6 @@ class SampleSet(models.Model):
                    'a decision for a state transition with a certain '
                    'confidence.')
     )
-    # assert(self.round.index <= self.victim.round.index)
 
     # candidate state
     candidatealphabet = models.CharField(
@@ -245,7 +235,6 @@ class SampleSet(models.Model):
                    'iterative attack, it will be a single symbol of '
                    'knownnextalphabet.')
     )
-    # assert(all([c in self.knownalphabet for c in self.candidatealphabet]))
 
     alignmentalphabet = models.CharField(
         max_length=255,
@@ -254,7 +243,6 @@ class SampleSet(models.Model):
                    'alignment for this batch. This is a permutation of the '
                    'target alignment alphabet.')
     )
-    # assert(sort(self.alignmentalphabet) == sort(self.round.victim.target.alignmentalphabet))
 
     data = models.TextField(
         default='',
