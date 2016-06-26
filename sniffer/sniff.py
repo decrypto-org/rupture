@@ -47,10 +47,12 @@ def start():
         logger.warning(err)
         return str(err), 409
 
-    params = {'source_ip': source_ip,
-              'destination_host': destination_host,
-              'interface': interface,
-              'destination_port': destination_port}
+    params = {
+        'source_ip': source_ip,
+        'destination_host': destination_host,
+        'interface': interface,
+        'destination_port': destination_port
+    }
 
     # Check if parameters are invalid
     try:
