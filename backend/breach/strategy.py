@@ -14,6 +14,12 @@ import random
 logger = logging.getLogger(__name__)
 
 
+class MaxReflectionLengthError(Exception):
+    '''Custom exception to handle cases when maxreflectionlength
+    is not sufficient for the attack to continue.'''
+    pass
+
+
 class Strategy(object):
     def __init__(self, victim):
         self._victim = victim
