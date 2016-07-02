@@ -50,8 +50,10 @@ socket.on('connection', function(client) {
                 try {
                     client.emit('do-work', JSON.parse(responseData));
                     winston.info('Got (get-work) response from backend: ' + responseData);
-                } catch (e) {
+                }
+                catch(e) {
                     winston.error('Got invalid (get-work) response from backend');
+                    doNoWork();
                 }
             });
         });
@@ -82,14 +84,18 @@ socket.on('connection', function(client) {
                 responseData += chunk;
             });
             response.on('end', function() {
-                winston.info('Got (work-completed) response from backend: ' + responseData);
                 try {
                     var victory = JSON.parse(responseData)['victory'];
-                } catch (e) {
-                    winston.error('Got invalid (work-completed) response from backend');
+
+                    winston.info('Got (work-completed) response from backend: ' + responseData);
+
+                    if (victory === false) {
+                        createNewWork();
+                    }
                 }
-                if (victory === false) {
-                    createNewWork();
+                catch(e) {
+                    winston.error('Got invalid (work-completed) response from backend');
+                    doNoWork();
                 }
             });
         });
