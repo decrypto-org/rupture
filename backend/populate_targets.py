@@ -25,7 +25,7 @@ def create_target(target):
     if method:
         target['method'] = method
     else:
-        logger.info('[!] Invalid method for target "{}".'.format(target['name']))
+        logger.error('[!] Invalid method for target "{}".'.format(target['name']))
         return
 
     target_args = {
@@ -73,7 +73,7 @@ if __name__ == '__main__':
         with open(os.path.join(BASE_DIR, 'target_config.yml'), 'r') as ymlconf:
             cfg = yaml.load(ymlconf)
     except IOError, err:
-        logger.info('IOError: %s' % err)
+        logger.error('IOError: %s' % err)
         exit(1)
     targets = cfg.items()
 
@@ -86,4 +86,4 @@ if __name__ == '__main__':
             if isinstance(err, IntegrityError):
                 logger.info('[!] Target "{}" already exists.'.format(target['name']))
             elif isinstance(err, ValueError):
-                logger.info('[!] Invalid parameters for target "{}".'.format(target['name']))
+                logger.error('[!] Invalid parameters for target "{}".'.format(target['name']))
