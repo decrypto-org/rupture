@@ -362,10 +362,12 @@ class Strategy(object):
             )
             sampleset.save()
 
-            assert(self._round.maxroundcardinality >= len(sampleset.candidatealphabet))
-            assert(self._round.minroundcardinality <= len(sampleset.candidatealphabet))
-            assert(set(sampleset.candidatealphabet) <= set(self._round.knownalphabet))
-            assert(set(sampleset.alignmentalphabet) == set(self._round.victim.target.alignmentalphabet))
+            try:
+                sampleset.clean()
+            except ValidationError, err:
+                logger.error(err)
+                sampleset.delete()
+                raise err
 
     def _attack_is_completed(self):
         return len(self._round.knownsecret) == self._victim.target.secretlength
