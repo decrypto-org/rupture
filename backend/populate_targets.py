@@ -84,6 +84,6 @@ if __name__ == '__main__':
             create_target(target)
         except (IntegrityError, ValueError), err:
             if isinstance(err, IntegrityError):
-                logger.info('[!] Target "{}" already exists.'.format(target['name']))
+                logger.warning('[!] Target "{}" already exists.'.format(target['name']))
             elif isinstance(err, ValueError):
                 logger.error('[!] Invalid parameters for target "{}".'.format(target['name']))
