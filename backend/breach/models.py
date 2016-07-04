@@ -222,6 +222,15 @@ class SampleSet(models.Model):
     A set of samples collected for a particular victim pertaining to an
     alphabet vector used to extend a known secret.
     '''
+    def clean(self):
+        if self.round.maxroundcardinality < len(self.candidatealphabet):
+            raise ValidationError('Sampleset alphabet should be at most maxroundcardinality sized.')
+        if self.round.minroundcardinality > len(self.candidatealphabet):
+            raise ValidationError('Sampleset alphabet should be at least minroundcardinality sized.')
+        if set(self.candidatealphabet) > set(self.round.knownalphabet):
+            raise ValidationError("Candidate alphabet must be a subset of round's known alphabet")
+        if set(self.alignmentalphabet) != set(self.round.victim.target.alignmentalphabet):
+            raise ValidationError("Alignment alphabet must be a permutation of target's alignmentalphabet")
 
     round = models.ForeignKey(
         Round,
