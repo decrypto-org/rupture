@@ -326,9 +326,12 @@ class Strategy(object):
             logger.info(err)
             raise err
 
-        assert(next_round.knownsecret.startswith(next_round.victim.target.prefix))
-
-        assert(set(next_round.knownalphabet) <= set(next_round.victim.target.alphabet))
+        try:
+            next_round.clean()
+        except ValidationError, err:
+            logger.error(err)
+            self._round.delete()
+            raise err
 
         logger.debug('Created new round:')
         logger.debug('\tKnown secret: {}'.format(next_round.knownsecret))
