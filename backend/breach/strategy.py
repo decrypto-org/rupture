@@ -1,5 +1,6 @@
 from django.utils import timezone
 from django.db.models import Max
+from django.core.exceptions import ValidationError
 
 from breach.analyzer import decide_next_world_state
 from breach.models import SampleSet, Round, Target
