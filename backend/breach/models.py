@@ -165,6 +165,13 @@ class Round(models.Model):
             self.method = self.victim.target.method
             return self.method
 
+    def clean(self):
+        if not self.knownsecret.startswith(self.victim.target.prefix):
+            raise ValidationError('Knownsecret must start with known target prefix')
+
+        if not set(self.knownalphabet) <= set(self.victim.target.alphabet):
+            raise ValidationError("Knownalphabet must be a subset of target's alphabet")
+
     victim = models.ForeignKey(Victim)
 
     index = models.IntegerField(
