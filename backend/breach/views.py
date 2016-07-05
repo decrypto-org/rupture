@@ -15,12 +15,6 @@ def get_work(request, victim_id=0):
         raise Http404('Victim not found')
 
     strategy = Strategy(victim)
-
-    # Example work structure:
-    # return {'url': 'https://www.dimkarakostas.com/?breach-test',
-    #         'amount': 10,
-    #         'timeout': 0}
-
     new_work = strategy.get_work()
 
     return JsonResponse(new_work)

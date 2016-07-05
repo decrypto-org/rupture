@@ -1,5 +1,6 @@
 from __future__ import unicode_literals
 from django.db import models
+from django.core.exceptions import ValidationError
 import urlparse
 
 
@@ -164,6 +165,13 @@ class Round(models.Model):
             self.method = self.victim.target.method
             return self.method
 
+    def clean(self):
+        if not self.knownsecret.startswith(self.victim.target.prefix):
+            raise ValidationError('Knownsecret must start with known target prefix')
+
+        if not set(self.knownalphabet) <= set(self.victim.target.alphabet):
+            raise ValidationError("Knownalphabet must be a subset of target's alphabet")
+
     victim = models.ForeignKey(Victim)
 
     index = models.IntegerField(
@@ -182,7 +190,6 @@ class Round(models.Model):
                    'occurs when the target alphabet is not a perfect power of '
                    '2.')
     )
-    # assert(self.maxroundcardinality >= len(self.candidatealphabet))
 
     minroundcardinality = models.IntegerField(
         default=1,
@@ -203,19 +210,11 @@ class Round(models.Model):
         max_length=255,
         help_text='Known secret before the sample set was collected'
     )
-    # assert(
-    #     self.knownsecret[0:len(self.victim.target.prefix)]
-    #     ==
-    #     self.victim.target.prefix
-    # )
 
     knownalphabet = models.CharField(
         max_length=255,
         help_text='The candidate alphabet for the next unknown character'
     )
-    # assert(
-    #     all([c in self.victim.target.alphabet for c in self.knownalphabet])
-    # )
 
 
 class SampleSet(models.Model):
@@ -223,6 +222,15 @@ class SampleSet(models.Model):
     A set of samples collected for a particular victim pertaining to an
     alphabet vector used to extend a known secret.
     '''
+    def clean(self):
+        if self.round.maxroundcardinality < len(self.candidatealphabet):
+            raise ValidationError('Sampleset alphabet should be at most maxroundcardinality sized.')
+        if self.round.minroundcardinality > len(self.candidatealphabet):
+            raise ValidationError('Sampleset alphabet should be at least minroundcardinality sized.')
+        if set(self.candidatealphabet) > set(self.round.knownalphabet):
+            raise ValidationError("Candidate alphabet must be a subset of round's known alphabet")
+        if set(self.alignmentalphabet) != set(self.round.victim.target.alignmentalphabet):
+            raise ValidationError("Alignment alphabet must be a permutation of target's alignmentalphabet")
 
     round = models.ForeignKey(
         Round,
@@ -233,7 +241,6 @@ class SampleSet(models.Model):
                    'a decision for a state transition with a certain '
                    'confidence.')
     )
-    # assert(self.round.index <= self.victim.round.index)
 
     # candidate state
     candidatealphabet = models.CharField(
@@ -245,7 +252,6 @@ class SampleSet(models.Model):
                    'iterative attack, it will be a single symbol of '
                    'knownnextalphabet.')
     )
-    # assert(all([c in self.knownalphabet for c in self.candidatealphabet]))
 
     alignmentalphabet = models.CharField(
         max_length=255,
@@ -254,7 +260,6 @@ class SampleSet(models.Model):
                    'alignment for this batch. This is a permutation of the '
                    'target alignment alphabet.')
     )
-    # assert(sort(self.alignmentalphabet) == sort(self.round.victim.target.alignmentalphabet))
 
     data = models.TextField(
         default='',

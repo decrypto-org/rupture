@@ -32,13 +32,16 @@ var BREACHClient = {
 		victim_id: config.VICTIM_ID
             });
 	}
-	else
-	{
+	else {
             console.log('No work');
-            setTimeout(function(){
-		this._socket.emit('client-hello', {
-			victim_id: config.VICTIM_ID})}.bind(this),
-	     this.MORE_WORK_TIMEOUT);
+            setTimeout(
+                () => {
+                    this._socket.emit('client-hello', {
+                        victim_id: config.VICTIM_ID
+                    })
+                },
+                this.MORE_WORK_TIMEOUT
+            );
 	}
     },
     doWork(work) {

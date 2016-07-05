@@ -1,5 +1,6 @@
 from django.utils import timezone
 from django.db.models import Max
+from django.core.exceptions import ValidationError
 
 from breach.analyzer import decide_next_world_state
 from breach.models import SampleSet, Round, Target
@@ -23,7 +24,13 @@ class MaxReflectionLengthError(Exception):
 class Strategy(object):
     def __init__(self, victim):
         self._victim = victim
-        self._sniffer = Sniffer(victim.snifferendpoint, self._victim.sourceip, self._victim.target.host, self._victim.interface, self._victim.target.port)
+        self._sniffer = Sniffer(
+            victim.snifferendpoint,
+            self._victim.sourceip,
+            self._victim.target.host,
+            self._victim.interface,
+            self._victim.target.port
+        )
 
         # Extract maximum round index for the current victim.
         current_round_index = Round.objects.filter(victim=self._victim).aggregate(Max('index'))['index__max']
@@ -37,7 +44,10 @@ class Strategy(object):
                 # If the initial round or samplesets cannot be created, end the analysis
                 return
 
-        self._round = Round.objects.filter(victim=self._victim, index=current_round_index)[0]
+        self._round = Round.objects.filter(
+            victim=self._victim,
+            index=current_round_index
+        )[0]
         self._analyzed = False
 
     def _build_candidates_divide_conquer(self, state):
@@ -108,7 +118,9 @@ class Strategy(object):
             huffman_complement = set(self._round.knownalphabet) - set(alphabet)
 
             huffman_balance = added_symbols - len(candidate_balance)
+
             assert(len(knownalphabet_complement) > len(candidate_balance) + huffman_balance)
+
             huffman_balance = knownalphabet_complement[len(candidate_balance):huffman_balance]
             reflected_data.insert(1, sentinel.join(list(huffman_complement) + huffman_balance))
 
@@ -232,11 +244,11 @@ class Strategy(object):
         current_round_samplesets = SampleSet.objects.filter(round=self._round, success=True)
         self._decision = decide_next_world_state(current_round_samplesets)
 
-        logger.debug('############################################################################')
+        logger.debug(75 * '#')
         logger.debug('Decision:')
         for i in self._decision:
             logger.debug('\t{}: {}'.format(i, self._decision[i]))
-        logger.debug('############################################################################\n')
+        logger.debug(75 * '#')
 
         self._analyzed = True
 
@@ -320,6 +332,13 @@ class Strategy(object):
             logger.info(err)
             raise err
 
+        try:
+            next_round.clean()
+        except ValidationError, err:
+            logger.error(err)
+            self._round.delete()
+            raise err
+
         logger.debug('Created new round:')
         logger.debug('\tKnown secret: {}'.format(next_round.knownsecret))
         logger.debug('\tKnown alphabet: {}'.format(next_round.knownalphabet))
@@ -348,6 +367,13 @@ class Strategy(object):
                 alignmentalphabet=alignmentalphabet
             )
             sampleset.save()
+
+            try:
+                sampleset.clean()
+            except ValidationError, err:
+                logger.error(err)
+                sampleset.delete()
+                raise err
 
     def _attack_is_completed(self):
         return len(self._round.knownsecret) == self._victim.target.secretlength

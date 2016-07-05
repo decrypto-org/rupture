@@ -60,15 +60,15 @@ if __name__ == '__main__':
     destination_host = 'dionyziz.com'
     interface = 'wlan0'
     destination_port = '443'
-    print('Initializing sniffer')
+    logger.debug('Initializing sniffer')
     sniffer = Sniffer('http://%s:9000' % source_ip, source_ip, destination_host, interface, destination_port)
-    print('Starting')
+    logger.debug('Starting')
     sniffer.start()
-    print('Sniff started')
+    logger.debug('Sniff started')
     sleep(5)
-    print('Reading sniffer data')
+    logger.debug('Reading sniffer data')
     data = sniffer.read()
-    print('Sniffer data read:\n%s', data)
-    print('Stopping sniffer')
+    logger.debug('Sniffer data read:\n%s', data)
+    logger.debug('Stopping sniffer')
     sniffer.stop()
-    print('Sniffer stopped')
+    logger.debug('Sniffer stopped')
