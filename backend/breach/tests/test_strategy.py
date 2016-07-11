@@ -13,7 +13,7 @@ class StrategyTestCase(RuptureTestCase):
         work0 = strategy0.get_work()
         self.assertEqual(
             work0['url'],
-            'https://di.uoa.gr/?breach=^testsecret0^1^'
+            'https://di.uoa.gr/?breach=^1^testsecret0^'
         )
         self.assertTrue('amount' in work0)
         self.assertTrue('timeout' in work0)
@@ -26,7 +26,7 @@ class StrategyTestCase(RuptureTestCase):
         work1 = strategy1.get_work()
         self.assertEqual(
             work1['url'],
-            'https://di.uoa.gr/?breach=^testsecret1^0^'
+            'https://di.uoa.gr/?breach=^0^testsecret1^'
         )
 
         strategy1._mark_current_work_completed()
@@ -46,7 +46,8 @@ class StrategyTestCase(RuptureTestCase):
         work_0 = strategy_0.get_work()
         self.assertEqual(
             work_0['url'],
-            'https://di.uoa.gr/?breach=^testsecret0^testsecret$^testsecret(^1^3^2^'
+            # testsecret5 and testsecret4 are dummy balancing secrets
+            'https://di.uoa.gr/?breach=^1^3^2^testsecret0^testsecret5^testsecret4^'
         )
 
 
@@ -54,7 +55,7 @@ class StrategyTestCase(RuptureTestCase):
 
         self.assertEqual(
             work_1['url'],
-            'https://di.uoa.gr/?breach=^testsecret3^testsecret2^testsecret1^0^$^(^'
+            'https://di.uoa.gr/?breach=^0^5^4^testsecret3^testsecret2^testsecret1^'
         )
 
         strategy_1._mark_current_work_completed()
