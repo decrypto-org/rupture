@@ -1,3 +1,4 @@
+from django.utils import timezone
 from mock import patch
 
 from breach.tests.base import RuptureTestCase
@@ -17,6 +18,9 @@ class StrategyTestCase(RuptureTestCase):
         self.assertTrue('amount' in work0)
         self.assertTrue('timeout' in work0)
 
+        strategy0._mark_current_work_completed()
+
+
         strategy1 = Strategy(self.victim)
 
         work1 = strategy1.get_work()
@@ -24,6 +28,8 @@ class StrategyTestCase(RuptureTestCase):
             work1['url'],
             'https://di.uoa.gr/?breach=^testsecret1^0^'
         )
+
+        strategy1._mark_current_work_completed()
 
     def test_same_round_same_batch(self):
         pass
@@ -43,9 +49,12 @@ class StrategyTestCase(RuptureTestCase):
             'https://di.uoa.gr/?breach=^testsecret0^testsecret$^testsecret(^1^3^2^'
         )
 
-        strategy_1 = Strategy(self.balance_victim)
-        work_1 = strategy_1.get_work()
+
+        strategy_0._mark_current_work_completed()
+
         self.assertEqual(
             work_1['url'],
             'https://di.uoa.gr/?breach=^testsecret3^testsecret2^testsecret1^0^$^(^'
         )
+
+        strategy_1._mark_current_work_completed()
