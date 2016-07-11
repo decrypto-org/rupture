@@ -11,7 +11,7 @@ winston.info('Rupture real-time service starting');
 winston.info('Listening on port ' + PORT);
 
 var socket = io.listen(PORT);
-var victims = new Object();
+var victims = {};
 
 const BACKEND_HOST = 'localhost',
       BACKEND_PORT = '8000';
