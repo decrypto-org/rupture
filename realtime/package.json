@@ -12,5 +12,11 @@
   "dependencies": {
     "socket.io": "^1.4.5",
     "winston": "^2.2.0"
+  },
+  "devDependencies": {
+    "jshint": "^2.9.2"
+  },
+  "jshintConfig": {
+    "esversion": 6
   }
 }
