@@ -85,7 +85,7 @@ socket.on('connection', function(client) {
             });
             response.on('end', function() {
                 try {
-                    var victory = JSON.parse(responseData)['victory'];
+                    var victory = JSON.parse(responseData).victory;
 
                     winston.info('Got (work-completed) response from backend: ' + responseData);
 
