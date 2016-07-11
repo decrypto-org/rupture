@@ -1,0 +1,9 @@
+language: python
+sudo: true
+install:
+    - pip install pep8
+    - npm install jshint
+    - cd backend && pip install -r requirements.txt && cd ..
+    - cd sniffer && pip install -r requirements.txt && cd ..
+script:
+    - make all
