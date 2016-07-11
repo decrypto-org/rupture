@@ -126,8 +126,8 @@ socket.on('connection', function(client) {
         for (var i in victims) {
             if (victims.i == client.id) {
                 victims.i = null;
-            };
-        };
+            }
+        }
 
         var requestBody = {
             success: false
