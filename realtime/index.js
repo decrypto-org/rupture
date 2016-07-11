@@ -22,12 +22,12 @@ socket.on('connection', function(client) {
     var victimId;
     client.on('client-hello', function({victim_id}) {
         if (!victims.victim_id) {
-	    victimId = victim_id;
-	    client.emit('server-hello');
-	 }
+            victimId = victim_id;
+            client.emit('server-hello');
+        }
         else {
-	    client.emit('server-nowork')
-	 }
+            client.emit('server-nowork');
+        }
     });
 
     var doNoWork = function() {
@@ -125,8 +125,8 @@ socket.on('connection', function(client) {
 
         for (var i in victims) {
             if (victims.i == client.id) {
-	        victims.i = null;
-	     };
+                victims.i = null;
+            };
         };
 
         var requestBody = {
