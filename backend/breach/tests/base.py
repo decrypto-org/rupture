@@ -45,6 +45,7 @@ class RuptureTestCase(TestCase):
             amount=1,
             knownsecret='testsecret',
             knownalphabet='0123',
+            minroundcardinality=1,
             maxroundcardinality=3
         )
         self.balance_samplesets = [
