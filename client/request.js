@@ -14,6 +14,7 @@ var Request = {
 
 var Collection = {
     _ONE_REQUEST_DEFAULT_TIMEOUT: 5000,
+    _SENTINEL: '^',
     create(url, {amount, alignmentalphabet, oneRequestTimeout}, onOneSuccess, onAllSuccess, onError) {
         var requests = [];
         var loadingTimeout;
