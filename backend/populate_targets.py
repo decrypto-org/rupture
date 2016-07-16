@@ -45,6 +45,8 @@ def create_target(target):
         target_args['block_align'] = target['block_align']
     if 'huffman_pool' in target:
         target_args['huffman_pool'] = target['huffman_pool']
+    if 'samplesize' in target:
+        target_args['samplesize'] = target['samplesize']
 
     t = Target(**target_args)
     t.save()
