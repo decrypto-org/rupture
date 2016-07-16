@@ -128,7 +128,9 @@ class Sniffer(threading.Thread):
         # Kill it with fire!
         self.status = False
 
-        self.stop_packet()
+        # Send 3 stop packets, in case one is not captured
+        for i in range(3):
+            self.stop_packet()
 
     def stop_packet(self):
         '''
