@@ -30,5 +30,11 @@
     "socket.io-client": "^1.4.5",
     "vinyl-source-stream": "^1.1.0",
     "watchify": "^3.7.0"
+  },
+  "jshintConfig": {
+    "esversion": 6
+  },
+  "devDependencies": {
+    "jshint": "^2.9.2"
   }
 }

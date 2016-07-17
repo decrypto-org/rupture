@@ -37,11 +37,11 @@ var Collection = {
                 clearTimeout(loadingTimeout);
                 onError();
             }, oneRequestTimeout);
-        }
+        };
         const allCompleted = () => {
             clearTimeout(loadingTimeout);
             onAllSuccess();
-        }
+        };
         const oneLoaded = (index) => {
             console.log();
 
@@ -54,7 +54,7 @@ var Collection = {
             if (loadedCount == amount) {
                 allCompleted();
             }
-        }
+        };
 
         antiBrowserCaching = Math.random() * Number.MAX_SAFE_INTEGER;
         var alignmentPadding;

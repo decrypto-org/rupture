@@ -11,7 +11,7 @@ winston.info('Rupture real-time service starting');
 winston.info('Listening on port ' + PORT);
 
 var socket = io.listen(PORT);
-var victims = new Object();
+var victims = {};
 
 const BACKEND_HOST = 'localhost',
       BACKEND_PORT = '8000';
@@ -22,12 +22,12 @@ socket.on('connection', function(client) {
     var victimId;
     client.on('client-hello', function({victim_id}) {
         if (!victims.victim_id) {
-	    victimId = victim_id;
-	    client.emit('server-hello');
-	 }
+            victimId = victim_id;
+            client.emit('server-hello');
+        }
         else {
-	    client.emit('server-nowork')
-	 }
+            client.emit('server-nowork');
+        }
     });
 
     var doNoWork = function() {
@@ -85,7 +85,7 @@ socket.on('connection', function(client) {
             });
             response.on('end', function() {
                 try {
-                    var victory = JSON.parse(responseData)['victory'];
+                    var victory = JSON.parse(responseData).victory;
 
                     winston.info('Got (work-completed) response from backend: ' + responseData);
 
@@ -125,9 +125,9 @@ socket.on('connection', function(client) {
 
         for (var i in victims) {
             if (victims.i == client.id) {
-	        victims.i = null;
-	     };
-        };
+                victims.i = null;
+            }
+        }
 
         var requestBody = {
             success: false

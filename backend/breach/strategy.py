@@ -89,6 +89,7 @@ class Strategy(object):
         # Added symbols are the total amount of dummy symbols that need to be added,
         # either in candidate alphabet or huffman complement set in order
         # to avoid huffman tree imbalance between samplesets of the same batch.
+
         added_symbols = self._round.maxroundcardinality - self._round.minroundcardinality
 
         sentinel = '^'
@@ -147,6 +148,7 @@ class Strategy(object):
         # If analysis is complete or maxreflectionlength cannot be overcome
         # then execution should abort
         if self._analyzed:
+            logger.debug('Aborting get_work because analysis is completed')
             return {}
 
         # Reaps a hanging sampleset that may exist from previous framework execution
@@ -181,6 +183,8 @@ class Strategy(object):
             return {}
 
         unstarted_samplesets = self._get_unstarted_samplesets()
+
+        logger.debug('Found %i unstarted samplesets', len(unstarted_samplesets))
 
         assert(unstarted_samplesets)
 
@@ -228,6 +232,10 @@ class Strategy(object):
     def _mark_current_work_completed(self, capture=None, sampleset=None):
         if not sampleset:
             sampleset = self._get_current_sampleset()
+
+        logger.debug('Marking sampleset as completed:')
+        logger.debug('\tcandidatealphabet: %s', sampleset.candidatealphabet)
+        logger.debug('\troundknownalphabet: %s', sampleset.round.knownalphabet)
 
         sampleset.completed = timezone.now()
         sampleset.save()
