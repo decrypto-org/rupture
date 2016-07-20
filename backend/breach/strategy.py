@@ -229,12 +229,11 @@ class Strategy(object):
             sampleset.records = capture['records']
             sampleset.save()
         else:
-            s = SampleSet(
-                round=sampleset.round,
-                candidatealphabet=sampleset.candidatealphabet,
-                alignmentalphabet=sampleset.alignmentalphabet
-            )
-            s.save()
+            self._create_sampleset({
+                'round': self._round,
+                'candidatealphabet': sampleset.candidatealphabet,
+                'alignmentalphabet': sampleset.alignmentalphabet
+            })
 
     def _mark_current_work_completed(self, capture=None, sampleset=None):
         if not sampleset:
