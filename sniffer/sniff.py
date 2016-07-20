@@ -70,6 +70,10 @@ def start():
     msg = 'Sniffer (source_ip: {}, destination_host: {}) is alive.'.format(source_ip, destination_host)
     logger.debug(msg)
 
+    # Give Scapy some time to lock the low-level network resources and start sniffing
+    logger.debug('Waiting for calibration: {} seconds...'.format(float(data['calibration_wait'])))
+    sleep(float(data['calibration_wait']))
+
     return msg, 201
 
 
