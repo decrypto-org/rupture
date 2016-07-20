@@ -266,7 +266,7 @@ class Strategy(object):
         assert(self._analyzed)
 
         # Do we need to collect more samplesets to build up confidence?
-        return self._decision['confidence'] > 1
+        return self._decision['confidence'] > self._victim.target.confidence_threshold
 
     def _create_next_round(self):
         assert(self._round_is_completed())
