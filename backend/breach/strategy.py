@@ -445,6 +445,13 @@ class Strategy(object):
                                 self._victim.calibration_wait += CALIBRATION_STEP
                                 self._victim.save()
                                 logger.debug('Calibrating system. New calibration_wait time: {} seconds'.format(self._victim.calibration_wait))
+                        else:
+                            logger.debug('Records multiple of samplesize but with different cardinality.')
+                            if self._need_for_cardinality_update():
+                                self._victim.target.recordscardinality = int(capture['records']/self._victim.target.samplesize)
+                                self._victim.save()
+                                logger.debug("Updating records' cardinality. New cardinality: {}".format(self._victim.target.recordscardinality))
+
                         raise ValueError('Not all records captured')
             else:
                 logger.debug('Client returned fail to realtime')
