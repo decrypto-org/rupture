@@ -396,6 +396,13 @@ class Strategy(object):
     def _attack_is_completed(self):
         return len(self._round.knownsecret) == self._victim.target.secretlength
 
+    def _need_for_calibration(self):
+        started_samplesets = SampleSet.objects.filter(round=self._round).exclude(started=None)
+        minimum_samplesets = len(started_samplesets) >= CALIBRATION_SAMPLESET_WINDOW_CHECK
+        calibration_samplesets = SampleSet.objects.filter(round=self._round).order_by('-completed')[0:CALIBRATION_SAMPLESET_WINDOW_CHECK]
+        consecutive_failed_samplesets = all([not sampleset.success for sampleset in calibration_samplesets])
+        return minimum_samplesets and consecutive_failed_samplesets
+
     def work_completed(self, success=True):
         '''Receives and consumes work completed from the victim, analyzes
         the work, and returns True if the attack is complete (victory),
