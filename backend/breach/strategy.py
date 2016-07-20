@@ -162,7 +162,7 @@ class Strategy(object):
         hanging_samplesets = self._get_started_samplesets()
         for s in hanging_samplesets:
             logger.warning('Reaping hanging set for: {}'.format(s.candidatealphabet))
-            self._mark_current_work_completed('', s)
+            self._mark_current_work_completed(sampleset=s)
 
         try:
             self._sniffer.start()
@@ -422,7 +422,7 @@ class Strategy(object):
         and create replacements.'''
         current_batch_samplesets = SampleSet.objects.filter(round=self._round, batch=self._round.batch, success=True).exclude(started=None)
         for sampleset in current_batch_samplesets:
-            self._mark_current_work_completed('', sampleset)
+            self._mark_current_work_completed(sampleset=sampleset)
 
     def work_completed(self, success=True):
         '''Receives and consumes work completed from the victim, analyzes
