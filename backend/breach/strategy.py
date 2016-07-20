@@ -30,7 +30,8 @@ class Strategy(object):
             'sourceip': self._victim.sourceip,
             'host': self._victim.target.host,
             'interface': self._victim.interface,
-            'port': self._victim.target.port
+            'port': self._victim.target.port,
+            'calibration_wait': self._victim.calibration_wait
         }
         self._sniffer = Sniffer(sniffer_params)
 

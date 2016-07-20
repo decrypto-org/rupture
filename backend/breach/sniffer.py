@@ -15,13 +15,15 @@ class Sniffer(object):
         self.destination_host = params['host']
         self.interface = params['interface']
         self.destination_port = params['port']
+        self.calibration_wait = params['calibration_wait']
 
     def get_sniffer_state(self):
         state = {
             'source_ip': self.source_ip,
             'destination_host': self.destination_host,
             'interface': self.interface,
-            'destination_port': self.destination_port
+            'destination_port': self.destination_port,
+            'calibration_wait': self.calibration_wait
         }
         return state
 
