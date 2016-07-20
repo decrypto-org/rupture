@@ -223,6 +223,7 @@ class Strategy(object):
         if capture:
             sampleset.success = True
             sampleset.data = capture['data']
+            sampleset.records = capture['records']
             sampleset.save()
         else:
             s = SampleSet(
