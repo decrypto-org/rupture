@@ -362,6 +362,17 @@ class Strategy(object):
         logger.debug('\tKnown alphabet: {}'.format(next_round.knownalphabet))
         logger.debug('\tAmount: {}'.format(next_round.amount))
 
+    def _create_sampleset(self, params):
+        sampleset = SampleSet(**params)
+        sampleset.save()
+
+        try:
+            sampleset.clean()
+        except ValidationError, err:
+            logger.error(err)
+            sampleset.delete()
+            raise err
+
     def _create_round_samplesets(self):
         state = {
             'knownalphabet': self._round.knownalphabet,
