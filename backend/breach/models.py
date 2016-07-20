@@ -263,6 +263,11 @@ class SampleSet(models.Model):
                    'confidence.')
     )
 
+    batch = models.IntegerField(
+        default=0,
+        help_text='The round batch that this sampleset belongs to.'
+    )
+
     # candidate state
     candidatealphabet = models.CharField(
         max_length=255,
