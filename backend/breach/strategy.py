@@ -24,13 +24,15 @@ class MaxReflectionLengthError(Exception):
 class Strategy(object):
     def __init__(self, victim):
         self._victim = victim
-        self._sniffer = Sniffer(
-            victim.snifferendpoint,
-            self._victim.sourceip,
-            self._victim.target.host,
-            self._victim.interface,
-            self._victim.target.port
-        )
+
+        sniffer_params = {
+            'snifferendpoint': self._victim.snifferendpoint,
+            'sourceip': self._victim.sourceip,
+            'host': self._victim.target.host,
+            'interface': self._victim.interface,
+            'port': self._victim.target.port
+        }
+        self._sniffer = Sniffer(sniffer_params)
 
         # Extract maximum round index for the current victim.
         current_round_index = Round.objects.filter(victim=self._victim).aggregate(Max('index'))['index__max']
