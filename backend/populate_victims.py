@@ -53,6 +53,8 @@ def create_victim(victim):
     }
     if 'interface' in victim:
         victim_args['interface'] = victim['interface']
+    if 'calibration_wait' in victim:
+        victim_args['calibration_wait'] = victim['calibration_wait']
 
     v = Victim(**victim_args)
     v.save()
