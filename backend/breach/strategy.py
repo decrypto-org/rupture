@@ -222,7 +222,7 @@ class Strategy(object):
         or mark sampleset as failed and create new sampleset for the same element that failed.'''
         if capture:
             sampleset.success = True
-            sampleset.data = capture
+            sampleset.data = capture['data']
             sampleset.save()
         else:
             s = SampleSet(
@@ -247,7 +247,10 @@ class Strategy(object):
 
     def _collect_capture(self):
         captured_data = self._sniffer.read()
-        return captured_data['capture'], captured_data['records']
+        return {
+            'data': captured_data['capture'],
+            'records': captured_data['records']
+        }
 
     def _analyze_current_round(self):
         '''Analyzes the current round samplesets to extract a decision.'''
@@ -401,15 +404,15 @@ class Strategy(object):
         try:
             if success:
                 # Call sniffer to get captured data
-                capture, records = self._collect_capture()
+                capture = self._collect_capture()
                 logger.debug('Work completed:')
-                logger.debug('\tLength: {}'.format(len(capture)))
-                logger.debug('\tRecords: {}'.format(records))
+                logger.debug('\tLength: {}'.format(len(capture['data'])))
+                logger.debug('\tRecords: {}'.format(capture['records']))
 
                 # Check if all TLS response records were captured,
                 # if available
                 if self._victim.target.recordscardinality:
-                    if records != self._victim.target.samplesize * self._victim.target.recordscardinality:
+                    if capture['records'] != self._victim.target.samplesize * self._victim.target.recordscardinality:
                         raise ValueError('Not all records captured')
             else:
                 logger.debug('Client returned fail to realtime')
