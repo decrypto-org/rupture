@@ -410,6 +410,13 @@ class Strategy(object):
         consecutive_failed_samplesets = all([not sampleset.success for sampleset in calibration_samplesets])
         return minimum_samplesets and consecutive_failed_samplesets
 
+    def _need_for_cardinality_update(self):
+        calibration_samplesets = SampleSet.objects.filter(round=self._round).order_by('-completed')[0:CALIBRATION_SAMPLESET_WINDOW_CHECK]
+        consecutive_new_cardinality_samplesets = all(
+            [sampleset.records % sampleset.round.victim.target.samplesize == 0 for sampleset in calibration_samplesets]
+        )
+        return self._need_for_calibration() and consecutive_new_cardinality_samplesets
+
     def work_completed(self, success=True):
         '''Receives and consumes work completed from the victim, analyzes
         the work, and returns True if the attack is complete (victory),
