@@ -457,6 +457,7 @@ class Strategy(object):
                             if self._need_for_cardinality_update():
                                 self._victim.target.recordscardinality = int(capture['records']/self._victim.target.samplesize)
                                 self._victim.save()
+                                self._flush_batch_samplesets()
                                 logger.debug("Updating records' cardinality. New cardinality: {}".format(self._victim.target.recordscardinality))
 
                         raise ValueError('Not all records captured')
