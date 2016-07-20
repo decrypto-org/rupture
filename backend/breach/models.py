@@ -145,6 +145,13 @@ class Victim(models.Model):
                    "'http://' prefix.")
     )
 
+    calibration_wait = models.FloatField(
+        default=0.0,
+        help_text=('The amount of time in seconds that sniffer should wait '
+                   'so that Scapy has enough time to lock on low-level network '
+                   'resources.')
+    )
+
 
 class Round(models.Model):
     class Meta:
