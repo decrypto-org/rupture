@@ -104,6 +104,12 @@ class Target(models.Model):
         help_text=('The amount of samples per sampleset.')
     )
 
+    confidence_threshold = models.FloatField(
+        default=1.0,
+        help_text=('The threshold that is used for confidence, in order '
+                   'to determine whether a candidate should be chosen.')
+    )
+
 
 class Victim(models.Model):
     '''
