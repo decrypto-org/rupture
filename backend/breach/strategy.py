@@ -368,6 +368,9 @@ class Strategy(object):
             'knownsecret': self._round.knownsecret
         }
 
+        self._round.batch += 1
+        self._round.save()
+
         candidate_alphabets = self._build_candidates(state)
 
         alignmentalphabet = ''
