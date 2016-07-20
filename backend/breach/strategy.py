@@ -232,7 +232,8 @@ class Strategy(object):
             self._create_sampleset({
                 'round': self._round,
                 'candidatealphabet': sampleset.candidatealphabet,
-                'alignmentalphabet': sampleset.alignmentalphabet
+                'alignmentalphabet': sampleset.alignmentalphabet,
+                'batch': sampleset.batch
             })
 
     def _mark_current_work_completed(self, capture=None, sampleset=None):
@@ -395,7 +396,8 @@ class Strategy(object):
             self._create_sampleset({
                 'round': self._round,
                 'candidatealphabet': candidate,
-                'alignmentalphabet': alignmentalphabet
+                'alignmentalphabet': alignmentalphabet,
+                'batch': self._round.batch
             })
 
     def _attack_is_completed(self):
