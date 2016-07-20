@@ -14,6 +14,9 @@ import random
 
 logger = logging.getLogger(__name__)
 
+CALIBRATION_STEP = 0.1
+CALIBRATION_SAMPLESET_WINDOW_CHECK = 3
+
 
 class MaxReflectionLengthError(Exception):
     '''Custom exception to handle cases when maxreflectionlength
