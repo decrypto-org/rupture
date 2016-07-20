@@ -392,19 +392,11 @@ class Strategy(object):
         logger.debug('\tAlignment alphabet: {}'.format(alignmentalphabet))
 
         for candidate in candidate_alphabets:
-            sampleset = SampleSet(
-                round=self._round,
-                candidatealphabet=candidate,
-                alignmentalphabet=alignmentalphabet
-            )
-            sampleset.save()
-
-            try:
-                sampleset.clean()
-            except ValidationError, err:
-                logger.error(err)
-                sampleset.delete()
-                raise err
+            self._create_sampleset({
+                'round': self._round,
+                'candidatealphabet': candidate,
+                'alignmentalphabet': alignmentalphabet
+            })
 
     def _attack_is_completed(self):
         return len(self._round.knownsecret) == self._victim.target.secretlength
