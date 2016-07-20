@@ -193,6 +193,14 @@ class Round(models.Model):
                    'index 1.')
     )
 
+    batch = models.IntegerField(
+        default=0,
+        help_text=('Which batch of the round is currently being attempted. '
+                   'A new batch starts any time samplesets for the round '
+                   'are created, either because the round is starting or '
+                   'because not enough condidence was built.')
+    )
+
     maxroundcardinality = models.IntegerField(
         default=1,
         help_text=('The maximum amount of symbols that will be tested in this '
