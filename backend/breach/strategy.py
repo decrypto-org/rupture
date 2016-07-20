@@ -417,6 +417,13 @@ class Strategy(object):
         )
         return self._need_for_calibration() and consecutive_new_cardinality_samplesets
 
+    def _flush_batch_samplesets(self):
+        '''Mark all successful samplesets of current round's batch as failed
+        and create replacements.'''
+        current_batch_samplesets = SampleSet.objects.filter(round=self._round, batch=self._round.batch, success=True).exclude(started=None)
+        for sampleset in current_batch_samplesets:
+            self._mark_current_work_completed('', sampleset)
+
     def work_completed(self, success=True):
         '''Receives and consumes work completed from the victim, analyzes
         the work, and returns True if the attack is complete (victory),
