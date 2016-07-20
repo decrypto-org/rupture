@@ -279,6 +279,11 @@ class SampleSet(models.Model):
         help_text='The raw data collected on the network for this sampleset'
     )
 
+    records = models.IntegerField(
+        default=0,
+        help_text='The number of records that contain all the data.'
+    )
+
     started = models.DateTimeField(
         default=None,
         null=True,
