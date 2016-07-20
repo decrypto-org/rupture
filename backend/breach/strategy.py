@@ -423,7 +423,8 @@ class Strategy(object):
                 # Check if all TLS response records were captured,
                 # if available
                 if self._victim.target.recordscardinality:
-                    if capture['records'] != self._victim.target.samplesize * self._victim.target.recordscardinality:
+                    expected_records = self._victim.target.samplesize * self._victim.target.recordscardinality
+                    if capture['records'] != expected_records:
                         raise ValueError('Not all records captured')
             else:
                 logger.debug('Client returned fail to realtime')
