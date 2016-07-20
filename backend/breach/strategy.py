@@ -425,6 +425,12 @@ class Strategy(object):
                 if self._victim.target.recordscardinality:
                     expected_records = self._victim.target.samplesize * self._victim.target.recordscardinality
                     if capture['records'] != expected_records:
+                        if capture['records'] % self._victim.target.samplesize:
+                            logger.debug('Records not multiple of samplesize. Checking need for calibration...')
+                            if self._need_for_calibration():
+                                self._victim.calibration_wait += CALIBRATION_STEP
+                                self._victim.save()
+                                logger.debug('Calibrating system. New calibration_wait time: {} seconds'.format(self._victim.calibration_wait))
                         raise ValueError('Not all records captured')
             else:
                 logger.debug('Client returned fail to realtime')
