@@ -35,7 +35,7 @@ or you can also install each module separately, as below.
 
 ### Javascript
 
-Rupture uses Javascript for communication between the client code and the realtime server. Client code is compiled using *browserify* and server code is run on *Node.js*.
+Rupture uses Javascript for communication between the client code and the realtime server. Client code is compiled using *babel* and server code is run on *Node.js*.
 
 #### Injection
  - Install injection.
