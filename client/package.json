@@ -23,13 +23,7 @@
     "scriptPreprocessor": "preprocessor.js"
   },
   "dependencies": {
-    "browserify": "^13.0.0",
-    "gulp": "^3.9.1",
-    "gulp-util": "^3.0.7",
-    "reactify": "^1.1.1",
     "socket.io-client": "^1.4.5",
-    "vinyl-source-stream": "^1.1.0",
-    "watchify": "^3.7.0"
   },
   "jshintConfig": {
     "esversion": 6
