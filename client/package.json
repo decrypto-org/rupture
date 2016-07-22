@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "webpack": "webpack --progress --colors",
+    "watch": "webpack --progress --colors --watch",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "contributors": [
