@@ -37,7 +37,7 @@ li.completed, li.running, li.paused, li.scanned{
     margin:0px 10px;
 }
 li.completed ul, li.running ul, li.paused ul, li.scanned ul{
-    padding-left:15px;
+    padding-left:0px;
     padding-top:5px;
 }
 li.state{
@@ -102,4 +102,7 @@ h2{
 .deletepause{
     float:right;
     margin:2% 12% 0 0;
+}
+.progressmargin{
+    margin:5px 0px;
 }
