@@ -106,3 +106,12 @@ h2{
 .progressmargin{
     margin:5px 0px;
 }
+.button{
+    padding:30px 25px;
+    float:right;
+    text-align:center;
+    max-width:17%;
+}
+.button input{
+    width:70%;
+}
