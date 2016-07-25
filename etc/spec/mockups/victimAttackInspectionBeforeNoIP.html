@@ -14,6 +14,16 @@
     <script src="https://code.jquery.com/jquery-1.9.1.js"></script>
     <!-- Bootstrapcompiled and minified JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+    <script>
+        function Modal() {
+            var option_value = document.getElementById("sel1").value;
+            if (option_value == "new") {
+                $('#myModal').modal({
+                    show: true
+                });
+            }
+        }
+    </script>
 </head>
 
 <body>
@@ -33,7 +43,7 @@
                         <div class="row">
                             <label for="sel1" class="col-md-4 col-sm-6 progressmargin vertical"> Choose Target:</label>
                             <div class="col-md-6 progressmargin">
-                                <select class="form-control" id="sel1">
+                                <select class="form-control" id="sel1" onclick = "Modal()">
                                     <option value="gmail">Gmail</option>
                                     <option value="facebook">Facebook</option>
                                     <option value="twitter">Twitter</option>
