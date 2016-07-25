@@ -89,3 +89,13 @@ li.state{
 h3{
     text-align:center;
 }
+.centralise{
+    padding-left:6%;
+}
+h2{
+    margin-left:15%;
+}
+.bold{
+    font-weight:bold;
+    font-size:16px;
+}
