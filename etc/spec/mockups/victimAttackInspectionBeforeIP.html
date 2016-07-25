@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Victim Attack Inspection</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Bootstrap compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <!-- Custom CSS library -->
+    <link rel="stylesheet" href="style.css">
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-1.9.1.js"></script>
+    <!-- Bootstrapcompiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+    <script>
+        function Modal() {
+            var option_value = document.getElementById("sel1").value;
+            if (option_value == "new") {
+                $('#myModal').modal({
+                    show: true
+                });
+            }
+        }
+    </script>
+</head>
+
+<body>
+    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-left" href="networkOverview.html"><img src="logo.png"/></a>
+            </div> <!-- /.navbar-header -->
+        </div> <!-- /.container-fluid -->
+    </div> <!-- /.navbar-top -->
+
+    <div class="container">
+        <div class="row ghost formformat">
+            <div class="col-md-offset-3 col-md-6">
+                <form role="form">
+                    <div class="form-group">
+                        <div class="row">
+                            <label for="sel1" class="col-md-4 col-sm-6 progressmargin vertical"> Choose Target:</label>
+                            <div class="col-md-6 progressmargin">
+                                <select class="form-control" id="sel1" onclick = "Modal()">
+                                    <option value="gmail">Gmail</option>
+                                    <option value="facebook">Facebook</option>
+                                    <option value="twitter">Twitter</option>
+                                    <option value="ruptureit">Ruptureit</option>
+                                    <option value="new">Create new target</option>
+                                </select>
+                            </div>
+                            <label for="ip" class="col-md-4 col-sm-6">IP:&nbsp;</label>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" id="ip" name="ip" placeholder="192.168.1.2">
+                            </div>
+                        </div>
+                        <div class="col-md-4"> </div>
+                        <div class="col-md-6 zeropad">
+                            <input type="submit" class="btn btn-primary attack" value="Attack">
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="myModal" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                         <h3 class="modal-title">Target Configuration</h3>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class=" col-xs-offset-1 col-xs-11">
+                                <form role="form" action="victimAttackInspectionAfter.html" method="post">
+                                    <div class="form-group">
+                                        <label for="name" class="col-xs-5 progressmargin">Name:</label>
+                                        <div class="col-xs-6 progressmargin">
+                                            <input type="text" class="form-control" id="name" name="name">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="url" class="col-xs-5 progressmargin">Endpoint url:</label>
+                                        <div class="col-xs-6 progressmargin">
+                                            <input type="url" class="form-control" id="url" name="URL">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="prefix" class="col-xs-5 progressmargin">Known prefix:</label>
+                                        <div class="col-xs-6 progressmargin">
+                                            <input type="text" class="form-control" id="prefix" name="prefix">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="length" class="col-xs-5 progressmargin">Secret length:</label>
+                                        <div class="col-xs-6 progressmargin">
+                                            <input type="number" class="form-control" id="length" name="length">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="secral" class="col-xs-5 progressmargin">Secret Alphabet:</label>
+                                        <div class="col-xs-6 progressmargin">
+                                            <input type="text" class="form-control" id="secral" name="secral">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="alignal" class="col-xs-5 progressmargin">Alignment Alphabet:</label>
+                                        <div class="col-xs-6 progressmargin">
+                                            <input type="text" class="form-control" id="alignal" name="alignal">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="card" class="col-xs-5 progressmargin">Record cardinality:</label>
+                                        <div class="col-xs-6 progressmargin">
+                                            <input type="number" class="form-control" id="card" name="card" value="1">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="methods" class="col-xs-5 progressmargin">Method:</label>
+                                        <div class="radio" name="methods">
+                                            <label class="col-xs-4 serialmargin">
+                                                <input type="radio" name="method" value="serial"  checked>Serial
+                                            </label>
+                                        </div>
+                                        <div class="col-xs-5"></div>
+                                            <div class="radio">
+                                            <label class="col-xs-4 dividemargin">
+                                            <input type="radio" name="method" value="divide">Divide &amp; Conquer
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                 <input type="submit" class="btn btn-default" value="Done">
+                        </div>
+                    </div>
+                </div> <!--Modal content-->
+            </div> <!--modal-dialog-->
+        </div> <!--Modal-->
+    </div> <!--container-->
+</body>
+</html>
