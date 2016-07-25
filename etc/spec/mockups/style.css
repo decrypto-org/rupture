@@ -1,0 +1,54 @@
+body{
+    padding-top:70px;
+}
+.navbar-left img{
+    height:50px;
+}
+h1{
+    text-align:center;
+    padding-bottom:10px;
+}
+.navbar-right a{
+    margin-right:10px;
+}
+.button{
+    padding:30px 25px;
+    float:right;
+    text-align:center;
+    max-width:17%;
+}
+.button input{
+    width:70%;
+}
+ul{
+    list-style:none;
+}
+#mainpage{
+    width:80%;
+}
+.line{
+    clear:both;
+    float:left;
+}
+li.completed, li.running, li.paused, li.scanned{
+    float:left;
+    clear:none;
+    padding:20px 14px;
+    margin:0px 10px;
+}
+li.completed ul, li.running ul, li.paused ul, li.scanned ul{
+    padding-left:15px;
+    padding-top:5px;
+}
+li.state{
+    font-weight: bold;
+}
+.zeropad{
+    padding:0px;
+}
+.progressmargin{
+    margin:5px 0px;
+}
+.ghost{
+    margin-top:50px;
+}
