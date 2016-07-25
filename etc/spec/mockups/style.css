@@ -52,3 +52,37 @@ li.state{
 .ghost{
     margin-top:50px;
 }
+.formformat{
+    margin-left:50px;
+}
+.attack{
+    float:right;
+    margin:10px 5px;
+}
+.details{
+    padding-top:10px;
+    text-align:center;
+}
+.formformat img{
+    float:left;
+    clear:none;
+    height:35px;
+    margin-right:1%;
+}
+.attackbutton{
+    float:right;
+    margin-top:10px;
+}
+.serialmargin{
+    margin:5px 0px 0px 15px;
+}
+.dividemargin{
+    margin-left:15px;
+    padding:0px;
+}
+.progressbar{
+    margin-right:40%;
+}
+.vertical{
+    margin-top:2%;
+}
