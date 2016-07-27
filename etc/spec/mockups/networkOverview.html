@@ -31,6 +31,7 @@
             <div id="mainpage" class="col-md-8 col-xs-12 col-sm-6 col-lg-8">
                 <ul class="line collapse in" id="complete">
                     <li class="completed">
+                        <button type="button" class="close nooutline">&times;</button>
                         <img src="green_pc.png" alt="completed attack">
                         <ul>
                             <li class="state">Completed</li>
@@ -50,6 +51,7 @@
                         </ul>
                     </li>
                     <li class="completed">
+                        <button type="button" class="close nooutline">&times;</button>
                         <img src="green_pc.png" alt="completed attack"</li>
                         <ul>
                             <li class="state">Completed</li>
@@ -71,7 +73,10 @@
                 </ul>
                 <ul class="line collapse in" id="running">
                     <li class="running">
-                        <input type="image" src="yellow_pause_pc.png" class="nooutline" name="running attack"/>
+                        <div class="btn zeropad">
+                            <button type="button" class="close nooutline">&times;</button>
+                            <input type="image" src="yellow_pause_pc.png" class="pull-left nooutline" name="running attack"/>
+                        </div>
                         <ul>
                             <li class="state">Running...</li>
                             <li>192.168.1.19</li>
@@ -90,7 +95,10 @@
                         </ul>
                     </li>
                     <li class="running">
-                        <input type="image" src="yellow_pause_pc.png" class="nooutline" name="running attack"/>
+                        <div class="btn zeropad">
+                            <button type="button" class="close nooutline">&times;</button>
+                            <input type="image" src="yellow_pause_pc.png" class="pull-left nooutline" name="running attack"/>
+                        </div>
                         <ul>
                             <li class="state"> Running...</li>
                             <li>192.168.1.37</li>
@@ -109,7 +117,10 @@
                         </ul>
                     </li>
                     <li class="paused">
-                        <input type="image" src="yellow_play_pc.png" class="nooutline" name="running attack"/>
+                        <div class="btn zeropad">
+                            <button type="button" class="close nooutline">&times;</button>
+                            <input type="image" src="yellow_play_pc.png" class="pull-left nooutline" name="paused attack"/>
+                        </div>
                         <ul>
                             <li class="state">Paused</li>
                             <li>192.168.1.47</li>
@@ -187,6 +198,26 @@
                 </div>
             </div>
         </div>
+
+
+        <div class="notification">
+            <p>The victim has been deleted.</p>
+            <div class="btn">[Undo]</div>
+            <button type="button" class="close nooutline">&times;</button>
+        </div>
+
+        <script>
+            $('.close').click(function() {
+                $('.notification').css({
+                    'display': 'block',
+                });
+            });
+            $('.notification button').click(function() {
+                $('.notification').css({
+                    'display': 'none',
+                });
+            });
+        </script>
     </div>
 </body>
 </html>

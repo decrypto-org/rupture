@@ -118,3 +118,50 @@ h2{
 .ghost{
     margin-top:50px;
 }
+.line .close{
+    visibility:hidden;
+}
+li.completed:hover .close, li.running:hover .close, li.paused:hover .close {
+    visibility:visible;
+}
+.btn:active, .nooutline{
+    outline:none;
+    box-shadow:none;
+    border-color:transparent;
+}
+#mainpage h2.btn{
+    float:left;
+    clear:both;
+    font-size:150%;
+}
+.notification{
+    display:none;
+    position:absolute;
+    z-index:101;
+    top:55px;
+    left:38%;
+    right:38%;
+    background:#f2f2f2;
+    height:35px;
+    text-align:center;
+    line-height:2.5;
+    overflow:hidden;
+    -webkit-box-shadow:0 0 5px #a6a6a6;
+    -moz-box-shadow: 0 0 5px #a6a6a6;
+    box-shadow:0 0 5px #a6a6a6;
+}
+.notification p{
+    padding-left:40px;
+    float:left;
+    clear:none;
+}
+.notification div.btn{
+    padding-top:5px;
+    float:left;
+    clear:none;
+}
+.notification button{
+    padding:2%;
+    float:left;
+    clear:none;
+}
