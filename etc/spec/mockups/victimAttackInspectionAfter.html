@@ -96,9 +96,27 @@
         </div>
 
         <div class="deletepause">
-            <button type="button" class="btn btn-danger" data-dismiss="modal">Delete</button>
+            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#Modal">Delete</button>
             <button type="button" class="btn btn-primary">Pause</button>
         </div>
+
+        <div id="Modal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <p>Do you really want to completely delete the attack?</p>
+                    </div>
+                    <div class="modal-footer">
+                         <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                         <button type="button" class="btn btn-default">Yes</button>
+                     </div>
+                 </div>
+
+             </div>
+         </div>
+
     </div>
 </body>
 </html>
