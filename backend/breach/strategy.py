@@ -229,7 +229,7 @@ class Strategy(object):
             sampleset.records = capture['records']
             sampleset.save()
         else:
-            self._create_sampleset({
+            SampleSet.create_sampleset({
                 'round': self._round,
                 'candidatealphabet': sampleset.candidatealphabet,
                 'alignmentalphabet': sampleset.alignmentalphabet,
@@ -389,7 +389,7 @@ class Strategy(object):
         logger.debug('\tAlignment alphabet: {}'.format(alignmentalphabet))
 
         for candidate in candidate_alphabets:
-            self._create_sampleset({
+            SampleSet.create_sampleset({
                 'round': self._round,
                 'candidatealphabet': candidate,
                 'alignmentalphabet': alignmentalphabet,
