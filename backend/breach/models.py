@@ -260,6 +260,17 @@ class SampleSet(models.Model):
         if set(self.alignmentalphabet) != set(self.round.victim.target.alignmentalphabet):
             raise ValidationError("Alignment alphabet must be a permutation of target's alignmentalphabet")
 
+    @staticmethod
+    def create_sampleset(params):
+        sampleset = SampleSet(**params)
+        sampleset.save()
+        try:
+            sampleset.clean()
+        except ValidationError, err:
+            sampleset.delete()
+            raise err
+        return sampleset
+
     round = models.ForeignKey(
         Round,
         help_text=('Which round this sampleset belongs to. Each round '
