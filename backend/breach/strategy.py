@@ -443,8 +443,8 @@ class Strategy(object):
 
                 # Check if all TLS response records were captured,
                 # if available
-                if self._victim.target.recordscardinality:
-                    expected_records = self._victim.target.samplesize * self._victim.target.recordscardinality
+                if self._victim.recordscardinality:
+                    expected_records = self._victim.target.samplesize * self._victim.recordscardinality
                     if capture['records'] != expected_records:
                         if capture['records'] % self._victim.target.samplesize:
                             logger.debug('Records not multiple of samplesize. Checking need for calibration...')
@@ -455,10 +455,10 @@ class Strategy(object):
                         else:
                             logger.debug('Records multiple of samplesize but with different cardinality.')
                             if self._need_for_cardinality_update():
-                                self._victim.target.recordscardinality = int(capture['records']/self._victim.target.samplesize)
+                                self._victim.recordscardinality = int(capture['records']/self._victim.target.samplesize)
                                 self._victim.save()
                                 self._flush_batch_samplesets()
-                                logger.debug("Updating records' cardinality. New cardinality: {}".format(self._victim.target.recordscardinality))
+                                logger.debug("Updating records' cardinality. New cardinality: {}".format(self._victim.recordscardinality))
 
                         raise ValueError('Not all records captured')
             else:
