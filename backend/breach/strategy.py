@@ -250,11 +250,7 @@ class Strategy(object):
         self._handle_sampleset_success(capture, sampleset)
 
     def _collect_capture(self):
-        captured_data = self._sniffer.read()
-        return {
-            'data': captured_data['capture'],
-            'records': captured_data['records']
-        }
+        return self._sniffer.read()
 
     def _analyze_current_round(self):
         '''Analyzes the current round samplesets to extract a decision.'''

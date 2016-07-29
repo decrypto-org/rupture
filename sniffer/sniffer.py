@@ -169,7 +169,7 @@ class Sniffer(threading.Thread):
         logger.debug('Captured {} application records'.format(application_records))
 
         return {
-            'capture': application_data,
+            'data': application_data,
             'records': application_records
         }
 

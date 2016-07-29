@@ -109,9 +109,9 @@ def read():
         logger.warning(err)
         return str(err), 422
 
-    assert('capture' in capture)
+    assert('data' in capture)
 
-    logger.debug('Got capture with length: {}'.format(len(capture['capture'])))
+    logger.debug('Got capture with length: {}'.format(len(capture['data'])))
 
     return jsonify(**capture), 200
 
