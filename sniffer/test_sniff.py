@@ -25,12 +25,10 @@ class BaseTestCase(ThreadAwareTestCase):
             calibration_wait=self.calibration_wait
         )
 
-        self.json_data = json.dumps(self.data)
-
     def _request(self, url):
         return self.app.post(
             url,
-            data=self.json_data,
+            data=json.dumps(self.data),
             content_type='application/json'
         )
 
