@@ -35,7 +35,8 @@ class BaseTestCase(ThreadAwareTestCase):
     def _start(self):
         return self._request('/start')
 
-    def _delete(self):
+    @patch('sniffer.Sniffer.stop', return_value=None)
+    def _delete(self, patched_sniffer_stop):
         return self._request('/delete')
 
     def _read(self):
