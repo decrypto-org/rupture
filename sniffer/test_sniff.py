@@ -3,8 +3,6 @@ import unittest
 from mock import patch
 import json
 from urllib import urlencode
-from time import sleep
-
 import sniff
 
 
