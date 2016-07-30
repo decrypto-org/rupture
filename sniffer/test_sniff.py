@@ -15,12 +15,14 @@ class BaseTestCase(ThreadAwareTestCase):
         self.destination_host = 'di.uoa.gr'
         self.destination_port = '443'
         self.interface = 'wlan0'
-      
+        self.calibration_wait = 0.0
+
         self.data = dict(
             source_ip=self.source_ip,
             destination_host=self.destination_host,
             destination_port=self.destination_port,
-            interface=self.interface
+            interface=self.interface,
+            calibration_wait=self.calibration_wait
         )
 
         self.json_data = json.dumps(self.data)
