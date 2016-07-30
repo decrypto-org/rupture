@@ -1,5 +1,6 @@
 from tl.testing.thread import ThreadAwareTestCase
 import unittest
+from mock import patch
 import json
 from urllib import urlencode
 from time import sleep
