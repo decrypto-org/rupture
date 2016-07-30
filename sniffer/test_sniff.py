@@ -73,6 +73,13 @@ class ResponseCodesTestCase(BaseTestCase):
         self.assertEqual(rv.status_code, 404)
 
 
+class CalibrationTestCase(BaseTestCase):
+    @patch('sniff.sleep', return_value=None)
+    def test_sleep(self, patched_sniffer_sleep):
+        self.data['calibration_wait'] = 1000000.0
+        self._start()
+        sniff.sleep.assert_called_with(1000000.0)
+
 
 if __name__ == '__main__':
     unittest.main()
