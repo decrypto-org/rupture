@@ -8,5 +8,6 @@ install:
     - nvm use 6.3
     - npm install jshint
     - cd realtime && npm install && cd ..
+    - gem install mdl
 script:
     - make all
