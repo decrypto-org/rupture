@@ -7,7 +7,7 @@ from time import sleep
 import sniff
 
 
-class SniffTestCase(ThreadAwareTestCase):
+class BaseTestCase(ThreadAwareTestCase):
     def setUp(self):
         sniff.app.config['TESTING'] = True
         self.app = sniff.app.test_client()
@@ -44,6 +44,11 @@ class SniffTestCase(ThreadAwareTestCase):
             '/read?' + urlencode(self.data)
         )
 
+    def tearDown(self):
+        self._delete()
+
+
+class ResponseCodesTestCase(BaseTestCase):
     def test_start_201(self):
         rv = self._start()
         self.assertEqual(rv.status_code, 201)
@@ -66,10 +71,6 @@ class SniffTestCase(ThreadAwareTestCase):
         rv = self._delete()
         self.assertEqual(rv.status_code, 404)
 
-    def tearDown(self):
-        sleep(0.1)
-        self._delete()
-        sleep(0.1)
 
 
 if __name__ == '__main__':
