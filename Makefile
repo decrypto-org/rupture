@@ -11,8 +11,7 @@ syntax:
 	# Syntax check client JS
 	find client -iname "*.js"|grep -v '/node_modules/'|grep -v '/dist/'|xargs jshint
 	# Syntax check MD files
-	# TODO: enable this
-	# mdl etc
+	mdl --rules ~MD036 etc
 test:
 	cd backend && python manage.py test
 	cd sniffer && python test_sniff.py
