@@ -32,7 +32,8 @@ class BaseTestCase(ThreadAwareTestCase):
             content_type='application/json'
         )
 
-    def _start(self):
+    @patch('sniff.Sniffer.start_sniffing', return_value=None)
+    def _start(self, patched_start_sniffing):
         return self._request('/start')
 
     @patch('sniffer.Sniffer.stop', return_value=None)
