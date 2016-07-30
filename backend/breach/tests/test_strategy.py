@@ -20,7 +20,6 @@ class StrategyTestCase(RuptureTestCase):
 
         strategy0._mark_current_work_completed()
 
-
         strategy1 = Strategy(self.victim)
 
         work1 = strategy1.get_work()
@@ -49,7 +48,6 @@ class StrategyTestCase(RuptureTestCase):
             # testsecret5 and testsecret4 are dummy balancing secrets
             'https://di.uoa.gr/?breach=^1^3^2^testsecret0^testsecret5^testsecret4^'
         )
-
 
         strategy0._mark_current_work_completed()
 
