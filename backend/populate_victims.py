@@ -49,10 +49,13 @@ def create_victim(victim):
         'target': target,
         'snifferendpoint': victim['snifferendpoint'],
         'sourceip': victim['sourceip'],
-        'realtimeurl': victim['realtimeurl']
+        'realtimeurl': victim['realtimeurl'],
+        'recordscardinality': target.recordscardinality
     }
     if 'interface' in victim:
         victim_args['interface'] = victim['interface']
+    if 'calibration_wait' in victim:
+        victim_args['calibration_wait'] = victim['calibration_wait']
 
     v = Victim(**victim_args)
     v.save()

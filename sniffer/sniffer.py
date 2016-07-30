@@ -128,7 +128,9 @@ class Sniffer(threading.Thread):
         # Kill it with fire!
         self.status = False
 
-        self.stop_packet()
+        # Send 3 stop packets, in case one is not captured
+        for i in range(3):
+            self.stop_packet()
 
     def stop_packet(self):
         '''
@@ -167,7 +169,7 @@ class Sniffer(threading.Thread):
         logger.debug('Captured {} application records'.format(application_records))
 
         return {
-            'capture': application_data,
+            'data': application_data,
             'records': application_records
         }
 

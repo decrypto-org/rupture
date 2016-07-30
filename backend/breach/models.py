@@ -104,6 +104,12 @@ class Target(models.Model):
         help_text=('The amount of samples per sampleset.')
     )
 
+    confidence_threshold = models.FloatField(
+        default=1.0,
+        help_text=('The threshold that is used for confidence, in order '
+                   'to determine whether a candidate should be chosen.')
+    )
+
 
 class Victim(models.Model):
     '''
@@ -137,6 +143,20 @@ class Victim(models.Model):
         help_text=("The realtime module URL that the client should "
                    "communicate with. This URL must include the "
                    "'http://' prefix.")
+    )
+
+    calibration_wait = models.FloatField(
+        default=0.0,
+        help_text=('The amount of time in seconds that sniffer should wait '
+                   'so that Scapy has enough time to lock on low-level network '
+                   'resources.')
+    )
+
+    recordscardinality = models.IntegerField(
+        default=0,
+        help_text=('The amount of expected TLS response records per request. '
+                   'If 0 then the amount is not known or is expected to '
+                   'change per request.')
     )
 
 
@@ -178,6 +198,14 @@ class Round(models.Model):
         default=1,
         help_text=('Which round of the attack this is. The first round has ',
                    'index 1.')
+    )
+
+    batch = models.IntegerField(
+        default=0,
+        help_text=('Which batch of the round is currently being attempted. '
+                   'A new batch starts any time samplesets for the round '
+                   'are created, either because the round is starting or '
+                   'because not enough condidence was built.')
     )
 
     maxroundcardinality = models.IntegerField(
@@ -232,6 +260,17 @@ class SampleSet(models.Model):
         if set(self.alignmentalphabet) != set(self.round.victim.target.alignmentalphabet):
             raise ValidationError("Alignment alphabet must be a permutation of target's alignmentalphabet")
 
+    @staticmethod
+    def create_sampleset(params):
+        sampleset = SampleSet(**params)
+        sampleset.save()
+        try:
+            sampleset.clean()
+        except ValidationError, err:
+            sampleset.delete()
+            raise err
+        return sampleset
+
     round = models.ForeignKey(
         Round,
         help_text=('Which round this sampleset belongs to. Each round '
@@ -240,6 +279,11 @@ class SampleSet(models.Model):
                    'enough samplesets must be completed to be able to make '
                    'a decision for a state transition with a certain '
                    'confidence.')
+    )
+
+    batch = models.IntegerField(
+        default=0,
+        help_text='The round batch that this sampleset belongs to.'
     )
 
     # candidate state
@@ -264,6 +308,11 @@ class SampleSet(models.Model):
     data = models.TextField(
         default='',
         help_text='The raw data collected on the network for this sampleset'
+    )
+
+    records = models.IntegerField(
+        default=0,
+        help_text='The number of records that contain all the data.'
     )
 
     started = models.DateTimeField(

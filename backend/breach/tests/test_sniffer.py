@@ -7,7 +7,15 @@ from breach.sniffer import Sniffer
 class SnifferTest(TestCase):
     def setUp(self):
         self.endpoint = 'http://localhost'
-        self.sniffer = Sniffer(self.endpoint, '147.102.239.229', 'dionyziz.com', 'wlan0', '8080')
+        sniffer_params = {
+            'snifferendpoint': self.endpoint,
+            'sourceip': '147.102.239.229',
+            'host': 'dionyziz.com',
+            'interface': 'wlan0',
+            'port': '8080',
+            'calibration_wait': 0.0
+        }
+        self.sniffer = Sniffer(sniffer_params)
 
     @patch('breach.sniffer.requests')
     def test_sniffer_start(self, requests):
