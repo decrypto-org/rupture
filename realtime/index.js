@@ -1,3 +1,13 @@
+const program = require('commander');
+
+program
+    .version('0.0.1')
+    .option('-p, --port <port>', 'specify the websocket port to listen to [3031]', 3031)
+    .option('-H, --backend-host <hostname>', 'specify the hostname of the HTTP backend service to connect to [localhost]', 'localhost')
+    .option('-P, --backend-port <port>', 'specify the port of the HTTP backend service to connect to [8000]', 8000)
+    .parse(process.argv);
+
+
 const io = require('socket.io'),
       winston = require('winston'),
       http = require('http');
@@ -5,7 +15,7 @@ const io = require('socket.io'),
 winston.remove(winston.transports.Console);
 winston.add(winston.transports.Console, {'timestamp': true});
 
-const PORT = 3031;
+const PORT = program.port;
 
 winston.info('Rupture real-time service starting');
 winston.info('Listening on port ' + PORT);
@@ -13,8 +23,10 @@ winston.info('Listening on port ' + PORT);
 var socket = io.listen(PORT);
 var victims = {};
 
-const BACKEND_HOST = 'localhost',
-      BACKEND_PORT = '8000';
+const BACKEND_HOST = program.backendHost;
+      BACKEND_PORT = program.backendPort;
+
+winston.info('Backed by backend service running at ' + BACKEND_HOST + ':' + BACKEND_PORT);
 
 socket.on('connection', (client) => {
     winston.info('New connection from client ' + client.id);
