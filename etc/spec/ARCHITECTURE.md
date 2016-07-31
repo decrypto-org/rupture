@@ -318,7 +318,7 @@ The client / real-time protocol is implemented using
 ### client-hello / server-hello
 
 When the client initially connects to the real-time server, it sends the message
-**client-hello** passing its *victim-id* to the real-time server.  The server
+**client-hello** passing its *victim_id* to the real-time server.  The server
 responds with a **server-hello** message. After these handshake messages are
 exchanged, the client and server can exchange futher messages.
 
