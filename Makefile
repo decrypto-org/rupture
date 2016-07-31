@@ -9,7 +9,7 @@ syntax:
 	# Syntax check realtime JS
 	find realtime -iname "*.js"|grep -v '/node_modules/'|xargs jshint
 	# Syntax check client JS
-	find client -iname "*.js"|grep -v '/node_modules/'|grep -v '/dist/'|xargs jshint
+	find client -iname "*.js"|grep -v '/node_modules/'|grep -v '/dist/'|grep -v '/lcov-report/'|xargs jshint
 	# Syntax check MD files
 	mdl --rules ~MD036 etc
 test:
