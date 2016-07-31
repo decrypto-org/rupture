@@ -33,7 +33,17 @@ socket.on('connection', (client) => {
     winston.info('New connection from client ' + client.id);
 
     var victimId;
-    client.on('client-hello', ({victim_id}) => {
+    client.on('client-hello', (data) => {
+        var victim_id;
+
+        try {
+            ({victim_id} = data);
+        }
+        catch (e) {
+            winston.error('Got invalid client-hello message from client');
+            return;
+        }
+
         if (!victims.victim_id) {
             victimId = victim_id;
             client.emit('server-hello');
@@ -126,7 +136,17 @@ socket.on('connection', (client) => {
         createNewWork();
     });
 
-    client.on('work-completed', ({work, success, host}) => {
+    client.on('work-completed', (data) => {
+        var work, success, host;
+
+        try {
+            ({work, success, host} = data);
+        }
+        catch (e) {
+            winston.error('Got invalid work-completed from client');
+            return;
+        }
+
         winston.info('Client indicates work completed: ', work, success, host);
 
         var requestBody = work;
