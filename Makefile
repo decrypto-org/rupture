@@ -17,3 +17,4 @@ test:
 	cd sniffer && python test_sniff.py
 	cd realtime && npm run test
 	cd client && npm run test
+	cd realtime && npm run test
