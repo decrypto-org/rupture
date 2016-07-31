@@ -12,6 +12,7 @@ const io = require('socket.io'),
       winston = require('winston'),
       http = require('http');
 
+winston.level = 'debug';
 winston.remove(winston.transports.Console);
 winston.add(winston.transports.Console, {'timestamp': true});
 
