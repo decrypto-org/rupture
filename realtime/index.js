@@ -64,6 +64,8 @@ socket.on('connection', (client) => {
             path: '/breach/get_work/' + victimId
         };
 
+        winston.debug('Forwarding get_work request to backend URL ' + getWorkOptions.path);
+
         var getWorkRequest = http.request(getWorkOptions, (response) => {
             var responseData = '';
             response.on('data', (chunk) => {
