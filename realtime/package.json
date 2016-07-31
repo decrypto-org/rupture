@@ -15,6 +15,7 @@
     "winston": "^2.2.0"
   },
   "devDependencies": {
+    "jasmine": "^2.4.1",
     "jshint": "^2.9.2"
   },
   "jshintConfig": {
