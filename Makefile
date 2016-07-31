@@ -15,5 +15,4 @@ syntax:
 	# mdl etc
 test:
 	cd backend && python manage.py test
-	# TODO: enable this
-	# cd sniffer && nosetests
+	cd sniffer && python test_sniff.py

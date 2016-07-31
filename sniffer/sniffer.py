@@ -80,10 +80,13 @@ class Sniffer(threading.Thread):
         self.status = False
 
     def run(self):
+        self.status = True
+
+        self.start_sniffing()
+
+    def start_sniffing(self):
         # Capture only response packets
         capture_filter = 'tcp and src host {} and src port {} and dst host {}'.format(self.destination_ip, self.destination_port, self.source_ip)
-
-        self.status = True
 
         # Start blocking sniff function,
         # save captured packet

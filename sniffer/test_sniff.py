@@ -1,42 +1,43 @@
 from tl.testing.thread import ThreadAwareTestCase
 import unittest
+from mock import patch
 import json
 from urllib import urlencode
-from time import sleep
-
-import sniff
+import app
 
 
-class SniffTestCase(ThreadAwareTestCase):
+class BaseTestCase(ThreadAwareTestCase):
     def setUp(self):
-        sniff.app.config['TESTING'] = True
-        self.app = sniff.app.test_client()
+        app.app.config['TESTING'] = True
+        self.app = app.app.test_client()
 
         self.source_ip = '192.168.1.118'
         self.destination_host = 'di.uoa.gr'
         self.destination_port = '443'
         self.interface = 'wlan0'
-      
+        self.calibration_wait = 0.0
+
         self.data = dict(
             source_ip=self.source_ip,
             destination_host=self.destination_host,
             destination_port=self.destination_port,
-            interface=self.interface
+            interface=self.interface,
+            calibration_wait=self.calibration_wait
         )
-
-        self.json_data = json.dumps(self.data)
 
     def _request(self, url):
         return self.app.post(
             url,
-            data=self.json_data,
+            data=json.dumps(self.data),
             content_type='application/json'
         )
 
-    def _start(self):
+    @patch('app.Sniffer.start_sniffing', return_value=None)
+    def _start(self, patched_start_sniffing):
         return self._request('/start')
 
-    def _delete(self):
+    @patch('sniffer.Sniffer.stop', return_value=None)
+    def _delete(self, patched_sniffer_stop):
         return self._request('/delete')
 
     def _read(self):
@@ -44,6 +45,11 @@ class SniffTestCase(ThreadAwareTestCase):
             '/read?' + urlencode(self.data)
         )
 
+    def tearDown(self):
+        self._delete()
+
+
+class ResponseCodesTestCase(BaseTestCase):
     def test_start_201(self):
         rv = self._start()
         self.assertEqual(rv.status_code, 201)
@@ -66,10 +72,13 @@ class SniffTestCase(ThreadAwareTestCase):
         rv = self._delete()
         self.assertEqual(rv.status_code, 404)
 
-    def tearDown(self):
-        sleep(0.1)
-        self._delete()
-        sleep(0.1)
+
+class CalibrationTestCase(BaseTestCase):
+    @patch('app.sleep', return_value=None)
+    def test_sleep(self, patched_sniffer_sleep):
+        self.data['calibration_wait'] = 1000000.0
+        self._start()
+        app.sleep.assert_called_with(1000000.0)
 
 
 if __name__ == '__main__':
