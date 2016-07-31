@@ -74,7 +74,7 @@ socket.on('connection', (client) => {
                     client.emit('do-work', JSON.parse(responseData));
                     winston.info('Got (get-work) response from backend: ' + responseData);
                 }
-                catch(e) {
+                catch (e) {
                     winston.error('Got invalid (get-work) response from backend');
                     doNoWork();
                 }
@@ -116,7 +116,7 @@ socket.on('connection', (client) => {
                         createNewWork();
                     }
                 }
-                catch(e) {
+                catch (e) {
                     winston.error('Got invalid (work-completed) response from backend');
                     doNoWork();
                 }
