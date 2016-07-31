@@ -3,13 +3,13 @@ import unittest
 from mock import patch
 import json
 from urllib import urlencode
-import sniff
+import app
 
 
 class BaseTestCase(ThreadAwareTestCase):
     def setUp(self):
-        sniff.app.config['TESTING'] = True
-        self.app = sniff.app.test_client()
+        app.app.config['TESTING'] = True
+        self.app = app.app.test_client()
 
         self.source_ip = '192.168.1.118'
         self.destination_host = 'di.uoa.gr'
@@ -32,7 +32,7 @@ class BaseTestCase(ThreadAwareTestCase):
             content_type='application/json'
         )
 
-    @patch('sniff.Sniffer.start_sniffing', return_value=None)
+    @patch('app.Sniffer.start_sniffing', return_value=None)
     def _start(self, patched_start_sniffing):
         return self._request('/start')
 
@@ -74,11 +74,11 @@ class ResponseCodesTestCase(BaseTestCase):
 
 
 class CalibrationTestCase(BaseTestCase):
-    @patch('sniff.sleep', return_value=None)
+    @patch('app.sleep', return_value=None)
     def test_sleep(self, patched_sniffer_sleep):
         self.data['calibration_wait'] = 1000000.0
         self._start()
-        sniff.sleep.assert_called_with(1000000.0)
+        app.sleep.assert_called_with(1000000.0)
 
 
 if __name__ == '__main__':
