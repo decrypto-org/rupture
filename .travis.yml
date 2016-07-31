@@ -2,9 +2,11 @@ language: python
 sudo: true
 install:
     - pip install pep8
-    - npm install jshint
     - cd backend && pip install -r requirements.txt && cd ..
     - cd sniffer && pip install -r requirements.txt && cd ..
+    - nvm install 6.3
+    - nvm use 6.3
+    - npm install jshint
     - cd realtime && npm install && cd ..
 script:
     - make all
