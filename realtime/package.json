@@ -15,8 +15,11 @@
     "winston": "^2.2.0"
   },
   "devDependencies": {
+    "body-parser": "^1.15.2",
+    "express": "^4.14.0",
     "jasmine": "^2.4.1",
-    "jshint": "^2.9.2"
+    "jshint": "^2.9.2",
+    "socket.io-client": "^1.4.8"
   },
   "jshintConfig": {
     "esversion": 6
