@@ -318,7 +318,7 @@ The client / real-time protocol is implemented using
 ### client-hello / server-hello
 
 When the client initially connects to the real-time server, it sends the message
-**client-hello** passing its *victim-id* to the real-time server.  The server
+**client-hello** passing its *victim_id* to the real-time server.  The server
 responds with a **server-hello** message. After these handshake messages are
 exchanged, the client and server can exchange futher messages.
 
@@ -373,8 +373,9 @@ makes requests for work. This API is explained below.
 The backend implements various API endpoints for communication with the
 real-time server.
 
-### /getwork
-Requests work to be performed on behalf of a client.
+### /get_work/<victim>
+
+HTTP GET endpoint. Requests work to be performed on behalf of a client.
 
 Arguments:
  - victim: The id of the victim.
@@ -389,7 +390,9 @@ In case no work is available for the client, it returns an HTTP `404` response.
 Work can be unavailable in case a different client is already collecting data
 for the particular victim, and we do not wish to interfere with it.
 
-### /workcompleted
+### /work_completed/<victim>
+
+HTTP POST endpoint.
 
 Indicates on behalf of the client that some work was successfully or
 unsuccessfully completed.

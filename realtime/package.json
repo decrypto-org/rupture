@@ -4,17 +4,22 @@
   "description": "Rupture real-time service",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node --harmony --harmony_destructuring index.js"
+    "test": "node --harmony spec/run.js",
+    "start": "node --harmony index.js"
   },
   "author": "",
   "license": "MIT",
   "dependencies": {
+    "commander": "^2.9.0",
     "socket.io": "^1.4.5",
     "winston": "^2.2.0"
   },
   "devDependencies": {
-    "jshint": "^2.9.2"
+    "body-parser": "^1.15.2",
+    "express": "^4.14.0",
+    "jasmine": "^2.4.1",
+    "jshint": "^2.9.2",
+    "socket.io-client": "^1.4.8"
   },
   "jshintConfig": {
     "esversion": 6
