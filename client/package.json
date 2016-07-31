@@ -6,7 +6,7 @@
   "scripts": {
     "webpack": "webpack --progress --colors",
     "watch": "webpack --progress --colors --watch",
-    "test": "node --harmony spec/run.js"
+    "test": "istanbul cover spec/run.js"
   },
   "contributors": [
     {
@@ -37,6 +37,7 @@
     "esversion": 6
   },
   "devDependencies": {
+    "istanbul": "^0.4.4",
     "jasmine": "^2.4.1",
     "jshint": "^2.9.2"
   }
