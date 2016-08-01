@@ -47,9 +47,11 @@ socket.on('connection', (client) => {
         if (!victims.victim_id) {
             victimId = victim_id;
             client.emit('server-hello');
+            winston.debug('Send server-hello message');
         }
         else {
             client.emit('server-nowork');
+            winston.debug('There is an other victimId <-> client.id match. Make client idle');
         }
     });
 
