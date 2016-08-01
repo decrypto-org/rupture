@@ -1,3 +1,6 @@
+[![Build
+Status](https://travis-ci.org/dionyziz/rupture.svg?branch=develop)](https://travis-ci.org/dionyziz/rupture)
+
 Rupture
 =======
 Rupture is a framework for easily conducting BREACH and other compression-based
