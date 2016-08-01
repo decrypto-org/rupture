@@ -44,8 +44,9 @@ socket.on('connection', (client) => {
             return;
         }
 
-        if (!victims.victim_id) {
+        if (!victims[victim_id]) {
             victimId = victim_id;
+            victims[victimId] = client.id;
             client.emit('server-hello');
             winston.debug('Send server-hello message');
         }
@@ -136,7 +137,6 @@ socket.on('connection', (client) => {
 
     client.on('get-work', () => {
         winston.info('get-work from client ' + client.id);
-        victims.victimId = client.id;
         createNewWork();
     });
 
