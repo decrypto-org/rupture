@@ -161,8 +161,8 @@ socket.on('connection', (client) => {
         winston.info('Client ' + client.id + ' disconnected');
 
         for (let i in victims) {
-            if (victims.i == client.id) {
-                victims.i = null;
+            if (victims[i] == client.id) {
+                victims[i] = null;
             }
         }
 
