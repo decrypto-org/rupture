@@ -88,6 +88,9 @@ class Strategy(object):
             started=None
         )
 
+    def _get_sentinel(self):
+        return self._victim.target.sentinel
+
     def _reflection(self, alphabet):
         # We use '^' as a separator symbol and we assume it is not part of the
         # secret. We also assume it will not be in the content.
@@ -98,7 +101,7 @@ class Strategy(object):
 
         added_symbols = self._round.maxroundcardinality - self._round.minroundcardinality
 
-        sentinel = '^'
+        sentinel = self._get_sentinel()
 
         assert(sentinel not in self._round.knownalphabet)
         knownalphabet_complement = list(set(string.ascii_letters + string.digits) - set(self._round.knownalphabet))
