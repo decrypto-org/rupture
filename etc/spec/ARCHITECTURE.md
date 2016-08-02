@@ -214,25 +214,27 @@ to initiate a new sniffer, get information or delete an existing one. The
 sniffer server implements a RESTful API for communication with the backend.
 
 ### /start
+
 POST request that initializes a new sniffer. Upon receiving this request, the
 sniffer service should start sniffing.
 
 The request contains a JSON with the following fields:
 
- - source_ip: The IP of the victim on the local network.
- - destination_host: The hostname of the target that is being attacked.
+- source_ip: The IP of the victim on the local network.
+- destination_host: The hostname of the target that is being attacked.
 
 Returns HTTP `201` if the sniffer is created correctly. Otherwise, it returns
 HTTP `400` if either of the parameters is not properly set, or HTTP `409 -
 Conflict`, if a sniffer for the given arguments already exists.
 
 ### /read
+
 GET request that asks for the network capture of the sniffer.
 
 The GET parameters are:
 
- - source_ip: The IP of the victim on the local network.
- - destination_host: The hostname of the target that is being attacked.
+- source_ip: The IP of the victim on the local network.
+- destination_host: The hostname of the target that is being attacked.
 
 Returns HTTP `200` with a JSON that has a field *capture*, which contains the
 network capture of the sniffer as hexadecimal digits, and a field *records*,
@@ -242,12 +244,13 @@ records were not properly formed on the sniffed network, or HTTP `404` if no
 sniffer with the given parameters exists.
 
 ### /delete
+
 POST request that asks for the deletion of the sniffer.
 
 The request contains a JSON with the following fields:
 
- - source_ip: The IP of the victim on the local network.
- - destination_host: The hostname of the target that is being attacked.
+- source_ip: The IP of the victim on the local network.
+- destination_host: The hostname of the target that is being attacked.
 
 Returns HTTP `200` if the sniffer was deleted successfully, or HTTP `404` if no
 sniffer with the given parameters exists.
@@ -345,12 +348,14 @@ there is no available work to be performed at this time.
 When the client has finished its work or has been interrupted due to network
 error, it emits a **work-completed** message, containing the following
 information:
+
 ```sh
 {
   work: work,
   success: bool
 }
 ```
+
 *success* is *true* if all requests were performed correctly, otherwise it
 is *false*. *work* contains the work that was performed or failed to perform.
 
@@ -373,12 +378,13 @@ makes requests for work. This API is explained below.
 The backend implements various API endpoints for communication with the
 real-time server.
 
-### /get_work/<victim>
+### `/get_work/<victim>`
 
 HTTP GET endpoint. Requests work to be performed on behalf of a client.
 
 Arguments:
- - victim: The id of the victim.
+
+- victim: The id of the victim.
 
 If there is work to be done, it returns an HTTP `200` response with the JSON
 body containing the work structure. The work will contain instructions to
@@ -390,7 +396,7 @@ In case no work is available for the client, it returns an HTTP `404` response.
 Work can be unavailable in case a different client is already collecting data
 for the particular victim, and we do not wish to interfere with it.
 
-### /work_completed/<victim>
+### `/work_completed/<victim>`
 
 HTTP POST endpoint.
 
@@ -398,8 +404,9 @@ Indicates on behalf of the client that some work was successfully or
 unsuccessfully completed.
 
 Arguments:
- - work: work
- - success: bool
+
+- work: work
+- success: bool
 
 If *success* is *True*, this indicates that the series of indicated requests
 were performed by the victim correctly. Otherwise, the victim failed to perform
