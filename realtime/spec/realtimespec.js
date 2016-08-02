@@ -73,6 +73,23 @@ describe('real-time service', () => {
         });
     });
 
+    it('sets client.id null, when client disconnects', (done) => {
+        socket.on('connect', () => {
+            socket.emit('client-hello', {victim_id: 5});
+        });
+        socket.on('server-hello', () => {
+            socket.close();
+            socket2.connect();
+        });
+        socket2.on('connect', () => {
+            socket2.emit('client-hello', {victim_id: 5});
+            socket2.on('server-hello', () => {
+                socket2.close();
+                done();
+            });
+        });
+    });
+
     describe('backend communication', () => {
         let fakeServer;
 
