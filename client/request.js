@@ -1,4 +1,4 @@
-var Request = {
+const Request = {
     _img: null,
     make(url, callback) {
         console.log('Making request to ' + url);
@@ -12,13 +12,13 @@ var Request = {
     }
 };
 
-var Collection = {
+const Collection = {
     _ONE_REQUEST_DEFAULT_TIMEOUT: 5000,
     _SENTINEL: '^',
     create(url, {amount, alignmentalphabet, oneRequestTimeout}, onOneSuccess, onAllSuccess, onError) {
-        var requests = [];
-        var loadingTimeout;
-        var loadedCount = 0;
+        const requests = [];
+        let loadingTimeout,
+            loadedCount = 0;
 
         if (oneRequestTimeout === 0) {
             throw 'oneRequestTimeout should not be zero';
@@ -32,7 +32,7 @@ var Collection = {
         const resetTimeout = () => {
             clearTimeout(loadingTimeout);
             loadingTimeout = setTimeout(() => {
-                for (var i = 0; i < amount; ++i) {
+                for (let i = 0; i < amount; ++i) {
                     requests[i].cancel();
                 }
                 clearTimeout(loadingTimeout);
@@ -57,12 +57,11 @@ var Collection = {
             }
         };
 
-        antiBrowserCaching = Math.random() * Number.MAX_SAFE_INTEGER;
-        var alignmentPadding;
+        let antiBrowserCaching = Math.random() * Number.MAX_SAFE_INTEGER;
 
-        for (var i = 0; i < amount; ++i) {
-            alignmentPadding = alignmentalphabet.substr(0, i % 16);
-            var request = Request.make(url + alignmentPadding + this._SENTINEL + '&' + (antiBrowserCaching + i), oneLoaded.bind({}, i));
+        for (let i = 0; i < amount; ++i) {
+            let alignmentPadding = alignmentalphabet.substr(0, i % 16);
+            let request = Request.make(url + alignmentPadding + this._SENTINEL + '&' + (antiBrowserCaching + i), oneLoaded.bind({}, i));
             requests.push(request);
         }
     }
