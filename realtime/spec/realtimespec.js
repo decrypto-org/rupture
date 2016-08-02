@@ -38,7 +38,8 @@ function connect() {
 
 describe('real-time service', () => {
     let server,
-        socket;
+        socket,
+        socket2;
 
     beforeEach(() => {
         server = runServer();
@@ -53,6 +54,55 @@ describe('real-time service', () => {
         socket.on('connect', () => {
             socket.emit('client-hello', {victim_id: 5});
             socket.on('server-hello', done);
+        });
+    });
+
+    it('does not duplicate clients running', (done) => {
+        socket.on('connect', () => {
+            socket.emit('client-hello', {victim_id: 5});
+        });
+        socket.on('server-hello', () => {
+            socket2 = connect();
+            socket2.on('connect', () => {
+                socket2.emit('client-hello', {victim_id: 5});
+            });
+            socket2.on('server-nowork', () => {
+                socket2.close();
+                done();
+            });
+        });
+    });
+
+    it('sets client.id null, when client disconnects', (done) => {
+        socket.on('connect', () => {
+            socket.emit('client-hello', {victim_id: 5});
+        });
+        socket.on('server-hello', () => {
+            socket.close();
+            socket2.connect();
+        });
+        socket2.on('connect', () => {
+            socket2.emit('client-hello', {victim_id: 5});
+            socket2.on('server-hello', () => {
+                socket2.close();
+                done();
+            });
+        });
+    });
+
+    it('accepts clients with different victimIDs', (done) => {
+        socket.on('connect', () => {
+            socket.emit('client-hello', {victim_id: 5});
+        });
+        socket.on('server-hello', () => {
+            socket2 = connect();
+            socket2.on('connect', () => {
+                socket2.emit('client-hello', {victim_id: 4});
+            });
+            socket2.on('server-hello', () => {
+                socket2.close();
+                done();
+            });
         });
     });
 

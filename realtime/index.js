@@ -44,12 +44,15 @@ socket.on('connection', (client) => {
             return;
         }
 
-        if (!victims.victim_id) {
+        if (!victims[victim_id]) {
             victimId = victim_id;
+            victims[victimId] = client.id;
             client.emit('server-hello');
+            winston.debug('Send server-hello message');
         }
         else {
             client.emit('server-nowork');
+            winston.debug('There is an other victimId <-> client.id match. Make client idle');
         }
     });
 
@@ -134,7 +137,6 @@ socket.on('connection', (client) => {
 
     client.on('get-work', () => {
         winston.info('get-work from client ' + client.id);
-        victims.victimId = client.id;
         createNewWork();
     });
 
@@ -159,8 +161,8 @@ socket.on('connection', (client) => {
         winston.info('Client ' + client.id + ' disconnected');
 
         for (let i in victims) {
-            if (victims.i == client.id) {
-                victims.i = null;
+            if (victims[i] == client.id) {
+                victims[i] = null;
             }
         }
 
