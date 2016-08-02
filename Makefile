@@ -14,6 +14,7 @@ syntax:
 	mdl --rules ~MD036 etc
 test:
 	cd backend && python manage.py test
-	cd sniffer && python test_sniff.py
+	cd sniffer && nosetests --with-coverage --cover-package=app,sniffer
 	cd realtime && npm run test
 	cd client && npm run test
+	coverage combine backend/.coverage sniffer/.coverage

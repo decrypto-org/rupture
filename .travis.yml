@@ -12,3 +12,5 @@ install:
     - gem install mdl
 script:
     - make all
+after_success:
+    - coveralls
