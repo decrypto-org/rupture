@@ -57,7 +57,7 @@ const Collection = {
             }
         };
 
-        antiBrowserCaching = Math.random() * Number.MAX_SAFE_INTEGER;
+        let antiBrowserCaching = Math.random() * Number.MAX_SAFE_INTEGER;
 
         for (let i = 0; i < amount; ++i) {
             let alignmentPadding = alignmentalphabet.substr(0, i % 16);
