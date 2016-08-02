@@ -1,4 +1,5 @@
 const {Request, Collection} = require('../request.js');
+require('jasmine-expect');
 
 describe('request', () => {
     var requestsMade = [],
@@ -48,7 +49,7 @@ describe('collection', () => {
               onAllSuccess = jasmine.createSpy(),
               onError = jasmine.createSpy();
 
-        Collection.create('https://ruptureit.com', {
+        Collection.create('https://ruptureit.com/reflect?q=reflection', {
             amount: 3,
             alignmentalphabet: 'abc'
         }, onOneSuccess, onAllSuccess, onError);
@@ -70,5 +71,13 @@ describe('collection', () => {
         expect(onOneSuccess.calls.count()).toBe(3);
         expect(onAllSuccess).toHaveBeenCalled();
         expect(onError).not.toHaveBeenCalled();
+
+        expect(urls[0]).toStartWith('https://ruptureit.com');
+
+        // anti-caching
+        ending0 = urls[0].split('&')[1];
+        ending1 = urls[1].split('&')[1];
+
+        expect(ending0).not.toBe(ending1);
     });
 });
