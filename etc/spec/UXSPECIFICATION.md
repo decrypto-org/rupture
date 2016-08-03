@@ -178,3 +178,5 @@ Inspection* page to start the attack.
 At the top of the window is a close button to return to the *Victim Attack
 Inspection* page without completing the target configuration, if the user wants
 to choose another target endpoint.
+
+![Edit target](http://imgur.com/VGePeHN.jpg)
