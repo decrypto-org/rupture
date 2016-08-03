@@ -99,4 +99,48 @@ website.
 
 *Rupture web UI after scanning*
 
+### Victim Attack Inspection page
 
+At the top of the page are the attack’s general details. If the attack is
+already running or it has been paused and is about to resume, the *Victim Attack
+Inspection* page displays the following list:
+
+* Target endpoint with its logo if available
+* Victim's IP,  Victim's machine name
+* Decrypted secret
+* Progress bar, as the one described in the *Network Overview* page
+
+If the attack is about to begin and the user clicked the *Add custom victim*
+button, the victim’s IP is a field for the user to add the IP.
+
+If the attack is about to begin and the user has already chosen a victim, the
+victim’s IP is already filled.
+
+In both cases, the last two bullets are not displayed before the attack starts.
+Instead of the name of the target endpoint, there is a dropdown list called
+*Choose target*. There are some default target endpoints such as Gmail, Facebook
+etc. The last option of the dropdown list is the *Add new target…* option. The *Add
+new target* option requires that the user has already written a population
+script for this specific target. If the user clicks the *Add new target…* option,
+the modal window *Target Configuration* appears.
+
+Below these is an *Attack* button which initiates the attack.
+
+When the attacks are running, there is a table beneath the attack's general
+info with one entry per batch:
+
+| Round | Batch | Alignment alphabet | possible knownsecret   | confidence  |
+|-------|-------|------------------- |------------------------|-------------|
+|       |       |                    |                        |             |
+|       |       |                    |                        |             |
+
+Beneath this table are two buttons, the *Attack/Pause* button, for the user to
+pause or reinitiate the attack and the *Delete* button if the user wants to
+delete the attack. If the *Delete* button is clicked, the attack is deleted,
+the user is redirected to the *Network Overview* page and a notification *The
+victim has been deleted. [Undo]* appears at the top of the page, where *[Undo]*
+is clickable. As described in the *Network Overview* section, the notification
+disapears after 10 seconds or if the user clicks its close button earlier.
+
+On the top of the page is a navigation bar with Rupture logo on its left. When
+the logo is clicked, the user is redirected to the *Network Overview* page.
