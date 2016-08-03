@@ -2,7 +2,7 @@
 
 function install_nodejs_npm {
     sudo apt-get install curl
-    curl -sL https://deb.nodesource.com/setup_4.x | sudo -E bash -   ## install or update nodejs with npm
+    curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -   ## install or update nodejs with npm
     sudo apt-get install -y nodejs
     sudo apt-get install -y build-essential ##needed so as to be able to install native addons from npm
 }
