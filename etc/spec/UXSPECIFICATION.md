@@ -152,3 +152,29 @@ disapears after 10 seconds or if the user clicks its close button earlier.
 
 On the top of the page is a navigation bar with Rupture logo on its left. When
 the logo is clicked, the user is redirected to the *Network Overview* page.
+
+![Attack page](http://imgur.com/rdDvbhH.jpg)
+
+*Attack Page*
+
+### Target Configuration
+
+This is a modal window. Under the modal window’s title *Target Configuration*, is
+a form for the user to complete. The title is followed by a form for the user
+to complete:
+
+* Name (as it will be displayed at the *Network Overview* page and the *Victim
+  Attack Inspection* page)
+* Endpoint URL
+* Known prefix
+* Secret length
+* Secret alphabet
+* Alignment alphabet
+* Record cardinality (default=1)
+* Method: serial or divide and conquer with a radio button
+
+There is a *Done* button which redirects the user to the *Victim Attack
+Inspection* page to start the attack.
+At the top of the window is a close button to return to the *Victim Attack
+Inspection* page without completing the target configuration, if the user wants
+to choose another target endpoint.
