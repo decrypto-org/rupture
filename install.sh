@@ -80,7 +80,7 @@ for var in "$@"; do
     realtime)
 	install_nodejs_npm
 	(cd realtime
-	npm install) ##install required packages for compilation of the client code
+	npm install) ##install required packages for deploying the realtime server
 	;;
     backend)
 	install_python
