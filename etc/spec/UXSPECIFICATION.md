@@ -113,8 +113,12 @@ Inspection* page displays the following list:
 If the attack is about to begin and the user clicked the *Add custom victim*
 button, the victim’s IP is a field for the user to add the IP.
 
+![Add Custom Victim](http://imgur.com/4LA3A2k.jpg)
+
 If the attack is about to begin and the user has already chosen a victim, the
 victim’s IP is already filled.
+
+![Attack page after bettercap](http://imgur.com/irv8xx9.jpg)
 
 In both cases, the last two bullets are not displayed before the attack starts.
 Instead of the name of the target endpoint, there is a dropdown list called
@@ -123,6 +127,10 @@ etc. The last option of the dropdown list is the *Add new target…* option. The
 new target* option requires that the user has already written a population
 script for this specific target. If the user clicks the *Add new target…* option,
 the modal window *Target Configuration* appears.
+
+![Drop down target list](http://imgur.com/qL0Tb0n.jpg)
+
+*Drop down target list*
 
 Below these is an *Attack* button which initiates the attack.
 
