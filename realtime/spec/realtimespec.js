@@ -73,7 +73,7 @@ describe('real-time service', () => {
         });
     });
 
-    it('sets client.id null, when client disconnects', (done) => {
+    it('allows a client to reconnect after it disconnects', (done) => {
         socket.on('connect', () => {
             socket.emit('client-hello', {victim_id: 5});
         });
