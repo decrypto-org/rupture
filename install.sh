@@ -102,7 +102,7 @@ for var in "$@"; do
         sudo gem install syslog-logger #install syslog-logger from local directory or remote server
         sudo apt-get install build-essential ruby-dev libpcap-dev #install dependencies
         sudo gem install bettercap
-        (cd realitime
+        (cd realtime
         npm install) ##install required packages for compilation of the client code
 	 install_python
         (cd backend
