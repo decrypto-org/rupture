@@ -90,3 +90,13 @@ On the top of the page is a navigation bar with the Rupture logo on its left. Wh
 the logo is clicked, the user is redirected to the *Network Overview* page. At
 the left of the footer is a link button for the [RuptureIt](https://ruptureit.com/)
 website.
+
+![Rupture web UI before scanning](http://imgur.com/k2rzpY9.jpg)
+
+*Rupture web UI before scanning*
+
+![Rupture web UI after scanning](http://imgur.com/J886VtV.jpg)
+
+*Rupture web UI after scanning*
+
+
