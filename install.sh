@@ -2,10 +2,10 @@
 
 function install_nodejs_npm {
     sudo apt-get install curl
-    curl -sL https://deb.nodesource.com/setup_4.x | sudo -E bash -   ## install or update nodejs with npm
+    curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -   ## install or update nodejs with npm
     sudo apt-get install -y nodejs
     sudo apt-get install -y build-essential ##needed so as to be able to install native addons from npm
-} 
+}
 
 function install_python {
     sudo apt-get install -y python2.7
@@ -33,12 +33,12 @@ function error_checking() {
 }
 
 
-USAGE="Usage: $0 options 
+USAGE="Usage: $0 options
 options:
-    client 
+    client
     injection
-    realtime 
-    backend 
+    realtime
+    backend
     sniffer
     all"
 
@@ -49,7 +49,7 @@ exit 1; }
 ## no argument passed
 if [ "$1" == "" ]
 then
-    echo "$USAGE" 
+    echo "$USAGE"
     exit 0
 fi
 
@@ -65,13 +65,13 @@ fi
 
 for var in "$@"; do
     case "$var" in
-    client) 
+    client)
 	install_nodejs_npm
 	sudo npm install -g gulp
 	(cd client
 	npm install) ##install required packages for compilation of the client code
 	;;
-    injection) 
+    injection)
 	sudo apt-get install ruby rubygems build-essential
 	sudo gem install syslog-logger #install syslog-logger from local directory or remote server
 	sudo apt-get install build-essential ruby-dev libpcap-dev #install dependencies
@@ -80,7 +80,7 @@ for var in "$@"; do
     realtime)
 	install_nodejs_npm
 	(cd realtime
-	npm install) ##install required packages for compilation of the client code
+	npm install) ##install required packages for deploying the realtime server
 	;;
     backend)
 	install_python
@@ -102,7 +102,7 @@ for var in "$@"; do
         sudo gem install syslog-logger #install syslog-logger from local directory or remote server
         sudo apt-get install build-essential ruby-dev libpcap-dev #install dependencies
         sudo gem install bettercap
-        (cd realitime
+        (cd realtime
         npm install) ##install required packages for compilation of the client code
 	 install_python
         (cd backend
@@ -112,7 +112,7 @@ for var in "$@"; do
         activate_virtualenv)
 	 echo '##########################################################################'
 	 echo "# Don't forget to create your population scripts or update existing ones #"
-	 echo '##########################################################################'     
+	 echo '##########################################################################'
 	;;
   esac
 done
