@@ -171,3 +171,11 @@ li.completed:hover .close, li.running:hover .close, li.paused:hover .close {
     font-size:150%;
     margin:0px 20px;
 }
+footer{
+    float:right;
+    margin:10px 20px;
+    font-size:110%;
+}
+footer a{
+    color:#808080;
+}
