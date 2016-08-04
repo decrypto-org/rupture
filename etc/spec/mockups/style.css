@@ -165,3 +165,9 @@ li.completed:hover .close, li.running:hover .close, li.paused:hover .close {
     float:left;
     clear:none;
 }
+#mainpage h2.btn{
+    float:left;
+    clear:both;
+    font-size:150%;
+    margin:0px 20px;
+}
