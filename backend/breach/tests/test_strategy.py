@@ -1,5 +1,6 @@
 from django.utils import timezone
 from mock import patch
+from binascii import hexlify
 
 from breach.tests.base import RuptureTestCase
 from breach.strategy import Strategy
@@ -37,8 +38,66 @@ class StrategyTestCase(RuptureTestCase):
     def test_same_round_same_batch(self):
         pass
 
-    def test_same_round_different_batch(self):
-        pass
+    @patch('breach.strategy.Sniffer')
+    def test_same_round_different_batch(self, Sniffer):
+
+        # Mock captured parameteres for Sniffer
+        capture0 = {'data': 'exlength', 'records': 1}
+        capture1 = {'data': 'length', 'records': 1}
+        instance = Sniffer.return_value
+        instance.read.return_value = capture0
+
+        # Mock initial round
+        mock_target = Target.objects.create(
+            endpoint='https://di.uoa.gr/?breach=%s',
+            prefix='test',
+            alphabet='0123456789',
+            name='webuoagr',
+            confidence_threshold=1.0
+        )
+
+        dif_batch_victim = Victim.objects.create(
+            target=mock_target,
+            sourceip='192.168.10.141',
+            snifferendpoint='http://localhost/'
+        )
+        dif_batch_round = Round.objects.create(
+            victim=dif_batch_victim,
+            amount=1,
+            knownsecret='testsecret',
+            knownalphabet='01',
+        )
+        self.dif_batch_samplesets = [
+            SampleSet.objects.create(
+                round=dif_batch_round,
+                candidatealphabet='0',
+                data=hexlify('length2')
+            ),
+            SampleSet.objects.create(
+                round=dif_batch_round,
+                candidatealphabet='1',
+                data=hexlify('length')
+            )
+        ]
+
+        strategy0 = Strategy(dif_batch_victim)
+        work0 = strategy0.get_work()
+        strategy0.work_completed()
+
+        instance.read.return_value = capture1
+        strategy1 = Strategy(dif_batch_victim)
+        work1 = strategy1.get_work()
+        strategy1.work_completed()
+
+        dif_batch_strategy0 = Strategy(dif_batch_victim)
+        dif_batch_work0 = dif_batch_strategy0.get_work()
+
+        dif_batch_strategy1 = Strategy(dif_batch_victim)
+        dif_batch_work1 = dif_batch_strategy1.get_work()
+
+        # Check if new Samplesets are equal to the original ones.
+        self.assertEqual(dif_batch_work0, work0)
+        self.assertEqual(dif_batch_work1, work1)
 
     @patch('breach.strategy.Sniffer')
     def test_advance_round(self, Sniffer):
