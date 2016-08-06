@@ -1,6 +1,6 @@
 #!/bin/sh
 
-BASEDIR=$(dirname "$0")
+BASEDIR=$(dirname -- "$(readlink -f -- "${BASH_SOURCE}")")
 
 REALTIMEURL=$1
 VICTIMID=$2

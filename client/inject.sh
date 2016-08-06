@@ -1,5 +1,7 @@
 #!/bin/sh
 
+BASEDIR=$(dirname -- "$(readlink -f -- "${BASH_SOURCE}")")
+
 SOURCEIP=$1
 
 iconv -f utf-8 -t ascii//TRANSLIT dist/main.js > dist/main2.js
