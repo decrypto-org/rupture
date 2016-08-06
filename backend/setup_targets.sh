@@ -7,7 +7,7 @@ if [ ! -d $RUPTUREDIR ]; then
 fi
 
 echo "[-] Populating targets..."
-if $BASEDIR/env/bin/python $BASEDIR/populate_targets.py; then
+if $BASEDIR/env/bin/python $BASEDIR/populate_targets.py $RUPTUREDIR/target_config.yml; then
     echo "[*] Targets have been set."
 else
     echo "[!] Target setup was interrupted."

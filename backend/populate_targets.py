@@ -1,8 +1,8 @@
 import django
 import logging
 import os
+import sys
 import yaml
-from backend.settings import BASE_DIR
 from django.db import IntegrityError
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'backend.settings')
@@ -73,8 +73,9 @@ def create_target(target):
     )
 
 if __name__ == '__main__':
+    target_cfg = sys.argv[1]
     try:
-        with open(os.path.join(BASE_DIR, 'target_config.yml'), 'r') as ymlconf:
+        with open(target_cfg, 'r') as ymlconf:
             cfg = yaml.load(ymlconf)
     except IOError, err:
         logger.error('IOError: %s' % err)
