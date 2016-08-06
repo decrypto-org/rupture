@@ -1,6 +1,6 @@
 #!/bin/bash
 
-BASEDIR=$(dirname "$0")
+BASEDIR=$(dirname -- "$(readlink -f -- "${BASH_SOURCE}")")
 
 mkdir -p $BASEDIR/logs
 log_file=$(date "+%Y_%m_%d-%H_%M_%S")
