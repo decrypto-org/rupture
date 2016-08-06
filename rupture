@@ -11,6 +11,18 @@ terminate() {
     echo "[*] Shut down complete."
 }
 
+error_checking() {
+    case $1 in
+        -v|--version|-h|--help|-s|--setup|--setup-target|--setup-victim|--backend|--sniffer|--realtime|-a|--attack)
+            ;;
+        *)
+            echo "Invalid argument."
+            usage
+            exit 1
+            ;;
+    esac
+}
+
 usage() {
     echo "Usage:
     ./rupture <parameter>
@@ -71,6 +83,9 @@ attack() {
     cat /dev/null > $BASEDIR/rupture.log
     tailf $BASEDIR/rupture.log
 }
+
+## Check all arguments for validation before beginning setup
+error_checking $@
 
 BASEDIR=$(dirname -- "$(readlink -f -- "${BASH_SOURCE}")")
 
