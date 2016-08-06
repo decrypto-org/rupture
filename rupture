@@ -88,6 +88,8 @@ attack() {
 error_checking $@
 
 BASEDIR=$(dirname -- "$(readlink -f -- "${BASH_SOURCE}")")
+RUPTUREDIR="$HOME/.rupture"
+mkdir -p $RUPTUREDIR
 
 while [[ $# -gt 0 ]]
 do
