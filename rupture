@@ -40,6 +40,10 @@ where <parameter> is:
           in relative directories."
 }
 
+version() {
+    echo "rupture version $(cat $BASEDIR/.version)"
+}
+
 
 use_nvm() {
     if [ -z "$NVM_DIR" ]; then
@@ -74,6 +78,9 @@ while [[ $# -gt 0 ]]
 do
     var="$1"
     case $var in
+        -v|--version)
+            version
+            ;;
         -s|--setup)
             setup
             ;;
