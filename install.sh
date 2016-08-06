@@ -84,6 +84,7 @@ for var in "$@"; do
 	;;
     backend)
 	install_python
+        sudo apt-get install mysql-server libmysqlclient-dev python-mysqldb
 	(cd backend
 	activate_virtualenv
 	python manage.py migrate)
