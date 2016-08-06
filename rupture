@@ -13,7 +13,7 @@ terminate() {
 
 error_checking() {
     case $1 in
-        -v|--version|-h|--help|-s|--setup|--setup-target|--setup-victim|--backend|--sniffer|--realtime|-a|--attack)
+        --dev|-v|--version|-h|--help|-s|--setup|--setup-target|--setup-victim|--backend|--sniffer|--realtime|-a|--attack)
             ;;
         *)
             echo "Invalid argument."
@@ -95,6 +95,9 @@ while [[ $# -gt 0 ]]
 do
     var="$1"
     case $var in
+        --dev)
+            rm -r $RUPTUREDIR
+            ;;
         -v|--version)
             version
             ;;
