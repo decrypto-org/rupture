@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 BASEDIR=$(dirname -- "$(readlink -f -- "${BASH_SOURCE}")")
 
