@@ -9,7 +9,7 @@ fi
 
 
 echo "[-] Populating victims..."
-if $BASEDIR/env/bin/python $BASEDIR/populate_victims.py; then
+if $BASEDIR/env/bin/python $BASEDIR/populate_victims.py $RUPTUREDIR/victim_config.yml; then
     echo "[*] Victims have been set."
 else
     echo "[!] Victim setup was interrupted."
