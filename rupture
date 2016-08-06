@@ -11,8 +11,6 @@ terminate() {
     echo "[*] Shut down complete."
 }
 
-BASEDIR=$(dirname "$0")
-
 usage() {
     echo "Usage:
     ./rupture <parameter>
@@ -70,6 +68,8 @@ attack() {
     cat /dev/null > $BASEDIR/rupture.log
     tailf $BASEDIR/rupture.log
 }
+
+BASEDIR=$(dirname -- "$(readlink -f -- "${BASH_SOURCE}")")
 
 case $PARAMETER in
     "setup" ) setup;;
