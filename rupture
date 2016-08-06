@@ -81,6 +81,9 @@ do
         -v|--version)
             version
             ;;
+        -h|--help)
+            usage
+            ;;
         -s|--setup)
             setup
             ;;
