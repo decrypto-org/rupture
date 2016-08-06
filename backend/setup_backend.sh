@@ -1,6 +1,6 @@
 #!/bin/bash
 
-BASEDIR=$(dirname "$0")
+BASEDIR=$(dirname -- "$(readlink -f -- "${BASH_SOURCE}")")
 
 echo '[-] Flushing old database, if exists...'
 $BASEDIR/env/bin/python $BASEDIR/manage.py flush --no-input

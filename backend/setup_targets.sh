@@ -1,6 +1,6 @@
 #!/bin/bash
 
-BASEDIR=$(dirname "$0")
+BASEDIR=$(dirname -- "$(readlink -f -- "${BASH_SOURCE}")")
 
 echo "[-] Populating targets..."
 if $BASEDIR/env/bin/python $BASEDIR/populate_targets.py; then
