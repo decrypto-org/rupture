@@ -2,12 +2,8 @@
 
 BASEDIR=$(dirname "$0")
 
-echo '[-] Removing old database, if exists...'
-rm -f $BASEDIR/db.sqlite3
-if test -e "$BASEDIR/db.sqlite3"; then
-    echo "[!] Database could not be deleted. Check permissions on $BASEDIR/db.sqlite3?";
-    exit;
-fi
+echo "[*] Setup of the database requires access to MySQL server as root."
+mysql -u root -p < $BASEDIR/init.sql
 
 echo '[-] Applying Django migrations...'
 if $BASEDIR/env/bin/python $BASEDIR/manage.py migrate; then
