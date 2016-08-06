@@ -1,7 +1,7 @@
 from django import setup
 import os
+import sys
 import yaml
-from backend.settings import BASE_DIR
 import subprocess
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'backend.settings')
@@ -38,7 +38,7 @@ def select_victim(victims):
     return victim_list
 
 
-def create_victim(victim):
+def create_victim(victim, client_dir):
     try:
         target = Target.objects.filter(name=victim['target'])[0]
     except IndexError:
@@ -75,15 +75,12 @@ def create_victim(victim):
                 v.realtimeurl
             )
 
-    create_client(v.realtimeurl, v.id)
-    create_injection(v.sourceip, v.id)
+    create_client(v.realtimeurl, v.id, client_dir)
+    create_injection(v.sourceip, v.id, client_dir)
 
 
-def create_client(realtimeurl, victimid):
+def create_client(realtimeurl, victimid, client_dir):
     print '[*] Creating client for chosen victim...'
-
-    rupture_dir = os.path.abspath(os.path.join(BASE_DIR, os.pardir))
-    client_dir = os.path.join(rupture_dir, 'client')
 
     with open(os.devnull, 'w') as FNULL:
         p = subprocess.Popen(
@@ -98,11 +95,8 @@ def create_client(realtimeurl, victimid):
             print '[!] Something went wrong when creating client {}'.format(victimid)
 
 
-def create_injection(sourceip, victimid):
+def create_injection(sourceip, victimid, client_dir):
     print '[*] Creating injection script for chosen victim...'
-
-    rupture_dir = os.path.abspath(os.path.join(BASE_DIR, os.pardir))
-    client_dir = os.path.join(rupture_dir, 'client')
 
     with open(os.path.join(client_dir, 'inject.sh'), 'r') as f:
         injection = f.read()
@@ -127,12 +121,13 @@ def get_victims(victim_cfg):
 
 if __name__ == '__main__':
     victim_cfg = sys.argv[1]
+    client_dir = sys.argv[2]
     victims = get_victims(victim_cfg)
     try:
         victim_list = select_victim(victims)
         for victim in victim_list:
             try:
-                create_victim(victim)
+                create_victim(victim, client_dir)
             except ValueError:
                 print '[!] Invalid parameters for victim ({}, {}).'.format(victim['target'], victim['sourceip'])
     except KeyboardInterrupt:
