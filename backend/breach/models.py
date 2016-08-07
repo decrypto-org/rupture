@@ -74,6 +74,13 @@ class Target(models.Model):
                    'change per request.')
     )
 
+    sentinel = models.CharField(
+        max_length=1,
+        default='^',
+        help_text=('Character used to seperate the complementary huffman '
+                   'characters, in order to avoid unwanted compression.')
+    )
+
     SERIAL = 1
     DIVIDE_CONQUER = 2
     METHOD_CHOICES = (
