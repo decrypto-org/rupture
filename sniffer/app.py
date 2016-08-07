@@ -47,15 +47,17 @@ def start():
         logger.warning(err)
         return str(err), 409
 
-    params = {'source_ip': source_ip,
-              'destination_host': destination_host,
-              'interface': interface,
-              'destination_port': destination_port}
+    params = {
+        'source_ip': source_ip,
+        'destination_host': destination_host,
+        'interface': interface,
+        'destination_port': destination_port
+    }
 
     # Check if parameters are invalid
     try:
         sniffer = Sniffer(params)
-    except AssertionError, err:
+    except ValueError, err:
         logger.warning(err)
         return str(err), 400
 
@@ -67,6 +69,10 @@ def start():
         sleep(0.01)
     msg = 'Sniffer (source_ip: {}, destination_host: {}) is alive.'.format(source_ip, destination_host)
     logger.debug(msg)
+
+    # Give Scapy some time to lock the low-level network resources and start sniffing
+    logger.debug('Waiting for calibration: {} seconds...'.format(float(data['calibration_wait'])))
+    sleep(float(data['calibration_wait']))
 
     return msg, 201
 
@@ -99,13 +105,13 @@ def read():
     # Use the sniffer's get_capture() method to get the captured packets
     try:
         capture = sniffer.get_capture()
-    except AssertionError, err:
+    except ValueError, err:
         logger.warning(err)
         return str(err), 422
 
-    assert('capture' in capture)
+    assert('data' in capture)
 
-    logger.debug('Got capture with length: {}'.format(len(capture['capture'])))
+    logger.debug('Got capture with length: {}'.format(len(capture['data'])))
 
     return jsonify(**capture), 200
 

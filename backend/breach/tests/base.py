@@ -1,3 +1,4 @@
+from django.utils import timezone
 from django.test import TestCase
 from breach.models import SampleSet, Victim, Target, Round
 
@@ -44,6 +45,7 @@ class RuptureTestCase(TestCase):
             amount=1,
             knownsecret='testsecret',
             knownalphabet='0123',
+            minroundcardinality=1,
             maxroundcardinality=3
         )
         self.balance_samplesets = [
@@ -58,3 +60,8 @@ class RuptureTestCase(TestCase):
                 data='small'
             )
         ]
+
+    def tearDown(self):
+        for sampleset in self.balance_samplesets + self.samplesets:
+            sampleset.completed = timezone.now()
+            sampleset.save()

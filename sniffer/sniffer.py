@@ -19,11 +19,13 @@ TLS_ALERT = 21
 TLS_HANDSHAKE = 22
 TLS_APPLICATION_DATA = 23
 TLS_HEARTBEAT = 24
-TLS_CONTENT = {TLS_CHANGE_CIPHER_SPEC: 'Change cipher spec (20)',
-               TLS_ALERT: 'Alert (21)',
-               TLS_HANDSHAKE: 'Handshake (22)',
-               TLS_APPLICATION_DATA: 'Application Data (23)',
-               TLS_HEARTBEAT: 'Heartbeat (24)'}
+TLS_CONTENT = {
+    TLS_CHANGE_CIPHER_SPEC: 'Change cipher spec (20)',
+    TLS_ALERT: 'Alert (21)',
+    TLS_HANDSHAKE: 'Handshake (22)',
+    TLS_APPLICATION_DATA: 'Application Data (23)',
+    TLS_HEARTBEAT: 'Heartbeat (24)'
+}
 
 
 class Sniffer(threading.Thread):
@@ -54,15 +56,21 @@ class Sniffer(threading.Thread):
             self.destination_host = str(arg['destination_host'])
             self.destination_port = int(arg['destination_port'])
         except KeyError:
-            assert False, 'Invalid argument dictionary - Not enough parameters'
+            raise ValueError('Invalid argument dictionary - Not enough parameters')
 
         try:
             self.destination_ip = socket.gethostbyaddr(self.destination_host)[-1][0]
         except socket.herror, err:
-            assert False, 'socket.herror - ' + str(err)
+            raise ValueError('socket.herror - {}'.format(str(err)))
 
-        # If either of the parameters is None, assert error
-        assert self.interface and self.source_ip and self.destination_host and self.destination_port, 'Invalid argument dictionary - Invalid parameters'
+        # If either of the parameters is None, raise ValueError
+        if not all([
+            self.interface,
+            self.source_ip,
+            self.destination_host,
+            self.destination_port]
+        ):
+            raise ValueError('Invalid argument dictionary - Invalid parameters')
 
         # Dictionary with keys the destination (victim's) port
         # and value the data stream corresponding to that port
@@ -72,18 +80,23 @@ class Sniffer(threading.Thread):
         self.status = False
 
     def run(self):
+        self.status = True
+
+        self.start_sniffing()
+
+    def start_sniffing(self):
         # Capture only response packets
         capture_filter = 'tcp and src host {} and src port {} and dst host {}'.format(self.destination_ip, self.destination_port, self.source_ip)
-
-        self.status = True
 
         # Start blocking sniff function,
         # save captured packet
         # and set it to stop when stop() is called
-        sniff(iface=self.interface,
-              filter=capture_filter,
-              prn=lambda pkt: self.process_packet(pkt),
-              stop_filter=lambda pkt: self.filter_packet(pkt))
+        sniff(
+            iface=self.interface,
+            filter=capture_filter,
+            prn=lambda pkt: self.process_packet(pkt),
+            stop_filter=lambda pkt: self.filter_packet(pkt)
+        )
 
     def filter_packet(self, pkt):
         return not self.is_alive()
@@ -118,14 +131,17 @@ class Sniffer(threading.Thread):
         # Kill it with fire!
         self.status = False
 
-        self.stop_packet()
+        # Send 3 stop packets, in case one is not captured
+        for i in range(3):
+            self.stop_packet()
 
     def stop_packet(self):
         '''
         Send a dummy TCP packet to the victim with source IP the destination host's,
         which will be caught by sniff filter and cause sniff function to stop.
         '''
-        send(IP(dst=self.destination_ip, src=self.source_ip)/TCP(dport=self.destination_port), verbose=0)
+        dummy_packet = IP(dst=self.destination_ip, src=self.source_ip)/TCP(dport=self.destination_port)
+        send(dummy_packet, verbose=0)
 
     def follow_stream(self, stream):
         stream_data = b''
@@ -145,8 +161,6 @@ class Sniffer(threading.Thread):
         # Iterate over the captured packets
         # and aggregate the application level payload
         for port, stream in self.port_streams.items():
-            # logger.debug('Parsing port: {}'.format(port))
-
             stream_data = self.follow_stream(stream)
 
             data_record_list = self.get_application_data(stream_data)
@@ -157,8 +171,10 @@ class Sniffer(threading.Thread):
         logger.debug('Captured {} application data'.format(len(application_data)))
         logger.debug('Captured {} application records'.format(application_records))
 
-        return {'capture': application_data,
-                'records': application_records}
+        return {
+            'data': application_data,
+            'records': application_records
+        }
 
     def get_application_data(self, payload_data):
         '''
@@ -178,12 +194,10 @@ class Sniffer(threading.Thread):
 
             # payload_data should begin with a valid TLS header
             if content_type not in TLS_CONTENT:
-                logger.warning('Invalid payload: \n' + binascii.hexlify(payload_data))
+                logger.warning('Invalid payload data.')
 
                 # Flush invalid captured packets
-                assert False, 'Captured packets were not properly constructed'
-
-            # logger.debug('Content type: {} - Length: {}'.format(TLS_CONTENT[content_type], length))
+                raise ValueError('Captured packets were not properly constructed')
 
             # Keep only TLS application data payload
             if content_type == TLS_APPLICATION_DATA:

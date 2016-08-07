@@ -36,7 +36,7 @@ def decide_optimal_candidate(candidate_lengths, samples_per_sampleset):
         key=operator.itemgetter('length')
     )
 
-    logger.debug('\n############################################################################')
+    logger.debug('\n' + 75 * '#')
     logger.debug('Candidate scoreboard:')
     for cand in sorted_candidate_lengths:
         logger.debug('\t{}: {}'.format(cand['candidate_alphabet'], cand['length']))

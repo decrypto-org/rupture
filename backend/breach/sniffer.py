@@ -8,19 +8,22 @@ logger = logging.getLogger(__name__)
 
 
 class Sniffer(object):
-    def __init__(self, endpoint, source_ip, destination_host, interface, destination_port):
-        self.endpoint = endpoint
-        self.source_ip = source_ip
-        self.destination_host = destination_host
-        self.interface = interface
-        self.destination_port = destination_port
+    def __init__(self, params):
+        self.endpoint = params['snifferendpoint']
+
+        self.source_ip = params['sourceip']
+        self.destination_host = params['host']
+        self.interface = params['interface']
+        self.destination_port = params['port']
+        self.calibration_wait = params['calibration_wait']
 
     def get_sniffer_state(self):
         state = {
             'source_ip': self.source_ip,
             'destination_host': self.destination_host,
             'interface': self.interface,
-            'destination_port': self.destination_port
+            'destination_port': self.destination_port,
+            'calibration_wait': self.calibration_wait
         }
         return state
 
@@ -60,15 +63,15 @@ if __name__ == '__main__':
     destination_host = 'dionyziz.com'
     interface = 'wlan0'
     destination_port = '443'
-    print('Initializing sniffer')
+    logger.debug('Initializing sniffer')
     sniffer = Sniffer('http://%s:9000' % source_ip, source_ip, destination_host, interface, destination_port)
-    print('Starting')
+    logger.debug('Starting')
     sniffer.start()
-    print('Sniff started')
+    logger.debug('Sniff started')
     sleep(5)
-    print('Reading sniffer data')
+    logger.debug('Reading sniffer data')
     data = sniffer.read()
-    print('Sniffer data read:\n%s', data)
-    print('Stopping sniffer')
+    logger.debug('Sniffer data read:\n%s', data)
+    logger.debug('Stopping sniffer')
     sniffer.stop()
-    print('Sniffer stopped')
+    logger.debug('Sniffer stopped')

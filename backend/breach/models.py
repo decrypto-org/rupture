@@ -1,5 +1,6 @@
 from __future__ import unicode_literals
 from django.db import models
+from django.core.exceptions import ValidationError
 import urlparse
 
 
@@ -20,6 +21,13 @@ class Target(models.Model):
     @property
     def host(self):
         return urlparse.urlparse(self.endpoint).hostname
+
+    name = models.CharField(
+        default='',
+        unique=True,
+        max_length=255,
+        help_text=('A unique name identifying the target.')
+    )
 
     port = models.IntegerField(
         default=443,
@@ -66,6 +74,49 @@ class Target(models.Model):
                    'change per request.')
     )
 
+    sentinel = models.CharField(
+        max_length=1,
+        default='^',
+        help_text=('Character used to seperate the complementary huffman '
+                   'characters, in order to avoid unwanted compression.')
+    )
+
+    SERIAL = 1
+    DIVIDE_CONQUER = 2
+    METHOD_CHOICES = (
+        (SERIAL, 'serial'),
+        (DIVIDE_CONQUER, 'divide&conquer'),
+    )
+
+    method = models.IntegerField(
+        default=SERIAL,
+        choices=METHOD_CHOICES,
+        help_text='Method of building candidate samplesets.'
+    )
+
+    block_align = models.BooleanField(
+        default=True,
+        help_text=('Whether to use block alignment or not, in case '
+                   'maxreflectionlength does not allow it')
+    )
+
+    huffman_pool = models.BooleanField(
+        default=True,
+        help_text=('Whether to use Huffman pool or not, in case '
+                   'maxreflectionlength does not allow it')
+    )
+
+    samplesize = models.IntegerField(
+        default=64,
+        help_text=('The amount of samples per sampleset.')
+    )
+
+    confidence_threshold = models.FloatField(
+        default=1.0,
+        help_text=('The threshold that is used for confidence, in order '
+                   'to determine whether a candidate should be chosen.')
+    )
+
 
 class Victim(models.Model):
     '''
@@ -86,12 +137,6 @@ class Victim(models.Model):
         help_text='Source IP on the local network, e.g. 192.168.10.140'
     )
 
-    method = models.CharField(
-        default='divide&conquer',
-        max_length=255,
-        help_text='Method of building candidate samplesets.'
-    )
-
     interface = models.CharField(
         default='wlan0',
         max_length=255,
@@ -99,10 +144,60 @@ class Victim(models.Model):
                    "network.")
     )
 
+    realtimeurl = models.CharField(
+        default='http://localhost:3031',
+        max_length=255,
+        help_text=("The realtime module URL that the client should "
+                   "communicate with. This URL must include the "
+                   "'http://' prefix.")
+    )
+
+    calibration_wait = models.FloatField(
+        default=0.0,
+        help_text=('The amount of time in seconds that sniffer should wait '
+                   'so that Scapy has enough time to lock on low-level network '
+                   'resources.')
+    )
+
+    recordscardinality = models.IntegerField(
+        default=0,
+        help_text=('The amount of expected TLS response records per request. '
+                   'If 0 then the amount is not known or is expected to '
+                   'change per request.')
+    )
+
 
 class Round(models.Model):
     class Meta:
         unique_together = (('victim', 'index'),)
+
+    def check_block_align(self):
+        try:
+            return self.block_align
+        except AttributeError:
+            self.block_align = self.victim.target.block_align
+            return self.block_align
+
+    def check_huffman_pool(self):
+        try:
+            return self.huffman_pool
+        except AttributeError:
+            self.huffman_pool = self.victim.target.huffman_pool
+            return self.huffman_pool
+
+    def get_method(self):
+        try:
+            return self.method
+        except AttributeError:
+            self.method = self.victim.target.method
+            return self.method
+
+    def clean(self):
+        if not self.knownsecret.startswith(self.victim.target.prefix):
+            raise ValidationError('Knownsecret must start with known target prefix')
+
+        if not set(self.knownalphabet) <= set(self.victim.target.alphabet):
+            raise ValidationError("Knownalphabet must be a subset of target's alphabet")
 
     victim = models.ForeignKey(Victim)
 
@@ -110,6 +205,14 @@ class Round(models.Model):
         default=1,
         help_text=('Which round of the attack this is. The first round has ',
                    'index 1.')
+    )
+
+    batch = models.IntegerField(
+        default=0,
+        help_text=('Which batch of the round is currently being attempted. '
+                   'A new batch starts any time samplesets for the round '
+                   'are created, either because the round is starting or '
+                   'because not enough condidence was built.')
     )
 
     maxroundcardinality = models.IntegerField(
@@ -122,7 +225,6 @@ class Round(models.Model):
                    'occurs when the target alphabet is not a perfect power of '
                    '2.')
     )
-    # assert(self.maxroundcardinality >= len(self.candidatealphabet))
 
     minroundcardinality = models.IntegerField(
         default=1,
@@ -143,19 +245,11 @@ class Round(models.Model):
         max_length=255,
         help_text='Known secret before the sample set was collected'
     )
-    # assert(
-    #     self.knownsecret[0:len(self.victim.target.prefix)]
-    #     ==
-    #     self.victim.target.prefix
-    # )
 
     knownalphabet = models.CharField(
         max_length=255,
         help_text='The candidate alphabet for the next unknown character'
     )
-    # assert(
-    #     all([c in self.victim.target.alphabet for c in self.knownalphabet])
-    # )
 
 
 class SampleSet(models.Model):
@@ -163,6 +257,26 @@ class SampleSet(models.Model):
     A set of samples collected for a particular victim pertaining to an
     alphabet vector used to extend a known secret.
     '''
+    def clean(self):
+        if self.round.maxroundcardinality < len(self.candidatealphabet):
+            raise ValidationError('Sampleset alphabet should be at most maxroundcardinality sized.')
+        if self.round.minroundcardinality > len(self.candidatealphabet):
+            raise ValidationError('Sampleset alphabet should be at least minroundcardinality sized.')
+        if set(self.candidatealphabet) > set(self.round.knownalphabet):
+            raise ValidationError("Candidate alphabet must be a subset of round's known alphabet")
+        if set(self.alignmentalphabet) != set(self.round.victim.target.alignmentalphabet):
+            raise ValidationError("Alignment alphabet must be a permutation of target's alignmentalphabet")
+
+    @staticmethod
+    def create_sampleset(params):
+        sampleset = SampleSet(**params)
+        sampleset.save()
+        try:
+            sampleset.clean()
+        except ValidationError, err:
+            sampleset.delete()
+            raise err
+        return sampleset
 
     round = models.ForeignKey(
         Round,
@@ -173,7 +287,11 @@ class SampleSet(models.Model):
                    'a decision for a state transition with a certain '
                    'confidence.')
     )
-    # assert(self.round.index <= self.victim.round.index)
+
+    batch = models.IntegerField(
+        default=0,
+        help_text='The round batch that this sampleset belongs to.'
+    )
 
     # candidate state
     candidatealphabet = models.CharField(
@@ -185,7 +303,6 @@ class SampleSet(models.Model):
                    'iterative attack, it will be a single symbol of '
                    'knownnextalphabet.')
     )
-    # assert(all([c in self.knownalphabet for c in self.candidatealphabet]))
 
     alignmentalphabet = models.CharField(
         max_length=255,
@@ -194,11 +311,15 @@ class SampleSet(models.Model):
                    'alignment for this batch. This is a permutation of the '
                    'target alignment alphabet.')
     )
-    # assert(sort(self.alignmentalphabet) == sort(self.round.victim.target.alignmentalphabet))
 
     data = models.TextField(
         default='',
         help_text='The raw data collected on the network for this sampleset'
+    )
+
+    records = models.IntegerField(
+        default=0,
+        help_text='The number of records that contain all the data.'
     )
 
     started = models.DateTimeField(
