@@ -10,6 +10,8 @@ install:
     - cd client && npm install && cd ..
     - cd realtime && npm install && cd ..
     - gem install mdl
+services:
+    - mysql
 script:
     - make all
 after_success:
