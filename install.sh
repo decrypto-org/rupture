@@ -110,9 +110,9 @@ for var in "$@"; do
         python manage.py migrate)
         (cd sniffer
         activate_virtualenv)
-        echo '##########################################################################'
-        echo "# Don't forget to create your population scripts or update existing ones #"
-        echo '##########################################################################'
+        echo '###########################################################################'
+        echo "# Don't forget to create your configuration files or update existing ones #"
+        echo '###########################################################################'
         ;;
   esac
 done
