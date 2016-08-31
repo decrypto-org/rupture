@@ -4,10 +4,7 @@ from binascii import hexlify
 
 from breach.tests.base import RuptureTestCase
 from breach.strategy import Strategy
-from breach.models import SampleSet
-from breach.models import Round
-from breach.models import Target
-from breach.models import Victim
+from breach.models import Target, Victim, Round, SampleSet
 
 
 class StrategyTestCase(RuptureTestCase):

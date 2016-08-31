@@ -1,7 +1,7 @@
 from django.http import Http404, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from breach.strategy import Strategy
-from breach.models import Victim
+from breach.models.victim import Victim
 
 import json
 
