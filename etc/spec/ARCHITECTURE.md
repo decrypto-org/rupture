@@ -412,3 +412,25 @@ If *success* is *True*, this indicates that the series of indicated requests
 were performed by the victim correctly. Otherwise, the victim failed to perform
 the required requests due to a network error or a timeout and the work has to
 be redone.
+
+The backend also exposes a RESTful API via HTTP to which the the Web UI
+makes requests for work. This API is explained below.
+
+## webUI <-> backend(HTTP)
+
+The backend implements various API endpoints for communication with the
+Web UI.
+
+### `/victim`
+
+HTTP POST endpoint.
+
+Creates a new victim.
+
+Arguments:
+
+- IP: IP address
+- target: string
+
+Returns HTTP `200` with a JSON that has a field *victimid*, which contains the
+ID of the new victim.
