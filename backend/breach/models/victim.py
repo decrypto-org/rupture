@@ -11,6 +11,7 @@ class Victim(models.Model):
     target = models.ForeignKey('breach.Target')
 
     snifferendpoint = models.CharField(
+        default='http://127.0.0.1:9000',
         max_length=255,
         help_text=("The HTTP endpoint of the adversarial sniffer running on "
                    "the victim's network which is listening for our HTTP "
