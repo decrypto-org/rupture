@@ -15,6 +15,7 @@ Rupture is developed by:
 * Dimitris Karakostas <dimit.karakostas@gmail.com>
 * Dionysis Zindros <dionyziz@gmail.com>
 * Eva Sarafianou <eva.sarafianou@gmail.com>
+* Dimitris Grigoriou <dimitris.riou@gmail.com>
 
 This research is being conducted at the [Cryptography & Security
 lab](http://crypto.di.uoa.gr/) at the University of Athens and the National
