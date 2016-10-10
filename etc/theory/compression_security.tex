@@ -1,32 +1,27 @@
-\documentclass{sig-alternate-05-2015}
+\documentclass[conference, letterpaper, 10pt]{IEEEtran}
 
 \usepackage[utf8]{inputenc}
 
 \title{On the security of encryption and compression composition under reflection attacks}
 
-\numberofauthors{1}
-\author{
-    Anonymized submission
-}
+%\author{
+%    Anonymized submission
+%}
 
-% \numberofauthors{3}
-%
-% \author{
-% \alignauthor
-% Dimitris Karakostas\\
-%        \affaddr{University of Athens}\\
-%        \email{dimit.karakostas@gmail.com}
-% \alignauthor
-% Aggelos Kiayias\\
-%        \affaddr{University of Athens}\\
-%        \email{aggelos@di.uoa.gr}
-% \alignauthor
-% Dionysis Zindros\\
-%        \affaddr{University of Athens}\\
-%        \email{dionyziz@di.uoa.gr}
-% }
-% \date{May 2016}
-%
+ \author{
+     \IEEEauthorblockN{Dimitris Karakostas}
+     \IEEEauthorblockA{University of Athens \\
+     dimit.karakostas@gmail.com}
+     \and
+     \IEEEauthorblockN{Aggelos Kiayias}
+     \IEEEauthorblockA{University of Edinburgh\\
+     akiayias@inf.ed.ac.uk}
+     \and
+     \IEEEauthorblockA{Dionysis Zindros}
+     \IEEEauthorblockA{University of Athens \\
+     dionyziz@di.uoa.gr}
+ }
+
 \usepackage{url}
 \usepackage{amsmath}
 \usepackage{graphicx}
@@ -36,6 +31,8 @@
 % \usepackage{amsthm}
 \usepackage{amssymb}
 \usepackage[colorlinks=true,linkcolor=blue,citecolor=green]{hyperref}
+
+\usepackage{cite}
 
 \DeclarePairedDelimiter{\ceil}{\lceil}{\rceil}
 \let\oldemptyset\emptyset
@@ -603,7 +600,7 @@ Then:
 
 \end{lemma}
 
-\begin{proof}
+\begin{IEEEproof}
 
 Let $g$ be the boolean function $Q$ on the plaintext. Define the adversary
 $\mathcal{A}$ as follows:
@@ -769,7 +766,7 @@ Therefore,
 
 Which is non-negligible.
 
-\end{proof}
+\end{IEEEproof}
 
 \subsection{Amplified attack}
 
@@ -824,7 +821,7 @@ against a non-negligible subset of elements, the
 
 \end{lemma}
 
-\begin{proof}
+\begin{IEEEproof}
 
 From the fact that $Q$ is compression-detectable and from the Compression Attack Theorem, we have that:
 
@@ -942,7 +939,7 @@ distribution, we have:
 \end{align*}
 
 Where $C$ is a negligible function.
-\end{proof}
+\end{IEEEproof}
 
 \section{Defense}\label{sec:defense}
 
