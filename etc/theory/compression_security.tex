@@ -456,86 +456,6 @@ Where $:$ denotes the concatenation of a symbol with a string.
 
 We call $f$ functions that exhibit such behavior \textit{concatenative}.
 
-\subsection{The compression function assumption}\label{subsec:comfuncassumption}
-
-In BREACH, $Com$ is a variant of LZ77 \cite{c9}. In this compression algorithm,
-repetitions of strings are well-compressed. In our ideal model, we examine a
-simplified version of LZ77 which we describe in this paragraph.
-
-Our version of LZ77 is not composed with a symbol-compressing algorithm such as
-Huffman coding. Therefore, a way is needed to encode literal symbols and
-compression symbols. The LZ77 algorithm treats the uncompressed text as a
-series of bits. Let the plaintext be $p$ and its length be $n = |p|$. The LZ77
-compression function needs to have an alphabet of 2 symbols for representing
-literals (the bits $0$ and $1$ of the plaintext) as well as an alphabet of an
-additional $n$ symbols for representing compression distances from $1$ to $n$
-and lengths from $1$ to $n$ (the same symbol is used to represent a distance
-and a length). This makes an alphabet of a total of $n + 2$ symbols which are
-represented by bit sequences of exactly $\ceil{lg(n + 2)}$ bits each.
-
-We first describe the decompression algorithm. At the beginning of the
-compressed string, the number of characters in the uncompressed plaintext is
-encoded in ASCII followed by the "$\$$" ASCII character as a separator. This
-allows the decoder to compute how many bits are used to represent each symbol
-in the compressed text.
-
-Ordering these bit strings lexicographically, the first two bit strings will
-correspond to the literal "$0$" and "$1$" bits of the plaintext. The next bit
-strings will correspond to \textit{distance} bit sequences of values $1, 2,
-\ldots, n$ respectively.
-
-After the "$\$$" separator, an encoding of the plaintext is given. The encoding
-can be decompressed by linearly reading it one character at a time. If a bit
-sequence corresponding to a literal is given, this is decoded as the respective
-literal bit of the plaintext. If a distance bit sequence of value $a$ is given,
-then another distance bit sequence of value $b$ sequence follows.  Then $a$
-must be less than or equal to the plaintext characters decoded so far, while
-$b$ is arbitrary. This pair of values is decoded as follows. The decompressed
-text beginning at a distance of $a$ bits behind the current position decoding
-position and of length $b$ bits is taken into account. That text is then the
-new decompressed plaintext which is appended to the existing decompressed
-plaintext one bit at a time. This procedure can cause self-overlapping texts.
-In the end, the decoded text must be $n$ bits long, otherwise the compression
-is invalid.
-
-\begin{lstlisting}[texcl,mathescape]
-def $\text{LZ77}^{-1}(c)$:
-    parts = c.split("$\$$")
-    plaintextLength = parse_int(parts[0])
-    bitsPerSymbol = $\ceil{lg(\text{plaintextLength}) + 2}$
-    enc = strToBinArray("".join(parts[1:]))
-
-    plaintext = ''
-    for i in range(0, len(enc), bits):
-        symbol = binaryToInt(enc[i:bits])
-        if symbol = 0:
-            plaintext += '0'
-        else if symbol = 1:
-            plaintext += '1'
-        else:
-            d = symbol - 1
-            i += bits
-            length = int(enc[i:bits])
-            if d > len(plaintext):
-                return $\bot$
-            while length:
-                plaintext += plaintext[-d]
-                length -= 1
-    if len(plaintext) != plaintextLength:
-        return $\bot$
-    else:
-        return plaintext
-\end{lstlisting}
-
-Where negative and range array indexing and the $range$ function is as in
-Python.
-
-Our LZ77 compressor can then be described simply: It chooses the shortest in
-bits compressed text, which, when decoded using the above algorithm yields the
-desired plaintext.
-
-% TODO: Prove that it is a compression function for some $\mathcal{M}$
-
 \subsection{The full-text predicate assumption}\label{subsec:fulltextassumption}
 
 The BREACH attack is a specific instance of reflection-based attacks in which
@@ -1344,6 +1264,88 @@ can then be measured as the mean length over the number of requests in the set.
 This method can be combined with the methods described in \ref{subsec:parallel}
 in order to utilize the parallelization and reduce the time cost of the
 necessary multiple requests.
+
+\appendices
+
+\section{The compression function assumption}\label{subsec:comfuncassumption}
+
+In BREACH, $Com$ is a variant of LZ77 \cite{c9}. In this compression algorithm,
+repetitions of strings are well-compressed. In our ideal model, we examine a
+simplified version of LZ77 which we describe in this paragraph.
+
+Our version of LZ77 is not composed with a symbol-compressing algorithm such as
+Huffman coding. Therefore, a way is needed to encode literal symbols and
+compression symbols. The LZ77 algorithm treats the uncompressed text as a
+series of bits. Let the plaintext be $p$ and its length be $n = |p|$. The LZ77
+compression function needs to have an alphabet of 2 symbols for representing
+literals (the bits $0$ and $1$ of the plaintext) as well as an alphabet of an
+additional $n$ symbols for representing compression distances from $1$ to $n$
+and lengths from $1$ to $n$ (the same symbol is used to represent a distance
+and a length). This makes an alphabet of a total of $n + 2$ symbols which are
+represented by bit sequences of exactly $\ceil{lg(n + 2)}$ bits each.
+
+We first describe the decompression algorithm. At the beginning of the
+compressed string, the number of characters in the uncompressed plaintext is
+encoded in ASCII followed by the "$\$$" ASCII character as a separator. This
+allows the decoder to compute how many bits are used to represent each symbol
+in the compressed text.
+
+Ordering these bit strings lexicographically, the first two bit strings will
+correspond to the literal "$0$" and "$1$" bits of the plaintext. The next bit
+strings will correspond to \textit{distance} bit sequences of values $1, 2,
+\ldots, n$ respectively.
+
+After the "$\$$" separator, an encoding of the plaintext is given. The encoding
+can be decompressed by linearly reading it one character at a time. If a bit
+sequence corresponding to a literal is given, this is decoded as the respective
+literal bit of the plaintext. If a distance bit sequence of value $a$ is given,
+then another distance bit sequence of value $b$ sequence follows.  Then $a$
+must be less than or equal to the plaintext characters decoded so far, while
+$b$ is arbitrary. This pair of values is decoded as follows. The decompressed
+text beginning at a distance of $a$ bits behind the current position decoding
+position and of length $b$ bits is taken into account. That text is then the
+new decompressed plaintext which is appended to the existing decompressed
+plaintext one bit at a time. This procedure can cause self-overlapping texts.
+In the end, the decoded text must be $n$ bits long, otherwise the compression
+is invalid.
+
+\begin{lstlisting}[texcl,mathescape]
+def $\text{LZ77}^{-1}(c)$:
+    parts = c.split("$\$$")
+    plaintextLength = parse_int(parts[0])
+    bitsPerSymbol = $\ceil{lg(\text{plaintextLength}) + 2}$
+    enc = strToBinArray("".join(parts[1:]))
+
+    plaintext = ''
+    for i in range(0, len(enc), bits):
+        symbol = binaryToInt(enc[i:bits])
+        if symbol = 0:
+            plaintext += '0'
+        else if symbol = 1:
+            plaintext += '1'
+        else:
+            d = symbol - 1
+            i += bits
+            length = int(enc[i:bits])
+            if d > len(plaintext):
+                return $\bot$
+            while length:
+                plaintext += plaintext[-d]
+                length -= 1
+    if len(plaintext) != plaintextLength:
+        return $\bot$
+    else:
+        return plaintext
+\end{lstlisting}
+
+Where negative and range array indexing and the $range$ function is as in
+Python.
+
+Our LZ77 compressor can then be described simply: It chooses the shortest in
+bits compressed text, which, when decoded using the above algorithm yields the
+desired plaintext.
+
+% TODO: Prove that it is a compression function for some $\mathcal{M}$
 
 \begin{thebibliography}{13}
 
