@@ -49,17 +49,19 @@
 
 \begin{abstract}
 When compression is composed with encryption, unexpected vulnerabilities can
-arise. Such vulnerabilities have been explored in practical
-attacks against TLS such as CRIME, TIME and BREACH.
-Our contributions are two-fold.
-First, we introduce an abstract theoretical model for such attacks, the
-\textit{adaptive reflection security} model. We discuss what properties common
-compression function have, such as the \textit{compression-detectability} of
-predicates, and we show that all length-preserving encryption schemes are
-vulnerable when composed with such functions.
-Second, we provide a modular
-scalable open-source production-grade generic attack framework where these
-attacks are implemented in a robust manner.
+arise. Such vulnerabilities have been explored in practical attacks against TLS
+such as CRIME, TIME, and BREACH. We introduce an abstract theoretical model for
+such attacks, the \textit{adaptive reflection security} model. We discuss what
+properties common compression functions have, such as the
+\textit{compression-detectability} of predicates, and we show that all
+length-preserving encryption schemes are vulnerable when composed with such
+functions. For the case of the BREACH attack, we show that it can be described
+as an instance of our theoretical model. Motivated by the lack of
+production-grade testing tools, we provide a modular scalable open-source
+generic attack framework that implements these attacks in a robust manner.
+Furthermore, we explore the performance of defenses described in literature and
+propose a novel protocol that effectively eliminates the threat these attacks
+pose.
 \end{abstract}
 
 \section{Introduction}\label{sec:prev}
