@@ -80,8 +80,8 @@ def decide_next_world_state(samplesets):
     over the same candidate alphabet.
 
     Returns a pair with the decision. The first element of the pair is the new
-    state of the world; the second element of the pair is the confidence with
-    which the analyzer is suggesting the state transition.
+    state of every optimal candidate; the second element of the pair is the
+    confidence with which the analyzer is suggesting the state transition.
     '''
     # Ensure we have enough sample sets to compare.
     assert(len(samplesets) > 1)
@@ -113,22 +113,15 @@ def decide_next_world_state(samplesets):
     # Ensure we have a decision to make
     assert(len(candidate_lengths) > 1)
 
-    min_vector, confidence = decide_optimal_candidate(candidate_lengths, samples_per_sampleset=amount)
+    optimal_candidates, confidence = decide_optimal_candidates(candidate_lengths, samples_per_sampleset=amount)
 
-    # use minimum group's alphabet vector
-    decision_knownalphabet = min_vector
-    # known secret remains the same as in all current samplesets
-    decision_knownsecret = knownsecret
-
-    if len(decision_knownalphabet) == 1:
-        # decision vector was one character, so we can extend the known secret
-        decision_knownsecret += decision_knownalphabet
-        decision_knownalphabet = target.alphabet
-
-    state = {
-        'knownsecret': decision_knownsecret,
-        'knownalphabet': decision_knownalphabet
-    }
+    state = []
+    # All optimal candidates are returned in order to create new rounds.
+    for i in optimal_candidates:
+        state.append({
+            'knownsecret': knownsecret + i['candidate'],
+            'knownalphabet': target.alphabet
+        })
 
     return {
         'state': state,
