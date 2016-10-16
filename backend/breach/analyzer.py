@@ -9,13 +9,14 @@ class AnalyzerError(Exception):
     pass
 
 
-def decide_optimal_candidate(candidate_lengths, samples_per_sampleset):
+def decide_optimal_candidates(candidate_lengths, samples_per_sampleset):
     '''Take a dictionary of candidate alphabets and their associated
-    accumulative lengths and decide which candidate alphabet is the best
-    (minimum) with what confidence.
+    accumulative lengths and decide which candidate alphabets are the best
+    (below average value) with what confidence(worst optimal candidate's
+    distance from average value).
 
     Returns a pair with the decision. The first element of the pair is which
-    candidate alphabet is best; the second element is the confidence level for
+    candidate alphabets are best; the second element is the confidence level for
     the decision.
     '''
 
@@ -36,27 +37,32 @@ def decide_optimal_candidate(candidate_lengths, samples_per_sampleset):
         key=operator.itemgetter('length')
     )
 
+    optimal_candidates = []
+    average_threshold = sum(item['length'] for item in sorted_candidate_lengths) / len(sorted_candidate_lengths)
+
+    # Candidates with accumulated length below average value have a possible
+    # secret match, so they are returned.
     logger.debug('\n' + 75 * '#')
     logger.debug('Candidate scoreboard:')
     for cand in sorted_candidate_lengths:
         logger.debug('\t{}: {}'.format(cand['candidate_alphabet'], cand['length']))
-
-    # Extract candidate with minimum length and the next best competitor
-    # candidate. In case of binary search, these will be the only two
-    # candidates.
-    min_candidate = sorted_candidate_lengths[0]
-    next_best_candidate = sorted_candidate_lengths[1]
+        if(cand['length'] < average_threshold):
+            optimal_candidates.append({
+                'candidate': cand['candidate_alphabet'],
+                'length': cand['length']
+            })
 
     samples_per_candidate = samplesets_per_candidate * samples_per_sampleset
 
-    # Extract a confidence value, in bytes, for our decision based on the second-best candidate.
-    confidence = float(next_best_candidate['length'] - min_candidate['length']) / samples_per_candidate
+    # Extract a confidence value, in bytes, for our decision based on the worst optimal candidate's
+    # distance from average value.
+    confidence = float(average_threshold - optimal_candidates[-1]['length']) / samples_per_candidate
 
     # Captured bytes are represented as hex string,
     # so we need to convert confidence metric to bytes
     confidence /= 2.0
 
-    return min_candidate['candidate_alphabet'], confidence
+    return optimal_candidates, confidence
 
 
 def decide_next_world_state(samplesets):
