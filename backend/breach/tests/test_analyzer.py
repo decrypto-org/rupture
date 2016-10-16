@@ -9,5 +9,5 @@ class AnalyzerTestCase(RuptureTestCase):
         state = decision['state']
         confidence = decision['confidence']
 
-        self.assertEqual(state['knownsecret'], 'testsecret1')
-        self.assertEqual(state['knownalphabet'], '0123456789')
+        self.assertEqual(state[0]['knownsecret'], 'testsecret1')
+        self.assertEqual(state[0]['knownalphabet'], '0123456789')
