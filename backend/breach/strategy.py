@@ -391,6 +391,9 @@ class Strategy(object):
                 'batch': self._round.batch
             })
 
+    def _check_branch_length(self):
+        return self._round.knownsecret == self._victim.target.secretlength - 1
+
     def _attack_is_completed(self):
         return len(self._round.knownsecret) == self._victim.target.secretlength
 
@@ -501,15 +504,20 @@ class Strategy(object):
         self._analyze_current_round()
 
         if self._round_is_completed():
-            # Advance to the next round.
-            try:
-                self._create_next_round()
-            except MaxReflectionLengthError:
-                # If a new round cannot be created, end the attack
-                return True
+            # Mark this round as completed and advance to the next rounds.
+            self._round.completed = timezone.now()
+            self._round.save()
 
-            if self._attack_is_completed():
-                return True
+            # Check if this branch is equal to the secret length.
+            if not self._check_branch_length():
+                try:
+                    self._create_new_rounds()
+                    return False
+                except MaxReflectionLengthError:
+                    # If a new round cannot be created, end the attack
+                    return True
+            # If current branch is completed, get work for a new branch which is already created.
+            return False
 
         # Not enough confidence, we need to create more samplesets to be
         # collected for this round.
