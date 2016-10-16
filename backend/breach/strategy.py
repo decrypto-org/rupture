@@ -52,8 +52,11 @@ class Strategy(object):
 
         self._round = Round.objects.filter(
             victim=self._victim,
-            index=current_round_index
+            completed=None
         )[0]
+        if not self._round.started:
+            self._round.started = timezone.now()
+            self._round.save()
         self._analyzed = False
 
     def _build_candidates_divide_conquer(self, state):
@@ -513,4 +516,6 @@ class Strategy(object):
 
     def _begin_attack(self):
         self._create_round(self._get_first_round_state())
+        self._round.started = timezone.now()
+        self._round.save()
         self._create_round_samplesets()
