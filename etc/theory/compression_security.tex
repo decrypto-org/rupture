@@ -137,6 +137,7 @@ lengths of different request packets may reveal properties of the private data,
 at which point the privacy of the communication between the user and the website is
 broken.
 
+A formal description of the above example is defined in Appendix \ref{sec:breachmodel}.
 Our contributions are two-fold. Firstly, we introduce a novel model for discussing
 compression and encryption composition attacks, the \textit{adaptive reflection
 game} with an accompanying security definition. This model is quite general in
@@ -447,103 +448,6 @@ computable:
 The compression-detectability property exists in all common compression
 functions as long as $s$ and $r$ compress in the same context. We will
 illustrate such examples later in this work.
-
-\section{The BREACH model}\label{sec:breachmodel}
-We now turn our attention to the BREACH attack specifically, which utilizes
-the properties explored above, and we describe that BREACH is a specific
-instance of the general attack.
-
-In the BREACH model, we deal with a specific function $f$, property $Q$,
-compression function $Com$, length-leaking $Enc$, and secret distribution
-$\mathcal{M}$.
-
-In the next paragraphs, we describe a simplified model of the attack that
-lends itself to the formal model, while abstracting away the complex
-practical details of the attack pertaining to the networking and particularities
-of the implementation that are of little significance to the cryptographic
-formalisms presented here.
-
-\subsection{The rendering context assumption}\label{subsec:rendering}
-
-In the modern web, function $f$ represents a specific attack target, which
-constitutes the renderer of a web page, given a specific secret, reflection,
-and noise. Typically, $f$ will concatenate instances of the secret, the
-reflection, and the noise, between some context strings which constitute the
-static portions of the site.
-
-In the case of BREACH, it is typically assumed that $f$ outputs a concatenation
-of various instances of $s$, $r$, and $v$ with arbitrary repetitions, in
-addition to concatenating with some constant context whose position is
-independent of the values of $s, r, v$. The number of repetitions of $s, r, v$
-are also independent of the values of $s, r, v$.
-
-Formally, assume that the symbols $\{\beta_1, \beta_2, \beta_3\}$ do not appear
-in the alphabet of the secret.
-
-Our assumptions for $f$ can be stated as follows. Let
-
-\begin{equation*}
-\begin{split}
-\exists \mu \in \{0, 1, \beta_1, \beta_2, \beta_3\}^*\\
-\exists u_1, v_1, u_2, v_2, u_3, v_3 \in \{0, 1, \beta_1, \beta_2, \beta_3\}^*\\
-\mu = u_1 \beta_1 v_1 \land\\
-\mu = u_2 \beta_2 v_2 \land\\
-\mu = u_3 \beta_3 v_3 \land\\
-\forall s, r, v \in \{0, 1\}^*\\
-f(s, r, v) = Rep(Rep(Rep(\mu, \beta_1, s), \beta_2, r), \beta_3, v)
-\end{split}
-\end{equation*}
-
-Where $Rep$ is the string replacement function:
-
-\begin{align*}
-Rep(\epsilon, \alpha, \beta) &\defeq \epsilon\\
-Rep(\alpha:xs, \alpha, \beta) &\defeq \beta:Rep(xs, \alpha, \beta)\\
-Rep(x:xs, \alpha, \beta) &\defeq x:Rep(xs, \alpha, \beta)
-\end{align*}
-
-Where $:$ denotes the concatenation of a symbol with a string.
-
-We call $f$ functions that exhibit such behavior \textit{concatenative}.
-
-\subsection{The full-text predicate assumption}\label{subsec:fulltextassumption}
-
-The BREACH attack is a specific instance of reflection-based attacks in which
-the $Q$ property pertains to a prefix of the secret. It asks "Does the secret
-begin with such text?"
-
-We require $X$ to be of compressible length,
-i.e. the following equation must be satisfied:
-
-\begin{equation*}
-    |X| > \ceil{lg(f(X, X, \epsilon) + 2)}
-\end{equation*}
-
-In practical terms, this requires the secret that needs to be stolen to be at
-least 3 bytes so that it is better compressed rather than represented as a
-literal.
-
-\subsection{Prefixes are
-compression-detectable}\label{subsec:breachprefix}
-
-Let $startswith(v, s)$ be the $k$-length prefix checking predicate on a
-$\lambda$-bit secret $s$:
-
-\begin{equation*}
-    startswith(v, s) \defeq \exists w: s = v w
-\end{equation*}
-
-Let $f$ be a concatenative rendering function and let $Com = LZ77$. Then:
-
-\begin{align*}
-\Pr[startswith(v, \cdot) \textrm{ compression-detectable under } f, Com] =\\ \text{non-negl}(\lambda - k)
-\end{align*}
-
-Where the probability randomness is taken uniformly over all $k$-bit prefixes $v \in \{0, 1\}^k$.
-
-Due to the complexity of the $LZ77$ algorithm, we do not provide a proof of this result. However, the
-result has been experimentally verified against various end-points by our open-source Rupture implementation.
-This result is also supported by the feasibility of BREACH and CRIME.
 
 \section{Compression attacks}\label{sec:comattack}
 
@@ -1396,6 +1300,103 @@ bits compressed text, which, when decoded using the above algorithm yields the
 desired plaintext.
 
 % TODO: Prove that it is a compression function for some $\mathcal{M}$
+
+\section{The BREACH model}\label{sec:breachmodel}
+We now turn our attention to the BREACH attack specifically, which utilizes
+the properties explored above, and we describe that BREACH is a specific
+instance of the general attack.
+
+In the BREACH model, we deal with a specific function $f$, property $Q$,
+compression function $Com$, length-leaking $Enc$, and secret distribution
+$\mathcal{M}$.
+
+In the next paragraphs, we describe a simplified model of the attack that
+lends itself to the formal model, while abstracting away the complex
+practical details of the attack pertaining to the networking and particularities
+of the implementation that are of little significance to the cryptographic
+formalisms presented here.
+
+\subsection{The rendering context assumption}\label{subsec:rendering}
+
+In the modern web, function $f$ represents a specific attack target, which
+constitutes the renderer of a web page, given a specific secret, reflection,
+and noise. Typically, $f$ will concatenate instances of the secret, the
+reflection, and the noise, between some context strings which constitute the
+static portions of the site.
+
+In the case of BREACH, it is typically assumed that $f$ outputs a concatenation
+of various instances of $s$, $r$, and $v$ with arbitrary repetitions, in
+addition to concatenating with some constant context whose position is
+independent of the values of $s, r, v$. The number of repetitions of $s, r, v$
+are also independent of the values of $s, r, v$.
+
+Formally, assume that the symbols $\{\beta_1, \beta_2, \beta_3\}$ do not appear
+in the alphabet of the secret.
+
+Our assumptions for $f$ can be stated as follows. Let
+
+\begin{equation*}
+\begin{split}
+\exists \mu \in \{0, 1, \beta_1, \beta_2, \beta_3\}^*\\
+\exists u_1, v_1, u_2, v_2, u_3, v_3 \in \{0, 1, \beta_1, \beta_2, \beta_3\}^*\\
+\mu = u_1 \beta_1 v_1 \land\\
+\mu = u_2 \beta_2 v_2 \land\\
+\mu = u_3 \beta_3 v_3 \land\\
+\forall s, r, v \in \{0, 1\}^*\\
+f(s, r, v) = Rep(Rep(Rep(\mu, \beta_1, s), \beta_2, r), \beta_3, v)
+\end{split}
+\end{equation*}
+
+Where $Rep$ is the string replacement function:
+
+\begin{align*}
+Rep(\epsilon, \alpha, \beta) &\defeq \epsilon\\
+Rep(\alpha:xs, \alpha, \beta) &\defeq \beta:Rep(xs, \alpha, \beta)\\
+Rep(x:xs, \alpha, \beta) &\defeq x:Rep(xs, \alpha, \beta)
+\end{align*}
+
+Where $:$ denotes the concatenation of a symbol with a string.
+
+We call $f$ functions that exhibit such behavior \textit{concatenative}.
+
+\subsection{The full-text predicate assumption}\label{subsec:fulltextassumption}
+
+The BREACH attack is a specific instance of reflection-based attacks in which
+the $Q$ property pertains to a prefix of the secret. It asks "Does the secret
+begin with such text?"
+
+We require $X$ to be of compressible length,
+i.e. the following equation must be satisfied:
+
+\begin{equation*}
+    |X| > \ceil{lg(f(X, X, \epsilon) + 2)}
+\end{equation*}
+
+In practical terms, this requires the secret that needs to be stolen to be at
+least 3 bytes so that it is better compressed rather than represented as a
+literal.
+
+\subsection{Prefixes are
+compression-detectable}\label{subsec:breachprefix}
+
+Let $startswith(v, s)$ be the $k$-length prefix checking predicate on a
+$\lambda$-bit secret $s$:
+
+\begin{equation*}
+    startswith(v, s) \defeq \exists w: s = v w
+\end{equation*}
+
+Let $f$ be a concatenative rendering function and let $Com = LZ77$. Then:
+
+\begin{align*}
+\Pr[startswith(v, \cdot) \textrm{ compression-detectable under } f, Com] =\\ \text{non-negl}(\lambda - k)
+\end{align*}
+
+Where the probability randomness is taken uniformly over all $k$-bit prefixes $v \in \{0, 1\}^k$.
+
+Due to the complexity of the $LZ77$ algorithm, we do not provide a proof of this result. However, the
+result has been experimentally verified against various end-points by our open-source Rupture implementation.
+This result is also supported by the feasibility of BREACH and CRIME.
 
 \begin{thebibliography}{13}
 
