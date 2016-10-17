@@ -138,6 +138,89 @@ at which point the privacy of the communication between the user and the website
 broken.
 
 A formal description of the above example is defined in Appendix \ref{sec:breachmodel}.
+
+\subsection{Terms}
+The previous example allows us to explore multiple terms that are used in the
+rest of our work. These terms include the \textit{rendering function} $f$,
+\textit{rendered message}, \textit{secret} $s$, \textit{noise} $v$,
+\textit{reflection} $r$ and the distributions $\mathcal{M}$ and $\mathcal{V}$.
+
+In order to elaborate on the previous example, we define a specific instance of
+it. In this case, the website is found in the URL \textit{mail.example.com} and
+the web page that the adversary exploits is
+\textit{mail.example.com/search?query=attack}. This website provides a HTTP GET
+parameter called \textit{query} and the adversary uses the reflection string
+\textit{attack}. The HTML response is described below:
+
+\begin{lstlisting}
+<div>
+    <p>You searched for: attack</p>
+    <p>No results found.</p>
+</div>
+<div>
+    Your inbox:
+    <ul>
+    <li>[Bank] Routing number: 123</li>
+    </ul>
+</div>
+<div>
+    <p>A random token: L*fKLs#a4fd@</p>
+</div>
+\end{lstlisting}
+
+The server's HTML generator could be abstracted as a \textit{rendering
+function} $f$. This function's input is the user's request, resources such as the
+HTML blueprint for the web page, and external functions such as web framework
+middlewares.
+
+The output of the rendering function is the \textit{rendered message} $m$. This
+is the generated HTML response code, that contains response data that is
+rendered by the user's browser and contains different string elements. The HTML
+response elements can be distinguished based on the role of each one in a
+compression-based attack. An element can be a \textit{secret}, \textit{noise},
+\textit{static}, or a \textit{reflection}. An element's alphabet consists of all
+possible values each character in the element may take.
+
+A \textit{secret} $s$ is any part of the response that is user-specific and a
+potential security risk in case of compromise. Examples of secrets in an HTML
+response include private messages, email contents, financial data, or web
+security elements like CSRF tokens \cite{c16}. The secret's alphabet is generally printable
+text characters. In our example, the strings "Bank", which refers to a email
+topic, and "Routing number: 123", which represents an email content, are
+considered secrets.
+
+The \textit{noise} $v$ on the other side is a value that changes unpredictably per
+request regardless of the requested content. Examples of noise include
+timestamps, user-generated content, masked information. The noise's distribution
+is in general a random distribution of a subset of printable characters. In our
+example, the string "L*fKLs!a4fd@" is considered noise.
+
+\textit{Static} content is any part of the response that remains unchanged
+across user requests like HTML <div> tags and CSS code. Static content is fully
+predictable per request and thus irrelevant in the attack outcome since the
+attacker can bypass it. Strings like "div", "ul", "Your inbox:" are considered
+static in our example.
+
+A \textit{reflection} $r$ is a component crafted by the attacker and can be
+adaptively transformed as the attack progresses. The reflection is included in
+the response and compressed in the same context with the secret that is
+targeted. In our example, the HTTP GET value "attack" of parameter "query" is used as
+a reflection.
+
+Secrets and reflections are chosen from the distribution $\mathcal{M}$. For
+example, consider the secret "123" in our example. Two cases for the
+distribution $\mathcal{M}$ would be all permutations of 4-length strings
+consisting of printable characters or only english alphabet letters. The
+reflection is chosen from the distribution $\mathcal{M}$, so the definition of
+$\mathcal{M}$ reflects the adversary's power, i.e. in the first case above the
+adversary is less powerful than the second.
+
+Finally, a noise element is chosen from the distribution $\mathcal{V}$. This
+distribution in our example describes the uniformly random choice of strings of
+certain alphabet. In our example this alphabet is the printable ASCII characters
+and a noise element is chosen randomly from $\mathcal{V}$ per request.
+
+\subsection{Contributions}
 Our contributions are two-fold. Firstly, we introduce a novel model for discussing
 compression and encryption composition attacks, the \textit{adaptive reflection
 game} with an accompanying security definition. This model is quite general in
@@ -1439,6 +1522,9 @@ compression", Information Theory, IEEE Transactions, vol. 23, 1977.
 
 \bibitem{c15} T. Dierks, E. Rescorla, The Transport Layer Security (TLS)
 Protocol Version 1.2, August 2008.
+
+\bibitem{c16} [online] URL:
+\url{https://www.owasp.org/index.php/Cross-Site_Request_Forgery_(CSRF)} [cited May 2016]
 
 \end{thebibliography}
 
