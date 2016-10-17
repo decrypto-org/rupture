@@ -89,6 +89,54 @@ Furthermore, generalized rendering and compression functions help better
 capture and model specific attacks such as BREACH in the context of
 realistic instances, like the rendering of real web pages.
 
+\subsection{A motivational example}\label{subsec:example}
+Our work is highly motivated by the threat compression side-channel attacks pose
+against real-world systems. The severity of these attacks can be highlighted by
+the example that this section describes.
+
+Consider the communication between a user that browses the Internet and a server
+that hosts a website. This website might be a social network, e-banking service,
+mail provider etc. When the server receives a request for a web page on the
+website it collects all needed data, generates the HTML code that will be
+displayed by the user's browser and sends a network response containing this
+code along with other resources such as images, libraries etc. All response data
+is encrypted using TLS which ensures privacy and integrity between the two
+communicating parties.
+
+Next we assume an adversary that aims at breaking this communication's security.
+This adversary tries to decrypt multiple bits of encrypted information between
+the user and the website and reveal information about the private data
+exchanged. However, the adversary should fulfill the requirements described
+below.
+
+Firstly, he should be able to issue any number of malicious requests using the
+user's cookies. This can be achieved by forcing the user's browser to run a
+piece of code, such as a Javascript script hosted on an adversary-controlled
+website, that requests some web page on said website.
+
+Secondly, the requests should include an adversary-chosen string that is also
+included in the response data. In order to achieve that, the website must offer
+some web page that provides a HTTP GET parameter whose value is included in the HTML
+response.
+
+Finally, the adversary is able to handle all user's network traffic. That way he
+is able to collect and analyze the network packets of the encrypted
+communication with the server. He is also able inject the malicious script in
+plain HTTP responses the user receives from third websites even when the user is
+careful enough to avoid adversary-controlled websites.
+
+The described adversary can issue a compression side-channel attack against the
+user and the website. The malicious requests contain specially crafted
+reflection strings that are included in the response and compressed with the
+private data. The structure of the reflection depends heavily on properties of
+the private data and will be further explored in the following sections.
+
+As the attack progresses the adversary collects network data for multiple
+requests and reflections. Although this data is encrypted, analysis on the
+lengths of different request packets may reveal properties of the private data,
+at which point the privacy of the communication between the user and the website is
+broken.
+
 Our contributions are two-fold. Firstly, we introduce a novel model for discussing
 compression and encryption composition attacks, the \textit{adaptive reflection
 game} with an accompanying security definition. This model is quite general in
