@@ -475,3 +475,13 @@ Arguments:
 
 Returns HTTP 200.
 
+### `/victim/not_started`
+
+HTTP GET endpoint.
+
+On a GET request, it asks for all possible victims to attack.
+
+No arguments.
+
+Returns HTTP 200 with a JSON with a list of possible victims' IPs
+and machine names.
