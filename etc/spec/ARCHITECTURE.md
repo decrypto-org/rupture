@@ -455,3 +455,14 @@ Arguments:
 - victim_id: The id of the victim
 
 Returns HTTP `200` with a JSON with the details for the specific victim.
+
+On a PUT request, it passes the desired state of the attack ("paused" or "running")
+and the victim_id and asks the backend to update the attack state of the victim
+with the specific victim_id, i.e pause or resume running the attack.
+
+Arguments:
+
+- victim_id: The id of the victim
+- state: string (either "running" or "paused")
+
+Returns HTTP 200.
