@@ -423,9 +423,9 @@ Web UI.
 
 ### `/victim`
 
-HTTP POST endpoint.
+HTTP POST and GET endpoint.
 
-Creates a new victim.
+On a POST request, it creates a new victim.
 
 Arguments:
 
@@ -434,3 +434,14 @@ Arguments:
 
 Returns HTTP `200` with a JSON that has a field *victimid*, which contains the
 ID of the new victim.
+
+On a GET request, it asks for  all the stored victims that the attack is still
+running on, has been paused or has been completed.
+
+No arguments
+
+Returns HTTP 200 with a JSON that contains a list of all the stored
+victims.
+
+
+
