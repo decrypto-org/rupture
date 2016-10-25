@@ -466,3 +466,12 @@ Arguments:
 - state: string (either "running" or "paused")
 
 Returns HTTP 200.
+
+On a DELETE request, the backend deletes the victim with the specific victim_id
+
+Arguments:
+
+- victim_id: The id of the victim
+
+Returns HTTP 200.
+
