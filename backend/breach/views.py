@@ -7,6 +7,7 @@ from django.core import serializers
 from .forms import TargetForm, VictimForm
 import json
 from django.utils import timezone
+import time
 
 
 def get_work(request, victim_id=0):
@@ -73,3 +74,19 @@ class VictimListView(View):
             return JsonResponse({
                 'victim_id': victim.id
             })
+
+    def get(self, request):
+        victims = Victim.objects.all()
+        ret_victims = []
+        for i, victim in enumerate(victims):
+            if victim.state == 'discovered':
+                if victim.running_time < 900:
+                    ret_victims.append({'victim_id': victim.id, 'state': victim.state, 'sourceip': victim.sourceip})
+            else:
+                ret_victims.append({'victim_id': victim.id, 'state': victim.state, 'target_name': victim.target.name,
+                                    'percentage': victim.percentage, 'start_time': time.mktime(victim.attacked_at.timetuple()),
+                                    'sourceip': victim.sourceip})
+
+        return JsonResponse({
+            'victims': ret_victims,
+        })
