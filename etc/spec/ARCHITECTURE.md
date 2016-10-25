@@ -443,5 +443,15 @@ No arguments
 Returns HTTP 200 with a JSON that contains a list of all the stored
 victims.
 
+### `/victim/<victim_id>`
 
+HTTP GET, PUT and DELETE endpoint.
 
+On a GET request, it asks for the general information and details
+for the attack to the victim with the specific victimId.
+
+Arguments:
+
+- victim_id: The id of the victim
+
+Returns HTTP `200` with a JSON with the details for the specific victim.
