@@ -2,10 +2,11 @@ from django.http import Http404, JsonResponse
 from django.views.generic import View
 from django.views.decorators.csrf import csrf_exempt
 from breach.strategy import Strategy
-from breach.models import Target
+from breach.models import Target, Victim
 from django.core import serializers
-from .forms import TargetForm
+from .forms import TargetForm, VictimForm
 import json
+from django.utils import timezone
 
 
 def get_work(request, victim_id=0):
@@ -58,3 +59,17 @@ class TargetView(View):
         return JsonResponse({
             'targets': list(Target.objects.all().values())
         })
+
+
+class VictimListView(View):
+
+    def post(self, request):
+        input_data = json.loads(request.body.decode('utf-8'))
+        form = VictimForm(input_data)
+        if form.is_valid():
+            victim = Victim.objects.create(
+                sourceip=input_data['sourceip'],
+            )
+            return JsonResponse({
+                'victim_id': victim.id
+            })
