@@ -504,3 +504,10 @@ Arguments:
 - method: The method of the attack, serial or divide & conquer
 
 Returns HTTP 200 with a JSON with the target's name.
+
+On a GET request, it asks for the targets for which the attack is possible.
+
+No arguments.
+
+Returns HTTP `200` with a JSON with a list of possible targets
+and machine names.
