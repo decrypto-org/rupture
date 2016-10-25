@@ -485,3 +485,22 @@ No arguments.
 
 Returns HTTP 200 with a JSON with a list of possible victims' IPs
 and machine names.
+
+### `/target`
+
+HTTP POST and GET endpoint.
+
+On a POST request, it creates a new target.
+
+Arguments:
+
+- name: The target's name
+- endpoint: The target's endpoint
+- prefix: The know prefix of the secret
+- secretlength: The secret's length
+- alphabet: The secret's alphabet
+- alignmentalphabet: The alignment alphabet
+- recordscardinality: The records' cardinality
+- method: The method of the attack, serial or divide & conquer
+
+Returns HTTP 200 with a JSON with the target's name.
