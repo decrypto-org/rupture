@@ -416,6 +416,29 @@ be directly translated between the two versions of the game.
 
 \section{The security of compression}\label{sec:comsec}
 
+\subsection{The ideal compression function}
+
+A necessary step in our research is investigating the parameters that comprise a
+compression function. In order to achieve that, we define the notion of
+compression idealness.
+
+$\mathcal{K}$ is an ideal compression function when:
+
+\begin{equation*}
+\begin{split}
+\forall w_1, w_2 \in \bar{M}:\\
+\Pr_{w \leftarrow \bar{M}}(w = w_1) < \Pr_{w \leftarrow \bar{M}}(w = w_2)
+\iff\\
+\lvert\mathcal{K}(w_1)\rvert > \lvert\mathcal{K}(w_2)\rvert
+\end{split}
+\end{equation*}
+
+Our definition states that compression performance of function $\mathcal{K}$ for
+a data piece $w_i$ depends on the probability of occurence for $w_i$. Data
+pieces with higher probability in compression context distribution $\bar{M}$
+will compress better than data pieces with lower probability when $\mathcal{K}$
+is used.
+
 \subsection{Composing with compression}\label{subsec:comcompose}
 
 We now shift our interest to algorithms which compose compression and
