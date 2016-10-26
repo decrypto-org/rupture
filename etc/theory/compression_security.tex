@@ -439,6 +439,21 @@ pieces with higher probability in compression context distribution $\bar{M}$
 will compress better than data pieces with lower probability when $\mathcal{K}$
 is used.
 
+\subsection{The interdependence assumption}
+
+Let $\mathcal{S}, \mathcal{R}$ be two distributions of random values $s$, $r$
+and $\bar{M}$ their joint distribution. We say that $s$ and $r$ are
+interdependent when:
+
+\begin{equation*}
+\begin{split}
+\exists s_1, r_1, s_2, r_2:\\
+\Pr_{(s, r) \leftarrow \bar{M}}((s, r) = (s_1, r_1)) < \Pr_{(s, r) \leftarrow \bar{M}}((s, r) = (s_2, r_1))
+\land\\
+\Pr_{(s, r) \leftarrow \bar{M}}((s, r) = (s_1, r_2)) < \Pr_{(s, r) \leftarrow \bar{M}}((s, r) = (s_2, r_2))
+\end{split}
+\end{equation*}
+
 \subsection{Composing with compression}\label{subsec:comcompose}
 
 We now shift our interest to algorithms which compose compression and
