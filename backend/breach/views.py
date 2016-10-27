@@ -2,7 +2,7 @@ from django.http import Http404, JsonResponse
 from django.views.generic import View
 from django.views.decorators.csrf import csrf_exempt
 from breach.strategy import Strategy
-from breach.models.target import Target
+from breach.models import Target
 from django.core import serializers
 from .forms import TargetForm
 import json
@@ -53,3 +53,8 @@ class TargetView(View):
             return JsonResponse({
                'target_name': target.name
             })
+
+    def get(self, request):
+        return JsonResponse({
+            'targets': list(Target.objects.all().values())
+        })
