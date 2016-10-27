@@ -1,8 +1,10 @@
 from django.http import Http404, JsonResponse
+from django.views.generic import View
 from django.views.decorators.csrf import csrf_exempt
 from breach.strategy import Strategy
-from breach.models.victim import Victim
-
+from breach.models.target import Target
+from django.core import serializers
+from .forms import TargetForm
 import json
 
 
@@ -40,3 +42,14 @@ def work_completed(request, victim_id=0):
     return JsonResponse({
         'victory': victory
     })
+
+
+class TargetView(View):
+
+    def post(self, request):
+        form = TargetForm(json.loads(request.body.decode('utf-8')))
+        if form.is_valid():
+            target = form.save()
+            return JsonResponse({
+               'target_name': target.name
+            })
