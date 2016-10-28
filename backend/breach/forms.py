@@ -1,5 +1,5 @@
 from django.forms import ModelForm
-from breach.models import Target
+from breach.models import Target, Victim
 
 
 class TargetForm(ModelForm):
@@ -14,4 +14,12 @@ class TargetForm(ModelForm):
             'alignmentalphabet',
             'recordscardinality',
             'method'
+        )
+
+
+class VictimForm(ModelForm):
+    class Meta:
+        model = Victim
+        fields = (
+            'sourceip',
         )
