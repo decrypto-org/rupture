@@ -35,8 +35,29 @@ class StrategyTestCase(RuptureTestCase):
 
         strategy1._mark_current_work_completed()
 
-    def test_same_round_same_batch(self):
-        pass
+    @patch('breach.strategy.Sniffer')
+    def test_same_round_same_batch(self, Sniffer):
+
+        # Mock initial round
+        mock_target = Target.objects.create(
+            endpoint='https://di.uoa.gr/?breach=%s',
+            prefix='test',
+            alphabet='01',
+            name='twitter',
+            alignmentalphabet='ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+        )
+
+        victim = self.create_mock_victim(mock_target)
+
+        strategy0 = Strategy(victim)
+        work0 = strategy0.get_work()
+        strategy0._mark_current_work_completed()
+
+        strategy1 = Strategy(victim)
+        work1 = strategy1.get_work()
+        strategy1._mark_current_work_completed()
+
+        self.assertEqual(work0['alignmentalphabet'], work1['alignmentalphabet'])
 
     @patch('breach.strategy.Sniffer')
     def test_same_round_different_batch(self, Sniffer):
