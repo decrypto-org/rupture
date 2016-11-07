@@ -50,18 +50,25 @@
 \begin{abstract}
 When compression is composed with encryption, unexpected vulnerabilities can
 arise. Such vulnerabilities have been explored in practical attacks against TLS
-such as CRIME, TIME, and BREACH. We introduce an abstract theoretical model for
-such attacks, the \textit{adaptive reflection security} model. We discuss what
-properties common compression functions have, such as the
-\textit{compression-detectability} of predicates, and we show that all
-length-preserving encryption schemes are vulnerable when composed with such
-functions. For the case of the BREACH attack, we show that it can be described
-as an instance of our theoretical model. Motivated by the lack of
+such as CRIME, TIME, and BREACH, even after TLS 1.3. We introduce an abstract
+theoretical cryptographic model for such attacks, the \textit{adaptive
+reflection security} game with the relevant security definitions. We propose a
+model for \textit{compression idealness} and experimentally show that typical compression
+functions expose partially ideal behavior. We then experimentally show that
+typical plaintexts used in practice follow an interdependent joint distribution,
+our stronger notion of dependent joint distributions. Based on these two
+properties, we prove that \textit{compression-detectability} of predicates
+arises, the ability to extract a predicate of the plaintext using reflection.
+We then prove that all length-preserving encryption schemes are insecure when
+composed with such functions. Our attack model describes two modes of attack,
+one-shot and amplified. For the case of the BREACH attack, we discuss how it can
+be described as an instance of our theoretical model. Motivated by the lack of
 production-grade testing tools, we provide a modular scalable open-source
-generic attack framework that implements these attacks in a robust manner.
-Furthermore, we explore the performance of defenses described in literature and
-propose a novel protocol that effectively eliminates the threat these attacks
-pose.
+generic attack framework that implements compression side-channel attacks in a
+robust manner. Finally, we propose a novel defense protocol, \textit{context
+hiding}, that effectively eliminates the threat these attacks pose. This
+protocol modifies the plaintext joint distribution so as to remove the
+interdependence, thereby mitigating the problem.
 \end{abstract}
 
 \section{Introduction}\label{sec:prev}
