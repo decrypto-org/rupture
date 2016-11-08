@@ -1083,17 +1083,14 @@ response, the statistical analysis performed by Rupture is no longer feasible.
 
 We have conducted several experiments to evaluate the performance of web
 services protected by CTX. The results of these experiments are overwhelmingly
-positive and should be taken into account when considering incorporating CTX in
-a web service.
+positive.
 
 The CTX parameters that affect performance are basically 3: the number of
-origins, the total amount of plaintext response, and the amount of secrets in
-the response. Each parameter affects the performance differently and will be
-examined thoroughly in the following sections.
-
-Our experiments focused on each parameter separately, so the results reflect the
-performace under each one independently. A combination of the parameters may
-result in slightly different results when used in real-world systems.
+origins, the total size of plaintext response in bytes, and the amount of
+secrets in the response. Each parameter affects the performance differently and
+will be examined thoroughly in the following sections. Our experiments focused
+on each parameter separately, so the results reflect the performace under each
+one independently.
 
 In all our tests we use an HTML web page where the secrets are strings of
 English literature. The tests measure the performance penalty in terms of size
