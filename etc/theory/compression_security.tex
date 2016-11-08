@@ -1042,12 +1042,6 @@ Our research includes the development of the CTX defense. CTX is an
 implementation of the context hiding method described in the previous section
 for HTML web pages.
 
-CTX depends on separating secrets based on origin. Origin is used to describe
-the party that generated the secret. The origin can be either the web
-application or a user. Thus, for any secrets A and B generated from the same
-origin, whoever is able to change the secret A can also know the secret B with
-no violation of the application privacy contract.
-
 It is up to the application developer to decide which portions of the response
 are sensitive and must be protected as secrets. Sensitive data does not only
 include high-value secrets such as passwords and CSRF tokens, but also user data
