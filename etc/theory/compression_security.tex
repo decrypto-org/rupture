@@ -577,8 +577,8 @@ and noise pair, we say that $Q$ compares favourably under $\overbar{r},
     cpr^Q_{f, Com}(s, \overbar{r}, \overbar{v})
     \defeq\\
     \begin{cases}
-        |Com(f(s, r_1, v_1))| < |Com(f(s, r_2, v_2))| &\text{ if } Q(s)\\
-        |Com(f(s, r_1, v_1))| > |Com(f(s, r_2, v_2))| &\text{ otherwise}
+        |\mathcal{K}(s, r_1, v_1)| < |\mathcal{K}(s, r_2, v_2)| &\text{ if } Q(s)\\
+        |\mathcal{K}(s, r_1, v_1)| > |\mathcal{K}(s, r_2, v_2)| &\text{ otherwise}
     \end{cases}
 \end{split}
 \end{equation*}
@@ -746,13 +746,13 @@ And so:
 Let us now examine the event of $\mathcal{A}$ being successful, denoted Succ,
 when $cpr^Q_{f, Com}(s, \overbar{r}, \overbar{v})$. Assuming $Q(s)$:
 \begin{align*}
-    \Pr[|Com(f(s, r_1, v_1))| < |Com(f(s, r_2, v_2))||Q(s)]
+    \Pr[|\mathcal{K}(s, r_1, v_1)| < |\mathcal{K}(s, r_2, v_2)||Q(s)]
     = \pi + \alpha(\lambda)
 \end{align*}
 
 And from the strict length monotonicity of $Enc$ it follows that:
 \begin{align*}
-    \Pr[&|Enc(Com(f(s, r_1, v_1)))| <\\&|Enc(Com(f(s, r_2, v_2)))||Q(s)]
+    \Pr[&|Enc(\mathcal{K}(s, r_1, v_1))| <\\&|Enc(\mathcal{K}(s, r_2, v_2))||Q(s)]
         \geq \pi + \alpha(\lambda)\\
     \Rightarrow \Pr[&
         |\text{Reflect}^{\mathcal{E}_{pk}, \mathcal{V}}_s(r_1)|
@@ -768,7 +768,7 @@ And from the strict length monotonicity of $Enc$ it follows that:
 
 The case for $\lnot Q(s)$ is the same, but with a different inequality direction:
 \begin{align*}
-    \Pr[|Com(f(s, r_1, v_1))| > |Com(f(s, r_2, v_2))||\lnot Q(s)]
+    \Pr[|\mathcal{K}(s, r_1, v_1)| > |\mathcal{K}(s, r_2, v_2)||\lnot Q(s)]
         \geq\\
         \pi + \alpha(\lambda)\\
     \Rightarrow \Pr[\text{Succ}|\lnot Q(s)] \geq\\
