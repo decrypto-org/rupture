@@ -453,11 +453,34 @@ function when:
 \end{split}
 \end{equation*}
 
-Our definition states that compression performance of function $\mathcal{K}$ for
-a data piece $w_i$ depends on the probability of occurence for $w_i$. Data
-pieces with higher probability in compression context distribution $\bar{M}$
-will compress better than data pieces with lower probability when $\mathcal{K}$
-is used.
+The intuitive notion behind compression idealness is that the encoding
+function is somehow perfectly aware of the input distribution. It
+exploits this knowledge of the input space to encode each possible
+input in an ideal way – more often occurring plaintexts are compressed
+better, i.e. in shorter length, than rarely occurring plaintexts.
+Practical compression functions are not perfectly ideal, because the
+distribution of plaintexts they try to cover is broad and ill-defined.
+However, such compression functions try to learn the distribution of
+the plaintext they are about to compress by observing frequencies of
+occurrences and taking advantage of them.
+
+We now turn our attention to two specific compression functions, the
+LZ77 and Huffman function. These two compression functions are of
+interest for two reasons. First, they are representative of the way
+typical lossless compression functions work internally, by taking
+advantage of letter frequencies (Huffman) or letter-sequence (LZ77)
+repetitions. Second, they are the ones almost exclusively used in
+practice. The DEFLATE algorithm, which is a composition of LZ77 and
+Huffman, is the algorithm used in gzip, which is prevalent on the
+modern web. In 2016, 98.85\% of websites that enabled compression used
+some form of gzip \cite{c19}. We argue that both LZ77 and Huffman are nearly
+ideal compression functions. The complexity of the Huffman and
+especially the LZ77 algorithms arises from many intricate technical
+details, such as, for instance, the sliding window size of LZ77. These
+details make it impractical to deal with these functions in analytical
+proofs. Hence, we support our idealness claims in an experimental
+manner. For reference, the exact definitions of DEFLATE are given in
+\cite{c12}.
 
 \subsection{The interdependence assumption}
 
@@ -1841,6 +1864,10 @@ agricultural and medical research, 1938
 
 \bibitem{c18} M. S. Mayzner, M. E. Tresselt, Tables of Single-letter and Digram
 Frequency Counts for Various Word-length and Letter-position Combinations, 1965
+
+\bibitem{c19} [online] URL:
+\url{https://w3techs.com/technologies/details/ce-gzipcompression/all/all} [cited
+November 2016]
 
 \end{thebibliography}
 
