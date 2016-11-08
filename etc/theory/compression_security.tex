@@ -988,8 +988,6 @@ in a secret $a$ being insecure for all other secrets belonging in $a$'s origin.
 Cross-compression describes the ability of a secret to affect compression of a
 separate secret. Under the context hiding defense, cross-compression should be
 enabled for same-origin secrets and disabled for secrets from different origins.
-Any two same-origin secrets $a$ and $b$ are compressed together, so $a$ can act
-as a reflection in a compression side-channel attack that aims to steal $b$.
 
 \subsection{Context hiding functionality}
 Our defense method proposes disabling cross-compression by permuting same-origin
