@@ -987,8 +987,8 @@ in a secret $a$ being insecure for all other secrets belonging in $a$'s origin.
 Our defense method proposes disabling cross-compression by applying a simple
 substitution cipher derived from a random permutation of the plaintext alphabet.
 
-Firstly, we identify the origins based on the format of the output $m_i$ of
-rendering function $f$ and store them in array $origins$. $m_i$ is then
+Firstly, we identify the origins based on the output $m$ of
+rendering function $f$ and store them in array $origins$. $m$ is then
 partitioned in contexts and each secret $s_i$ exist in a context $ctx_i$.
 Contexts and origins are 1-1 correlated and multiple secrets may exist in the
 same context. Each origin is uniquely identified by an integer in range $[0,
@@ -1018,11 +1018,11 @@ The protected secret $s'$ is annotated by the special characters
 $\beta_{start}^i$, $\beta_{end}^i$ that mark the start and the end of any
 substring that exists in context $ctx_i$ and needs to be depermuted.
 
-The output $m_i'$ that is produced after applying hiding on all chosen contexts
+The output $m'$ that is produced after applying hiding on all chosen contexts
 includes the permutation array $permutations$, so that applying the reverse
 permutation on all secrets is possible.
 
-The permuted secrets in $m_i'$ can be retrieved using the special annotation
+The permuted secrets in $m'$ can be retrieved using the special annotation
 characters $\beta_{start}^i$ and $\beta_{end}^i$, that are unique per context.
 
 The initial secret $s$ can be retrieved from the protected secret $s'$
