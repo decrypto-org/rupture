@@ -439,9 +439,9 @@ are drawn. We say that $s$ and $r$ are interdependent when:
 \begin{equation*}
 \begin{split}
 \exists s_1, r_1, s_2, r_2:\\
-\Pr_{(s, r) \leftarrow \bar{M}}((s, r) = (s_1, r_1)) < \Pr_{(s, r) \leftarrow \bar{M}}((s, r) = (s_2, r_1))
+\Pr_{(s, r) \leftarrow \bar{M}}[(s, r) = (s_1, r_1)] < \Pr_{(s, r) \leftarrow \bar{M}}[(s, r) = (s_2, r_1)]
 \land\\
-\Pr_{(s, r) \leftarrow \bar{M}}((s, r) = (s_1, r_2)) < \Pr_{(s, r) \leftarrow \bar{M}}((s, r) = (s_2, r_2))
+\Pr_{(s, r) \leftarrow \bar{M}}[(s, r) = (s_1, r_2)] < \Pr_{(s, r) \leftarrow \bar{M}}[(s, r) = (s_2, r_2)]
 \end{split}
 \end{equation*}
 
@@ -472,7 +472,7 @@ function when:
 \begin{equation*}
 \begin{split}
 \forall w_1, w_2 \in \bar{M}:\\
-\Pr_{w \leftarrow \bar{M}}(w = w_1) < \Pr_{w \leftarrow \bar{M}}(w = w_2)
+\Pr_{w \leftarrow \bar{M}}[w = w_1] < \Pr_{w \leftarrow \bar{M}}[w = w_2]
 \iff\\
 \lvert\mathcal{K}(w_1)\rvert > \lvert\mathcal{K}(w_2)\rvert
 \end{split}
