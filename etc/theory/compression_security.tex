@@ -975,13 +975,7 @@ An origin is a uniquely identifiable party that generates content. A party can
 be either a physical entity, like a user, or an application that provides a
 service. It is important to properly identify the party that generated, or could
 have generated, a piece of content. The definition of origins should reflect the
-ability to generate all content that is assigned to each origin. For example,
-consider content pieces $a$ and $b$ and parties $C$ and $D$. $C$ could have
-generated both contents $a$ and $b$. However, $D$ could also have generated
-content $b$ by impersonating party $C$, whereas this is not possible for content
-piece $a$. In this case, content pieces $a$ and $b$ should be assigned to
-separate origins, otherwise the confidentiality of $a$ under context hiding is
-compromised.
+ability to generate all content that is assigned to each origin.
 
 \subsubsection{Same-origin secrets}
 Defining origins is the first step to identifying same-origin secrets. Secrets
