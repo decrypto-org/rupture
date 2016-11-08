@@ -434,6 +434,35 @@ be directly translated between the two versions of the game.
 
 \section{The security of compression}\label{sec:comsec}
 
+\subsection{The interdependence assumption}
+
+Let $\bar{M}$ be a joint distribution from which the random variables $(s, r)$
+are drawn. We say that $s$ and $r$ are interdependent when:
+
+\begin{equation*}
+\begin{split}
+\exists s_1, r_1, s_2, r_2:\\
+\Pr_{(s, r) \leftarrow \bar{M}}((s, r) = (s_1, r_1)) < \Pr_{(s, r) \leftarrow \bar{M}}((s, r) = (s_2, r_1))
+\land\\
+\Pr_{(s, r) \leftarrow \bar{M}}((s, r) = (s_1, r_2)) < \Pr_{(s, r) \leftarrow \bar{M}}((s, r) = (s_2, r_2))
+\end{split}
+\end{equation*}
+
+We observe that commonly compressed texts such as HTML content exhibit
+interdependence almost everywhere. To be more precise, if we sample, for
+example, digrams (two-letter sequences) in HTML content of popular websites and
+treat the this two-letter sequence $\phi = (s, r)$ of the two characters $s$ and
+$r$ as a random variable $\phi$, we notice that $s$ and $r$ are dependent
+variables and in fact interdependent. Similarly when sampling two-word sequences
+$\phi = (s, r)$ of the two words $s$ and $r$ from English literature, then $s$
+and $r$ are interdependent. The same occurs for digrams in English. This
+straightforward fact is supported by extensive statistical analyses in the
+scientific literature such as \cite{c18}.
+
+The necessity of the assumption that the plaintext being compressed follows an
+interdependent distribution will become clear shortly, when we introduce our
+definition of compression functions.
+
 \subsection{Compression idealness}
 
 A necessary step in our research is investigating the parameters that comprise a
@@ -481,35 +510,6 @@ details make it impractical to deal with these functions in analytical
 proofs. Hence, we support our idealness claims in an experimental
 manner. For reference, the exact definitions of DEFLATE are given in
 \cite{c12}.
-
-\subsection{The interdependence assumption}
-
-Let $\bar{M}$ be a joint distribution from which the random variables $(s, r)$
-are drawn. We say that $s$ and $r$ are interdependent when:
-
-\begin{equation*}
-\begin{split}
-\exists s_1, r_1, s_2, r_2:\\
-\Pr_{(s, r) \leftarrow \bar{M}}((s, r) = (s_1, r_1)) < \Pr_{(s, r) \leftarrow \bar{M}}((s, r) = (s_2, r_1))
-\land\\
-\Pr_{(s, r) \leftarrow \bar{M}}((s, r) = (s_1, r_2)) < \Pr_{(s, r) \leftarrow \bar{M}}((s, r) = (s_2, r_2))
-\end{split}
-\end{equation*}
-
-We observe that commonly compressed texts such as HTML content exhibit
-interdependence almost everywhere. To be more precise, if we sample, for
-example, digrams (two-letter sequences) in HTML content of popular websites and
-treat the this two-letter sequence $\phi = (s, r)$ of the two characters $s$ and
-$r$ as a random variable $\phi$, we notice that $s$ and $r$ are dependent
-variables and in fact interdependent. Similarly when sampling two-word sequences
-$\phi = (s, r)$ of the two words $s$ and $r$ from English literature, then $s$
-and $r$ are interdependent. The same occurs for digrams in English. This
-straightforward fact is supported by extensive statistical analyses in the
-scientific literature such as \cite{c18}.
-
-The necessity of the assumption that the plaintext being compressed follows an
-interdependent distribution will become clear shortly, when we introduce our
-definition of compression functions.
 
 \subsection{Composing with compression}\label{subsec:comcompose}
 
