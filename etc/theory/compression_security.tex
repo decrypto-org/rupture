@@ -470,6 +470,21 @@ interdependent when:
 \end{split}
 \end{equation*}
 
+We observe that commonly compressed texts such as HTML content exhibit
+interdependence almost everywhere. To be more precise, if we sample, for
+example, digrams (two-letter sequences) in HTML content of popular websites and
+treat the this two-letter sequence $\phi = (s, r)$ of the two characters $s$ and
+$r$ as a random variable $\phi$, we notice that $s$ and $r$ are dependent
+variables and in fact interdependent. Similarly when sampling two-word sequences
+$\phi = (s, r)$ of the two words $s$ and $r$ from English literature, then $s$
+and $r$ are interdependent. The same occurs for digrams in English. This
+straightforward fact is supported by extensive statistical analyses in the
+scientific literature such as \cite{c18}.
+
+The necessity of the assumption that the plaintext being compressed follows an
+interdependent distribution will become clear shortly, when we introduce our
+definition of compression functions.
+
 \subsection{Composing with compression}\label{subsec:comcompose}
 
 We now shift our interest to algorithms which compose compression and
@@ -1820,6 +1835,9 @@ Protocol Version 1.2, August 2008.
 
 \bibitem{c17} R. Fisher, F. Yates: Statistical tables for biological,
 agricultural and medical research, 1938
+
+\bibitem{c18} M. S. Mayzner, M. E. Tresselt, Tables of Single-letter and Digram
+Frequency Counts for Various Word-length and Letter-position Combinations, 1965
 
 \end{thebibliography}
 
