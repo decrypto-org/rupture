@@ -1074,7 +1074,7 @@ secret. The same permutation is applied to all secrets of the same origin. That
 way, better compression is achieved intra-origin.
 
 Each time the server issues an HTTPS response, new per-origin permutations are
-generated. The power of the BREACH attack lies to the assumption that we can
+generated. Compression side-channel attacks in general rely on the assumption that we can
 perform multiple requests to the target website while the transmitted secret
 remains the same. Since new alphabet permutations are generated per HTTPS
 response, the statistical analysis performed by Rupture is no longer feasible.
