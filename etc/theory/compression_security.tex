@@ -1061,16 +1061,11 @@ origin per character. The latter would result in the best possible security
 under CTX, although compression would be effectively disabled possibly resulting
 in poor performance. This is the case with defenses such as secret masking.
 
-The portions of the plaintext within contexts of different origin are then
-forced to compress separately, i.e. not cross-compress. However, compression is
-achieved within each context. In order to acomplish this, CTX generates a
-pseudo-random permutation of the secret alphabet for each origin. The secret
-alphabet is by default the alphabet of ASCII bytes (0 - 128). In order to
-randomly permute the secret alphabet, we use the Fisher--Yates shuffle
-algorithm~\cite{c17}. This algorithm puts all the elements into a hat and
-continually determines the next element by randomly drawing an element from the
-hat until no elements remain. The Fisher--Yates shuffle algorithm produces an
-unbiased permutation meaning that every permutation is equally probable.
+Different-origin secrets are then forced to compress separately, i.e. not
+cross-compress. However, compression is achieved within each context. The
+default origin alphabet is ASCII characters (0 - 128). In order to randomly
+permute the secret alphabet, we use the Fisher--Yates shuffle
+algorithm~\cite{c17}.
 
 Secrets are then permuted by the server using the generated permutation of the
 corresponding origin prior to TLS encryption and network transmission. Upon
