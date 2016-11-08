@@ -1001,7 +1001,9 @@ array corresponds to the first origin in the $origins$ array and so forth.
 In order to secure a secret $s$ we apply a hiding function. The hiding function
 \textit{hide} takes two arguments, the secret $s$ and the permutation $p$ of the
 secret's origin. It applies the substitution cipher on each character in $s$ and
-returns the permuted secret $s'$.
+returns the permuted secret $s'$. The substitution cipher is implemented in the
+function $Permute_p(c)$, which finds the index $i$ of character $c$ in the sorted
+permutation $p$ and replaces it with the $i$-th character in $p$.
 
 \begin{lstlisting}[texcl,mathescape,basicstyle=\small]
 def hide($s, p$):
