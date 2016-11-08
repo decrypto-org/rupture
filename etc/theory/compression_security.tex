@@ -1051,12 +1051,9 @@ the contents of documents and spreadsheets in Google Docs and the list of online
 friends on Facebook or Google Hangouts, as they contain all the important
 contacts of the victim. Practically any piece of information which is only
 accessible when logged in is potentially a secret and should be CTX protected.
-
-The developer should also separate the HTML plaintext into contexts. Each
-context contains portions of the plaintext. Some of these contexts do not
-typically need compression-security protection, e.g. static HTML portions that
-are accessible on a website even when logged out. However, sensitive data, as
-mentioned above, require compression-security protection.
+On the other hand, some data do not typically need compression-security
+protection, e.g. static HTML portions that are accessible on a website even when
+logged out.
 
 The minimum amount of origins is one origin for the entire response, in which
 case CTX is not protecting any part of the plaintext, and the maximum is one
