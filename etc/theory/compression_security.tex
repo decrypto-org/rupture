@@ -1103,7 +1103,7 @@ both compressed and uncompressed, will be. This is expected, given the fact that
 secrets from different origins do not cross-compress.
 
 Our experiment covered a 650KB web page, which consists of 1\% secrets and 99\%
-static data. The secrets are distributed in origins that range from 1 to 50, so
+static data. The secrets are distributed in origins that range from 1 to 49, so
 the length of a secret per origin is reduced as origins increase and the total
 amount of secrets and static data remains the same.
 
@@ -1116,7 +1116,7 @@ amount of secrets and static data remains the same.
 As figure 2 shows, the size overhead when 1 origin is used is less than 0.5\%
 and about 4.7\% when 49 origins are used. This means that the compressed
 response when CTX is used is expected to be 1.47x the unprotected compressed
-response when 50 origins are used. In comparison, disabling compression would
+response when 49 origins are used. In comparison, disabling compression would
 result in 976.8\% overhead.
 
 The second parameter, the total response size, affects the impact of CTX on the
