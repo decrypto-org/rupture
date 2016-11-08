@@ -279,7 +279,7 @@ is chosen.
 
 When the adversary decides to complete the game, they output a guess $y$. The
 adversary is successful if $g(\psi) = y$, where $\psi$ is the sequence
-of all secrets sampled by the reflection oracle during the course of the game. 
+of all secrets sampled by the reflection oracle during the course of the game.
 
 Formally, let the public key adversarial game be defined as follows:
 
@@ -401,8 +401,7 @@ def $\text{Game}_{\text{REF-SIM}}^{\mathcal{PE},\mathcal{S}}(\lambda, f, \mathca
         return 0
 \end{lstlisting}
 
-\subsection{Symmetric version}\label{subsec:refsecsym}
-
+\noindent {\bf Symmetric key version.}
 The above game can be modified to deal with symmetric encryption. For this, the
 choice of key is changed to be limited to a secret key instead of a public and
 private key pair. The adversary is not given access to any key material.
