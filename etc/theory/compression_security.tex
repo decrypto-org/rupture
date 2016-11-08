@@ -161,7 +161,7 @@ the web page that the adversary exploits is
 parameter called \textit{query} and the adversary uses the reflection string
 \textit{attack}. The HTML response is described below:
 
-\begin{lstlisting}
+\begin{lstlisting}[basicstyle=\small]
 <div>
     <p>You searched for: attack</p>
     <p>No results found.</p>
@@ -292,7 +292,7 @@ of all secrets sampled by the reflection oracle during the course of the game.
 
 Formally, let the public key adversarial game be defined as follows:
 
-\begin{lstlisting}[texcl,mathescape]
+\begin{lstlisting}[texcl,mathescape,basicstyle=\small]
 def $\text{Game}_{\text{REF-SEC}}^{\mathcal{PE},\mathcal{A}}(\lambda, f, \mathcal{V}, \mathcal{M}, g)$:
     $(pk, sk) \leftarrow \mathcal{K}(\lambda)$
     $\omega = ()$
@@ -307,7 +307,7 @@ def $\text{Game}_{\text{REF-SEC}}^{\mathcal{PE},\mathcal{A}}(\lambda, f, \mathca
 
 Where the reflection oracle provided to the adversary is as follows:
 
-\begin{lstlisting}[texcl,mathescape]
+\begin{lstlisting}[texcl,mathescape,basicstyle=\small]
 def $\text{Reflect}^{\mathcal{E}_{pk}, \mathcal{V}}(r)$: (global variable $\psi$)
     $s \leftarrow \mathcal{M}_\omega$
     $v \leftarrow \mathcal{V}$
@@ -320,7 +320,7 @@ def $\text{Reflect}^{\mathcal{E}_{pk}, \mathcal{V}}(r)$: (global variable $\psi$
 
 Let the simulator game be defined as follows:
 
-\begin{lstlisting}[texcl,mathescape]
+\begin{lstlisting}[texcl,mathescape,basicstyle=\small]
 def $\text{Game}_{\text{REF-SIM}}^{\mathcal{PE},\mathcal{S}}(\lambda, f, \mathcal{V}, \mathcal{M}, g)$:
     $\omega = ()$
     $i = 0$
@@ -334,7 +334,7 @@ def $\text{Game}_{\text{REF-SIM}}^{\mathcal{PE},\mathcal{S}}(\lambda, f, \mathca
 
 Where the simulator reflection oracle is configured to not answer:
 
-\begin{lstlisting}[texcl,mathescape]
+\begin{lstlisting}[texcl,mathescape,basicstyle=\small]
 def $\text{ReflectSim}^{\mathcal{E}_{pk}, \mathcal{V}}(r)$:
     $s \leftarrow \mathcal{M}_\omega$
     $v \leftarrow \mathcal{V}$
@@ -347,7 +347,6 @@ def $\text{ReflectSim}^{\mathcal{E}_{pk}, \mathcal{V}}(r)$:
 \subsection{Adversarial advantage}\label{subsec:refsecadv}
 
 Let us now define the advantage of the adversary against a simulator:
-
 \begin{align*}
     \text{Adv}_{\mathcal{PE}, \mathcal{A}, \mathcal{S}}&(\lambda, f, \mathcal{V}, \mathcal{M}, g) &\defeq\\
     |\Pr[\text{Game}_{\text{REF-SEC}}^{\mathcal{PE},\mathcal{A}}(\lambda, f, \mathcal{V}, \mathcal{M}, g) = 1] &-\\
@@ -359,7 +358,6 @@ Let us now define the advantage of the adversary against a simulator:
 Given a polynomially computable rendering function $f(\cdot, \cdot, \cdot)$ and
 a  noise distribution $\mathcal{V}$, a public-key encryption scheme
 $\mathcal{PE}$ is \textit{reflection-secure} if:
-
 \begin{align*}
 \forall \mathcal{M}:
 \forall g:
@@ -377,7 +375,7 @@ random choices from $\mathcal{M}_\omega$ always return the initial secret $s$.
 
 This simplifies the game as follows:
 
-\begin{lstlisting}[texcl,mathescape]
+\begin{lstlisting}[texcl,mathescape,basicstyle=\small]
 def $\text{Game}_{\text{REF-SEC}}^{\mathcal{PE},\mathcal{A}}(\lambda, f, \mathcal{V}, \mathcal{M}, g)$:
     $(pk, sk) \leftarrow \mathcal{K}(\lambda)$
     $s \leftarrow \mathcal{M}$
@@ -390,7 +388,7 @@ def $\text{Game}_{\text{REF-SEC}}^{\mathcal{PE},\mathcal{A}}(\lambda, f, \mathca
 
 The adversary reflection oracle is also simplified:
 
-\begin{lstlisting}[texcl,mathescape]
+\begin{lstlisting}[texcl,mathescape,basicstyle=\small]
 def $\text{Reflect}^{\mathcal{E}_{pk}, \mathcal{V}}_s(r)$:
     $v \leftarrow \mathcal{V}$
     $m = f(s, r, v)$
@@ -400,7 +398,7 @@ def $\text{Reflect}^{\mathcal{E}_{pk}, \mathcal{V}}_s(r)$:
 
 And the simulator does not require an oracle for its execution:
 
-\begin{lstlisting}[texcl,mathescape]
+\begin{lstlisting}[texcl,mathescape,basicstyle=\small]
 def $\text{Game}_{\text{REF-SIM}}^{\mathcal{PE},\mathcal{S}}(\lambda, f, \mathcal{V}, \mathcal{M}, g)$:
     $y \leftarrow \mathcal{S}(f, \mathcal{V}, \mathcal{M}, g)$
     $s \leftarrow \mathcal{M}$
@@ -438,7 +436,6 @@ be directly translated between the two versions of the game.
 
 Let $\bar{M}$ be a joint distribution from which the random variables $(s, r)$
 are drawn. We say that $s$ and $r$ are interdependent when:
-
 \begin{equation*}
 \begin{split}
 \exists s_1, r_1, s_2, r_2:\\
@@ -472,7 +469,6 @@ compression idealness.
 Let $\mathcal{K}$ be a function from some input distribution $\bar{M}$ to the
 output space of all strings ${0, 1}^*$. $\mathcal{K}$ is an ideal compression
 function when:
-
 \begin{equation*}
 \begin{split}
 \forall w_1, w_2 \in \bar{M}:\\
@@ -516,7 +512,6 @@ manner. For reference, the exact definitions of DEFLATE are given in
 We now shift our interest to algorithms which compose compression and
 encryption.  Therefore, we treat the public-key encryption scheme above as a
 composition of a compression and encryption algorithm:
-
 \begin{equation*}
     \mathcal{E} = Enc \circ Com
 \end{equation*}
@@ -529,7 +524,6 @@ on $\{0, 1\}^*$ and not on some fixed-length input.
 
 An important assumption for our attack is that the encryption function $Enc$ is
 \textit{length monotonic}. Specifically,
-
 \begin{equation*}
 \begin{split}
 \forall m_1, m_2 \in \{0, 1\}^*\\
@@ -555,7 +549,6 @@ proportionally retaining measure and assuming $\mathcal{M}_Q \neq \emptyset$
 and $\mathcal{M}_{\lnot Q} \neq \emptyset$.
 
 For the specific property $Q$ and plaintext distribution $\mathcal{M}$, define:
-
 \begin{equation*}
     \pi \defeq max(\Pr_{s \leftarrow \mathcal{M}}[Q(s)], 1 - \Pr_{s \leftarrow \mathcal{M}}[Q(s)])
 \end{equation*}
@@ -579,7 +572,6 @@ is used. On the contrary, if $s \in \mathcal{M}_{\lnot Q}$, the opposite
 direction should occur.  If this is the case for the selected reflection pair
 and noise pair, we say that $Q$ compares favourably under $\overbar{r},
 \overbar{v}$:
-
 \begin{equation*}
 \begin{split}
     cpr^Q_{f, Com}(s, \overbar{r}, \overbar{v})
@@ -594,7 +586,6 @@ and noise pair, we say that $Q$ compares favourably under $\overbar{r},
 The reflection pair $\overbar{r}$ \textit{detects} predicate $Q$ under
 compression $Com$ rendered with rendering function $f$ over the secret
 distribution $\mathcal{M}$ and the noise distribution $\mathcal{V}$ when:
-
 \begin{align*}
     dtc(Q, \overbar{r}, f, Com, \mathcal{M}, \mathcal{V})
     \defeq\\
@@ -610,7 +601,6 @@ distribution $\mathcal{M}$ and the noise distribution $\mathcal{V}$ when:
 
 We call $Q$ \textit{compression-detectable} if a pair $\overbar{r}$ exists,
 such that:
-
 \begin{equation*}
     \exists \overbar{r} = r_1, r_2 \in \mathcal{M}:
     dct(Q, \overbar{r}, f, Com, \mathcal{M}, \mathcal{V})
@@ -618,7 +608,6 @@ such that:
 
 Furthermore we require that such a pair $\overbar{r}$ is polynomially
 computable:
-
 \begin{align*}
     \exists \text{PPT } \mathcal{O}_R:\\
     dct(Q, \overbar{r}, f, Com, \mathcal{M}, \mathcal{V}),\\
@@ -641,7 +630,6 @@ compression-detectable plaintext predicate over plaintext distribution
 $\mathcal{M}$ and noise distribution $\mathcal{V}$.
 
 Then:
-
 \begin{align*}
     \exists \alpha \text{ non-negl}:
     \forall Enc:
@@ -659,7 +647,7 @@ Then:
 Let $g$ be the boolean function $Q$ on the plaintext. Define the adversary
 $\mathcal{A}$ as follows:
 
-\begin{lstlisting}[texcl,mathescape]
+\begin{lstlisting}[texcl,mathescape,basicstyle=\small]
 def $\mathcal{A}(Q, \mathcal{M}, y)$:
     $(r_1, r_2) \leftarrow \mathcal{O}_R(Com, f, Q, \mathcal{M}, \mathcal{V})$
 
@@ -673,7 +661,6 @@ def $\mathcal{A}(Q, \mathcal{M}, y)$:
 \end{lstlisting}
 
 Let $\mathcal{S}$ be an arbitrary simulator. Then we have:
-
 \begin{align*}
     \Pr[\text{Game}_{\text{REF-SIM}}^{\mathcal{PE},\mathcal{S}}
         (\lambda, f, \mathcal{V}, \mathcal{M}, g) = 1] &=\\
@@ -682,14 +669,12 @@ Let $\mathcal{S}$ be an arbitrary simulator. Then we have:
 \end{align*}
 
 Letting the random variables $b$ and $x$:
-
 \begin{align*}
     x &\leftarrow \mathcal{M}\\
     b &\leftarrow \mathcal{S}(f, \mathcal{V}, \mathcal{M}, g)
 \end{align*}
 
 Due to the independence of the simulator's output with the choice of $x$ we have:
-
 \begin{align*}
     Pr[b = Q(x)] &=\\
     Pr[\lnot b|\lnot Q(x)]Pr[\lnot Q(x)] + Pr[b|Q(x)]Pr[Q(x)] &=\\
@@ -702,13 +687,11 @@ For a given $\Pr[Q]$, this function is monotonic in $\Pr[b]$ and therefore has
 potential extrema at $\Pr[b] = 0$ or $\Pr[b] = 1$, for which cases the function
 takes the values $1 - \Pr[Q(x)]$ and $\Pr[Q(x)]$ respectively. Therefore, the
 maximum $\Pr[b]$ of the simulator is:
-
 \begin{equation*}
     \Pr[Q(x) = b] = max(\Pr[Q(x)], 1 - \Pr[Q(x)]) = \pi
 \end{equation*}
 
 And therefore:
-
 \begin{align*}
     \forall \mathcal{S}:\\
     \Pr[
@@ -720,7 +703,6 @@ And therefore:
 \end{align*}
 
 From the compression detectability of Q we know that:
-
 \begin{align*}
     \exists \alpha \text{ non-negl}:\\
     \Pr_{s \leftarrow \mathcal{M}_Q,
@@ -733,7 +715,6 @@ From the compression detectability of Q we know that:
 \end{align*}
 
 Therefore:
-
 \begin{align*}
     \Pr_{s \leftarrow \mathcal{M}_Q,
          \overbar{v} \leftarrow \mathcal{V}^2}
@@ -748,7 +729,6 @@ Therefore:
 \end{align*}
 
 And so:
-
 \begin{align*}
     \Pr_{s \leftarrow \mathcal{M},
          \overbar{v} \leftarrow \mathcal{V}^2}
@@ -765,14 +745,12 @@ And so:
 
 Let us now examine the event of $\mathcal{A}$ being successful, denoted Succ,
 when $cpr^Q_{f, Com}(s, \overbar{r}, \overbar{v})$. Assuming $Q(s)$:
-
 \begin{align*}
     \Pr[|Com(f(s, r_1, v_1))| < |Com(f(s, r_2, v_2))||Q(s)]
     = \pi + \alpha(\lambda)
 \end{align*}
 
 And from the strict length monotonicity of $Enc$ it follows that:
-
 \begin{align*}
     \Pr[&|Enc(Com(f(s, r_1, v_1)))| <\\&|Enc(Com(f(s, r_2, v_2)))||Q(s)]
         \geq \pi + \alpha(\lambda)\\
@@ -789,7 +767,6 @@ And from the strict length monotonicity of $Enc$ it follows that:
 \end{align*}
 
 The case for $\lnot Q(s)$ is the same, but with a different inequality direction:
-
 \begin{align*}
     \Pr[|Com(f(s, r_1, v_1))| > |Com(f(s, r_2, v_2))||\lnot Q(s)]
         \geq\\
@@ -799,7 +776,6 @@ The case for $\lnot Q(s)$ is the same, but with a different inequality direction
 \end{align*}
 
 And so the probability of success is given:
-
 \begin{align*}
     \Pr[\text{Succ}] =\\
     \Pr[\text{Succ}|Q(s)]\Pr[Q(s)]
@@ -809,7 +785,6 @@ And so the probability of success is given:
 \end{align*}
 
 Therefore,
-
 \begin{align*}
     \forall PPT \mathcal{S}:
     \text{Adv}_{\mathcal{SE}(Enc, Com), \mathcal{A}, \mathcal{S}}
@@ -829,7 +804,7 @@ The amplification is parameterized by an odd parameter $k$.
 
 Let the amplification adversary be defined as follows:
 
-\begin{lstlisting}[texcl,mathescape]
+\begin{lstlisting}[texcl,mathescape,basicstyle=\small]
 def $\mathcal{A}(Q, \mathcal{M})$:
     $(r_1, r_2) \leftarrow \mathcal{O}_R(Com, f, Q, \mathcal{M}, \mathcal{V})$
 
@@ -859,7 +834,6 @@ detectability margin $\alpha(\lambda)$,
 the amplified adversary achieves an arbitrarily large advantage
 against a non-negligible subset of elements, the
 \textit{amplifiable elements} distinguished by predicate $Amp$.
-
 \begin{align*}
     \forall Enc:
     \exists g:\\
@@ -878,7 +852,6 @@ against a non-negligible subset of elements, the
 \begin{IEEEproof}
 
 From the fact that $Q$ is compression-detectable and from the Compression Attack Theorem, we have that:
-
 \begin{align*}
     \Pr_{s \leftarrow \mathcal{M},
          \overbar{v} \leftarrow \mathcal{V}^2}
@@ -889,7 +862,6 @@ From the fact that $Q$ is compression-detectable and from the Compression Attack
 
 Some elements $s \in \mathcal{M}$ allow for better compression-detectability than others under the fixed
 reflection vector $\overbar{r}$. Call these elements \textit{amplifiable} and define predicate:
-
 \begin{align*}
     Amp(s) \defeq
     \Pr_{\overbar{v} \leftarrow \mathcal{V}^2}
@@ -913,7 +885,6 @@ Let:
 % B = (\pi - \frac{1}{2} + \frac{\alpha(\lambda)}{2}) / (\frac{1}{2} - \frac{\alpha(\lambda)}{2})
 % B = \pi / (\frac{1}{2} - \frac{\alpha(\lambda)}{2}) - (\frac{1}{2} - \frac{\alpha(\lambda)}{2}) / (\frac{1}{2} - \frac{\alpha(\lambda)}{2})
 % B = \pi / (\frac{1}{2} - \frac{\alpha(\lambda)}{2}) - 1
-
 \begin{align*}
     B = \frac{\pi}{\frac{1}{2} - \frac{\alpha(\lambda)}{2}} - 1
 \end{align*}
@@ -921,14 +892,12 @@ Let:
 $B$ is non-negligible in $\lambda$.
 
 Assume, for the sake of contradiction, that:
-
 \begin{align*}
     \Pr_{s \leftarrow \mathcal{M}}
     [Amp(s)] < B
 \end{align*}
 
 Then we have:
-
 \begin{align*}
     \Pr_{s \leftarrow \mathcal{M},
          \overbar{v} \leftarrow \mathcal{V}^2}
@@ -946,14 +915,12 @@ Then we have:
 \end{align*}
 
 But then:
-
 \begin{align*}
     B + (\frac{1}{2} + \frac{\alpha(\lambda)}{2})(1 - B) =
     \pi + \alpha(\lambda)
 \end{align*}
 
 And this contradicts the assumption that $Q$ is compression-detectable. Therefore:
-
 \begin{align*}
     \Pr_{s \leftarrow \mathcal{M}}
     [Amp(s)] \geq B
@@ -961,7 +928,6 @@ And this contradicts the assumption that $Q$ is compression-detectable. Therefor
 
 It remains to show that the advantage of the adversary can be
 arbitrarily large, i.e. that for some negligible $C$ we have:
-
 \begin{align*}
     \text{Adv}_{\mathcal{SE}(Enc, Com), \mathcal{A}, \mathcal{S}_{Amp}}
     (\lambda, f, \mathcal{V}, \mathcal{M}, g) = 1 - \pi - C
@@ -971,13 +937,11 @@ Indeed, observe that the amplifying adversary performs a repeated Bernoulli
 trial with $k$ repetitions and extracts a majority. Let $X$ be the number of
 repetitions that are successful for the adversary. Letting $\overbar{v}_i$
 be the noise chosen from $\mathcal{V}^2$ during the $i$-th round, $X$ is defined:
-
 \begin{align*}
     X \defeq |\{ i: cpr^Q_{f, Com}(s, \overbar{r}, \overbar{v}_i) \}|
 \end{align*}
 
 $X$ follows the binomial distribution, and therefore its expected value is:
-
 \begin{align*}
     E[X] = \frac{k}{2} + \frac{\alpha k}{2}
 \end{align*}
@@ -987,7 +951,6 @@ is equivalent to $X > \frac{k}{2}$.
 
 Because $\alpha$ is non-negligible and due to the tail bounds of the binomial
 distribution, we have:
-
 \begin{align*}
     Pr[Succ] = 1 - C(k)
 \end{align*}
@@ -1059,7 +1022,7 @@ $s$ in $ctx_i$. The hiding function \textit{hide} takes two arguments, secret $s
 permutation $p$ of the secret's origin. It applies the permutation on each
 character in $s$ and returns the permuted secret $s'$.
 
-\begin{lstlisting}[texcl,mathescape]
+\begin{lstlisting}[texcl,mathescape,basicstyle=\small]
 def hide($s, p$):
     $s' = ''$
     for $ch \in s$:
@@ -1083,7 +1046,7 @@ using the \textit{unhide} function. This function takes secret $s'$ and
 permutation $p$ of the secret's origin and applies the reverse permutation on
 $s'$, returning the depermuted secret $s$.
 
-\begin{lstlisting}[texcl,mathescape]
+\begin{lstlisting}[texcl,mathescape,basicstyle=\small]
 def unhide($s', p$):
     $s = ''$
     for $ch \in s'$:
@@ -1326,7 +1289,7 @@ half of the masked text.
 
 A masking function is defined:
 
-\begin{lstlisting}[texcl,mathescape]
+\begin{lstlisting}[texcl,mathescape,basicstyle=\small]
 def masking($s_i$):
     $l = |s_i|$
     $m_i \xleftarrow{\$} \{0, 1\}^l\\$
@@ -1337,7 +1300,7 @@ def masking($s_i$):
 Masking can be applied on a rendered secret $s_i$ in the output $m$ of a
 rendering function $f$ as:
 
-\begin{lstlisting}[texcl,mathescape]
+\begin{lstlisting}[texcl,mathescape,basicstyle=\small]
 def apply_masking($m_i, s_i$):
     $s_i', m_i \leftarrow masking(s_i)$
     return $Rep(m, s_i, \beta_1 s_i' \beta_2 m_i \beta_3)$
@@ -1350,7 +1313,7 @@ appear in $m$ before masking.
 Mask removal should be applied on all masked secrets, marked by the annotation
 symbols $\beta_1$, $\beta_2$, $\beta_3$, before the reversing of rendering function $f$:
 
-\begin{lstlisting}[texcl,mathescape]
+\begin{lstlisting}[texcl,mathescape,basicstyle=\small]
 def remove_masking($m', \beta_1, \beta_2, \beta_3$):
     return $Rep(m', \beta_1 s_i' \beta_2 m_i \beta_3, s_i' \oplus m_i)$
 \end{lstlisting}
@@ -1683,7 +1646,7 @@ plaintext one bit at a time. This procedure can cause self-overlapping texts.
 In the end, the decoded text must be $n$ bits long, otherwise the compression
 is invalid.
 
-\begin{lstlisting}[texcl,mathescape]
+\begin{lstlisting}[texcl,mathescape,basicstyle=\small]
 def $\text{LZ77}^{-1}(c)$:
     parts = c.split("$\$$")
     plaintextLength = parse_int(parts[0])
@@ -1754,7 +1717,6 @@ Formally, assume that the symbols $\{\beta_1, \beta_2, \beta_3\}$ do not appear
 in the alphabet of the secret.
 
 Our assumptions for $f$ can be stated as follows. Let
-
 \begin{equation*}
 \begin{split}
 \exists \mu \in \{0, 1, \beta_1, \beta_2, \beta_3\}^*\\
@@ -1768,7 +1730,6 @@ f(s, r, v) = Rep(Rep(Rep(\mu, \beta_1, s), \beta_2, r), \beta_3, v)
 \end{equation*}
 
 Where $Rep$ is the string replacement function:
-
 \begin{align*}
 Rep(\epsilon, \alpha, \beta) &\defeq \epsilon\\
 Rep(\alpha:xs, \alpha, \beta) &\defeq \beta:Rep(xs, \alpha, \beta)\\
@@ -1787,7 +1748,6 @@ begin with such text?"
 
 We require $X$ to be of compressible length,
 i.e. the following equation must be satisfied:
-
 \begin{equation*}
     |X| > \ceil{lg(f(X, X, \epsilon) + 2)}
 \end{equation*}
@@ -1801,13 +1761,11 @@ compression-detectable}\label{subsec:breachprefix}
 
 Let $startswith(v, s)$ be the $k$-length prefix checking predicate on a
 $\lambda$-bit secret $s$:
-
 \begin{equation*}
     startswith(v, s) \defeq \exists w: s = v w
 \end{equation*}
 
 Let $f$ be a concatenative rendering function and let $Com = LZ77$. Then:
-
 \begin{align*}
 \Pr[startswith(v, \cdot) \textrm{ compression-detectable under } f, Com] =\\ \text{non-negl}(\lambda - k)
 \end{align*}
