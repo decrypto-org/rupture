@@ -987,54 +987,51 @@ in a secret $a$ being insecure for all other secrets belonging in $a$'s origin.
 Our defense method proposes disabling cross-compression by applying a simple
 substitution cipher derived from a random permutation of the plaintext alphabet.
 
-Firstly, we identify the origins based on the output $m$ of
-rendering function $f$ and store them in array $origins$. $m$ is then
-partitioned in contexts and each secret $s_i$ exist in a context $ctx_i$.
-Contexts and origins are 1-1 correlated and multiple secrets may exist in the
-same context. Each origin is uniquely identified by an integer in range $[0,
-len(origins)-1)$.
+Firstly, we identify the origins based on the output $m$ of rendering function
+$f$ and store them in array $origins$. Each secret $s_i$ in $m$ is then
+separated based on its origin. Each origin is uniquely identified by an integer
+in range $[0, |origins|-1)$.
 
 Secondly, we identify the alphabet for each origin. An origin's alphabet
-consists of all sorted possible characters that a secret of this origin may
-contain. For each origin, we generate a random permutation of the origin's
-alphabet and store it in the array $permutations$. The first element in the
-$permutations$ array corresponds to the first origin in the $origins$ array and
-so forth.
+consists of all possible characters that a secret of this origin may contain.
+For each origin, we generate a random permutation of the origin's alphabet and
+store it in the array $permutations$. The first element in the $permutations$
+array corresponds to the first origin in the $origins$ array and so forth.
 
-In order to secure a context $ctx_i$ a hiding function is applied on each secret
-$s$ in $ctx_i$. The hiding function \textit{hide} takes two arguments, secret $s$ and the
-permutation $p$ of the secret's origin. It applies the permutation on each
-character in $s$ and returns the permuted secret $s'$.
+In order to secure a secret $s$ we apply a hiding function. The hiding function
+\textit{hide} takes two arguments, the secret $s$ and the permutation $p$ of the
+secret's origin. It applies the substitution cipher on each character in $s$ and
+returns the permuted secret $s'$.
 
 \begin{lstlisting}[texcl,mathescape,basicstyle=\small]
 def hide($s, p$):
     $s' = ''$
     for $ch \in s$:
-        $s' += Permute_p(ch)$
+        $s' = s' || Permute_p(ch)$
     return $s'$
 \end{lstlisting}
 
 The protected secret $s'$ is annotated by the special characters
 $\beta_{start}^i$, $\beta_{end}^i$ that mark the start and the end of any
-substring that exists in context $ctx_i$ and needs to be depermuted.
+substring that needs to be unpermuted.
 
-The output $m'$ that is produced after applying hiding on all chosen contexts
-includes the permutation array $permutations$, so that applying the reverse
-permutation on all secrets is possible.
+The output $m'$ that is produced after hiding all secrets includes the
+permutation array $permutations$, so that applying the reverse permutation on
+all secrets is possible.
 
 The permuted secrets in $m'$ can be retrieved using the special annotation
-characters $\beta_{start}^i$ and $\beta_{end}^i$, that are unique per context.
+characters $\beta_{start}^i$ and $\beta_{end}^i$ that are unique per origin.
 
 The initial secret $s$ can be retrieved from the protected secret $s'$
 using the \textit{unhide} function. This function takes secret $s'$ and
 permutation $p$ of the secret's origin and applies the reverse permutation on
-$s'$, returning the depermuted secret $s$.
+$s'$, returning the unpermuted secret $s$.
 
 \begin{lstlisting}[texcl,mathescape,basicstyle=\small]
 def unhide($s', p$):
     $s = ''$
     for $ch \in s'$:
-        $s += Depermute_p(ch)$
+        $s = s || Unpermute_p(ch)$
     return $s$
 \end{lstlisting}
 
