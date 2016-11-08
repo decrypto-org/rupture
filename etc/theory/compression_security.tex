@@ -996,12 +996,16 @@ Where $C$ is a negligible function.
 \end{IEEEproof}
 
 \section{Defense}\label{sec:defense}
-We propose a defense that effectively mitigates compression-based side-channel
-attacks in general.  Context hiding is built on the premise of separating
-secrets in a per-origin manner in order to avoid cross-compression. In order to
-achieve this we define what consists an origin, what properties same-origin
-secrets share, and what cross-compression is. This section describes the key
-components of the defense and the code implementation.
+We propose a defense, \textit{context hiding}, that mitigates a class of
+practical compression side-channel attacks such as CRIME, TIME, BREACH, Rupture,
+and HEIST. The full plaintext recovery these attacks perform is no longer
+possible when our defense is applied.
+
+Context hiding is built on the premise of separating secrets in a per-origin
+manner in order to avoid cross-compression. In order to achieve this we define
+what consists an origin, what properties same-origin secrets share, and what
+cross-compression is. This section describes the key components of the defense
+and the code implementation.
 
 \subsection{Context hiding properties}
 
