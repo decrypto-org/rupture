@@ -984,8 +984,8 @@ Also the origin's party has access to all content in this origin. This results
 in a secret $a$ being insecure for all other secrets belonging in $a$'s origin.
 
 \subsection{Context hiding functionality}
-Our defense method proposes disabling cross-compression by permuting same-origin
-secrets using a unique permutation for each origin.
+Our defense method proposes disabling cross-compression by applying a simple
+substitution cipher derived from a random permutation of the plaintext alphabet.
 
 Firstly, we identify the origins based on the format of the output $m_i$ of
 rendering function $f$ and store them in array $origins$. $m_i$ is then
