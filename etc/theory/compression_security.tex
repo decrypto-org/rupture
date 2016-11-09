@@ -240,29 +240,70 @@ example, noise elements are strings of printable ASCII characters. Each noise
 element is chosen from $\mathcal{V}$ per request.
 
 \subsection{Contributions}
-Our contributions are two-fold. Firstly, we introduce a novel model for discussing
-compression and encryption composition attacks, the \textit{adaptive reflection
-game} with an accompanying security definition. This model is quite general in
-that it does not describe specific instances of the rendering function $f$ or
-the compression function $Com$. Furthermore, it allows for general distributions
-of secret $\mathcal{M}$ and distributions of noise $\mathcal{V}$ which can
-affect the rendering. Additionally, the model describes an adaptive attack,
-but also allows for adaptive rendering based on the adversary behavior in the
-general case. We then introduce the abstract property of \textit{compression detectability}
-which we argue is a property commonly attained by compression functions when
-composed with real-world rendering functions. Finally, we show that this somewhat
-innocent property directly allows the construction of an attacker, which we
-prove breaks the security of the scheme. We also prove that such
+Our contributions are as follows.
+
+First we introduce a novel model for discussing compression and encryption
+composition attacks, the \textit{adaptive reflection game}, with an accompanying
+security definition. This model is quite general in that it does not describe
+specific instances of the rendering function $f$ or the compression function
+$Com$. Furthermore, it allows for general distributions of secret $\mathcal{M}$
+and distributions of noise $\mathcal{V}$ which can affect the rendering. Our
+model describes an adaptive attack, but also allows for adaptive rendering from
+the part of the defender based on the adversary behavior in the general case.
+
+We then investigate the necessary properties for compression functions. We
+define \textit{interdependence}, a property that characterizes dependent random
+variables drawn from a joint distribution. Interdependence is an important
+notion when exploring the effects of the reflection when compressed with a
+secret. Another property of compression functions is \textit{compression
+idealness}. We define idealness in theory and demonstrate how it applies on the
+compression algorithms that are widely used.
+
+We aim to understand the consequences of using
+compression along with encryption. In order to achieve that we focus on the
+composition of compression and encryption and define \textit{(strict) length
+monotonicity}.
+
+Furthermore, we introduce the abstract property of \textit{compression
+detectability}. We explore the notion of compressibility with respect to a
+predicate $Q$ of a plaintext from a distribution $\mathcal{M}$. This leads us to
+define the cases when $Q$ is detectable when the plaintext is rendered,
+compressed and encrypted with functions $f$, $Com$, and $Enc$. We prove that it
+is a property attained by ideal compression functions.
+
+The final part of our theoretical work on the attack is to show that this
+somewhat innocent property directly allows the construction of an attacker,
+which we prove breaks the security of the scheme. We also prove that such
 attacks can be amplified to achieve better confidence.
 
-Secondly, we implement a production-grade general implementation of compression
-and encryption composition attacks in the form of an open source framework and
-tool which we call Rupture \cite{c7}. This generic framework provides an
-extensible mechanism for experimentally testing attack and defense techniques
-in a modular setting. We implement specific compression attack instances such
-as BREACH. While limited proof-of-concept source code has been released for
-compression side-channel attacks, as far as we know this is the first time
-a working tool is provided for this class of attacks.
+Following the establishing of the attack premises, we shift our interest in
+defending against such attacks. Although there are several proposed defenses, we
+feel that none achieves good compression performance in real-world systems
+terms. In this direction, we propose \textit{context hiding}, a method that
+mitigates a class of practical compression side-channel attacks like BREACH.
+
+Context hiding aims at preventing the compression detectability of a predicate
+$Q$ of a secret $s$ in presense of reflection. We describe \textit{origins},
+specify what constitutes \textit{same-origin secrets} and describe the
+functionality of separating secrets from reflections using random
+\textit{permutations} of the distribution alphabet.
+
+Our engineering contributions are two-fold.
+
+Firstly, we implement Rupture \cite{c7}, a production-grade open source framework for
+conducting compression and encryption composition attacks. This generic
+framework provides an extensible mechanism for experimentally testing attack
+techniques in a modular setting. We implement specific compression attack
+instances such as BREACH. While limited proof-of-concept source code has been
+previously released for compression side-channel attacks, as far as we know this
+is the first time a working tool is provided for this class of attacks.
+
+Secondly, we continue with an implementation of the context hiding defense technique
+that we call CTX \cite{c20}. CTX runs at the application layer of web services
+and is opt-in. It is implemented in multiple languages, like Python and
+Javascript, and can be used in commonly used web frameworks, like Django and
+Node.js. CTX achieves balance between security and compression performance that
+is unprecedented compared to other proposed defense methods.
 
 \section{Reflection security}\label{sec:refsec}
 
@@ -1796,6 +1837,9 @@ Frequency Counts for Various Word-length and Letter-position Combinations, 1965
 \bibitem{c19} [online] URL:
 \url{https://w3techs.com/technologies/details/ce-gzipcompression/all/all} [cited
 November 2016]
+
+\bibitem{c20} D. Karakostas, A. Kiayias, E. Sarafianou, D. Zindros: "CTX:
+Eliminating BREACH with Context Hiding", Black Hat Europe, 2016.
 
 \end{thebibliography}
 
