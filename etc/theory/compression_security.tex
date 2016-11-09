@@ -56,9 +56,9 @@ reflection security} game with the relevant security definitions. We propose a
 model for \textit{compression idealness} and experimentally show that typical compression
 functions expose partially ideal behavior. We then experimentally show that
 typical plaintexts used in practice follow an interdependent joint distribution,
-our stronger notion of dependent joint distributions. Based on these two
+a stronger notion of dependent joint distributions. Based on these two
 properties, we prove that \textit{compression-detectability} of predicates
-arises, the ability to extract a predicate of the plaintext using reflection.
+arises, i.e. the ability to extract a predicate of the plaintext using reflection.
 We then prove that all length-preserving encryption schemes are insecure when
 composed with such functions. Our attack model describes two modes of attack,
 one-shot and amplified. For the case of the BREACH attack, we discuss how it can
@@ -67,9 +67,9 @@ production-grade testing tools, we provide a modular scalable open-source
 generic attack framework that implements compression side-channel attacks in a
 robust manner. Finally, we propose a novel defense protocol, \textit{context
 hiding}, that effectively eliminates the threat these attacks pose. This
-protocol modifies the plaintext joint distribution so as to remove the
-interdependence, thereby mitigating the problem. We show that our method of
-defense performs significantly more favourably in terms of compression rate when
+protocol modifies the plaintext joint distribution in order to remove the
+interdependence and mitigate the problem. We show that our method of
+defense performs significantly more favourably in terms of compression rate
 compared to previous techniques.
 \end{abstract}
 
@@ -79,79 +79,88 @@ Compression and encryption composition has caused serious security problems
 in protocols such as TLS \cite{c15} over the years. These
 include attacks like CRIME \cite{c1}, TIME \cite{c2}, and BREACH \cite{c3}.
 
-However, the theoretical models for these classes of attacks has been limited.
-The compression side-channel attack was first studied by Kelsey \cite{c4} in 2002.
-Kelley and Tamassia\cite{c5}  discuss the notion of \textit{entropy-restricted} semantic
-security, but this only models the case where two secrets compress to the same
-length, and so it is difficult to capture practical techniques used in attacks
+However, the theoretical models for these classes of attacks has been limited so
+far.
+The compression side-channel attack technique was first studied by Kelsey \cite{c4} in 2002.
+Kelley and Tamassia\cite{c5} discuss the notion of \textit{entropy-restricted} semantic
+security. However, this only models the case where two secrets compress to the same
+length, making it difficult to capture practical techniques used in attacks
 such as BREACH.
 
 Alawatugoda etc. \cite{c6} introduce a model for \textit{Cookie recovery},
-\textit{Random cookie indistinguishability}, as well as \textit{Chosen cookie indistinguishability}.
+\textit{Random cookie indistinguishability}, and \textit{Chosen cookie indistinguishability}.
 Nevertheless, their security models are limited in classes of rendering functions
 that are very specific. In their models, the attacker is able to directly influence
-the output of the rendering function through concatenation. While their results
+the output of the rendering function through concatenation. More information on
+rendering functions is provided in section \ref{subsec:terms}.
+
+While their results
 have significant value in analyzing the security of compression, we believe
 a generalization and abstraction of the rendering process is essential to
-theoretically analyzing the security of generic compression and rendering functions.
-Furthermore, generalized rendering and compression functions help better
-capture and model specific attacks such as BREACH in the context of
-realistic instances, like the rendering of real web pages.
+theoretically analyzing the security of compression and rendering functions in
+general. Furthermore, generalized rendering and compression functions help
+better consider specific attacks as realistic instances of the model. Such an
+example is BREACH, which is expressed as an instance of compression side-channel
+attacks in the context of real web services and the rendering of web pages.
 
 \subsection{A motivational example}\label{subsec:example}
 Our work is highly motivated by the threat compression side-channel attacks pose
-against real-world systems. The severity of these attacks can be highlighted by
-the example that this section describes.
+against real-world systems. So far little attention has been drawn, primarily
+due to the complexity of these attacks and the lack of production code tools
+that allow for an easy, robust execution. However, these attacks potentially allow for full
+plaintext recovery, as will be highlighted in this section's example.
 
 Consider the communication between a user that browses the Internet and a server
-that hosts a website. This website might be a social network, e-banking service,
-mail provider etc. When the server receives a request for a web page on the
-website it collects all needed data, generates the HTML code that will be
+that hosts a website. This website might be a social network, e-banking,
+mail provider or a similar service that handles sensitive private data. When the server receives a request for a web page
+it collects all needed data, generates the HTML code that will be
 displayed by the user's browser and sends a network response containing this
 code along with other resources such as images, libraries etc. All response data
-is encrypted using TLS which ensures privacy and integrity between the two
-communicating parties.
+is encrypted under TLS, which ensures privacy and integrity for the
+communication between the user and the server.
 
-Next we assume an adversary that aims at breaking this communication's security.
-This adversary tries to decrypt multiple bits of encrypted information between
-the user and the website and reveal information about the private data
-exchanged. However, the adversary should fulfill the requirements described
-below.
+There also exists an adversary that aims to break this communication's security.
+This adversary tries to decrypt the communication between
+the user and the server and reveal information about the private data that is
+exchanged. In order to achieve this, the adversary should fulfill certain
+requirements.
 
 Firstly, he should be able to issue any number of malicious requests using the
 user's cookies. This can be achieved by forcing the user's browser to run a
-piece of code, such as a Javascript script hosted on an adversary-controlled
-website, that requests some web page on said website.
+piece of code, such as a Javascript script, hosted on an adversary-controlled
+website. This script is executed when loaded in the user's browser and is able
+to issue requests to any URL crafted by the adversary.
 
-Secondly, the requests should include an adversary-chosen string that is also
-included in the response data. In order to achieve that, the website must offer
-some web page that provides a HTTP GET parameter whose value is included in the HTML
-response.
+Secondly, the web service that is under attack should allow the adversary to
+inject data in the response. This data takes the form a specially crafted string
+which can be added for example by using a HTTP GET parameter whose value is included in the
+HTML response.
 
-Finally, the adversary is able to handle all user's network traffic. That way he
+Thirdly, the adversary is able to handle the user's network traffic. That way he
 is able to collect and analyze the network packets of the encrypted
-communication with the server. He is also able inject the malicious script in
-plain HTTP responses the user receives from third websites even when the user is
-careful enough to avoid adversary-controlled websites.
+communication with the server. He is also able to inject malicious code in
+plain HTTP responses the user receives from third websites. That way the
+attacker is able to issue requests from the user's browser, even when the user is
+careful enough to avoid malicious websites.
 
-The described adversary can issue a compression side-channel attack against the
-user and the website. The malicious requests contain specially crafted
+Any adversary that fulfills these requirements can issue a compression side-channel attack against the
+user and the web service. The malicious requests contain specially crafted
 reflection strings that are included in the response and compressed with the
 private data. The structure of the reflection depends heavily on properties of
 the private data and will be further explored in the following sections.
 
-As the attack progresses the adversary collects network data for multiple
+As the attack progresses the adversary collects network data containing multiple
 requests and reflections. Although this data is encrypted, analysis on the
-lengths of different request packets may reveal properties of the private data,
-at which point the privacy of the communication between the user and the website is
-broken.
+lengths of different request packets will reveal properties of the private data.
+At this point the privacy of the communication between the user and the website is
+compromised and the adversary has broken the security of TLS.
 
-A formal description of the above example is defined in Appendix \ref{sec:breachmodel}.
+A description of the above example is included in Appendix \ref{sec:breachmodel}.
 
-\subsection{Terms}
-The previous example allows us to explore multiple terms that are used in the
-rest of our work. These terms include the \textit{rendering function} $f$,
-\textit{rendered message} $m$, \textit{secret} $s$, \textit{noise} $v$,
+\subsection{Terms}\label{subsec:terms}
+The previous example introduces multiple terms that are used in the rest of our
+work. The terms that need be explained include the \textit{rendering function}
+$f$, \textit{rendered message} $m$, \textit{secret} $s$, \textit{noise} $v$,
 \textit{reflection} $r$ and the distributions $\mathcal{M}$ of secrets and
 $\mathcal{V}$ of noise.
 
@@ -160,7 +169,7 @@ it. In this case, the website is found in the URL \textit{mail.example.com} and
 the web page that the adversary exploits is
 \textit{mail.example.com/search?query=attack}. This website provides a HTTP GET
 parameter called \textit{query} and the adversary uses the reflection string
-\textit{attack}. The HTML response is described below:
+\textit{attack}. The HTML response is included below:
 
 \begin{lstlisting}[basicstyle=\small\ttfamily]
 <div>
@@ -178,57 +187,57 @@ parameter called \textit{query} and the adversary uses the reflection string
 </div>
 \end{lstlisting}
 
-The server's HTML generator could be abstracted as a \textit{rendering
+The server's HTML generator is an instance of the \textit{rendering
 function} $f$. This function's input is the user's request, resources such as the
 HTML blueprint for the web page, and external functions such as web framework
 middlewares.
 
-The output of the rendering function is the \textit{rendered message} $m$. This
-is the generated HTML response code, that contains response data that is
-rendered by the user's browser and contains different string elements. The HTML
-response elements can be distinguished based on the role of each one in a
-compression-based attack. An element can be a \textit{secret}, \textit{noise},
-\textit{static}, or a \textit{reflection}. An element's alphabet consists of all
-possible values each character in the element may take.
+The output of $f$ is the \textit{rendered message} $m$. This
+is the generated HTML response code that contains response data and is
+rendered by the user's browser.
 
-A \textit{secret} $s$ is any part of the response that is user-specific and a
-potential security risk in case of compromise. Examples of secrets in an HTML
-response include private messages, email contents, financial data, or web
-security elements like CSRF tokens \cite{c16}. The secret's alphabet is generally printable
-text characters. In our example, the strings "Bank", which refers to a email
-topic, and "Routing number: 123", which represents an email content, are
-considered secrets.
+Data in the HTML response can be distinguished based on the role each one takes
+in the attack. A data element can be a \textit{secret}, \textit{noise},
+\textit{static}, or a \textit{reflection}. An element's alphabet is the set of
+all its characters.
 
-The \textit{noise} $v$ on the other side is a value that changes unpredictably per
-request regardless of the requested content. Examples of noise include
-timestamps, user-generated content, masked information. The noise's distribution
-is in general a random distribution of a subset of printable characters. In our
-example, the string "L*fKLs!a4fd@" is considered noise.
+A \textit{secret} $s$ is any part of the response that is user-specific. The
+compromise of $s$'s privacy is a potential security risk. Examples of secrets in
+an HTML response include private messages, email contents, financial data, and
+web security elements like CSRF tokens \cite{c16}. A secret's alphabet is
+generally printable text characters. In our example, the strings "Bank", which
+is an email topic, and "Routing number: 123", which is an email content, are
+both secrets. The attacker will issue requests on all characters in the secret's
+alphabet in order to perform the length analysis.
 
-\textit{Static} content is any part of the response that remains unchanged
-across user requests like HTML $<$div$>$ tags and CSS code. Static content is fully
-predictable per request and thus irrelevant in the attack outcome since the
-attacker can bypass it. Strings like "div", "ul", "Your inbox:" are considered
+The \textit{noise} $v$ on the other side is a value that changes unpredictably
+per request regardless of the requested content. Examples of noise include
+timestamps, user-generated content, and masked information. The noise's
+distribution is in general random and its alphabet consists of printable
+characters. In our example, the string "L*fKLs!a4fd@" is considered noise.
+
+\textit{Static} is any content that remains unchanged across requests. Typical
+examples of static data are HTML $<$div$>$ tags and CSS code. Static content is
+predictable and thus irrelevant in the attack since the attacker can easily
+predict its behaviour. Strings like "div", "ul", "Your inbox:" are considered
 static in our example.
 
 A \textit{reflection} $r$ is a component crafted by the attacker and can be
 adaptively transformed as the attack progresses. The reflection is included in
-the response and compressed in the same context with the secret that is
-targeted. In our example, the HTTP GET value "attack" of parameter "query" is used as
-a reflection.
+the response and is compressed along with the secret. In our example, the HTTP
+GET value "attack" of the parameter "query" is used as a reflection.
 
-Secrets and reflections are chosen from the distribution $\mathcal{M}$. For
-example, consider the secret "123" in our example. Two cases for the
-distribution $\mathcal{M}$ would be all permutations of 4-length strings
-consisting of printable characters or only english alphabet letters. The
-reflection is chosen from the distribution $\mathcal{M}$, so the definition of
-$\mathcal{M}$ reflects the adversary's power, i.e. in the first case above the
-adversary is less powerful than the second.
+Secrets and reflections are chosen from the support of distribution
+$\mathcal{M}$. The definition of $\mathcal{M}$ affects the the secret's alphabet
+and consequently the attack's execution performance. For example, two cases for
+the support of $\mathcal{M}$ are the set of 3-byte strings and the set of
+3-digit integers. The secret "123" exists in both supports. However, in the second
+case the requests that are needed in order to decrypt the secret are much less
+than the first case.
 
-Finally, a noise element is chosen from the distribution $\mathcal{V}$. This
-distribution in our example describes the uniformly random choice of strings of
-certain alphabet. In our example this alphabet is the printable ASCII characters
-and a noise element is chosen randomly from $\mathcal{V}$ per request.
+Finally, a noise element is chosen from the distribution $\mathcal{V}$. In our
+example, noise elements are strings of printable ASCII characters. Each noise
+element is chosen from $\mathcal{V}$ per request.
 
 \subsection{Contributions}
 Our contributions are two-fold. Firstly, we introduce a novel model for discussing
