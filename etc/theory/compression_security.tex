@@ -418,15 +418,14 @@ The reflection game is depicted in the following figure:
       \caption{Reflection Game}
    \end{figure}
 
-\noindent {\bf Symmetric key version.}
-
-The above game can be modified to deal with symmetric encryption. For this, the
-choice of key is changed to be limited to a secret key instead of a public and
-private key pair. The adversary is not given access to any key material.
-Instead, the adversary is given access to an encryption oracle which encrypts a
-given message using the secret key and returns the respective ciphertext, in
-addition to the existing reflection oracle. Both oracles can be called an
-arbitrary number of times by the challenger.
+\noindent {\bf Symmetric key version.} The above game can be modified to deal
+with symmetric encryption. For this, the choice of key is changed to be limited
+to a secret key instead of a public and private key pair. The adversary is not
+given access to any key material.  Instead, the adversary is given access to an
+encryption oracle which encrypts a given message using the secret key and
+returns the respective ciphertext, in addition to the existing reflection
+oracle. Both oracles can be called an arbitrary number of times by the
+challenger.
 
 In the following proofs, we will assume that the game is played symmetrically.
 As the attack does not pertain to the key exchange mechanism, all theorems can
