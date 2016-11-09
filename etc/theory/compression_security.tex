@@ -588,8 +588,12 @@ manner. For reference, the exact definitions of DEFLATE are given in
 \subsection{Composing with compression}\label{subsec:comcompose}
 
 We now shift our interest to algorithms which compose compression and
-encryption.  Therefore, we treat the public-key encryption scheme above as a
-composition of a compression and encryption algorithm:
+encryption. Compression is the central point in the chain of transformations on
+the plaintext. Therefore, we define the composition of a compression algorithm
+with a rendering function and an encryption algorithm.
+
+The public-key encryption scheme above is treated as a composition of a
+compression and encryption algorithm:
 \begin{equation*}
     \mathcal{E} = Enc \circ Com
 \end{equation*}
@@ -597,6 +601,12 @@ composition of a compression and encryption algorithm:
 $Com$ denotes a compression function as defined above, while $Enc$ denotes an
 encryption function. We stress our important assumption that $Enc$ is defined
 on $\{0, 1\}^*$ and not on some fixed-length input.
+
+The composition of the compression function $Com$ and the rendering function $f$
+is defined:
+\begin{equation*}
+    \mathcal{K} = Com \circ f
+\end{equation*}
 
 \subsection{Length monotonicity}\label{subsec:lenmonotone}
 
