@@ -620,29 +620,23 @@ distribution $\mathcal{M}$ and the noise distribution $\mathcal{V}$ when:
     dtc(Q, \overbar{r}, f, Com, \mathcal{M}, \mathcal{V})
     \defeq\\
     \exists \alpha \text{ non-negl}:\\
-    \Pr_{s_1 \leftarrow \mathcal{M}_Q,
-        s_2 \leftarrow \mathcal{M}_{\lnot Q},
-        \overbar{v} \leftarrow \mathcal{V}^2}
+    \Pr
         [cpr^Q_{f, Com}(s_1, \overbar{r}, \overbar{v}) \land
          cpr^Q_{f, Com}(s_2, \overbar{r}, \overbar{v})]
     \geq\\
     \pi + \alpha(\lambda)
 \end{align*}
 
-We call $Q$ \textit{compression-detectable} if a pair $\overbar{r}$ exists,
-such that:
-\begin{equation*}
-    \exists \overbar{r} = r_1, r_2 \in \mathcal{M}:
-    dct(Q, \overbar{r}, f, Com, \mathcal{M}, \mathcal{V})
-\end{equation*}
+Where $s_1$ is drawn from $\mathcal{M}_Q$, $s_2$ is drawn from
+$\mathcal{M}_{\lnot Q}$, and $v_1, v_2$ are drawn from $\mathcal{V}$.
 
-Furthermore we require that such a pair $\overbar{r}$ is polynomially
-computable:
-\begin{align*}
-    \exists \text{PPT } \mathcal{O}_R:\\
-    dct(Q, \overbar{r}, f, Com, \mathcal{M}, \mathcal{V}),\\
-    \overbar{r} \leftarrow \mathcal{O}_R(Com, f, Q, \mathcal{M}, \mathcal{V})
-\end{align*}
+We call $Q$ \textit{compression-detectable} if a pair $\overbar{r} = (r_1,
+r_2)$ exists, such that $dct(Q, \overbar{r}, f, Com, \mathcal{M}, \mathcal{V})$
+holds. Furthermore we require that such a pair $\overbar{r}$ is polynomially
+computable. That is, there exists some polynomial-time functionality
+$\mathcal{O}_R(Com, f, Q, \mathcal{M}, \mathcal{V})$ which produces an
+$\overbar{r}$ such that $dct(Q, \overbar{r}, f, Com, \mathcal{M}, \mathcal{V})$
+holds.
 
 The compression-detectability property exists in all common compression
 functions as long as $s$ and $r$ compress in the same context. We will
