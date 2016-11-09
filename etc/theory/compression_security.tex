@@ -309,7 +309,7 @@ is unprecedented compared to other proposed defense methods.
 
 \subsection{Adaptive reflection game}\label{subsec:refsecgame}
 
-Let $\mathcal{PE} = (\mathcal{K}, \mathcal{E}, \mathcal{D})$ be a public-key
+Let $\mathcal{PE} = (KeyGen, \mathcal{E}, \mathcal{D})$ be a public-key
 encryption scheme, $\mathcal{A}$ be an adversary and $\mathcal{S}$ be a
 simulator of $\mathcal{A}$.  The game
 $\text{Game}_{\text{REF-SEC}}^{\mathcal{PE},\mathcal{A}}(\lambda,  f,
@@ -322,7 +322,7 @@ reversible.  Notice that the distribution of secrets is parameterized with the
 history of execution $\omega$.
 
 The challenger produces a $\lambda$-bit key $(pk, sk) \leftarrow
-\mathcal{K}(\lambda)$. The adversary is given $pk$, $\mathcal{V}$, $g$ and $f$.
+KeyGen(\lambda)$. The adversary is given $pk$, $\mathcal{V}$, $g$ and $f$.
 Setting $\omega = ()$, the empty vector, the challenger initially chooses
 a secret $s_0 \leftarrow \mathcal{M}_\omega$.
 
@@ -346,7 +346,7 @@ Formally, let the public key adversarial game be defined as follows:
 
 \begin{lstlisting}[texcl,mathescape,basicstyle=\small]
 def $\text{Game}_{\text{REF-SEC}}^{\mathcal{PE},\mathcal{A}}(\lambda, f, \mathcal{V}, \mathcal{M}, g)$:
-    $(pk, sk) \leftarrow \mathcal{K}(\lambda)$
+    $(pk, sk) \leftarrow KeyGen(\lambda)$
     $\omega = ()$
     $i = 0$
     $y \leftarrow \mathcal{A}^{\text{Reflect}^{\mathcal{E}_{pk}, \mathcal{V}}}
@@ -429,7 +429,7 @@ This simplifies the game as follows:
 
 \begin{lstlisting}[texcl,mathescape,basicstyle=\small]
 def $\text{Game}_{\text{REF-SEC}}^{\mathcal{PE},\mathcal{A}}(\lambda, f, \mathcal{V}, \mathcal{M}, g)$:
-    $(pk, sk) \leftarrow \mathcal{K}(\lambda)$
+    $(pk, sk) \leftarrow KeyGen(\lambda)$
     $s \leftarrow \mathcal{M}$
     $y \leftarrow \mathcal{A}^{\text{Reflect}^{\mathcal{E}_{pk}, \mathcal{V}}_s(r)}(\lambda, f, \mathcal{V}, \mathcal{M}, g)$
     if $y = g(s)$:
@@ -615,7 +615,7 @@ An important assumption for our attack is that the encryption function $Enc$ is
 \begin{equation*}
 \begin{split}
 \forall m_1, m_2 \in \{0, 1\}^*\\
-\forall k_1, k_2 \in \mathcal{K}\\
+\forall k_1, k_2 \in KeyGen\\
 |m_2| > |m_1|
 \Rightarrow
 |Enc_{k_1}(m_2)| \geq |Enc_{k_2}(m_1)|
