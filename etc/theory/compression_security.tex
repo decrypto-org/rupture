@@ -50,18 +50,27 @@
 \begin{abstract}
 When compression is composed with encryption, unexpected vulnerabilities can
 arise. Such vulnerabilities have been explored in practical attacks against TLS
-such as CRIME, TIME, and BREACH. We introduce an abstract theoretical model for
-such attacks, the \textit{adaptive reflection security} model. We discuss what
-properties common compression functions have, such as the
-\textit{compression-detectability} of predicates, and we show that all
-length-preserving encryption schemes are vulnerable when composed with such
-functions. For the case of the BREACH attack, we show that it can be described
-as an instance of our theoretical model. Motivated by the lack of
+such as CRIME, TIME, and BREACH, even after TLS 1.3. We introduce an abstract
+theoretical cryptographic model for such attacks, the \textit{adaptive
+reflection security} game with the relevant security definitions. We propose a
+model for \textit{compression idealness} and experimentally show that typical compression
+functions expose partially ideal behavior. We then experimentally show that
+typical plaintexts used in practice follow an interdependent joint distribution,
+our stronger notion of dependent joint distributions. Based on these two
+properties, we prove that \textit{compression-detectability} of predicates
+arises, the ability to extract a predicate of the plaintext using reflection.
+We then prove that all length-preserving encryption schemes are insecure when
+composed with such functions. Our attack model describes two modes of attack,
+one-shot and amplified. For the case of the BREACH attack, we discuss how it can
+be described as an instance of our theoretical model. Motivated by the lack of
 production-grade testing tools, we provide a modular scalable open-source
-generic attack framework that implements these attacks in a robust manner.
-Furthermore, we explore the performance of defenses described in literature and
-propose a novel protocol that effectively eliminates the threat these attacks
-pose.
+generic attack framework that implements compression side-channel attacks in a
+robust manner. Finally, we propose a novel defense protocol, \textit{context
+hiding}, that effectively eliminates the threat these attacks pose. This
+protocol modifies the plaintext joint distribution so as to remove the
+interdependence, thereby mitigating the problem. We show that our method of
+defense performs significantly more favourably in terms of compression rate when
+compared to previous techniques.
 \end{abstract}
 
 \section{Introduction}\label{sec:prev}
@@ -152,7 +161,7 @@ the web page that the adversary exploits is
 parameter called \textit{query} and the adversary uses the reflection string
 \textit{attack}. The HTML response is described below:
 
-\begin{lstlisting}
+\begin{lstlisting}[basicstyle=\small]
 <div>
     <p>You searched for: attack</p>
     <p>No results found.</p>
@@ -196,7 +205,7 @@ is in general a random distribution of a subset of printable characters. In our
 example, the string "L*fKLs!a4fd@" is considered noise.
 
 \textit{Static} content is any part of the response that remains unchanged
-across user requests like HTML <div> tags and CSS code. Static content is fully
+across user requests like HTML $<$div$>$ tags and CSS code. Static content is fully
 predictable per request and thus irrelevant in the attack outcome since the
 attacker can bypass it. Strings like "div", "ul", "Your inbox:" are considered
 static in our example.
@@ -283,7 +292,7 @@ of all secrets sampled by the reflection oracle during the course of the game.
 
 Formally, let the public key adversarial game be defined as follows:
 
-\begin{lstlisting}[texcl,mathescape]
+\begin{lstlisting}[texcl,mathescape,basicstyle=\small]
 def $\text{Game}_{\text{REF-SEC}}^{\mathcal{PE},\mathcal{A}}(\lambda, f, \mathcal{V}, \mathcal{M}, g)$:
     $(pk, sk) \leftarrow \mathcal{K}(\lambda)$
     $\omega = ()$
@@ -298,7 +307,7 @@ def $\text{Game}_{\text{REF-SEC}}^{\mathcal{PE},\mathcal{A}}(\lambda, f, \mathca
 
 Where the reflection oracle provided to the adversary is as follows:
 
-\begin{lstlisting}[texcl,mathescape]
+\begin{lstlisting}[texcl,mathescape,basicstyle=\small]
 def $\text{Reflect}^{\mathcal{E}_{pk}, \mathcal{V}}(r)$: (global variable $\psi$)
     $s \leftarrow \mathcal{M}_\omega$
     $v \leftarrow \mathcal{V}$
@@ -311,7 +320,7 @@ def $\text{Reflect}^{\mathcal{E}_{pk}, \mathcal{V}}(r)$: (global variable $\psi$
 
 Let the simulator game be defined as follows:
 
-\begin{lstlisting}[texcl,mathescape]
+\begin{lstlisting}[texcl,mathescape,basicstyle=\small]
 def $\text{Game}_{\text{REF-SIM}}^{\mathcal{PE},\mathcal{S}}(\lambda, f, \mathcal{V}, \mathcal{M}, g)$:
     $\omega = ()$
     $i = 0$
@@ -325,7 +334,7 @@ def $\text{Game}_{\text{REF-SIM}}^{\mathcal{PE},\mathcal{S}}(\lambda, f, \mathca
 
 Where the simulator reflection oracle is configured to not answer:
 
-\begin{lstlisting}[texcl,mathescape]
+\begin{lstlisting}[texcl,mathescape,basicstyle=\small]
 def $\text{ReflectSim}^{\mathcal{E}_{pk}, \mathcal{V}}(r)$:
     $s \leftarrow \mathcal{M}_\omega$
     $v \leftarrow \mathcal{V}$
@@ -338,7 +347,6 @@ def $\text{ReflectSim}^{\mathcal{E}_{pk}, \mathcal{V}}(r)$:
 \subsection{Adversarial advantage}\label{subsec:refsecadv}
 
 Let us now define the advantage of the adversary against a simulator:
-
 \begin{align*}
     \text{Adv}_{\mathcal{PE}, \mathcal{A}, \mathcal{S}}&(\lambda, f, \mathcal{V}, \mathcal{M}, g) &\defeq\\
     |\Pr[\text{Game}_{\text{REF-SEC}}^{\mathcal{PE},\mathcal{A}}(\lambda, f, \mathcal{V}, \mathcal{M}, g) = 1] &-\\
@@ -350,7 +358,6 @@ Let us now define the advantage of the adversary against a simulator:
 Given a polynomially computable rendering function $f(\cdot, \cdot, \cdot)$ and
 a  noise distribution $\mathcal{V}$, a public-key encryption scheme
 $\mathcal{PE}$ is \textit{reflection-secure} if:
-
 \begin{align*}
 \forall \mathcal{M}:
 \forall g:
@@ -368,7 +375,7 @@ random choices from $\mathcal{M}_\omega$ always return the initial secret $s$.
 
 This simplifies the game as follows:
 
-\begin{lstlisting}[texcl,mathescape]
+\begin{lstlisting}[texcl,mathescape,basicstyle=\small]
 def $\text{Game}_{\text{REF-SEC}}^{\mathcal{PE},\mathcal{A}}(\lambda, f, \mathcal{V}, \mathcal{M}, g)$:
     $(pk, sk) \leftarrow \mathcal{K}(\lambda)$
     $s \leftarrow \mathcal{M}$
@@ -381,7 +388,7 @@ def $\text{Game}_{\text{REF-SEC}}^{\mathcal{PE},\mathcal{A}}(\lambda, f, \mathca
 
 The adversary reflection oracle is also simplified:
 
-\begin{lstlisting}[texcl,mathescape]
+\begin{lstlisting}[texcl,mathescape,basicstyle=\small]
 def $\text{Reflect}^{\mathcal{E}_{pk}, \mathcal{V}}_s(r)$:
     $v \leftarrow \mathcal{V}$
     $m = f(s, r, v)$
@@ -391,7 +398,7 @@ def $\text{Reflect}^{\mathcal{E}_{pk}, \mathcal{V}}_s(r)$:
 
 And the simulator does not require an oracle for its execution:
 
-\begin{lstlisting}[texcl,mathescape]
+\begin{lstlisting}[texcl,mathescape,basicstyle=\small]
 def $\text{Game}_{\text{REF-SIM}}^{\mathcal{PE},\mathcal{S}}(\lambda, f, \mathcal{V}, \mathcal{M}, g)$:
     $y \leftarrow \mathcal{S}(f, \mathcal{V}, \mathcal{M}, g)$
     $s \leftarrow \mathcal{M}$
@@ -401,7 +408,16 @@ def $\text{Game}_{\text{REF-SIM}}^{\mathcal{PE},\mathcal{S}}(\lambda, f, \mathca
         return 0
 \end{lstlisting}
 
+The reflection game is depicted in the following figure:
+
+   \begin{figure}[thpb]
+      \centering
+      \includegraphics[width=0.48\textwidth]{reflection_game.png}
+      \caption{Reflection Game}
+   \end{figure}
+
 \noindent {\bf Symmetric key version.}
+
 The above game can be modified to deal with symmetric encryption. For this, the
 choice of key is changed to be limited to a secret key instead of a public and
 private key pair. The adversary is not given access to any key material.
@@ -416,12 +432,84 @@ be directly translated between the two versions of the game.
 
 \section{The security of compression}\label{sec:comsec}
 
+\subsection{The interdependence assumption}
+
+Let $\bar{\mathcal{M}}$ be a joint distribution from which the random variables $(s, r)$
+are drawn. We say that $s$ and $r$ are interdependent when:
+\begin{equation*}
+\begin{split}
+\exists s_1, r_1, s_2, r_2:\\
+\Pr_{(s, r) \leftarrow \bar{\mathcal{M}}}[(s, r) = (s_1, r_1)] < \Pr_{(s, r) \leftarrow \bar{\mathcal{M}}}[(s, r) = (s_2, r_1)]
+\land\\
+\Pr_{(s, r) \leftarrow \bar{\mathcal{M}}}[(s, r) = (s_1, r_2)] > \Pr_{(s, r) \leftarrow \bar{\mathcal{M}}}[(s, r) = (s_2, r_2)]
+\end{split}
+\end{equation*}
+
+We observe that commonly compressed texts such as HTML content exhibit
+interdependence almost everywhere. To be more precise, if we sample, for
+example, digrams (two-letter sequences) in HTML content of popular websites and
+treat this two-letter sequence $\phi = (s, r)$ of the two characters $s$ and
+$r$ as a random variable $\phi$, we notice that $s$ and $r$ are dependent
+variables and in fact interdependent. Similarly when sampling two-word sequences
+$\phi = (s, r)$ of the two words $s$ and $r$ from English literature, then $s$
+and $r$ are interdependent. The same occurs for digrams in English. This
+straightforward fact is supported by extensive statistical analyses in the
+scientific literature such as \cite{c18}.
+
+The necessity of the assumption that the plaintext being compressed follows an
+interdependent distribution will become clear shortly, when we introduce our
+definition of compression functions.
+
+\subsection{Compression idealness}
+
+We now move on to define the notion of compression idealness.
+
+Let $\mathcal{K}$ be a function from some input distribution $\bar{\mathcal{M}}$ to the
+output space of all strings ${0, 1}^*$. $\mathcal{K}$ is an ideal compression
+function when:
+\begin{equation*}
+\begin{split}
+\forall w_1, w_2 \in \bar{\mathcal{M}}:\\
+\Pr_{w \leftarrow \bar{\mathcal{M}}}[w = w_1] < \Pr_{w \leftarrow \bar{\mathcal{M}}}[w = w_2]
+\iff\\
+\lvert\mathcal{K}(w_1)\rvert > \lvert\mathcal{K}(w_2)\rvert
+\end{split}
+\end{equation*}
+
+The intuitive notion behind compression idealness is that the encoding
+function is somehow perfectly aware of the input distribution. It
+exploits this knowledge of the input space to encode each possible
+input in an ideal way – more often occurring plaintexts are compressed
+better, i.e. in shorter length, than rarely occurring plaintexts.
+Practical compression functions are not perfectly ideal, because the
+distribution of plaintexts they try to cover is broad and ill-defined.
+However, such compression functions try to learn the distribution of
+the plaintext they are about to compress by observing frequencies of
+occurrences and taking advantage of them.
+
+We now turn our attention to two specific compression functions, the
+LZ77 and Huffman function. These two compression functions are of
+interest for two reasons. First, they are representative of the way
+typical lossless compression functions work internally, by taking
+advantage of letter frequencies (Huffman) or letter-sequence (LZ77)
+repetitions. Second, they are the ones almost exclusively used in
+practice. The DEFLATE algorithm, which is a composition of LZ77 and
+Huffman, is the algorithm used in gzip, which is prevalent on the
+modern web. In 2016, 98.85\% of websites that enabled compression used
+some form of gzip \cite{c19}. We argue that both LZ77 and Huffman are nearly
+ideal compression functions. The complexity of the Huffman and
+especially the LZ77 algorithms arises from many intricate technical
+details, such as, for instance, the sliding window size of LZ77. These
+details make it impractical to deal with these functions in analytical
+proofs. Hence, we support our idealness claims in an experimental
+manner. For reference, the exact definitions of DEFLATE are given in
+\cite{c12}.
+
 \subsection{Composing with compression}\label{subsec:comcompose}
 
 We now shift our interest to algorithms which compose compression and
 encryption.  Therefore, we treat the public-key encryption scheme above as a
 composition of a compression and encryption algorithm:
-
 \begin{equation*}
     \mathcal{E} = Enc \circ Com
 \end{equation*}
@@ -434,7 +522,6 @@ on $\{0, 1\}^*$ and not on some fixed-length input.
 
 An important assumption for our attack is that the encryption function $Enc$ is
 \textit{length monotonic}. Specifically,
-
 \begin{equation*}
 \begin{split}
 \forall m_1, m_2 \in \{0, 1\}^*\\
@@ -451,7 +538,7 @@ If the last inequality becomes strict, we call the encryption function
 A practical instance of a length monotonic encryption function is AES \cite{c8}.
 Stream ciphers can be treated as strictly monotonic to the bit level.
 
-\section{Property compressibility}\label{sec:propertycom}
+\section{Compressibility with respect to predicates}\label{sec:propertycom}
 
 Let $\mathcal{M}$ be a plaintext distribution and $Q(s)$ be a predicate on the
 plaintext $s \in \mathcal{M}$. Let us use $\mathcal{M}_Q$ to denote the subset
@@ -460,7 +547,6 @@ proportionally retaining measure and assuming $\mathcal{M}_Q \neq \emptyset$
 and $\mathcal{M}_{\lnot Q} \neq \emptyset$.
 
 For the specific property $Q$ and plaintext distribution $\mathcal{M}$, define:
-
 \begin{equation*}
     \pi \defeq max(\Pr_{s \leftarrow \mathcal{M}}[Q(s)], 1 - \Pr_{s \leftarrow \mathcal{M}}[Q(s)])
 \end{equation*}
@@ -484,14 +570,13 @@ is used. On the contrary, if $s \in \mathcal{M}_{\lnot Q}$, the opposite
 direction should occur.  If this is the case for the selected reflection pair
 and noise pair, we say that $Q$ compares favourably under $\overbar{r},
 \overbar{v}$:
-
 \begin{equation*}
 \begin{split}
     cpr^Q_{f, Com}(s, \overbar{r}, \overbar{v})
     \defeq\\
     \begin{cases}
-        |Com(f(s, r_1, v_1))| < |Com(f(s, r_2, v_2))| &\text{ if } Q(s)\\
-        |Com(f(s, r_1, v_1))| > |Com(f(s, r_2, v_2))| &\text{ otherwise}
+        |\mathcal{K}(s, r_1, v_1)| < |\mathcal{K}(s, r_2, v_2)| &\text{ if } Q(s)\\
+        |\mathcal{K}(s, r_1, v_1)| > |\mathcal{K}(s, r_2, v_2)| &\text{ otherwise}
     \end{cases}
 \end{split}
 \end{equation*}
@@ -499,23 +584,21 @@ and noise pair, we say that $Q$ compares favourably under $\overbar{r},
 The reflection pair $\overbar{r}$ \textit{detects} predicate $Q$ under
 compression $Com$ rendered with rendering function $f$ over the secret
 distribution $\mathcal{M}$ and the noise distribution $\mathcal{V}$ when:
-
 \begin{align*}
     dtc(Q, \overbar{r}, f, Com, \mathcal{M}, \mathcal{V})
     \defeq\\
     \exists \alpha \text{ non-negl}:\\
-    \Pr_{s \leftarrow \mathcal{M}_Q,
-        s' \leftarrow \mathcal{M}_{\lnot Q},
+    \Pr_{s_1 \leftarrow \mathcal{M}_Q,
+        s_2 \leftarrow \mathcal{M}_{\lnot Q},
         \overbar{v} \leftarrow \mathcal{V}^2}
-        [cpr^Q_{f, Com}(s, \overbar{r}, \overbar{v}) \land
-         cpr^Q_{f, Com}(s', \overbar{r}, \overbar{v})]
+        [cpr^Q_{f, Com}(s_1, \overbar{r}, \overbar{v}) \land
+         cpr^Q_{f, Com}(s_2, \overbar{r}, \overbar{v})]
     \geq\\
     \pi + \alpha(\lambda)
 \end{align*}
 
 We call $Q$ \textit{compression-detectable} if a pair $\overbar{r}$ exists,
 such that:
-
 \begin{equation*}
     \exists \overbar{r} = r_1, r_2 \in \mathcal{M}:
     dct(Q, \overbar{r}, f, Com, \mathcal{M}, \mathcal{V})
@@ -523,7 +606,6 @@ such that:
 
 Furthermore we require that such a pair $\overbar{r}$ is polynomially
 computable:
-
 \begin{align*}
     \exists \text{PPT } \mathcal{O}_R:\\
     dct(Q, \overbar{r}, f, Com, \mathcal{M}, \mathcal{V}),\\
@@ -546,7 +628,6 @@ compression-detectable plaintext predicate over plaintext distribution
 $\mathcal{M}$ and noise distribution $\mathcal{V}$.
 
 Then:
-
 \begin{align*}
     \exists \alpha \text{ non-negl}:
     \forall Enc:
@@ -564,7 +645,7 @@ Then:
 Let $g$ be the boolean function $Q$ on the plaintext. Define the adversary
 $\mathcal{A}$ as follows:
 
-\begin{lstlisting}[texcl,mathescape]
+\begin{lstlisting}[texcl,mathescape,basicstyle=\small]
 def $\mathcal{A}(Q, \mathcal{M}, y)$:
     $(r_1, r_2) \leftarrow \mathcal{O}_R(Com, f, Q, \mathcal{M}, \mathcal{V})$
 
@@ -578,7 +659,6 @@ def $\mathcal{A}(Q, \mathcal{M}, y)$:
 \end{lstlisting}
 
 Let $\mathcal{S}$ be an arbitrary simulator. Then we have:
-
 \begin{align*}
     \Pr[\text{Game}_{\text{REF-SIM}}^{\mathcal{PE},\mathcal{S}}
         (\lambda, f, \mathcal{V}, \mathcal{M}, g) = 1] &=\\
@@ -587,14 +667,12 @@ Let $\mathcal{S}$ be an arbitrary simulator. Then we have:
 \end{align*}
 
 Letting the random variables $b$ and $x$:
-
 \begin{align*}
     x &\leftarrow \mathcal{M}\\
     b &\leftarrow \mathcal{S}(f, \mathcal{V}, \mathcal{M}, g)
 \end{align*}
 
 Due to the independence of the simulator's output with the choice of $x$ we have:
-
 \begin{align*}
     Pr[b = Q(x)] &=\\
     Pr[\lnot b|\lnot Q(x)]Pr[\lnot Q(x)] + Pr[b|Q(x)]Pr[Q(x)] &=\\
@@ -607,13 +685,11 @@ For a given $\Pr[Q]$, this function is monotonic in $\Pr[b]$ and therefore has
 potential extrema at $\Pr[b] = 0$ or $\Pr[b] = 1$, for which cases the function
 takes the values $1 - \Pr[Q(x)]$ and $\Pr[Q(x)]$ respectively. Therefore, the
 maximum $\Pr[b]$ of the simulator is:
-
 \begin{equation*}
     \Pr[Q(x) = b] = max(\Pr[Q(x)], 1 - \Pr[Q(x)]) = \pi
 \end{equation*}
 
 And therefore:
-
 \begin{align*}
     \forall \mathcal{S}:\\
     \Pr[
@@ -625,35 +701,32 @@ And therefore:
 \end{align*}
 
 From the compression detectability of Q we know that:
-
 \begin{align*}
     \exists \alpha \text{ non-negl}:\\
-    \Pr_{s \leftarrow \mathcal{M}_Q,
-         s' \leftarrow \mathcal{M}_{\lnot Q},
+    \Pr_{s_1 \leftarrow \mathcal{M}_Q,
+         s_2 \leftarrow \mathcal{M}_{\lnot Q},
          \overbar{v} \leftarrow \mathcal{V}^2}
-         [cpr^Q_{f, Com}(s, \overbar{r}, \overbar{v}) \land
-          cpr^Q_{f, Com}(s', \overbar{r}, \overbar{v})]
+         [cpr^Q_{f, Com}(s_1, \overbar{r}, \overbar{v}) \land
+          cpr^Q_{f, Com}(s_2, \overbar{r}, \overbar{v})]
     \geq\\
     \pi + \alpha(\lambda)
 \end{align*}
 
 Therefore:
-
 \begin{align*}
-    \Pr_{s \leftarrow \mathcal{M}_Q,
+    \Pr_{s_1 \leftarrow \mathcal{M}_Q,
          \overbar{v} \leftarrow \mathcal{V}^2}
-         [cpr^Q_{f, Com}(s, \overbar{r}, \overbar{v})]
+         [cpr^Q_{f, Com}(s_1, \overbar{r}, \overbar{v})]
     \geq
     \pi + \alpha(\lambda) \land\\
-    \Pr_{s' \leftarrow \mathcal{M}_{\lnot Q},
+    \Pr_{s_2 \leftarrow \mathcal{M}_{\lnot Q},
          \overbar{v} \leftarrow \mathcal{V}^2}
-         [cpr^Q_{f, Com}(s', \overbar{r}, \overbar{v})]
+         [cpr^Q_{f, Com}(s_2, \overbar{r}, \overbar{v})]
     \geq
     \pi + \alpha(\lambda)
 \end{align*}
 
 And so:
-
 \begin{align*}
     \Pr_{s \leftarrow \mathcal{M},
          \overbar{v} \leftarrow \mathcal{V}^2}
@@ -670,16 +743,14 @@ And so:
 
 Let us now examine the event of $\mathcal{A}$ being successful, denoted Succ,
 when $cpr^Q_{f, Com}(s, \overbar{r}, \overbar{v})$. Assuming $Q(s)$:
-
 \begin{align*}
-    \Pr[|Com(f(s, r_1, v_1))| < |Com(f(s, r_2, v_2))||Q(s)]
+    \Pr[|\mathcal{K}(s, r_1, v_1)| < |\mathcal{K}(s, r_2, v_2)||Q(s)]
     = \pi + \alpha(\lambda)
 \end{align*}
 
 And from the strict length monotonicity of $Enc$ it follows that:
-
 \begin{align*}
-    \Pr[&|Enc(Com(f(s, r_1, v_1)))| <\\&|Enc(Com(f(s, r_2, v_2)))||Q(s)]
+    \Pr[&|Enc(\mathcal{K}(s, r_1, v_1))| <\\&|Enc(\mathcal{K}(s, r_2, v_2))||Q(s)]
         \geq \pi + \alpha(\lambda)\\
     \Rightarrow \Pr[&
         |\text{Reflect}^{\mathcal{E}_{pk}, \mathcal{V}}_s(r_1)|
@@ -694,9 +765,8 @@ And from the strict length monotonicity of $Enc$ it follows that:
 \end{align*}
 
 The case for $\lnot Q(s)$ is the same, but with a different inequality direction:
-
 \begin{align*}
-    \Pr[|Com(f(s, r_1, v_1))| > |Com(f(s, r_2, v_2))||\lnot Q(s)]
+    \Pr[|\mathcal{K}(s, r_1, v_1)| > |\mathcal{K}(s, r_2, v_2)||\lnot Q(s)]
         \geq\\
         \pi + \alpha(\lambda)\\
     \Rightarrow \Pr[\text{Succ}|\lnot Q(s)] \geq\\
@@ -704,7 +774,6 @@ The case for $\lnot Q(s)$ is the same, but with a different inequality direction
 \end{align*}
 
 And so the probability of success is given:
-
 \begin{align*}
     \Pr[\text{Succ}] =\\
     \Pr[\text{Succ}|Q(s)]\Pr[Q(s)]
@@ -714,7 +783,6 @@ And so the probability of success is given:
 \end{align*}
 
 Therefore,
-
 \begin{align*}
     \forall PPT \mathcal{S}:
     \text{Adv}_{\mathcal{SE}(Enc, Com), \mathcal{A}, \mathcal{S}}
@@ -734,7 +802,7 @@ The amplification is parameterized by an odd parameter $k$.
 
 Let the amplification adversary be defined as follows:
 
-\begin{lstlisting}[texcl,mathescape]
+\begin{lstlisting}[texcl,mathescape,basicstyle=\small]
 def $\mathcal{A}(Q, \mathcal{M})$:
     $(r_1, r_2) \leftarrow \mathcal{O}_R(Com, f, Q, \mathcal{M}, \mathcal{V})$
 
@@ -764,7 +832,6 @@ detectability margin $\alpha(\lambda)$,
 the amplified adversary achieves an arbitrarily large advantage
 against a non-negligible subset of elements, the
 \textit{amplifiable elements} distinguished by predicate $Amp$.
-
 \begin{align*}
     \forall Enc:
     \exists g:\\
@@ -783,7 +850,6 @@ against a non-negligible subset of elements, the
 \begin{IEEEproof}
 
 From the fact that $Q$ is compression-detectable and from the Compression Attack Theorem, we have that:
-
 \begin{align*}
     \Pr_{s \leftarrow \mathcal{M},
          \overbar{v} \leftarrow \mathcal{V}^2}
@@ -794,7 +860,6 @@ From the fact that $Q$ is compression-detectable and from the Compression Attack
 
 Some elements $s \in \mathcal{M}$ allow for better compression-detectability than others under the fixed
 reflection vector $\overbar{r}$. Call these elements \textit{amplifiable} and define predicate:
-
 \begin{align*}
     Amp(s) \defeq
     \Pr_{\overbar{v} \leftarrow \mathcal{V}^2}
@@ -818,7 +883,6 @@ Let:
 % B = (\pi - \frac{1}{2} + \frac{\alpha(\lambda)}{2}) / (\frac{1}{2} - \frac{\alpha(\lambda)}{2})
 % B = \pi / (\frac{1}{2} - \frac{\alpha(\lambda)}{2}) - (\frac{1}{2} - \frac{\alpha(\lambda)}{2}) / (\frac{1}{2} - \frac{\alpha(\lambda)}{2})
 % B = \pi / (\frac{1}{2} - \frac{\alpha(\lambda)}{2}) - 1
-
 \begin{align*}
     B = \frac{\pi}{\frac{1}{2} - \frac{\alpha(\lambda)}{2}} - 1
 \end{align*}
@@ -826,14 +890,12 @@ Let:
 $B$ is non-negligible in $\lambda$.
 
 Assume, for the sake of contradiction, that:
-
 \begin{align*}
     \Pr_{s \leftarrow \mathcal{M}}
     [Amp(s)] < B
 \end{align*}
 
 Then we have:
-
 \begin{align*}
     \Pr_{s \leftarrow \mathcal{M},
          \overbar{v} \leftarrow \mathcal{V}^2}
@@ -851,14 +913,12 @@ Then we have:
 \end{align*}
 
 But then:
-
 \begin{align*}
     B + (\frac{1}{2} + \frac{\alpha(\lambda)}{2})(1 - B) =
     \pi + \alpha(\lambda)
 \end{align*}
 
 And this contradicts the assumption that $Q$ is compression-detectable. Therefore:
-
 \begin{align*}
     \Pr_{s \leftarrow \mathcal{M}}
     [Amp(s)] \geq B
@@ -866,7 +926,6 @@ And this contradicts the assumption that $Q$ is compression-detectable. Therefor
 
 It remains to show that the advantage of the adversary can be
 arbitrarily large, i.e. that for some negligible $C$ we have:
-
 \begin{align*}
     \text{Adv}_{\mathcal{SE}(Enc, Com), \mathcal{A}, \mathcal{S}_{Amp}}
     (\lambda, f, \mathcal{V}, \mathcal{M}, g) = 1 - \pi - C
@@ -876,13 +935,11 @@ Indeed, observe that the amplifying adversary performs a repeated Bernoulli
 trial with $k$ repetitions and extracts a majority. Let $X$ be the number of
 repetitions that are successful for the adversary. Letting $\overbar{v}_i$
 be the noise chosen from $\mathcal{V}^2$ during the $i$-th round, $X$ is defined:
-
 \begin{align*}
     X \defeq |\{ i: cpr^Q_{f, Com}(s, \overbar{r}, \overbar{v}_i) \}|
 \end{align*}
 
 $X$ follows the binomial distribution, and therefore its expected value is:
-
 \begin{align*}
     E[X] = \frac{k}{2} + \frac{\alpha k}{2}
 \end{align*}
@@ -892,7 +949,6 @@ is equivalent to $X > \frac{k}{2}$.
 
 Because $\alpha$ is non-negligible and due to the tail bounds of the binomial
 distribution, we have:
-
 \begin{align*}
     Pr[Succ] = 1 - C(k)
 \end{align*}
@@ -901,144 +957,223 @@ Where $C$ is a negligible function.
 \end{IEEEproof}
 
 \section{Defense}\label{sec:defense}
+We propose a defense, \textit{context hiding}, that mitigates a class of
+practical compression side-channel attacks such as CRIME, TIME, BREACH, Rupture,
+and HEIST. The full plaintext recovery these attacks perform is no longer
+possible when our defense is applied.
 
-Defense against side-channel compression attacks and especially BREACH have been
-proposed in bibliography, including \cite{c3}, \cite{c5} and \cite{c6}.
+Context hiding is built on the premise of separating secrets in a per-origin
+manner in order to avoid cross-compression. In order to achieve this we define
+what constitutes an origin and what properties same-origin secrets share. This
+section describes the key components of the defense and the code implementation.
 
-\subsection{Disabling compression}\label{subsec:disablecom}
-Compression is the basic assumption for property compressibility. Disabling
-compression would break the adaptive reflection game, since it removes
-the compression part of the encryption function.
+\subsection{Context hiding properties}
 
-However, this method is not viable, since the performance overhead should it be
-applied overrules the benefits of the defense.
+\subsubsection{Origins}
+An origin is a uniquely identifiable party that generates content. A party can
+be either a physical entity, like a user, or an application that provides a
+service. It is important to properly identify the party that generated, or could
+have generated, a piece of content. The definition of origins should reflect the
+ability to generate all content that is assigned to each origin.
 
-\subsection{SameSite cookies}\label{subsec:samesite}
-SameSite cookies \cite{c10} is a proposed draft for enhancing web security. The
-main puprose of this technique is to mitigate cross-site request forgery
-attacks, although it also mitigates other kinds of cross-origin leakages.
+\subsubsection{Same-origin secrets}
+Defining origins is the first step to identifying same-origin secrets. Secrets
+are content pieces that are assinged to origins. Secrets that are assigned to an
+origin should have been generated by the party that this origin identifies.
+Also the origin's party has access to all content in this origin. This results
+in a secret $a$ being insecure for all other secrets belonging in $a$'s origin.
 
-This policy introduces a new attribute for web cookies that web servers may
-opt-in. This attribute states that cookies may only be included in a
-"first-party" context, i.e. in same origin requests.
+\subsection{Context hiding functionality}
+Our defense method proposes disabling cross-compression by applying a simple
+substitution cipher derived from a random permutation of the plaintext alphabet.
 
-However, the current BREACH application depends on cross-origin requests in
-order to call the reflection oracle, as defined in \ref{subsec:breachapp}.
-Enabling SameSite cookies would result in the elimination of this reflection
-oracle of the Reflection-Security Game and the effective mitigation of the
-attack.
+Firstly, we identify the origins based on the output $m$ of rendering function
+$f$ and store them in array $origins$. Each secret $s_i$ in $m$ is then
+separated based on its origin. Each origin is uniquely identified by an integer
+in range $[0, |origins|-1)$.
 
-\subsection{Masking secrets}\label{subsec:masking}
-Masking is a method of hiding secrets' properties per request. A mask is a
-bitstream equal in size with the secret. The masked text contains the result of
-the XOR operation between the secret and the mask concatenated with the mask.
-The secret can be obtained by applying XOR between the first and the second
-half of the masked text.
+Secondly, we identify the alphabet for each origin. An origin's alphabet
+consists of all possible characters that a secret of this origin may contain.
+For each origin, we generate a random permutation of the origin's alphabet and
+store it in the array $permutations$. The first element in the $permutations$
+array corresponds to the first origin in the $origins$ array and so forth.
 
-A masking function is defined:
+In order to secure a secret $s$ we apply a hiding function. The hiding function
+\textit{hide} takes two arguments, the secret $s$ and the permutation $p$ of the
+secret's origin. It applies the substitution cipher on each character in $s$ and
+returns the permuted secret $s'$. The substitution cipher is implemented in the
+function $Permute_p(c)$, which finds the index $i$ of character $c$ in the sorted
+permutation $p$ and replaces it with the $i$-th character in $p$.
 
-\begin{lstlisting}[texcl,mathescape]
-def masking($s_i$):
-    $l = |s_i|$
-    $m_i \xleftarrow{\$} \{0, 1\}^l\\$
-    $s_i' = m_i \oplus s$
-    return $s_i', m_i$
+\begin{lstlisting}[texcl,mathescape,basicstyle=\small]
+def hide($s, p$):
+    $s' = ''$
+    for $ch \in s$:
+        $s' = s' || Permute_p(ch)$
+    return $s'$
 \end{lstlisting}
 
-Masking can be applied on a rendered secret $s_i$ in the output $m$ of a
-rendering function $f$ as:
-
-\begin{lstlisting}[texcl,mathescape]
-def apply_masking($m_i, s_i$):
-    $s_i', m_i \leftarrow masking(s_i)$
-    return $Rep(m, s_i, \beta_1 s_i' \beta_2 m_i \beta_3)$
-\end{lstlisting}
-
-where $Rep$ is the string replacement function defined in
-\ref{subsec:rendering} and $\{\beta_1, \beta_2, \beta_3\}$ are symbols that do not
-appear in $m$ before masking.
-
-Mask removal should be applied on all masked secrets, marked by the annotation
-symbols $\beta_1$, $\beta_2$, $\beta_3$, before the reversing of rendering function $f$:
-
-\begin{lstlisting}[texcl,mathescape]
-def remove_masking($m', \beta_1, \beta_2, \beta_3$):
-    return $Rep(m', \beta_1 s_i' \beta_2 m_i \beta_3, s_i' \oplus m_i)$
-\end{lstlisting}
-
-where $Rep$ is the string replacement function and $\{\beta_1, \beta_2,
-\beta_3\}$ are the annotation symbols used in \texttt{apply\_masking}.
-
-Mask $m_i$ is chosen uniformly at random, so masked secret $s_i'$ is also
-random. This results in $s_i' m_i$ being indistinguishable from $r_1 r_2$ by a
-compression function $Com$, where $r_1$, $r_2$ are random nonces chosen
-uniformly at random.
-
-Masking renews the secret $s_i'$ each time the reflection oracle is called. That
-way, this method secures the secret's content against instances of the attack
-that require at least two calls to the reflection oracle.
-
-Masking doubles the size of the secret that is being protected. Furthermore,
-$m_i$ and $s_i'$ are random, so the compression performance is poor. Therefore,
-masking should be applied with limitation on high value secrets only, in order
-to avoid significant performance drop.
-
-Masking is a method used by Facebook \cite{c11} in order to protect CSRF tokens
-against BREACH attacks.
-
-\subsection{Context hiding}
-This defense technique requires the output $m_i$ of rendering function $f$ be
-partitioned in contexts and each secret $s_i$ exist in a context $ctx_i$.
-Multiple secrets may exist in the same context.
-
-A context is defined as all substrings of $m$ that satisfy a property $v$. A
-\textit{user-origin} context is a context with property $v$ of its substrings
-defined "Was the substring $t$ generated by user $user_i$?".
-
-Context hiding requires the initial generation of a seed $e$ that is used by a
-chosen random number generator to produce a permutation key $k_{ctx}^i$ per
-context $ctx_i$. The seed is regenerated for any output $m_i$ of $f$.
-
-In order to secure a context $ctx_i$ a hiding function is applied on each
-substring $t_i$ that exists in $ctx_i$. A context $ctx_i$ may not be secured, in
-which case the substrings that exist in $ctx_i$ are not hidden and remain
-vulnerable against the attack.
-
-In this instance of defense, we set $t_i$ to consist of ASCII characters. The
-hiding function uses a keyed pseudorandom permutation $\Pi_{k_{ctx}^i}(ch_i)$
-that replaces the input character $ch_i$ with another ASCII character. The
-hiding function is applied on all $ch_i \in t_i$:
-
-\begin{lstlisting}[texcl,mathescape]
-def context_hiding($ch_i, k_{ctx}^i$):
-    return $\Pi_{k_{ctx}^i}(ch_i)$
-\end{lstlisting}
-
-The hidden substring $t_i'$ is annotated by the special characters
+The protected secret $s'$ is annotated by the special characters
 $\beta_{start}^i$, $\beta_{end}^i$ that mark the start and the end of any
-substring that exists in context $ctx_i$ and needs to be unhidden.
+substring that needs to be unpermuted.
 
-The output $m'$ that is produced after applying hiding on all chosen contexts
-includes the seed $e$, so that the random number generator can be used to
-retrieve the key $k_{ctx}^i$ for each context $ctx_i$.
+The output $m'$ that is produced after hiding all secrets includes the
+permutation array $permutations$, so that applying the reverse permutation on
+all secrets is possible.
 
-The initial substring $t_i$ can be retrieved from the hidden substring $t_i'$
-using a \textit{context\_unhiding} function on each character $ch_i' \in t_i'$:
+The permuted secrets in $m'$ can be retrieved using the special annotation
+characters $\beta_{start}^i$ and $\beta_{end}^i$ that are unique per origin.
 
-\begin{lstlisting}[texcl,mathescape]
-def context_unhiding($ch_i', k_{ctx}^i$):
-    return $\Pi_{k_{ctx}^i}^{-1}(ch_i')$
+The initial secret $s$ can be retrieved from the protected secret $s'$
+using the \textit{unhide} function. This function takes secret $s'$ and
+permutation $p$ of the secret's origin and applies the reverse permutation on
+$s'$, returning the unpermuted secret $s$.
+
+\begin{lstlisting}[texcl,mathescape,basicstyle=\small]
+def unhide($s', p$):
+    $s = ''$
+    for $ch \in s'$:
+        $s = s || Unpermute_p(ch)$
+    return $s$
 \end{lstlisting}
 
-Hidden substrings $t_i'$ and the correct context key $k_{ctx}^i$ can be retrieved
-using the special annotation characters $\beta_{start}^i$ and $\beta_{end}^i$,
-that are unique per context.
+\subsection{The CTX defense}\label{subsec:ctx}
 
-Context hiding results in different permutations of substrings across different
-contexts. This enables the defender to handle a secret and the adversary
-generated reflection in different contexts. As long as either of the secret or
-reflection context is hidden, the detection of the prefix existence property Q
-will not be possible using BREACH in that case.
+\subsubsection{Implementation}
+Our contributions include the development of the CTX defense. CTX is an
+implementation of the context hiding method described in the previous section
+for HTML web pages.
+
+It is up to the application developer to decide which portions of the response
+are sensitive and must be protected as secrets. Sensitive data does not only
+include high-value secrets such as passwords and CSRF tokens, but also user data
+that the developer wishes to keep private. Some examples are the bodies of email
+messages in Gmail, the chat messages received or sent to a friend on Facebook,
+the contents of documents and spreadsheets in Google Docs and the list of online
+friends on Facebook or Google Hangouts, as they contain all the important
+contacts of the victim. Practically any piece of information which is only
+accessible when logged in is potentially a secret and should be CTX protected.
+On the other hand, some data do not typically need compression-security
+protection, e.g. static HTML portions that are accessible on a website even when
+logged out.
+
+The minimum amount of origins is one origin for the entire response, in which
+case CTX is not protecting any part of the plaintext, and the maximum is one
+origin per character. The latter would result in the best possible security
+under CTX, although compression would be effectively disabled - possibly resulting
+in poor performance. This is the case with defenses such as secret masking.
+
+Different-origin secrets are then forced to compress separately, i.e. not
+cross-compress. However, compression is achieved within each context. The
+default origin alphabet is ASCII characters (0 - 128). In order to randomly
+permute the secret alphabet, we use the Fisher--Yates shuffle
+algorithm~\cite{c17}.
+
+Secrets are then permuted by the server using the generated permutation of the
+corresponding origin prior to TLS encryption and network transmission. Upon
+arrival on the client side, the inverse permutation is applied to decode the
+secret. The same permutation is applied to all secrets of the same origin. That
+way, better compression is achieved intra-origin.
+
+Each time the server issues an HTTPS response, new per-origin permutations are
+generated. Compression side-channel attacks in general rely on the assumption that we can
+perform multiple requests to the target website while the transmitted secret
+remains the same. Since new alphabet permutations are generated per HTTPS
+response, the statistical analysis performed by Rupture is no longer feasible.
+
+\subsubsection{Experimental results}
+
+We have conducted several experiments to evaluate the performance of web
+services protected by CTX. The results of these experiments are overwhelmingly
+positive.
+
+The CTX parameters that affect performance are basically 3: the number of
+origins, the total response size in bytes, and the amount of
+secrets in the response. Each parameter affects the performance differently and
+will be examined thoroughly in the following sections. Our experiments focused
+on each parameter separately, so the results reflect the performace under each
+one independently.
+
+In all our tests we use an HTML web page where the secrets are strings of
+English literature. The tests measure the performance penalty in terms of size
+overhead in the compressed response HTML. The penalty in execution time is
+considered insignificant and not included when less than 10ms.
+
+However, it should be noted that our tests are particularly strict. A typical
+website response consists mainly of HTML code or libraries that usually need not
+be protected. In this case, the amount of secrets in the response would not
+exceed 1\% of the total response, in which case the CTX overhead as shown by our
+experiments is acceptable. For example, Facebook and Gmail, which offer web
+pages that are ~600KB typically need only protect approximately 0.5\% of the
+response.
+
+The first parameter, the number of origins, mainly affects the compression
+performance of the secrets. The more origins are used the bigger the response,
+both compressed and uncompressed, will be. This is expected, given the fact that
+secrets from different origins do not cross-compress.
+
+Our experiment covered a 650KB web page, which consists of 1\% secrets and 99\%
+static data. The secrets are distributed in origins that range from 1 to 50, so
+the length of a secret per origin is reduced as origins increase and the total
+amount of secrets and static data remains the same. We consider 50 origins a
+reasonable choice since a typical response contains data generated by multiple
+users and web services.
+
+   \begin{figure}[thpb]
+      \centering
+      \includegraphics[width=0.48\textwidth]{experiments/origins.png}
+      \caption{Origins}
+   \end{figure}
+
+As figure 2 shows, the size overhead when 1 origin is used is less than 0.5\%
+and about 4.7\% when 50 origins are used. This means that the compressed
+response when CTX is used is expected to be 1.47x the unprotected compressed
+response when 50 origins are used.
+
+The second parameter, the total response size in bytes, affects the impact of
+CTX on the compressed response.
+
+In this case, we use 50 origins and consider 1\% of the total response to be
+secret, equally distributed in all origins. The total response ranges from a
+13KB to a 650KB web page.
+
+Our experiments show that the increase in bytes that CTX adds is not
+proportional to the increase of the total response size. This results in a
+significant response size increase for small web pages, which becomes less
+observable as the web page grows larger.
+
+   \begin{figure}[thpb]
+      \centering
+      \includegraphics[width=0.48\textwidth]{experiments/total_response.png}
+      \caption{Total response}
+   \end{figure}
+
+Figure 3 depicts the results of this experiment. A 13KB web page suffers a 5KB
+CTX overhead, which corresponds to a 228\% increase in compressed response. On the
+other hand, CTX will add only 7KB of compressed data for a 650KB web page, which
+results in a 12\% increase. Disabling compression entirely would add overhead
+that ranges from 500\% to 1000\% for the tested web pages.
+
+The third parameter is the total amount of secrets in the response. In our
+example we use a 650KB web page with 50 CTX origins. The secrets range from 1\%
+up to 50\% of the web page, the rest being static data, and are evenly
+distributed across origins.
+
+   \begin{figure}[thpb]
+      \centering
+      \includegraphics[width=0.48\textwidth]{experiments/response_secrets.png}
+      \caption{Response secrets}
+   \end{figure}
+
+Figure 4 shows the results in this case. We find that protecting 1\% of the
+tested web page results in less than 5\% size overhead, whereas protecting 50\% of
+the page results in 35\%. This test also showed a noteworthy time increase in
+execution time, where for 10\% secrets in the web page CTX adds 10ms of
+execution time, while for 50\% it adds 47ms.
+
+In comparison, disabling compression would again result in 976.8\% load overhead
+and a network transmittion time overhead that, depending on the client's and the
+server's network, may be several seconds.
 
 \section{Application}\label{sec:application}
 
@@ -1304,6 +1439,94 @@ This method can be combined with the methods described in \ref{subsec:parallel}
 in order to utilize the parallelization and reduce the time cost of the
 necessary multiple requests.
 
+\section{Related work}\label{sec:related}
+
+\subsection{Defenses}
+
+Defense against side-channel compression attacks and especially BREACH have been
+proposed in bibliography, including \cite{c3}, \cite{c5} and \cite{c6}.
+
+\subsubsection{Disabling compression}\label{subsec:disablecom}
+Compression is the basic assumption for property compressibility. Disabling
+compression would break the adaptive reflection game, since it removes
+the compression part of the encryption function.
+
+However, this method is not viable, since the performance overhead should it be
+applied overrules the benefits of the defense.
+
+\subsubsection{SameSite cookies}\label{subsec:samesite}
+SameSite cookies \cite{c10} is a proposed draft for enhancing web security. The
+main puprose of this technique is to mitigate cross-site request forgery
+attacks, although it also mitigates other kinds of cross-origin leakages.
+
+This policy introduces a new attribute for web cookies that web servers may
+opt-in. This attribute states that cookies may only be included in a
+"first-party" context, i.e. in same origin requests.
+
+However, the current BREACH application depends on cross-origin requests in
+order to call the reflection oracle, as defined in \ref{subsec:breachapp}.
+Enabling SameSite cookies would result in the elimination of this reflection
+oracle of the Reflection-Security Game and the effective mitigation of the
+attack.
+
+\subsubsection{Masking secrets}\label{subsec:masking}
+Masking is a method of hiding secrets' properties per request. A mask is a
+bitstream equal in size with the secret. The masked text contains the result of
+the XOR operation between the secret and the mask concatenated with the mask.
+The secret can be obtained by applying XOR between the first and the second
+half of the masked text.
+
+A masking function is defined:
+
+\begin{lstlisting}[texcl,mathescape,basicstyle=\small]
+def masking($s_i$):
+    $l = |s_i|$
+    $m_i \xleftarrow{\$} \{0, 1\}^l\\$
+    $s_i' = m_i \oplus s$
+    return $s_i', m_i$
+\end{lstlisting}
+
+Masking can be applied on a rendered secret $s_i$ in the output $m$ of a
+rendering function $f$ as:
+
+\begin{lstlisting}[texcl,mathescape,basicstyle=\small]
+def apply_masking($m_i, s_i$):
+    $s_i', m_i \leftarrow masking(s_i)$
+    return $Rep(m, s_i, \beta_1 s_i' \beta_2 m_i \beta_3)$
+\end{lstlisting}
+
+where $Rep$ is the string replacement function defined in
+\ref{subsec:rendering} and $\{\beta_1, \beta_2, \beta_3\}$ are symbols that do not
+appear in $m$ before masking.
+
+Mask removal should be applied on all masked secrets, marked by the annotation
+symbols $\beta_1$, $\beta_2$, $\beta_3$, before the reversing of rendering function $f$:
+
+\begin{lstlisting}[texcl,mathescape,basicstyle=\small]
+def remove_masking($m', \beta_1, \beta_2, \beta_3$):
+    return $Rep(m', \beta_1 s_i' \beta_2 m_i \beta_3, s_i' \oplus m_i)$
+\end{lstlisting}
+
+where $Rep$ is the string replacement function and $\{\beta_1, \beta_2,
+\beta_3\}$ are the annotation symbols used in \texttt{apply\_masking}.
+
+Mask $m_i$ is chosen uniformly at random, so masked secret $s_i'$ is also
+random. This results in $s_i' m_i$ being indistinguishable from $r_1 r_2$ by a
+compression function $Com$, where $r_1$, $r_2$ are random nonces chosen
+uniformly at random.
+
+Masking renews the secret $s_i'$ each time the reflection oracle is called. That
+way, this method secures the secret's content against instances of the attack
+that require at least two calls to the reflection oracle.
+
+Masking doubles the size of the secret that is being protected. Furthermore,
+$m_i$ and $s_i'$ are random, so the compression performance is poor. Therefore,
+masking should be applied with limitation on high value secrets only, in order
+to avoid significant performance drop.
+
+Masking is a method used by Facebook \cite{c11} in order to protect CSRF tokens
+against BREACH attacks.
+
 \appendices
 
 \section{The compression function assumption}\label{subsec:comfuncassumption}
@@ -1348,7 +1571,7 @@ plaintext one bit at a time. This procedure can cause self-overlapping texts.
 In the end, the decoded text must be $n$ bits long, otherwise the compression
 is invalid.
 
-\begin{lstlisting}[texcl,mathescape]
+\begin{lstlisting}[texcl,mathescape,basicstyle=\small]
 def $\text{LZ77}^{-1}(c)$:
     parts = c.split("$\$$")
     plaintextLength = parse_int(parts[0])
@@ -1419,7 +1642,6 @@ Formally, assume that the symbols $\{\beta_1, \beta_2, \beta_3\}$ do not appear
 in the alphabet of the secret.
 
 Our assumptions for $f$ can be stated as follows. Let
-
 \begin{equation*}
 \begin{split}
 \exists \mu \in \{0, 1, \beta_1, \beta_2, \beta_3\}^*\\
@@ -1433,7 +1655,6 @@ f(s, r, v) = Rep(Rep(Rep(\mu, \beta_1, s), \beta_2, r), \beta_3, v)
 \end{equation*}
 
 Where $Rep$ is the string replacement function:
-
 \begin{align*}
 Rep(\epsilon, \alpha, \beta) &\defeq \epsilon\\
 Rep(\alpha:xs, \alpha, \beta) &\defeq \beta:Rep(xs, \alpha, \beta)\\
@@ -1452,7 +1673,6 @@ begin with such text?"
 
 We require $X$ to be of compressible length,
 i.e. the following equation must be satisfied:
-
 \begin{equation*}
     |X| > \ceil{lg(f(X, X, \epsilon) + 2)}
 \end{equation*}
@@ -1466,13 +1686,11 @@ compression-detectable}\label{subsec:breachprefix}
 
 Let $startswith(v, s)$ be the $k$-length prefix checking predicate on a
 $\lambda$-bit secret $s$:
-
 \begin{equation*}
     startswith(v, s) \defeq \exists w: s = v w
 \end{equation*}
 
 Let $f$ be a concatenative rendering function and let $Com = LZ77$. Then:
-
 \begin{align*}
 \Pr[startswith(v, \cdot) \textrm{ compression-detectable under } f, Com] =\\ \text{non-negl}(\lambda - k)
 \end{align*}
@@ -1513,12 +1731,12 @@ compression", Information Theory, IEEE Transactions, vol. 23, 1977.
 
 \bibitem{c11} [online] URL:
 \url{https://www.facebook.com/notes/protect-the-graph/preventing-a-breach-attack/1455331811373632}
-[cited May 2016]
+[cited November 2016]
 
 \bibitem{c12} P. Deutsch, "DEFLATE Compressed Data Format Specification version
 1.3", RFC 1951, 1996.
 
-\bibitem{c13} [online] URL: \url{https://ruptureit.com} [cited May 2016]
+\bibitem{c13} [online] URL: \url{https://ruptureit.com} [cited November 2016]
 
 \bibitem{c14} B. Moller, T. Duong, K. Kotowicz, This POODLE Bites: Exploiting the SSL 3.0 Fallback, September 2014.
 
@@ -1526,7 +1744,19 @@ compression", Information Theory, IEEE Transactions, vol. 23, 1977.
 Protocol Version 1.2, August 2008.
 
 \bibitem{c16} [online] URL:
-\url{https://www.owasp.org/index.php/Cross-Site_Request_Forgery_(CSRF)} [cited May 2016]
+De Ryck, Philippe, et al. "Automatic and precise client-side protection against
+CSRF attacks." European Symposium on Research in Computer Security. Springer
+Berlin Heidelberg, 2011.
+
+\bibitem{c17} R. Fisher, F. Yates: Statistical tables for biological,
+agricultural and medical research, 1938
+
+\bibitem{c18} M. S. Mayzner, M. E. Tresselt, Tables of Single-letter and Digram
+Frequency Counts for Various Word-length and Letter-position Combinations, 1965
+
+\bibitem{c19} [online] URL:
+\url{https://w3techs.com/technologies/details/ce-gzipcompression/all/all} [cited
+November 2016]
 
 \end{thebibliography}
 
