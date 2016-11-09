@@ -571,15 +571,17 @@ Stream ciphers can be treated as strictly monotonic to the bit level.
 \section{Compressibility with respect to predicates}\label{sec:propertycom}
 
 Let $\mathcal{M}$ be a plaintext distribution and $Q(s)$ be a predicate on the
-plaintext $s \in \mathcal{M}$. Let us use $\mathcal{M}_Q$ to denote the subset
-of $\mathcal{M}$ restricted over the elements for which $Q$ holds
-proportionally retaining measure and assuming $\mathcal{M}_Q \neq \emptyset$
-and $\mathcal{M}_{\lnot Q} \neq \emptyset$.
+plaintext $s$ drawn from $\mathcal{M}$. Furthermore, we require that $Q$ is not a
+trivial predicate; that is, there must exist elements for which $Q$ is true and
+others for which it is false.  Let us use $\mathcal{M}_Q$ to denote the
+distribution $\mathcal{M}$ conditioned on the predicate $Q$.
 
 For the specific property $Q$ and plaintext distribution $\mathcal{M}$, define:
 \begin{equation*}
-    \pi \defeq max(\Pr_{s \leftarrow \mathcal{M}}[Q(s)], 1 - \Pr_{s \leftarrow \mathcal{M}}[Q(s)])
+    \pi \defeq max(\Pr[Q(s)], 1 - \Pr[Q(s)])
 \end{equation*}
+
+Where $s$ is drawn from $\mathcal{M}$.
 
 Let $\mathcal{V}$ be a noise distribution from which a pair of noises
 $\overbar{v} = (v_1, v_2) \leftarrow \mathcal{V}^2$ is drawn.  Let $\overbar{r}
