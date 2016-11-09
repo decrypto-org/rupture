@@ -435,16 +435,18 @@ be directly translated between the two versions of the game.
 
 \subsection{The interdependence assumption}
 
-Let $\bar{\mathcal{M}}$ be a joint distribution from which the random variables $(s, r)$
-are drawn. We say that $s$ and $r$ are interdependent when:
-\begin{equation*}
-\begin{split}
-\exists s_1, r_1, s_2, r_2:\\
-\Pr_{(s, r) \leftarrow \bar{\mathcal{M}}}[(s, r) = (s_1, r_1)] < \Pr_{(s, r) \leftarrow \bar{\mathcal{M}}}[(s, r) = (s_2, r_1)]
+Let $\bar{\mathcal{M}}$ be a joint distribution from which the random variables
+$(s, r)$ are drawn. We say that $s$ and $r$ are interdependent when there exist
+$s_1, r_1, s_2, r_2$ in the support of $\bar{\mathcal{M}}$ such that:
+
+\begin{align*}
+    \Pr[(s, r) = (s_1, r_1)] &< \Pr[(s, r) = (s_2, r_1)]
 \land\\
-\Pr_{(s, r) \leftarrow \bar{\mathcal{M}}}[(s, r) = (s_1, r_2)] > \Pr_{(s, r) \leftarrow \bar{\mathcal{M}}}[(s, r) = (s_2, r_2)]
-\end{split}
-\end{equation*}
+    \Pr[(s, r) = (s_1, r_2)] &> \Pr[(s, r) = (s_2, r_2)]
+\end{align*}
+
+Where the pair $(s, r)$ is drawn from the joint distribution
+$\bar{\mathcal{M}}$.
 
 We observe that commonly compressed texts such as HTML content exhibit
 interdependence almost everywhere. To be more precise, if we sample, for
