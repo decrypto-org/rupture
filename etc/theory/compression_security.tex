@@ -266,9 +266,10 @@ $\text{Game}_{\text{REF-SEC}}^{\mathcal{PE},\mathcal{A}}(\lambda,  f,
 \mathcal{V}, g)$ is parameterized with a rendering function $f(\cdot, \cdot,
 \cdot)$, a noise distribution $\mathcal{V}$, the security parameter $\lambda$,
 some function $g$ of the plaintext vector, and a distribution of secrets $\mathcal{M}_\omega$
-such that $\forall \omega \forall s \in \mathcal{M}_\omega: |s| = \lambda$. Notice
-that the distribution of secrets is parameterized with the history of execution
-$\omega$.
+such that $\forall \omega \forall s \in \mathcal{M}_\omega: |s| = \lambda$. We
+require that the rendering function $f$ is polynomially computable and
+reversible.  Notice that the distribution of secrets is parameterized with the
+history of execution $\omega$.
 
 The challenger produces a $\lambda$-bit key $(pk, sk) \leftarrow
 \mathcal{K}(\lambda)$. The adversary is given $pk$, $\mathcal{V}$, $g$ and $f$.
