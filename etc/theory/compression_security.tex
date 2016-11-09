@@ -448,6 +448,16 @@ $s_1, r_1, s_2, r_2$ in the support of $\bar{\mathcal{M}}$ such that:
 Where the pair $(s, r)$ is drawn from the joint distribution
 $\bar{\mathcal{M}}$.
 
+It is clear that when two random variables $s$ and $r$ exhibit interdependence,
+they must necessarily be dependent random variables. To see that
+interdependence is a stronger version of dependence, observe that in the case
+of dependence, the probability for some $s = s_1$ conditioned on $r = r_1$ is
+necessarily different from the probability for some $s = s_2$ conditioned on $r
+= r_2$. In interdependence, it can be seen that we additionally require the
+event $s = s_1$ which was less probable than the event $s = s_2$ under the
+condition $r = r_1$ to become more probable than $s = s_2$ under the condition
+$r = r_2$.
+
 We observe that commonly compressed texts such as HTML content exhibit
 interdependence almost everywhere. To be more precise, if we sample, for
 example, digrams (two-letter sequences) in HTML content of popular websites and
