@@ -470,6 +470,19 @@ and $r$ are interdependent. The same occurs for digrams in English. This
 straightforward fact is supported by extensive statistical analyses in the
 scientific literature such as \cite{c18}.
 
+While the interdependence assumption is a general notion observed in all common
+plaintexts, it is suitable to mention here how these ideas will emerge as we
+mount our attack. In a plaintext $(s, r)$ in which the attacker controls some
+reflection string $r$ and wishes to obtain information about some secret string
+$s$, she wishes to distinguish between the cases $s = s_1$ and $s = s_2$ of two
+different secrets $s_1$ and $s_2$, i.e. between the instances $(s_1, r)$ and
+$(s_2, r)$. By measuring the difference in the probability of $(s, r)$
+occurring for $r = r_1$ and $r = r_2$, the attacker can distinguish which value
+of $s$ is in use. If $s = s_1$, then the attacker will observe the inequality
+$\Pr[(s, r) = (s_1, r_1)] < \Pr[(s, r) = (s_1, r_2)]$, but when $s = s_2$, the
+attacker will observe the different inequality $\Pr[(s, r) = (s_2, r_1)] >
+\Pr[(s, r) = (s_2, r_2)]$.
+
 The necessity of the assumption that the plaintext being compressed follows an
 interdependent distribution will become clear shortly, when we introduce our
 definition of compression functions.
