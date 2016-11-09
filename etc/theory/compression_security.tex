@@ -465,17 +465,18 @@ definition of compression functions.
 
 We now move on to define the notion of compression idealness.
 
-Let $\mathcal{K}$ be a function from some input distribution $\bar{\mathcal{M}}$ to the
-output space of all strings ${0, 1}^*$. $\mathcal{K}$ is an ideal compression
-function when:
+Let $\mathcal{K}$ be a function defined on some domain and with output space
+all strings $\{0, 1\}^*$, and let $\bar{\mathcal{M}}$ be a distribution whose
+support is a subset of the domain of $\mathcal{K}$.  We say that $\mathcal{K}$
+is an ideal compression function with respect to the distribution
+$\bar{\mathcal{M}}$ when for every $w_1, w_2$ in the support of
+$\bar{\mathcal{M}}$ we have:
+
 \begin{equation*}
-\begin{split}
-\forall w_1, w_2 \in \bar{\mathcal{M}}:\\
-\Pr_{w \leftarrow \bar{\mathcal{M}}}[w = w_1] < \Pr_{w \leftarrow \bar{\mathcal{M}}}[w = w_2]
-\iff\\
-\lvert\mathcal{K}(w_1)\rvert > \lvert\mathcal{K}(w_2)\rvert
-\end{split}
+\Pr[w = w_1] < \Pr[w = w_2] \iff \lvert\mathcal{K}(w_1)\rvert > \lvert\mathcal{K}(w_2)\rvert
 \end{equation*}
+
+Where $w$ is a random variable drawn from $\bar{\mathcal{M}}$.
 
 The intuitive notion behind compression idealness is that the encoding
 function is somehow perfectly aware of the input distribution. It
