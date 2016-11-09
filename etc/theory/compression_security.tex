@@ -1052,12 +1052,12 @@ practical compression side-channel attacks such as CRIME, TIME, BREACH, Rupture,
 and HEIST. The full plaintext recovery these attacks perform is no longer
 possible when our defense is applied.
 
+\subsection{Context hiding properties}
+
 Context hiding is built on the premise of separating secrets in a per-origin
 manner in order to avoid cross-compression. In order to achieve this we define
 what constitutes an origin and what properties same-origin secrets share. This
 section describes the key components of the defense and the code implementation.
-
-\subsection{Context hiding properties}
 
 \subsubsection{Origins}
 An origin is a uniquely identifiable party that generates content. A party can
