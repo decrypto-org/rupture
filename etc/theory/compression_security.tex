@@ -1128,6 +1128,31 @@ practical compression side-channel attacks such as CRIME, TIME, BREACH, Rupture,
 and HEIST. The full plaintext recovery these attacks perform is no longer
 possible when our defense is applied.
 
+\subsection{Attack elements from a defense perspective}
+The basic problem that needs be solved is the compression detectability of
+the predicate $Q$ under this class of attacks. In order to eliminate detectability,
+it should be made impossible for any pair of reflections $\overbar{r}$ to detect
+$Q$ under the compression function $Com$ and the rendering function $f$. In order to
+achieve this there exist two options - either change the compression or the
+rendering function.
+
+The next step is determining what the form of the needed changes is. In order to
+achieve that, we need to consider the notions that make detectability possible.
+These notions are compression idealness and interdependence. The first is part
+of the composition of $Com$ and $f$ whereas the second is part of $f$. That
+said, removing either of these notions from the functions will strip the
+adversary the ability to detect $Q$.
+
+The first choice is forcing the compression function to act non-ideally in the
+cases of secrets. Proposed defenses like disabling compression for annotated
+secrets, or for the whole response, serve this exact idea.
+
+The second choice is removing the interdependece between reflections and
+secrets. In order to achieve that we need to decorrelate the probability of each
+secret from the reflection. A method that uses this option is secret masking,
+described in section \ref{subsec:masking}. Context hiding also builds on this
+option and is described in the following sections.
+
 \subsection{Context hiding properties}
 
 Context hiding is built on the premise of separating secrets in a per-origin
