@@ -602,9 +602,10 @@ is used. On the contrary, if $s \in \mathcal{M}_{\lnot Q}$, the opposite
 direction should occur.  If this is the case for the selected reflection pair
 and noise pair, we say that $Q$ compares favourably under $\overbar{r},
 \overbar{v}$:
+
 \begin{equation*}
 \begin{split}
-    cpr^Q_{f, Com}(s, \overbar{r}, \overbar{v})
+    cpr^Q_{\kappa}(s, \overbar{r}, \overbar{v})
     \defeq\\
     \begin{cases}
         |\mathcal{K}(s, r_1, v_1)| < |\mathcal{K}(s, r_2, v_2)| &\text{ if } Q(s)\\
@@ -621,8 +622,8 @@ distribution $\mathcal{M}$ and the noise distribution $\mathcal{V}$ when:
     \defeq\\
     \exists \alpha \text{ non-negl}:\\
     \Pr
-        [cpr^Q_{f, Com}(s_1, \overbar{r}, \overbar{v}) \land
-         cpr^Q_{f, Com}(s_2, \overbar{r}, \overbar{v})]
+        [cpr^Q_{\kappa}(s_1, \overbar{r}, \overbar{v}) \land
+         cpr^Q_{\kappa}(s_2, \overbar{r}, \overbar{v})]
     \geq\\
     \pi + \alpha(\lambda)
 \end{align*}
@@ -732,8 +733,8 @@ From the compression detectability of Q we know that:
     \Pr_{s_1 \leftarrow \mathcal{M}_Q,
          s_2 \leftarrow \mathcal{M}_{\lnot Q},
          \overbar{v} \leftarrow \mathcal{V}^2}
-         [cpr^Q_{f, Com}(s_1, \overbar{r}, \overbar{v}) \land
-          cpr^Q_{f, Com}(s_2, \overbar{r}, \overbar{v})]
+         [cpr^Q_{\kappa}(s_1, \overbar{r}, \overbar{v}) \land
+          cpr^Q_{\kappa}(s_2, \overbar{r}, \overbar{v})]
     \geq\\
     \pi + \alpha(\lambda)
 \end{align*}
@@ -742,12 +743,12 @@ Therefore:
 \begin{align*}
     \Pr_{s_1 \leftarrow \mathcal{M}_Q,
          \overbar{v} \leftarrow \mathcal{V}^2}
-         [cpr^Q_{f, Com}(s_1, \overbar{r}, \overbar{v})]
+         [cpr^Q_{\kappa}(s_1, \overbar{r}, \overbar{v})]
     \geq
     \pi + \alpha(\lambda) \land\\
     \Pr_{s_2 \leftarrow \mathcal{M}_{\lnot Q},
          \overbar{v} \leftarrow \mathcal{V}^2}
-         [cpr^Q_{f, Com}(s_2, \overbar{r}, \overbar{v})]
+         [cpr^Q_{\kappa}(s_2, \overbar{r}, \overbar{v})]
     \geq
     \pi + \alpha(\lambda)
 \end{align*}
@@ -756,11 +757,11 @@ And so:
 \begin{align*}
     \Pr_{s \leftarrow \mathcal{M},
          \overbar{v} \leftarrow \mathcal{V}^2}
-         [cpr^Q_{f, Com}(s, \overbar{r}, \overbar{v})]
+         [cpr^Q_{\kappa}(s, \overbar{r}, \overbar{v})]
     =\\
-    \Pr[cpr^Q_{f, Com}(s, \overbar{r}, \overbar{v})|Q(s)]\Pr[Q(s)]
+    \Pr[cpr^Q_{\kappa}(s, \overbar{r}, \overbar{v})|Q(s)]\Pr[Q(s)]
     +\\
-    \Pr[cpr^Q_{f, Com}(s, \overbar{r}, \overbar{v})|\lnot Q(s)]\Pr[\lnot Q(s)]
+    \Pr[cpr^Q_{\kappa}(s, \overbar{r}, \overbar{v})|\lnot Q(s)]\Pr[\lnot Q(s)]
     \geq\\
     (\pi + \alpha(\lambda))(\Pr[Q(s)] + (1 - \Pr[Q(s)))
     =\\
@@ -768,7 +769,7 @@ And so:
 \end{align*}
 
 Let us now examine the event of $\mathcal{A}$ being successful, denoted Succ,
-when $cpr^Q_{f, Com}(s, \overbar{r}, \overbar{v})$. Assuming $Q(s)$:
+when $cpr^Q_{\kappa}(s, \overbar{r}, \overbar{v})$. Assuming $Q(s)$:
 \begin{align*}
     \Pr[|\mathcal{K}(s, r_1, v_1)| < |\mathcal{K}(s, r_2, v_2)||Q(s)]
     = \pi + \alpha(\lambda)
@@ -879,7 +880,7 @@ From the fact that $Q$ is compression-detectable and from the Compression Attack
 \begin{align*}
     \Pr_{s \leftarrow \mathcal{M},
          \overbar{v} \leftarrow \mathcal{V}^2}
-         [cpr^Q_{f, Com}(s, \overbar{r}, \overbar{v})]
+         [cpr^Q_{\kappa}(s, \overbar{r}, \overbar{v})]
     =\\
     \pi + \alpha(\lambda)
 \end{align*}
@@ -889,7 +890,7 @@ reflection vector $\overbar{r}$. Call these elements \textit{amplifiable} and de
 \begin{align*}
     Amp(s) \defeq
     \Pr_{\overbar{v} \leftarrow \mathcal{V}^2}
-    [cpr^Q_{f, Com}
+    [cpr^Q_{\kappa}
      (s, \overbar{r}, \overbar{v})]
     \geq
     \frac{1}{2} + \frac{\alpha(\lambda)}{2}
@@ -925,15 +926,15 @@ Then we have:
 \begin{align*}
     \Pr_{s \leftarrow \mathcal{M},
          \overbar{v} \leftarrow \mathcal{V}^2}
-         [cpr^Q_{f, Com}(s, \overbar{r}, \overbar{v})]
+         [cpr^Q_{\kappa}(s, \overbar{r}, \overbar{v})]
     =\\
     \Pr_{s \leftarrow \mathcal{M},
          \overbar{v} \leftarrow \mathcal{V}^2}
-         [cpr^Q_{f, Com}(s, \overbar{r}, \overbar{v})|Amp(s)]\Pr[Amp(s)]
+         [cpr^Q_{\kappa}(s, \overbar{r}, \overbar{v})|Amp(s)]\Pr[Amp(s)]
     +\\
     \Pr_{s \leftarrow \mathcal{M},
          \overbar{v} \leftarrow \mathcal{V}^2}
-         [cpr^Q_{f, Com}(s, \overbar{r}, \overbar{v})|\lnot Amp(s)]\Pr[\lnot Amp(s)]
+         [cpr^Q_{\kappa}(s, \overbar{r}, \overbar{v})|\lnot Amp(s)]\Pr[\lnot Amp(s)]
     <\\
     B + (\frac{1}{2} + \frac{\alpha}{2})(1 - B)
 \end{align*}
@@ -962,7 +963,7 @@ trial with $k$ repetitions and extracts a majority. Let $X$ be the number of
 repetitions that are successful for the adversary. Letting $\overbar{v}_i$
 be the noise chosen from $\mathcal{V}^2$ during the $i$-th round, $X$ is defined:
 \begin{align*}
-    X \defeq |\{ i: cpr^Q_{f, Com}(s, \overbar{r}, \overbar{v}_i) \}|
+    X \defeq |\{ i: cpr^Q_{\kappa}(s, \overbar{r}, \overbar{v}_i) \}|
 \end{align*}
 
 $X$ follows the binomial distribution, and therefore its expected value is:
