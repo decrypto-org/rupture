@@ -615,12 +615,13 @@ and noise pair, we say that $Q$ compares favourably under $\overbar{r},
 \end{equation*}
 
 The reflection pair $\overbar{r}$ \textit{detects} predicate $Q$ under
-compression $Com$ rendered with rendering function $f$ over the secret
-distribution $\mathcal{M}$ and the noise distribution $\mathcal{V}$ when:
+compression function $\kappa$ over the secret distribution $\mathcal{M}$ and
+the noise distribution $\mathcal{V}$ with advantage $\alpha$ when the
+comparison is favourable for both $s_1$ drawn from $\mathcal{M}_Q$ and $s_2$
+drawn from $\mathcal{M}_{\not Q}$. Formally, we define the predicate
+$dtc_\alpha(Q, \overbar{r}, f, Com, \mathcal{M}, \mathcal{V})$ as follows:
+
 \begin{align*}
-    dtc(Q, \overbar{r}, f, Com, \mathcal{M}, \mathcal{V})
-    \defeq\\
-    \exists \alpha \text{ non-negl}:\\
     \Pr
         [cpr^Q_{\kappa}(s_1, \overbar{r}, \overbar{v}) \land
          cpr^Q_{\kappa}(s_2, \overbar{r}, \overbar{v})]
@@ -631,13 +632,13 @@ distribution $\mathcal{M}$ and the noise distribution $\mathcal{V}$ when:
 Where $s_1$ is drawn from $\mathcal{M}_Q$, $s_2$ is drawn from
 $\mathcal{M}_{\lnot Q}$, and $v_1, v_2$ are drawn from $\mathcal{V}$.
 
-We call $Q$ \textit{compression-detectable} if a pair $\overbar{r} = (r_1,
-r_2)$ exists, such that $dct(Q, \overbar{r}, f, Com, \mathcal{M}, \mathcal{V})$
-holds. Furthermore we require that such a pair $\overbar{r}$ is polynomially
-computable. That is, there exists some polynomial-time functionality
-$\mathcal{O}_R(Com, f, Q, \mathcal{M}, \mathcal{V})$ which produces an
-$\overbar{r}$ such that $dct(Q, \overbar{r}, f, Com, \mathcal{M}, \mathcal{V})$
-holds.
+We call $Q$ \textit{compression-detectable} with an advantage $\alpha$ if a
+pair $\overbar{r} = (r_1, r_2)$ exists, such that $dtc_\alpha(Q, \overbar{r},
+f, Com, \mathcal{M}, \mathcal{V})$ holds. Furthermore we require that such a
+pair $\overbar{r}$ is polynomially computable. That is, there exists some
+polynomial-time functionality $\mathcal{O}_R(Com, f, Q, \mathcal{M},
+\mathcal{V})$ which produces an $\overbar{r}$ such that $dtc_\alpha(Q,
+\overbar{r}, f, Com, \mathcal{M}, \mathcal{V})$ holds.
 
 The compression-detectability property exists in all common compression
 functions as long as $s$ and $r$ compress in the same context. We will
@@ -650,9 +651,9 @@ illustrate such examples later in this work.
 \begin{lemma}[Compression attack]
 
 Let $Com$ be a compression function, $Enc$ be a strictly length-monotonic
-encryption function, $f$ be a rendering function and $Q$ be a
-compression-detectable plaintext predicate over plaintext distribution
-$\mathcal{M}$ and noise distribution $\mathcal{V}$.
+encryption function, $f$ be a rendering function and $Q$ be a plaintext
+predicate detectable with non-negligible advantage $\alpha$ over plaintext
+distribution $\mathcal{M}$ and noise distribution $\mathcal{V}$.
 
 Then:
 \begin{align*}
