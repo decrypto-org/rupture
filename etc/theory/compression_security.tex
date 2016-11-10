@@ -290,7 +290,7 @@ functionality of separating secrets from reflections using random
 
 Our engineering contributions are two-fold.
 
-Firstly, we implement Rupture \cite{c7}, a production-grade open source framework for
+Firstly, we implement Rupture\footnotemark[1], a production-grade open source framework for
 conducting compression and encryption composition attacks. This generic
 framework provides an extensible mechanism for experimentally testing attack
 techniques in a modular setting. We implement specific compression attack
@@ -298,12 +298,15 @@ instances such as BREACH. While limited proof-of-concept source code has been
 previously released for compression side-channel attacks, as far as we know this
 is the first time a working tool is provided for this class of attacks.
 
-Secondly, we continue with an implementation of the context hiding defense technique
-that we call CTX \cite{c20}. CTX runs at the application layer of web services
-and is opt-in. It is implemented in multiple languages, like Python and
-Javascript, and can be used in commonly used web frameworks, like Django and
-Node.js. CTX achieves balance between security and compression performance that
-is unprecedented compared to other proposed defense methods.
+Secondly, we continue with an implementation of the context hiding defense
+technique called CTX\footnote[1]{The Github repositories of the Rupture and CTX
+projects make the source code openly available but has been removed for
+anonymization purposes and can be provided upon request.}. CTX runs at the
+application layer of web services and is opt-in. It is implemented in multiple
+languages, like Python and Javascript, and can be used in commonly used web
+frameworks, like Django and Node.js. CTX achieves balance between security and
+compression performance that is unprecedented compared to other proposed defense
+methods.
 
 \section{Reflection security}\label{sec:refsec}
 
@@ -1910,8 +1913,8 @@ Black Hat USA, 2013.
 \bibitem{c6} J. Alawatugoda, D. Stebila and C. Boyd, "Protecting encrypted
 cookies from compression side-channel attacks", 2014.
 
-\bibitem{c7} D. Karakostas and D. Zindros, "Practical New Developments on
-BREACH", Black Hat Asia, 2016.
+% \bibitem{c7} D. Karakostas and D. Zindros, "Practical New Developments on
+% BREACH", Black Hat Asia, 2016.
 
 \bibitem{c8} NIST, "Announcing the ADVANCED ENCRYPTION STANDARD (AES)", 2001.
 
@@ -1949,8 +1952,8 @@ Frequency Counts for Various Word-length and Letter-position Combinations, 1965
 \url{https://w3techs.com/technologies/details/ce-gzipcompression/all/all} [cited
 November 2016]
 
-\bibitem{c20} D. Karakostas, A. Kiayias, E. Sarafianou, D. Zindros: "CTX:
-Eliminating BREACH with Context Hiding", Black Hat Europe, 2016.
+% \bibitem{c20} D. Karakostas, A. Kiayias, E. Sarafianou, D. Zindros: "CTX:
+% Eliminating BREACH with Context Hiding", Black Hat Europe, 2016.
 
 \end{thebibliography}
 
