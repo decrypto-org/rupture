@@ -268,7 +268,7 @@ Furthermore, we introduce the abstract property of \textit{compression
 detectability}. We explore the notion of compressibility with respect to a
 predicate $Q$ of a plaintext from a distribution $\mathcal{M}$. This leads us to
 define the cases when $Q$ is detectable when the plaintext is rendered,
-compressed and encrypted with functions $f$, $\textrm{Com}$, and $Enc$. We prove that it
+compressed and encrypted with functions $f$, $\textrm{Com}$, and $\textrm{Enc}$. We prove that it
 is a property attained by ideal compression functions.
 
 The final part of our theoretical work on the attack is to show that this
@@ -598,11 +598,12 @@ with a rendering function and an encryption algorithm.
 The public-key encryption scheme above is treated as a composition of a
 compression and encryption algorithm:
 \begin{equation*}
-    \mathcal{E} = Enc \circ \textrm{Com}
+    \mathcal{E} = \textrm{Enc} \circ \textrm{Com}
 \end{equation*}
 
-$\textrm{Com}$ denotes a compression function as defined above, while $Enc$ denotes an
-encryption function. We stress our important assumption that $Enc$ is defined
+$\textrm{Com}$ denotes a compression function as defined above, while
+$\textrm{Enc}$ denotes an
+encryption function. We stress our important assumption that $\textrm{Enc}$ is defined
 on $\{0, 1\}^*$ and not on some fixed-length input.
 
 The composition of the compression function $\textrm{Com}$ and the rendering function $f$
@@ -613,7 +614,8 @@ is defined:
 
 \subsection{Length monotonicity}\label{subsec:lenmonotone}
 
-An important assumption for our attack is that the encryption function $Enc$ is
+An important assumption for our attack is that the encryption function
+$\textrm{Enc}$ is
 \textit{length monotonic}. Specifically,
 \begin{equation*}
 \begin{split}
@@ -621,7 +623,7 @@ An important assumption for our attack is that the encryption function $Enc$ is
 \forall k_1, k_2 \in KeyGen\\
 |m_2| > |m_1|
 \Rightarrow
-|Enc_{k_1}(m_2)| \geq |Enc_{k_2}(m_1)|
+|\textrm{Enc}_{k_1}(m_2)| \geq |\textrm{Enc}_{k_2}(m_1)|
 \end{split}
 \end{equation*}
 
@@ -715,7 +717,7 @@ predicate $Q$.
 
 \begin{lemma}[Compression attack]
 
-Let $\textrm{Com}$ be a compression function, $Enc$ be a strictly length-monotonic
+Let $\textrm{Com}$ be a compression function, $\textrm{Enc}$ be a strictly length-monotonic
 encryption function, $f$ be a rendering function and $Q$ be a plaintext
 predicate detectable with non-negligible advantage $\alpha$ over plaintext
 distribution $\mathcal{M}$ and noise distribution $\mathcal{V}$.
@@ -723,11 +725,11 @@ distribution $\mathcal{M}$ and noise distribution $\mathcal{V}$.
 Then:
 \begin{align*}
     \exists \alpha \text{ non-negl}:
-    \forall Enc:
+    \forall \textrm{Enc}:
     \exists g:\\
     \exists PPT \mathcal{A}:
     \forall PPT \mathcal{S}:\\
-    \text{Adv}_{\mathcal{SE}(Enc, \textrm{Com}), \mathcal{A}, \mathcal{S}}
+    \text{Adv}_{\mathcal{SE}(\textrm{Enc}, \textrm{Com}), \mathcal{A}, \mathcal{S}}
     (\lambda, f, \mathcal{V}, \mathcal{M}, g) = \alpha(\lambda)
 \end{align*}
 
@@ -841,9 +843,9 @@ when $cpr^Q_{\kappa}(s, \overbar{r}, \overbar{v})$. Assuming $Q(s)$:
     = \pi + \alpha(\lambda)
 \end{align*}
 
-And from the strict length monotonicity of $Enc$ it follows that:
+And from the strict length monotonicity of $\textrm{Enc}$ it follows that:
 \begin{align*}
-    \Pr[&|Enc(\mathcal{K}(s, r_1, v_1))| <\\&|Enc(\mathcal{K}(s, r_2, v_2))||Q(s)]
+    \Pr[&|\textrm{Enc}(\mathcal{K}(s, r_1, v_1))| <\\&|\textrm{Enc}(\mathcal{K}(s, r_2, v_2))||Q(s)]
         \geq \pi + \alpha(\lambda)\\
     \Rightarrow \Pr[&
         |\text{Reflect}^{\mathcal{E}_{pk}, \mathcal{V}}_s(r_1)|
@@ -878,7 +880,7 @@ And so the probability of success is given:
 Therefore,
 \begin{align*}
     \forall PPT \mathcal{S}:
-    \text{Adv}_{\mathcal{SE}(Enc, \textrm{Com}), \mathcal{A}, \mathcal{S}}
+    \text{Adv}_{\mathcal{SE}(\textrm{Enc}, \textrm{Com}), \mathcal{A}, \mathcal{S}}
         (\lambda, f, \mathcal{V}, \mathcal{M}, g)
     \geq\\
     |\pi + \alpha(\lambda) - \pi| = \alpha(\lambda)
@@ -926,7 +928,7 @@ the amplified adversary achieves an arbitrarily large advantage
 against a non-negligible subset of elements, the
 \textit{amplifiable elements} distinguished by predicate $Amp$.
 \begin{align*}
-    \forall Enc:
+    \forall \textrm{Enc}:
     \exists g:\\
     \exists PPT \mathcal{A}:
     \forall PPT \mathcal{S}:\\
@@ -934,7 +936,7 @@ against a non-negligible subset of elements, the
     \exists B \text{ non-negl}:
     \exists C \text{ negl}:\\
     \Pr_{s \leftarrow \mathcal{M}}[Amp(s)] = B(\lambda) \land\\
-    \text{Adv}_{\mathcal{SE}(Enc, \textrm{Com}), \mathcal{A}, \mathcal{S}_{Amp}}
+    \text{Adv}_{\mathcal{SE}(\textrm{Enc}, \textrm{Com}), \mathcal{A}, \mathcal{S}_{Amp}}
     (\lambda, f, \mathcal{V}, \mathcal{M}, g) = 1 - \pi - C(k)
 \end{align*}
 
@@ -1020,7 +1022,7 @@ And this contradicts the assumption that $Q$ is compression-detectable. Therefor
 It remains to show that the advantage of the adversary can be
 arbitrarily large, i.e. that for some negligible $C$ we have:
 \begin{align*}
-    \text{Adv}_{\mathcal{SE}(Enc, \textrm{Com}), \mathcal{A}, \mathcal{S}_{Amp}}
+    \text{Adv}_{\mathcal{SE}(\textrm{Enc}, \textrm{Com}), \mathcal{A}, \mathcal{S}_{Amp}}
     (\lambda, f, \mathcal{V}, \mathcal{M}, g) = 1 - \pi - C
 \end{align*}
 
@@ -1068,7 +1070,7 @@ response that was generated by either a user or the service. The encryption
 algorithm and key are included in the implementation of the TLS protocol. In
 most real-world systems, the encryption algorithm is AES and the key is
 typically 128 or 256 bits. In relation to the reflection game, this is
-represented by the $Enc$ and the $KeyGen$ functions, whereas the AES key used
+represented by the $\textrm{Enc}$ and the $KeyGen$ functions, whereas the AES key used
 for the TLS application data is $sk$.
 
 In order to bootstrap the attack, the adversary knows a prefix of the secret.
@@ -1085,7 +1087,7 @@ goal of the adversary is to recognize which reflection that is.
 The reflection oracle constructs the encrypted responses by concatenating the
 secret, the reflection, noise and static data and rendering them with function
 $f$, compressing them with compression function $\textrm{Com}$ and encrypting them with
-the encryption algorithm $Enc$. The reflection oracle in this case is the web
+the encryption algorithm $\textrm{Enc}$. The reflection oracle in this case is the web
 application framework that implements the encryption function and the underlying
 web server that contains modules for compression and encryption. The final part
 of the oracle, sending the ciphertext $c_i$ to the adversary, is impemented by
@@ -1132,7 +1134,8 @@ $s$ is a Cookie that is included in the request, whereas the reflection $r$ is
 the same GET parameter described in BREACH.
 
 The rendering function $f$ is the browser's function that crafts the request
-payload. The compression function $\textrm{Com}$ and encryption function $Enc$ are again
+payload. The compression function $\textrm{Com}$ and encryption function
+$\textrm{Enc}$ are again
 the DEFLATE algorithm and the TLS protocol.
 
 The rest of the parameters are the same as in BREACH. The adversary follows the
@@ -1844,7 +1847,7 @@ the properties explored above, and we describe that BREACH is a specific
 instance of the general attack.
 
 In the BREACH model, we deal with a specific function $f$, property $Q$,
-compression function $\textrm{Com}$, length-leaking $Enc$, and secret distribution
+compression function $\textrm{Com}$, length-leaking $\textrm{Enc}$, and secret distribution
 $\mathcal{M}$.
 
 In the next paragraphs, we describe a simplified model of the attack that
