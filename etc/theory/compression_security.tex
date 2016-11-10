@@ -1122,6 +1122,24 @@ interdependence and compression idealness lead the adversary to conclude that
 $r_1$ is a prefix of $s$, thus decrypting the character in the secret that
 follows the known prefix.
 
+\subsubsection{CRIME}
+The CRIME attack is a similar to instance of the reflection game as BREACH, but
+with a few key differences.
+
+The main difference is that CRIME targets HTTP requests instead of responses. In
+this case, the challenger and the oracle exist in the user's browser. The secret
+$s$ is a Cookie that is included in the request, whereas the reflection $r$ is
+the same GET parameter described in BREACH.
+
+The rendering function $f$ is the browser's function that crafts the request
+payload. The compression function $Com$ and encryption function $Enc$ are again
+the DEFLATE algorithm and the TLS protocol.
+
+The rest of the parameters are the same as in BREACH. The adversary follows the
+same strategy in order to craft the reflections $r_1$ and $r_2$, compare
+different size lengths of requests that contain each one along with $s$ and
+decrypt a prefix os $s$.
+
 \section{Defense}\label{sec:defense}
 Keeping in mind our theoretical model, we determine the key elements that make these
 attacks possible.
