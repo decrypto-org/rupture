@@ -246,7 +246,7 @@ First we introduce a novel model for discussing compression and encryption
 composition attacks, the \textit{adaptive reflection game}, with an accompanying
 security definition. This model is quite general in that it does not describe
 specific instances of the rendering function $f$ or the compression function
-$Com$. Furthermore, it allows for general distributions of secret $\mathcal{M}$
+$\textrm{Com}$. Furthermore, it allows for general distributions of secret $\mathcal{M}$
 and distributions of noise $\mathcal{V}$ which can affect the rendering. Our
 model describes an adaptive attack, but also allows for adaptive rendering from
 the part of the defender based on the adversary behavior in the general case.
@@ -268,7 +268,7 @@ Furthermore, we introduce the abstract property of \textit{compression
 detectability}. We explore the notion of compressibility with respect to a
 predicate $Q$ of a plaintext from a distribution $\mathcal{M}$. This leads us to
 define the cases when $Q$ is detectable when the plaintext is rendered,
-compressed and encrypted with functions $f$, $Com$, and $Enc$. We prove that it
+compressed and encrypted with functions $f$, $\textrm{Com}$, and $Enc$. We prove that it
 is a property attained by ideal compression functions.
 
 The final part of our theoretical work on the attack is to show that this
@@ -598,17 +598,17 @@ with a rendering function and an encryption algorithm.
 The public-key encryption scheme above is treated as a composition of a
 compression and encryption algorithm:
 \begin{equation*}
-    \mathcal{E} = Enc \circ Com
+    \mathcal{E} = Enc \circ \textrm{Com}
 \end{equation*}
 
-$Com$ denotes a compression function as defined above, while $Enc$ denotes an
+$\textrm{Com}$ denotes a compression function as defined above, while $Enc$ denotes an
 encryption function. We stress our important assumption that $Enc$ is defined
 on $\{0, 1\}^*$ and not on some fixed-length input.
 
-The composition of the compression function $Com$ and the rendering function $f$
+The composition of the compression function $\textrm{Com}$ and the rendering function $f$
 is defined:
 \begin{equation*}
-    \mathcal{K} = Com \circ f
+    \mathcal{K} = \textrm{Com} \circ f
 \end{equation*}
 
 \subsection{Length monotonicity}\label{subsec:lenmonotone}
@@ -648,7 +648,7 @@ Where $s$ is drawn from $\mathcal{M}$.
 
 Let $\mathcal{V}$ be a noise distribution from which a pair of noises
 $\overbar{v} = (v_1, v_2) \leftarrow \mathcal{V}^2$ is drawn.  Let $\overbar{r}
-= (r_1, r_2) \in \mathcal{M}^2$ be a reflection string pair, $Com$ be a
+= (r_1, r_2) \in \mathcal{M}^2$ be a reflection string pair, $\textrm{Com}$ be a
 compression function, $f$ be a rendering function, and let $\alpha(\lambda)$ be
 a non-negligible function.
 
@@ -682,7 +682,7 @@ compression function $\kappa$ over the secret distribution $\mathcal{M}$ and
 the noise distribution $\mathcal{V}$ with advantage $\alpha$ when the
 comparison is favourable for both $s_1$ drawn from $\mathcal{M}_Q$ and $s_2$
 drawn from $\mathcal{M}_{\not Q}$. Formally, we define the predicate
-$dtc_\alpha(Q, \overbar{r}, f, Com, \mathcal{M}, \mathcal{V})$ as follows:
+$dtc_\alpha(Q, \overbar{r}, f, \textrm{Com}, \mathcal{M}, \mathcal{V})$ as follows:
 
 \begin{align*}
     \Pr
@@ -697,11 +697,11 @@ $\mathcal{M}_{\lnot Q}$, and $v_1, v_2$ are drawn from $\mathcal{V}$.
 
 We call $Q$ \textit{compression-detectable} with an advantage $\alpha$ if a
 pair $\overbar{r} = (r_1, r_2)$ exists, such that $dtc_\alpha(Q, \overbar{r},
-f, Com, \mathcal{M}, \mathcal{V})$ holds. Furthermore we require that such a
+f, \textrm{Com}, \mathcal{M}, \mathcal{V})$ holds. Furthermore we require that such a
 pair $\overbar{r}$ is polynomially computable. That is, there exists some
-polynomial-time functionality $\mathcal{O}_R(Com, f, Q, \mathcal{M},
+polynomial-time functionality $\mathcal{O}_R(\textrm{Com}, f, Q, \mathcal{M},
 \mathcal{V})$ which produces an $\overbar{r}$ such that $dtc_\alpha(Q,
-\overbar{r}, f, Com, \mathcal{M}, \mathcal{V})$ holds.
+\overbar{r}, f, \textrm{Com}, \mathcal{M}, \mathcal{V})$ holds.
 
 The compression-detectability property exists in all common compression
 functions as long as $s$ and $r$ compress in the same context. We will now
@@ -715,7 +715,7 @@ predicate $Q$.
 
 \begin{lemma}[Compression attack]
 
-Let $Com$ be a compression function, $Enc$ be a strictly length-monotonic
+Let $\textrm{Com}$ be a compression function, $Enc$ be a strictly length-monotonic
 encryption function, $f$ be a rendering function and $Q$ be a plaintext
 predicate detectable with non-negligible advantage $\alpha$ over plaintext
 distribution $\mathcal{M}$ and noise distribution $\mathcal{V}$.
@@ -727,7 +727,7 @@ Then:
     \exists g:\\
     \exists PPT \mathcal{A}:
     \forall PPT \mathcal{S}:\\
-    \text{Adv}_{\mathcal{SE}(Enc, Com), \mathcal{A}, \mathcal{S}}
+    \text{Adv}_{\mathcal{SE}(Enc, \textrm{Com}), \mathcal{A}, \mathcal{S}}
     (\lambda, f, \mathcal{V}, \mathcal{M}, g) = \alpha(\lambda)
 \end{align*}
 
@@ -740,7 +740,7 @@ $\mathcal{A}$ as follows:
 
 \begin{lstlisting}[texcl,mathescape,basicstyle=\small]
 def $\mathcal{A}(Q, \mathcal{M}, y)$:
-    $(r_1, r_2) \leftarrow \mathcal{O}_R(Com, f, Q, \mathcal{M}, \mathcal{V})$
+    $(r_1, r_2) \leftarrow \mathcal{O}_R(\textrm{Com}, f, Q, \mathcal{M}, \mathcal{V})$
 
     $l_1 = |\text{Reflect}^{\mathcal{E}_{pk}, \mathcal{V}}_s(r_1)|$
     $l_2 = |\text{Reflect}^{\mathcal{E}_{pk}, \mathcal{V}}_s(r_2)|$
@@ -878,7 +878,7 @@ And so the probability of success is given:
 Therefore,
 \begin{align*}
     \forall PPT \mathcal{S}:
-    \text{Adv}_{\mathcal{SE}(Enc, Com), \mathcal{A}, \mathcal{S}}
+    \text{Adv}_{\mathcal{SE}(Enc, \textrm{Com}), \mathcal{A}, \mathcal{S}}
         (\lambda, f, \mathcal{V}, \mathcal{M}, g)
     \geq\\
     |\pi + \alpha(\lambda) - \pi| = \alpha(\lambda)
@@ -897,7 +897,7 @@ Let the amplification adversary be defined as follows:
 
 \begin{lstlisting}[texcl,mathescape,basicstyle=\small]
 def $\mathcal{A}(Q, \mathcal{M})$:
-    $(r_1, r_2) \leftarrow \mathcal{O}_R(Com, f, Q, \mathcal{M}, \mathcal{V})$
+    $(r_1, r_2) \leftarrow \mathcal{O}_R(\textrm{Com}, f, Q, \mathcal{M}, \mathcal{V})$
 
     $low = 0$
     $high = 0$
@@ -919,7 +919,7 @@ def $\mathcal{A}(Q, \mathcal{M})$:
 
 \begin{lemma}[Amplification]
 
-Under the assumptions of the Compression Attack Theorem against $f, Com$
+Under the assumptions of the Compression Attack Theorem against $f, \textrm{Com}$
 and compression-detectable predicate $Q$ with non-negligible
 detectability margin $\alpha(\lambda)$,
 the amplified adversary achieves an arbitrarily large advantage
@@ -934,7 +934,7 @@ against a non-negligible subset of elements, the
     \exists B \text{ non-negl}:
     \exists C \text{ negl}:\\
     \Pr_{s \leftarrow \mathcal{M}}[Amp(s)] = B(\lambda) \land\\
-    \text{Adv}_{\mathcal{SE}(Enc, Com), \mathcal{A}, \mathcal{S}_{Amp}}
+    \text{Adv}_{\mathcal{SE}(Enc, \textrm{Com}), \mathcal{A}, \mathcal{S}_{Amp}}
     (\lambda, f, \mathcal{V}, \mathcal{M}, g) = 1 - \pi - C(k)
 \end{align*}
 
@@ -1020,7 +1020,7 @@ And this contradicts the assumption that $Q$ is compression-detectable. Therefor
 It remains to show that the advantage of the adversary can be
 arbitrarily large, i.e. that for some negligible $C$ we have:
 \begin{align*}
-    \text{Adv}_{\mathcal{SE}(Enc, Com), \mathcal{A}, \mathcal{S}_{Amp}}
+    \text{Adv}_{\mathcal{SE}(Enc, \textrm{Com}), \mathcal{A}, \mathcal{S}_{Amp}}
     (\lambda, f, \mathcal{V}, \mathcal{M}, g) = 1 - \pi - C
 \end{align*}
 
@@ -1084,7 +1084,7 @@ goal of the adversary is to recognize which reflection that is.
 
 The reflection oracle constructs the encrypted responses by concatenating the
 secret, the reflection, noise and static data and rendering them with function
-$f$, compressing them with compression function $Com$ and encrypting them with
+$f$, compressing them with compression function $\textrm{Com}$ and encrypting them with
 the encryption algorithm $Enc$. The reflection oracle in this case is the web
 application framework that implements the encryption function and the underlying
 web server that contains modules for compression and encryption. The final part
@@ -1102,7 +1102,7 @@ The rendering function $f$ in this case is the backend that generates the HTML
 response code. The HTML contains the secret, the reflection, and the noise. All
 will be compressed by the compression algorithm used by the web service, the
 most commonly used being the DEFLATE algorithm. The DEFLATE algorithm is the
-$Com$ function in terms of the reflection game.
+$\textrm{Com}$ function in terms of the reflection game.
 
 In cases when the reflection $r$ matches a prefix of the secret $s$, the
 probability of this prefix in the response data will be greater than in cases of
@@ -1132,7 +1132,7 @@ $s$ is a Cookie that is included in the request, whereas the reflection $r$ is
 the same GET parameter described in BREACH.
 
 The rendering function $f$ is the browser's function that crafts the request
-payload. The compression function $Com$ and encryption function $Enc$ are again
+payload. The compression function $\textrm{Com}$ and encryption function $Enc$ are again
 the DEFLATE algorithm and the TLS protocol.
 
 The rest of the parameters are the same as in BREACH. The adversary follows the
@@ -1170,14 +1170,14 @@ possible when our defense is applied.
 The basic problem that needs be solved is the compression detectability of
 the predicate $Q$ under this class of attacks. In order to eliminate detectability,
 it should be made impossible for any pair of reflections $\overbar{r}$ to detect
-$Q$ under the compression function $Com$ and the rendering function $f$. In order to
+$Q$ under the compression function $\textrm{Com}$ and the rendering function $f$. In order to
 achieve this there exist two options - either change the compression or the
 rendering function.
 
 The next step is determining what the form of the needed changes is. In order to
 achieve that, we need to consider the notions that make detectability possible.
 These notions are compression idealness and interdependence. The first is part
-of the composition of $Com$ and $f$ whereas the second is part of $f$. That
+of the composition of $\textrm{Com}$ and $f$ whereas the second is part of $f$. That
 said, removing either of these notions from the functions will strip the
 adversary the ability to detect $Q$.
 
@@ -1741,7 +1741,7 @@ where $Rep$ is the string replacement function and $\{\beta_1, \beta_2,
 
 Mask $m_i$ is chosen uniformly at random, so masked secret $s_i'$ is also
 random. This results in $s_i' m_i$ being indistinguishable from $r_1 r_2$ by a
-compression function $Com$, where $r_1$, $r_2$ are random nonces chosen
+compression function $\textrm{Com}$, where $r_1$, $r_2$ are random nonces chosen
 uniformly at random.
 
 Masking renews the secret $s_i'$ each time the reflection oracle is called. That
@@ -1760,7 +1760,7 @@ against BREACH attacks.
 
 \section{The compression function assumption}\label{subsec:comfuncassumption}
 
-In BREACH, $Com$ is a variant of LZ77 \cite{c9}. In this compression algorithm,
+In BREACH, $\textrm{Com}$ is a variant of LZ77 \cite{c9}. In this compression algorithm,
 repetitions of strings are well-compressed. In our ideal model, we examine a
 simplified version of LZ77 which we describe in this paragraph.
 
@@ -1844,7 +1844,7 @@ the properties explored above, and we describe that BREACH is a specific
 instance of the general attack.
 
 In the BREACH model, we deal with a specific function $f$, property $Q$,
-compression function $Com$, length-leaking $Enc$, and secret distribution
+compression function $\textrm{Com}$, length-leaking $Enc$, and secret distribution
 $\mathcal{M}$.
 
 In the next paragraphs, we describe a simplified model of the attack that
@@ -1919,9 +1919,9 @@ $\lambda$-bit secret $s$:
     startswith(v, s) \defeq \exists w: s = v w
 \end{equation*}
 
-Let $f$ be a concatenative rendering function and let $Com = LZ77$. Then:
+Let $f$ be a concatenative rendering function and let $\textrm{Com} = LZ77$. Then:
 \begin{align*}
-\Pr[startswith(v, \cdot) \textrm{ compression-detectable under } f, Com] =\\ \text{non-negl}(\lambda - k)
+\Pr[startswith(v, \cdot) \textrm{ compression-detectable under } f, \textrm{Com}] =\\ \text{non-negl}(\lambda - k)
 \end{align*}
 
 Where the probability randomness is taken uniformly over all $k$-bit prefixes $v \in \{0, 1\}^k$.
