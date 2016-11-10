@@ -4,23 +4,23 @@
 
 \title{On the security of encryption and compression composition under reflection attacks}
 
-%\author{
-%    Anonymized submission
-%}
+\author{
+    Anonymized submission
+}
 
- \author{
-     \IEEEauthorblockN{Dimitris Karakostas}
-     \IEEEauthorblockA{University of Athens \\
-     dimit.karakostas@gmail.com}
-     \and
-     \IEEEauthorblockN{Aggelos Kiayias}
-     \IEEEauthorblockA{University of Edinburgh\\
-     akiayias@inf.ed.ac.uk}
-     \and
-     \IEEEauthorblockA{Dionysis Zindros}
-     \IEEEauthorblockA{University of Athens \\
-     dionyziz@di.uoa.gr}
- }
+%  \author{
+%      \IEEEauthorblockN{Dimitris Karakostas}
+%      \IEEEauthorblockA{University of Athens \\
+%      dimit.karakostas@gmail.com}
+%      \and
+%      \IEEEauthorblockN{Aggelos Kiayias}
+%      \IEEEauthorblockA{University of Edinburgh\\
+%      akiayias@inf.ed.ac.uk}
+%      \and
+%      \IEEEauthorblockA{Dionysis Zindros}
+%      \IEEEauthorblockA{University of Athens \\
+%      dionyziz@di.uoa.gr}
+%  }
 
 \usepackage{url}
 \usepackage{amsmath}
@@ -151,8 +151,9 @@ A formal description of the above example is defined in Appendix \ref{sec:breach
 \subsection{Terms}
 The previous example allows us to explore multiple terms that are used in the
 rest of our work. These terms include the \textit{rendering function} $f$,
-\textit{rendered message}, \textit{secret} $s$, \textit{noise} $v$,
-\textit{reflection} $r$ and the distributions $\mathcal{M}$ and $\mathcal{V}$.
+\textit{rendered message} $m$, \textit{secret} $s$, \textit{noise} $v$,
+\textit{reflection} $r$ and the distributions $\mathcal{M}$ of secrets and
+$\mathcal{V}$ of noise.
 
 In order to elaborate on the previous example, we define a specific instance of
 it. In this case, the website is found in the URL \textit{mail.example.com} and
@@ -265,9 +266,10 @@ $\text{Game}_{\text{REF-SEC}}^{\mathcal{PE},\mathcal{A}}(\lambda,  f,
 \mathcal{V}, g)$ is parameterized with a rendering function $f(\cdot, \cdot,
 \cdot)$, a noise distribution $\mathcal{V}$, the security parameter $\lambda$,
 some function $g$ of the plaintext vector, and a distribution of secrets $\mathcal{M}_\omega$
-such that $\forall \omega \forall s \in \mathcal{M}_\omega: |s| = \lambda$. Notice
-that the distribution of secrets is parameterized with the history of execution
-$\omega$.
+such that $\forall \omega \forall s \in \mathcal{M}_\omega: |s| = \lambda$. We
+require that the rendering function $f$ is polynomially computable and
+reversible.  Notice that the distribution of secrets is parameterized with the
+history of execution $\omega$.
 
 The challenger produces a $\lambda$-bit key $(pk, sk) \leftarrow
 \mathcal{K}(\lambda)$. The adversary is given $pk$, $\mathcal{V}$, $g$ and $f$.
@@ -416,15 +418,14 @@ The reflection game is depicted in the following figure:
       \caption{Reflection Game}
    \end{figure}
 
-\noindent {\bf Symmetric key version.}
-
-The above game can be modified to deal with symmetric encryption. For this, the
-choice of key is changed to be limited to a secret key instead of a public and
-private key pair. The adversary is not given access to any key material.
-Instead, the adversary is given access to an encryption oracle which encrypts a
-given message using the secret key and returns the respective ciphertext, in
-addition to the existing reflection oracle. Both oracles can be called an
-arbitrary number of times by the challenger.
+\noindent {\bf Symmetric key version.} The above game can be modified to deal
+with symmetric encryption. For this, the choice of key is changed to be limited
+to a secret key instead of a public and private key pair. The adversary is not
+given access to any key material.  Instead, the adversary is given access to an
+encryption oracle which encrypts a given message using the secret key and
+returns the respective ciphertext, in addition to the existing reflection
+oracle. Both oracles can be called an arbitrary number of times by the
+challenger.
 
 In the following proofs, we will assume that the game is played symmetrically.
 As the attack does not pertain to the key exchange mechanism, all theorems can
@@ -434,16 +435,29 @@ be directly translated between the two versions of the game.
 
 \subsection{The interdependence assumption}
 
-Let $\bar{\mathcal{M}}$ be a joint distribution from which the random variables $(s, r)$
-are drawn. We say that $s$ and $r$ are interdependent when:
-\begin{equation*}
-\begin{split}
-\exists s_1, r_1, s_2, r_2:\\
-\Pr_{(s, r) \leftarrow \bar{\mathcal{M}}}[(s, r) = (s_1, r_1)] < \Pr_{(s, r) \leftarrow \bar{\mathcal{M}}}[(s, r) = (s_2, r_1)]
+Let $\bar{\mathcal{M}}$ be a joint distribution from which the random variables
+$(s, r)$ are drawn. We say that $s$ and $r$ are interdependent when there exist
+$s_1, r_1$ and $s_2, r_2$ in the support of $\bar{\mathcal{M}}$ with $s_1 \neq
+s_2$ such that:
+
+\begin{align*}
+    \Pr[(s, r) = (s_1, r_1)] &< \Pr[(s, r) = (s_1, r_2)]
 \land\\
-\Pr_{(s, r) \leftarrow \bar{\mathcal{M}}}[(s, r) = (s_1, r_2)] > \Pr_{(s, r) \leftarrow \bar{\mathcal{M}}}[(s, r) = (s_2, r_2)]
-\end{split}
-\end{equation*}
+    \Pr[(s, r) = (s_2, r_1)] &> \Pr[(s, r) = (s_2, r_2)]
+\end{align*}
+
+Where the pair $(s, r)$ is drawn from the joint distribution
+$\bar{\mathcal{M}}$.
+
+It is clear that when two random variables $s$ and $r$ exhibit interdependence,
+they must necessarily be dependent random variables. To see that
+interdependence is a stronger version of dependence, observe that in the case
+of dependence, the probability for some $s = s_1$ conditioned on $r = r_1$ is
+necessarily different from the probability for some $s = s_2$ conditioned on $r
+= r_2$. In interdependence, it can be seen that we additionally require the
+event $s = s_1$ which was less probable than the event $s = s_2$ under the
+condition $r = r_1$ to become more probable than $s = s_2$ under the condition
+$r = r_2$.
 
 We observe that commonly compressed texts such as HTML content exhibit
 interdependence almost everywhere. To be more precise, if we sample, for
@@ -456,25 +470,41 @@ and $r$ are interdependent. The same occurs for digrams in English. This
 straightforward fact is supported by extensive statistical analyses in the
 scientific literature such as \cite{c18}.
 
+While the interdependence assumption is a general notion observed in all common
+plaintexts, it is suitable to mention here how these ideas will emerge as we
+mount our attack. In a plaintext $(s, r)$ in which the attacker controls some
+reflection string $r$ and wishes to obtain information about some secret string
+$s$, she wishes to distinguish between the cases $s = s_1$ and $s = s_2$ of two
+different secrets $s_1$ and $s_2$, i.e. between the instances $(s_1, r)$ and
+$(s_2, r)$. By measuring the difference in the probability of $(s, r)$
+occurring for $r = r_1$ and $r = r_2$, the attacker can distinguish which value
+of $s$ is in use. If $s = s_1$, then the attacker will observe the inequality
+$\Pr[(s, r) = (s_1, r_1)] < \Pr[(s, r) = (s_1, r_2)]$, but when $s = s_2$, the
+attacker will observe the different inequality $\Pr[(s, r) = (s_2, r_1)] >
+\Pr[(s, r) = (s_2, r_2)]$.
+
 The necessity of the assumption that the plaintext being compressed follows an
 interdependent distribution will become clear shortly, when we introduce our
-definition of compression functions.
+definition of compression functions. This will also immediately hint at how the
+attacker is able to perform these measurements of probability inequalities
+indirectly by observing ciphertext lengths.
 
 \subsection{Compression idealness}
 
 We now move on to define the notion of compression idealness.
 
-Let $\mathcal{K}$ be a function from some input distribution $\bar{\mathcal{M}}$ to the
-output space of all strings ${0, 1}^*$. $\mathcal{K}$ is an ideal compression
-function when:
+Let $\mathcal{K}$ be a function defined on some domain and with output space
+all strings $\{0, 1\}^*$, and let $\bar{\mathcal{M}}$ be a distribution whose
+support is a subset of the domain of $\mathcal{K}$.  We say that $\mathcal{K}$
+is an ideal compression function with respect to the distribution
+$\bar{\mathcal{M}}$ when for every $w_1, w_2$ in the support of
+$\bar{\mathcal{M}}$ we have:
+
 \begin{equation*}
-\begin{split}
-\forall w_1, w_2 \in \bar{\mathcal{M}}:\\
-\Pr_{w \leftarrow \bar{\mathcal{M}}}[w = w_1] < \Pr_{w \leftarrow \bar{\mathcal{M}}}[w = w_2]
-\iff\\
-\lvert\mathcal{K}(w_1)\rvert > \lvert\mathcal{K}(w_2)\rvert
-\end{split}
+\Pr[w = w_1] < \Pr[w = w_2] \iff \lvert\mathcal{K}(w_1)\rvert > \lvert\mathcal{K}(w_2)\rvert
 \end{equation*}
+
+Where $w$ is a random variable drawn from $\bar{\mathcal{M}}$.
 
 The intuitive notion behind compression idealness is that the encoding
 function is somehow perfectly aware of the input distribution. It
