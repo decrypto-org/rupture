@@ -4,23 +4,23 @@
 
 \title{On the security of encryption and compression composition under reflection attacks}
 
-%\author{
-%    Anonymized submission
-%}
+\author{
+    Anonymized submission
+}
 
- \author{
-     \IEEEauthorblockN{Dimitris Karakostas}
-     \IEEEauthorblockA{University of Athens \\
-     dimit.karakostas@gmail.com}
-     \and
-     \IEEEauthorblockN{Aggelos Kiayias}
-     \IEEEauthorblockA{University of Edinburgh\\
-     akiayias@inf.ed.ac.uk}
-     \and
-     \IEEEauthorblockA{Dionysis Zindros}
-     \IEEEauthorblockA{University of Athens \\
-     dionyziz@di.uoa.gr}
- }
+%  \author{
+%      \IEEEauthorblockN{Dimitris Karakostas}
+%      \IEEEauthorblockA{University of Athens \\
+%      dimit.karakostas@gmail.com}
+%      \and
+%      \IEEEauthorblockN{Aggelos Kiayias}
+%      \IEEEauthorblockA{University of Edinburgh\\
+%      akiayias@inf.ed.ac.uk}
+%      \and
+%      \IEEEauthorblockA{Dionysis Zindros}
+%      \IEEEauthorblockA{University of Athens \\
+%      dionyziz@di.uoa.gr}
+%  }
 
 \usepackage{url}
 \usepackage{amsmath}
@@ -151,8 +151,9 @@ A formal description of the above example is defined in Appendix \ref{sec:breach
 \subsection{Terms}
 The previous example allows us to explore multiple terms that are used in the
 rest of our work. These terms include the \textit{rendering function} $f$,
-\textit{rendered message}, \textit{secret} $s$, \textit{noise} $v$,
-\textit{reflection} $r$ and the distributions $\mathcal{M}$ and $\mathcal{V}$.
+\textit{rendered message} $m$, \textit{secret} $s$, \textit{noise} $v$,
+\textit{reflection} $r$ and the distributions $\mathcal{M}$ of secrets and
+$\mathcal{V}$ of noise.
 
 In order to elaborate on the previous example, we define a specific instance of
 it. In this case, the website is found in the URL \textit{mail.example.com} and
@@ -265,9 +266,10 @@ $\text{Game}_{\text{REF-SEC}}^{\mathcal{PE},\mathcal{A}}(\lambda,  f,
 \mathcal{V}, g)$ is parameterized with a rendering function $f(\cdot, \cdot,
 \cdot)$, a noise distribution $\mathcal{V}$, the security parameter $\lambda$,
 some function $g$ of the plaintext vector, and a distribution of secrets $\mathcal{M}_\omega$
-such that $\forall \omega \forall s \in \mathcal{M}_\omega: |s| = \lambda$. Notice
-that the distribution of secrets is parameterized with the history of execution
-$\omega$.
+such that $\forall \omega \forall s \in \mathcal{M}_\omega: |s| = \lambda$. We
+require that the rendering function $f$ is polynomially computable and
+reversible.  Notice that the distribution of secrets is parameterized with the
+history of execution $\omega$.
 
 The challenger produces a $\lambda$-bit key $(pk, sk) \leftarrow
 \mathcal{K}(\lambda)$. The adversary is given $pk$, $\mathcal{V}$, $g$ and $f$.
@@ -416,15 +418,14 @@ The reflection game is depicted in the following figure:
       \caption{Reflection Game}
    \end{figure}
 
-\noindent {\bf Symmetric key version.}
-
-The above game can be modified to deal with symmetric encryption. For this, the
-choice of key is changed to be limited to a secret key instead of a public and
-private key pair. The adversary is not given access to any key material.
-Instead, the adversary is given access to an encryption oracle which encrypts a
-given message using the secret key and returns the respective ciphertext, in
-addition to the existing reflection oracle. Both oracles can be called an
-arbitrary number of times by the challenger.
+\noindent {\bf Symmetric key version.} The above game can be modified to deal
+with symmetric encryption. For this, the choice of key is changed to be limited
+to a secret key instead of a public and private key pair. The adversary is not
+given access to any key material.  Instead, the adversary is given access to an
+encryption oracle which encrypts a given message using the secret key and
+returns the respective ciphertext, in addition to the existing reflection
+oracle. Both oracles can be called an arbitrary number of times by the
+challenger.
 
 In the following proofs, we will assume that the game is played symmetrically.
 As the attack does not pertain to the key exchange mechanism, all theorems can
@@ -434,16 +435,29 @@ be directly translated between the two versions of the game.
 
 \subsection{The interdependence assumption}
 
-Let $\bar{\mathcal{M}}$ be a joint distribution from which the random variables $(s, r)$
-are drawn. We say that $s$ and $r$ are interdependent when:
-\begin{equation*}
-\begin{split}
-\exists s_1, r_1, s_2, r_2:\\
-\Pr_{(s, r) \leftarrow \bar{\mathcal{M}}}[(s, r) = (s_1, r_1)] < \Pr_{(s, r) \leftarrow \bar{\mathcal{M}}}[(s, r) = (s_2, r_1)]
+Let $\bar{\mathcal{M}}$ be a joint distribution from which the random variables
+$(s, r)$ are drawn. We say that $s$ and $r$ are interdependent when there exist
+$s_1, r_1$ and $s_2, r_2$ in the support of $\bar{\mathcal{M}}$ with $s_1 \neq
+s_2$ such that:
+
+\begin{align*}
+    \Pr[(s, r) = (s_1, r_1)] &< \Pr[(s, r) = (s_1, r_2)]
 \land\\
-\Pr_{(s, r) \leftarrow \bar{\mathcal{M}}}[(s, r) = (s_1, r_2)] > \Pr_{(s, r) \leftarrow \bar{\mathcal{M}}}[(s, r) = (s_2, r_2)]
-\end{split}
-\end{equation*}
+    \Pr[(s, r) = (s_2, r_1)] &> \Pr[(s, r) = (s_2, r_2)]
+\end{align*}
+
+Where the pair $(s, r)$ is drawn from the joint distribution
+$\bar{\mathcal{M}}$.
+
+It is clear that when two random variables $s$ and $r$ exhibit interdependence,
+they must necessarily be dependent random variables. To see that
+interdependence is a stronger version of dependence, observe that in the case
+of dependence, the probability for some $s = s_1$ conditioned on $r = r_1$ is
+necessarily different from the probability for some $s = s_2$ conditioned on $r
+= r_2$. In interdependence, it can be seen that we additionally require the
+event $s = s_1$ which was less probable than the event $s = s_2$ under the
+condition $r = r_1$ to become more probable than $s = s_2$ under the condition
+$r = r_2$.
 
 We observe that commonly compressed texts such as HTML content exhibit
 interdependence almost everywhere. To be more precise, if we sample, for
@@ -456,25 +470,41 @@ and $r$ are interdependent. The same occurs for digrams in English. This
 straightforward fact is supported by extensive statistical analyses in the
 scientific literature such as \cite{c18}.
 
+While the interdependence assumption is a general notion observed in all common
+plaintexts, it is suitable to mention here how these ideas will emerge as we
+mount our attack. In a plaintext $(s, r)$ in which the attacker controls some
+reflection string $r$ and wishes to obtain information about some secret string
+$s$, she wishes to distinguish between the cases $s = s_1$ and $s = s_2$ of two
+different secrets $s_1$ and $s_2$, i.e. between the instances $(s_1, r)$ and
+$(s_2, r)$. By measuring the difference in the probability of $(s, r)$
+occurring for $r = r_1$ and $r = r_2$, the attacker can distinguish which value
+of $s$ is in use. If $s = s_1$, then the attacker will observe the inequality
+$\Pr[(s, r) = (s_1, r_1)] < \Pr[(s, r) = (s_1, r_2)]$, but when $s = s_2$, the
+attacker will observe the different inequality $\Pr[(s, r) = (s_2, r_1)] >
+\Pr[(s, r) = (s_2, r_2)]$.
+
 The necessity of the assumption that the plaintext being compressed follows an
 interdependent distribution will become clear shortly, when we introduce our
-definition of compression functions.
+definition of compression functions. This will also immediately hint at how the
+attacker is able to perform these measurements of probability inequalities
+indirectly by observing ciphertext lengths.
 
 \subsection{Compression idealness}
 
 We now move on to define the notion of compression idealness.
 
-Let $\mathcal{K}$ be a function from some input distribution $\bar{\mathcal{M}}$ to the
-output space of all strings ${0, 1}^*$. $\mathcal{K}$ is an ideal compression
-function when:
+Let $\mathcal{K}$ be a function defined on some domain and with output space
+all strings $\{0, 1\}^*$, and let $\bar{\mathcal{M}}$ be a distribution whose
+support is a subset of the domain of $\mathcal{K}$.  We say that $\mathcal{K}$
+is an ideal compression function with respect to the distribution
+$\bar{\mathcal{M}}$ when for every $w_1, w_2$ in the support of
+$\bar{\mathcal{M}}$ we have:
+
 \begin{equation*}
-\begin{split}
-\forall w_1, w_2 \in \bar{\mathcal{M}}:\\
-\Pr_{w \leftarrow \bar{\mathcal{M}}}[w = w_1] < \Pr_{w \leftarrow \bar{\mathcal{M}}}[w = w_2]
-\iff\\
-\lvert\mathcal{K}(w_1)\rvert > \lvert\mathcal{K}(w_2)\rvert
-\end{split}
+\Pr[w = w_1] < \Pr[w = w_2] \iff \lvert\mathcal{K}(w_1)\rvert > \lvert\mathcal{K}(w_2)\rvert
 \end{equation*}
+
+Where $w$ is a random variable drawn from $\bar{\mathcal{M}}$.
 
 The intuitive notion behind compression idealness is that the encoding
 function is somehow perfectly aware of the input distribution. It
@@ -525,10 +555,10 @@ An important assumption for our attack is that the encryption function $Enc$ is
 \begin{equation*}
 \begin{split}
 \forall m_1, m_2 \in \{0, 1\}^*\\
-\forall \kappa_1, \kappa_2 \in \mathcal{K}\\
+\forall k_1, k_2 \in \mathcal{K}\\
 |m_2| > |m_1|
 \Rightarrow
-|Enc_{\kappa_1}(m_2)| \geq |Enc_{\kappa_2}(m_1)|
+|Enc_{k_1}(m_2)| \geq |Enc_{k_2}(m_1)|
 \end{split}
 \end{equation*}
 
@@ -541,15 +571,17 @@ Stream ciphers can be treated as strictly monotonic to the bit level.
 \section{Compressibility with respect to predicates}\label{sec:propertycom}
 
 Let $\mathcal{M}$ be a plaintext distribution and $Q(s)$ be a predicate on the
-plaintext $s \in \mathcal{M}$. Let us use $\mathcal{M}_Q$ to denote the subset
-of $\mathcal{M}$ restricted over the elements for which $Q$ holds
-proportionally retaining measure and assuming $\mathcal{M}_Q \neq \emptyset$
-and $\mathcal{M}_{\lnot Q} \neq \emptyset$.
+plaintext $s$ drawn from $\mathcal{M}$. Furthermore, we require that $Q$ is not a
+trivial predicate; that is, there must exist elements for which $Q$ is true and
+others for which it is false.  Let us use $\mathcal{M}_Q$ to denote the
+distribution $\mathcal{M}$ conditioned on the predicate $Q$.
 
 For the specific property $Q$ and plaintext distribution $\mathcal{M}$, define:
 \begin{equation*}
-    \pi \defeq max(\Pr_{s \leftarrow \mathcal{M}}[Q(s)], 1 - \Pr_{s \leftarrow \mathcal{M}}[Q(s)])
+    \pi \defeq max(\Pr[Q(s)], 1 - \Pr[Q(s)])
 \end{equation*}
+
+Where $s$ is drawn from $\mathcal{M}$.
 
 Let $\mathcal{V}$ be a noise distribution from which a pair of noises
 $\overbar{v} = (v_1, v_2) \leftarrow \mathcal{V}^2$ is drawn.  Let $\overbar{r}
@@ -570,9 +602,10 @@ is used. On the contrary, if $s \in \mathcal{M}_{\lnot Q}$, the opposite
 direction should occur.  If this is the case for the selected reflection pair
 and noise pair, we say that $Q$ compares favourably under $\overbar{r},
 \overbar{v}$:
+
 \begin{equation*}
 \begin{split}
-    cpr^Q_{f, Com}(s, \overbar{r}, \overbar{v})
+    cpr^Q_{\kappa}(s, \overbar{r}, \overbar{v})
     \defeq\\
     \begin{cases}
         |\mathcal{K}(s, r_1, v_1)| < |\mathcal{K}(s, r_2, v_2)| &\text{ if } Q(s)\\
@@ -582,39 +615,36 @@ and noise pair, we say that $Q$ compares favourably under $\overbar{r},
 \end{equation*}
 
 The reflection pair $\overbar{r}$ \textit{detects} predicate $Q$ under
-compression $Com$ rendered with rendering function $f$ over the secret
-distribution $\mathcal{M}$ and the noise distribution $\mathcal{V}$ when:
+compression function $\kappa$ over the secret distribution $\mathcal{M}$ and
+the noise distribution $\mathcal{V}$ with advantage $\alpha$ when the
+comparison is favourable for both $s_1$ drawn from $\mathcal{M}_Q$ and $s_2$
+drawn from $\mathcal{M}_{\not Q}$. Formally, we define the predicate
+$dtc_\alpha(Q, \overbar{r}, f, Com, \mathcal{M}, \mathcal{V})$ as follows:
+
 \begin{align*}
-    dtc(Q, \overbar{r}, f, Com, \mathcal{M}, \mathcal{V})
-    \defeq\\
-    \exists \alpha \text{ non-negl}:\\
-    \Pr_{s_1 \leftarrow \mathcal{M}_Q,
-        s_2 \leftarrow \mathcal{M}_{\lnot Q},
-        \overbar{v} \leftarrow \mathcal{V}^2}
-        [cpr^Q_{f, Com}(s_1, \overbar{r}, \overbar{v}) \land
-         cpr^Q_{f, Com}(s_2, \overbar{r}, \overbar{v})]
+    \Pr
+        [cpr^Q_{\kappa}(s_1, \overbar{r}, \overbar{v}) \land
+         cpr^Q_{\kappa}(s_2, \overbar{r}, \overbar{v})]
     \geq\\
     \pi + \alpha(\lambda)
 \end{align*}
 
-We call $Q$ \textit{compression-detectable} if a pair $\overbar{r}$ exists,
-such that:
-\begin{equation*}
-    \exists \overbar{r} = r_1, r_2 \in \mathcal{M}:
-    dct(Q, \overbar{r}, f, Com, \mathcal{M}, \mathcal{V})
-\end{equation*}
+Where $s_1$ is drawn from $\mathcal{M}_Q$, $s_2$ is drawn from
+$\mathcal{M}_{\lnot Q}$, and $v_1, v_2$ are drawn from $\mathcal{V}$.
 
-Furthermore we require that such a pair $\overbar{r}$ is polynomially
-computable:
-\begin{align*}
-    \exists \text{PPT } \mathcal{O}_R:\\
-    dct(Q, \overbar{r}, f, Com, \mathcal{M}, \mathcal{V}),\\
-    \overbar{r} \leftarrow \mathcal{O}_R(Com, f, Q, \mathcal{M}, \mathcal{V})
-\end{align*}
+We call $Q$ \textit{compression-detectable} with an advantage $\alpha$ if a
+pair $\overbar{r} = (r_1, r_2)$ exists, such that $dtc_\alpha(Q, \overbar{r},
+f, Com, \mathcal{M}, \mathcal{V})$ holds. Furthermore we require that such a
+pair $\overbar{r}$ is polynomially computable. That is, there exists some
+polynomial-time functionality $\mathcal{O}_R(Com, f, Q, \mathcal{M},
+\mathcal{V})$ which produces an $\overbar{r}$ such that $dtc_\alpha(Q,
+\overbar{r}, f, Com, \mathcal{M}, \mathcal{V})$ holds.
 
 The compression-detectability property exists in all common compression
-functions as long as $s$ and $r$ compress in the same context. We will
-illustrate such examples later in this work.
+functions as long as $s$ and $r$ compress in the same context. We will now
+prove the fact that all compression functions which are ideal under some
+distribution $\bar{\mathcal{M}}$ exhibit compression-detectability of some
+predicate $Q$.
 
 \section{Compression attacks}\label{sec:comattack}
 
@@ -623,9 +653,9 @@ illustrate such examples later in this work.
 \begin{lemma}[Compression attack]
 
 Let $Com$ be a compression function, $Enc$ be a strictly length-monotonic
-encryption function, $f$ be a rendering function and $Q$ be a
-compression-detectable plaintext predicate over plaintext distribution
-$\mathcal{M}$ and noise distribution $\mathcal{V}$.
+encryption function, $f$ be a rendering function and $Q$ be a plaintext
+predicate detectable with non-negligible advantage $\alpha$ over plaintext
+distribution $\mathcal{M}$ and noise distribution $\mathcal{V}$.
 
 Then:
 \begin{align*}
@@ -706,8 +736,8 @@ From the compression detectability of Q we know that:
     \Pr_{s_1 \leftarrow \mathcal{M}_Q,
          s_2 \leftarrow \mathcal{M}_{\lnot Q},
          \overbar{v} \leftarrow \mathcal{V}^2}
-         [cpr^Q_{f, Com}(s_1, \overbar{r}, \overbar{v}) \land
-          cpr^Q_{f, Com}(s_2, \overbar{r}, \overbar{v})]
+         [cpr^Q_{\kappa}(s_1, \overbar{r}, \overbar{v}) \land
+          cpr^Q_{\kappa}(s_2, \overbar{r}, \overbar{v})]
     \geq\\
     \pi + \alpha(\lambda)
 \end{align*}
@@ -716,12 +746,12 @@ Therefore:
 \begin{align*}
     \Pr_{s_1 \leftarrow \mathcal{M}_Q,
          \overbar{v} \leftarrow \mathcal{V}^2}
-         [cpr^Q_{f, Com}(s_1, \overbar{r}, \overbar{v})]
+         [cpr^Q_{\kappa}(s_1, \overbar{r}, \overbar{v})]
     \geq
     \pi + \alpha(\lambda) \land\\
     \Pr_{s_2 \leftarrow \mathcal{M}_{\lnot Q},
          \overbar{v} \leftarrow \mathcal{V}^2}
-         [cpr^Q_{f, Com}(s_2, \overbar{r}, \overbar{v})]
+         [cpr^Q_{\kappa}(s_2, \overbar{r}, \overbar{v})]
     \geq
     \pi + \alpha(\lambda)
 \end{align*}
@@ -730,11 +760,11 @@ And so:
 \begin{align*}
     \Pr_{s \leftarrow \mathcal{M},
          \overbar{v} \leftarrow \mathcal{V}^2}
-         [cpr^Q_{f, Com}(s, \overbar{r}, \overbar{v})]
+         [cpr^Q_{\kappa}(s, \overbar{r}, \overbar{v})]
     =\\
-    \Pr[cpr^Q_{f, Com}(s, \overbar{r}, \overbar{v})|Q(s)]\Pr[Q(s)]
+    \Pr[cpr^Q_{\kappa}(s, \overbar{r}, \overbar{v})|Q(s)]\Pr[Q(s)]
     +\\
-    \Pr[cpr^Q_{f, Com}(s, \overbar{r}, \overbar{v})|\lnot Q(s)]\Pr[\lnot Q(s)]
+    \Pr[cpr^Q_{\kappa}(s, \overbar{r}, \overbar{v})|\lnot Q(s)]\Pr[\lnot Q(s)]
     \geq\\
     (\pi + \alpha(\lambda))(\Pr[Q(s)] + (1 - \Pr[Q(s)))
     =\\
@@ -742,7 +772,7 @@ And so:
 \end{align*}
 
 Let us now examine the event of $\mathcal{A}$ being successful, denoted Succ,
-when $cpr^Q_{f, Com}(s, \overbar{r}, \overbar{v})$. Assuming $Q(s)$:
+when $cpr^Q_{\kappa}(s, \overbar{r}, \overbar{v})$. Assuming $Q(s)$:
 \begin{align*}
     \Pr[|\mathcal{K}(s, r_1, v_1)| < |\mathcal{K}(s, r_2, v_2)||Q(s)]
     = \pi + \alpha(\lambda)
@@ -853,7 +883,7 @@ From the fact that $Q$ is compression-detectable and from the Compression Attack
 \begin{align*}
     \Pr_{s \leftarrow \mathcal{M},
          \overbar{v} \leftarrow \mathcal{V}^2}
-         [cpr^Q_{f, Com}(s, \overbar{r}, \overbar{v})]
+         [cpr^Q_{\kappa}(s, \overbar{r}, \overbar{v})]
     =\\
     \pi + \alpha(\lambda)
 \end{align*}
@@ -863,7 +893,7 @@ reflection vector $\overbar{r}$. Call these elements \textit{amplifiable} and de
 \begin{align*}
     Amp(s) \defeq
     \Pr_{\overbar{v} \leftarrow \mathcal{V}^2}
-    [cpr^Q_{f, Com}
+    [cpr^Q_{\kappa}
      (s, \overbar{r}, \overbar{v})]
     \geq
     \frac{1}{2} + \frac{\alpha(\lambda)}{2}
@@ -899,15 +929,15 @@ Then we have:
 \begin{align*}
     \Pr_{s \leftarrow \mathcal{M},
          \overbar{v} \leftarrow \mathcal{V}^2}
-         [cpr^Q_{f, Com}(s, \overbar{r}, \overbar{v})]
+         [cpr^Q_{\kappa}(s, \overbar{r}, \overbar{v})]
     =\\
     \Pr_{s \leftarrow \mathcal{M},
          \overbar{v} \leftarrow \mathcal{V}^2}
-         [cpr^Q_{f, Com}(s, \overbar{r}, \overbar{v})|Amp(s)]\Pr[Amp(s)]
+         [cpr^Q_{\kappa}(s, \overbar{r}, \overbar{v})|Amp(s)]\Pr[Amp(s)]
     +\\
     \Pr_{s \leftarrow \mathcal{M},
          \overbar{v} \leftarrow \mathcal{V}^2}
-         [cpr^Q_{f, Com}(s, \overbar{r}, \overbar{v})|\lnot Amp(s)]\Pr[\lnot Amp(s)]
+         [cpr^Q_{\kappa}(s, \overbar{r}, \overbar{v})|\lnot Amp(s)]\Pr[\lnot Amp(s)]
     <\\
     B + (\frac{1}{2} + \frac{\alpha}{2})(1 - B)
 \end{align*}
@@ -936,7 +966,7 @@ trial with $k$ repetitions and extracts a majority. Let $X$ be the number of
 repetitions that are successful for the adversary. Letting $\overbar{v}_i$
 be the noise chosen from $\mathcal{V}^2$ during the $i$-th round, $X$ is defined:
 \begin{align*}
-    X \defeq |\{ i: cpr^Q_{f, Com}(s, \overbar{r}, \overbar{v}_i) \}|
+    X \defeq |\{ i: cpr^Q_{\kappa}(s, \overbar{r}, \overbar{v}_i) \}|
 \end{align*}
 
 $X$ follows the binomial distribution, and therefore its expected value is:
