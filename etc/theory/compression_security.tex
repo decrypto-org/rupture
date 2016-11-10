@@ -1140,6 +1140,23 @@ same strategy in order to craft the reflections $r_1$ and $r_2$, compare
 different size lengths of requests that contain each one along with $s$ and
 decrypt a prefix os $s$.
 
+\subsubsection{TIME}
+The TIME attack's novelty is the absence of a MitM module and the usage of a
+time side-channel. In this case, the adversary does not have access to the
+length, as is the case in BREACH, but the timings of the responses.
+
+This attack measures the time until the response is complete. This time value
+depends on the response length, since a longer response results in slower
+network transmission. This demonstrates that interdependence of $r$ and $s$ and
+compression idealness not only affects the length of the ciphertext, but also
+the time needed for transmission.
+
+TIME as a reflection game instance is very close to BREACH. The main difference
+is found in the oracle. In TIME the last part of the oracle, sending the
+ciphertext $c$ to the adversary, is implemented in the same script that issues the
+requests. Also the oracle does not send $c$ to the adversary, but
+rather an approximation of $\rvert c \rvert$.
+
 \section{Defense}\label{sec:defense}
 Keeping in mind our theoretical model, we determine the key elements that make these
 attacks possible.
