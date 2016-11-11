@@ -1497,19 +1497,19 @@ when sniffing starts, when it is completed, and retrieving the sniffed data.
 \subsubsection{Backend}
 
 The backend component is a Python code that controls the attack execution. It
-initializes the attack and calculates the initial request sets that should be
+initializes the attack and calculates the request sets that should be
 collected. It is responsible for strategic decision taking, statistical
-analysis of samples collected, adaptively advancing the attack, and storing
+analysis of collected samples, adaptively advancing the attack, and storing
 persistent data about the attacks in progress for future analysis.
 
 It communicates with the realtime component in order to guide the client as to
 what requests need to be made at each stage of the attack. Meanwhile, it orders
-the sniffer to listen and report network traffic, which is collected and stored
-at the end of each phase of the attack. At each round, the backend analyzes the
-sniffer reports and calculates the probability of success for the attack. At the
-end of each round, the predicate $Q$, which depends on the method of attack described
-in \ref{subsec:reflectionmethods}, is detected, until the entire secret is
-calculated.
+the sniffer to listen and report network traffic, which stored
+at the end of each phase of the attack. The backend analyzes the
+network data and calculates the probability of success for the attack. At the
+end of each round, the predicate $Q$ is detected, depending on which method of
+the ones described
+in \ref{subsec:reflectionmethods} is used.
 
    \begin{figure}[thpb]
       \centering
