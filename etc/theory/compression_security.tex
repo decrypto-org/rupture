@@ -76,40 +76,61 @@ compared to previous techniques.
 \section{Introduction}\label{sec:prev}
 
 Compression and encryption composition has caused serious security problems
-in protocols such as TLS \cite{c1} over the years.
-However, the theoretical models for these classes of attacks has been limited so
-far.
+in protocols such as TLS \cite{c1} over the years
+with an array of attacks making major headlines in security dissemination forums,
+including BREACH \cite{c2}, TIME \cite{c3}, and CRIME \cite{c4}.
+While the idea that compression is a side-channel that can be exploited
+is certainly folklore in the cryptography community and is documented
+at least as early as Kelsey's work \cite{c12},
+a proper theoretical model  capturing the real-world perspective
+of these side-channel attacks is still elusive.
 
-We believe a generalization and abstraction of the rendering process is
-essential to theoretically analyzing the security of compression and rendering
-functions in general. Furthermore, generalized rendering and compression
-functions help better consider specific attacks as realistic instances of the
-model. Such examples are BREACH \cite{c2}, TIME \cite{c3}, and CRIME \cite{c4}, which are expressed as
-instances of compression side-channel attacks in the context of real web
-services and the rendering of web pages.
+Motivated by this, in this paper we introduce
+a general model that incorporates the rendering process that is exploited
+during these attacks and in this way we facilitate a thorough
+theoretical analysis of the security of encryption-compression composition.
+We showcase the power of our framework by (i) showing how attacks like  BREACH \cite{c2}, TIME \cite{c3}, and CRIME \cite{c4}, can be expressed
+as instances of our compression side-channel attack template,
+(ii) demonstrating an improved attack framework, called Rupture,
+that improves substantially the performance of previous attacks,
+(iii) a general mitigation strategy, called CTX, that strikes
+a good balance between security and efficiency and can be readily incorporated
+in a TLS deployment without a significant performance degradation.
+In more details our results are outlined below.
 
 \subsection{A high-level overview}\label{subsec:example}
-Our work is motivated by the threat compression side-channel attacks pose
-against real-world systems. So far little attention has been drawn to these
-attacks, primarily due to the complexity and the lack of production code tools
-that allow for an easy, robust execution. However, these attacks potentially
-allow for full plaintext recovery, as will be highlighted in this section's
-example.
+As explained above,  compression side-channel attacks pose a serious threat
+against real-world deployments of TLS and in general of
+any encryption system. While widely received and documented
+by the security community there are still not many mitigation strategies in place
+to thwart them, primarily due to (i) the perceived high performance
+penalty associated with mitigating them, and
+(ii) their perceived complexity and
+the lack of production code tools
+that allow for their robust execution, something that makes some believe
+they are not a realistic threat. In this work we will illustrate that
+these perceptions  are wrong
+and the existence of these attacks
+suggests  a grave situation that is critical to be addressed.
 
-Consider the communication between a user that browses the Internet and a server
-that hosts a website. This website might be a social network, e-banking, mail
+In order to appreciate the seriousness of these attacks we present a motivating
+example.
+Suppose that  a  user that browses the Internet and a server
+that hosts a website are in active communication.
+This website might be a social network, e-banking, mail
 provider or a similar service that handles sensitive private data. When the
 server receives a request for a web page it collects all needed data, generates
 the HTML code that will be displayed by the user's browser and sends a network
 response containing this code along with other resources such as images and
 libraries. All response data is encrypted under TLS, which ensures privacy and
-integrity for the communication between the user and the server.
+integrity for the communication between the user and the server,
+but also compressed for efficiency.
 
-There also exists an adversary that aims to break this communication's security.
+Consider now an adversary that aims to break this communication's security.
 This adversary tries to decrypt the communication between
 the user and the server and reveal information about the private data that is
-exchanged. In order to achieve this, the adversary should fulfill certain
-requirements.
+exchanged. In order to mount a compression side-channel attack certain
+conditions need to be met.
 
 Firstly, the adversary is able to handle the user's network traffic. That way he
 is able to collect and analyze the network packets of the encrypted
@@ -126,7 +147,7 @@ Figure \ref{fig:attack_model} elaborates further on this attack mode.
 
 Thirdly, the web service that is under attack should allow the adversary to
 inject data in the encrypted response plaintext. This data takes the form of a
-specially crafted reflection string which can be added for example by using a
+specially crafted ``reflection'' string which can be added for example by using a
 HTTP GET parameter whose value is included in the HTML response.
 
 Any adversary that fulfills these requirements can issue a compression
