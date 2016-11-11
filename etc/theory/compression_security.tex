@@ -767,17 +767,80 @@ $\mathcal{M}_{\lnot Q}$, and $v_1, v_2$ are drawn from $\mathcal{V}$.
 
 We call $Q$ \textit{compression-detectable} with an advantage $\alpha$ if a
 pair $\overbar{r} = (r_1, r_2)$ exists, such that $dtc_\alpha(Q, \overbar{r},
-f, \textrm{Com}, \mathcal{M}, \mathcal{V})$ holds. Furthermore we require that such a
+\kappa, \mathcal{M}, \mathcal{V})$ holds. Furthermore we require that such a
 pair $\overbar{r}$ is polynomially computable. That is, there exists some
-polynomial-time functionality $\mathcal{O}_R(\textrm{Com}, f, Q, \mathcal{M},
+polynomial-time functionality $\mathcal{O}_R(\kappa, Q, \mathcal{M},
 \mathcal{V})$ which produces an $\overbar{r}$ such that $dtc_\alpha(Q,
-\overbar{r}, f, \textrm{Com}, \mathcal{M}, \mathcal{V})$ holds.
+\overbar{r}, \kappa, \mathcal{M}, \mathcal{V})$ holds.
 
 The compression-detectability property exists in all common compression
 functions as long as $s$ and $r$ compress in the same context. We will now
 prove the fact that all compression functions which are ideal under some
 distribution $\bar{\mathcal{M}}$ exhibit compression-detectability of some
 predicate $Q$.
+
+\subsection{Good compression allows predicate detection}
+
+We now move on to show that all good compression functions exhibit
+compression-detectability of some predicate. In intuitive terms, this means
+that if a compression function compresses well enough, it will necessarilly
+allow one part of the plaintext to affect how another part of the plaintext
+compresses. An attacker that is able to measure how well a string compresses
+can use this to detect a predicate on the second part of the plaintext by
+changing the first part of the plaintext.
+
+More specifically, we model our plaintext input to the compression function as
+the usual pair $(s, r)$ consisting of the secret string $s$ and reflection
+string $r$. When $(s, r)$ are encoded by a compression function $\kappa$ ideal
+under some plaintext distribution $\bar{\mathcal{M}}$, a simple predicate
+allows the distinction between two secrets $s_1$ and $s_2$ using a reflection
+pair $(r_1, r_2)$.
+
+In the following theorem, we prove compression detectability of a predicate
+with the following simplifications. First, we make the assumption that the
+resulting reflection pair $(r_1, r_2)$ is computable; second, for this proof
+we ignore the existence of noise.
+
+\begin{lemma}[Good compression is detectable]
+Let $\kappa$ be an ideal compression function with respect to some
+interdependent distribution $\bar{\mathcal{M}}$. Then there exists
+some compression-detectable predicate $Q$ for $\kappa$.
+\end{lemma}
+
+\begin{IEEEproof}
+
+From the fact that $\bar{\mathcal{M}}$ is interdependent, we have that:
+
+\begin{align*}
+    \Pr[r = r_1|s = s_1] < \Pr[r = r_2|s = s_1]&\land\\
+    \Pr[r = r_1|s = s_2] > \Pr[r = r_2|s = s_2]&
+\end{align*}
+
+Using the fact that $\kappa$ is ideal with respect to this distribution,
+we deduce that:
+
+\begin{align*}
+    |\kappa(s_1, r_1)| > |\kappa(s_1, r_2)|&\land\\
+    |\kappa(s_2, r_1)| < |\kappa(s_2, r_2)|&
+\end{align*}
+
+We then define $Q(s)$ to be the predicate "$s = s_1$". This partitions
+$\mathcal{M}$ into the distributions $\mathcal{M}_Q$ and
+$\mathcal{M}_{\lnot Q}$ both of which are non-empty, as $\mathcal{M}_Q$
+contains $s_1$ and $\mathcal{M}_{\lnot Q}$ contains $s_2$. From the fact that
+$Q$ is not trivial, we deduce that $\pi < 1$.
+
+Observe, then, that letting $\bar{r} = (r_1, r_2)$ we obtain:
+
+\begin{align*}
+    \Pr[cpr^Q_{\kappa}(s_1, \bar{r}, \kappa, \mathcal{M})
+    \land
+    cpr^Q_{\kappa}(s_2, \bar{r}, \kappa, \mathcal{M})] = 1
+\end{align*}
+
+This completes the proof.
+
+\end{IEEEproof}
 
 \section{Compression attacks}\label{sec:comattack}
 
