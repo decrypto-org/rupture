@@ -629,7 +629,7 @@ interest for two reasons. First, they are representative of the way
 typical lossless compression functions work internally, by taking
 advantage of letter frequencies (Huffman) or letter-sequence
 repetitions (LZ77). Second, they are the ones almost exclusively used in
-practice. The DEFLATE algorithm, which is a composition of LZ77 and
+practice. The DEFLATE algorithm \cite{c8}, which is a composition of LZ77 and
 Huffman, is the algorithm used in gzip, which is prevalent on the
 modern web. In 2016, 98.85\% of websites that enabled compression used
 some form of gzip \cite{c7}. We argue that both LZ77 and Huffman are nearly
@@ -637,9 +637,17 @@ ideal compression functions. The complexity of the Huffman and
 especially the LZ77 algorithms arises from many intricate technical
 details, such as, for instance, the sliding window size of LZ77. These
 details make it impractical to deal with these functions in analytical
-proofs. Hence, we support our idealness claims in an experimental
-manner in Figure \ref{fig:huffman_idealness}. For reference, the exact definitions of DEFLATE are given in
-\cite{c8}.
+proofs.
+
+We support our idealness claims in an experimental manner. Our experiment
+measured the compression performance of the Huffman and an ideal function on a
+text of English literature\footnote{The screenplay of the movie "The Social
+Network".}. First, we calculated the occurences of each character (letters and
+digits) in the text. Second, we generated the Huffman
+table for this text and the table of an ideal function based on the character
+frequencies. Each character is represented by a bitstream in both tables. Figure
+\ref{fig:huffman_idealness} depicts the length of the bitstreams of characters
+in descending order of occurencies for both the ideal and the Huffman functions.
 
     \begin{figure}[thpb]
         \centering
@@ -1830,8 +1838,8 @@ against BREACH attacks.
 
 \begin{thebibliography}{13}
 
-\bibitem{c1} T. Dierks, E. Rescorla, The Transport Layer Security (TLS)
-Protocol Version 1.2, August 2008.
+\bibitem{c1} Dierks, Tim. "The transport layer security (TLS) protocol version
+1.2." (2008).
 
 \bibitem{c2} Y. Gluck, N. Harris and A. Prado, "BREACH: Reviving the CRIME attack",
 Black Hat USA, 2013.
@@ -1839,14 +1847,16 @@ Black Hat USA, 2013.
 \bibitem{c3} Be'ery, T. and A. Shulman, "A Perfect CRIME? Only TIME Will Tell",
 Black Hat Europe 2013, 2013.
 
-\bibitem{c4} J. Rizzo and T. Duong, "The CRIME attack", Ekoparty, 2012.
+\bibitem{c4} Duong, Thai, and Juliano Rizzo. "The CRIME attack." Presentation at
+ekoparty Security Conference. 2012.
 
 \bibitem{c5} De Ryck, Philippe, et al. "Automatic and precise client-side
 protection against CSRF attacks." European Symposium on Research in Computer
 Security. Springer Berlin Heidelberg, 2011.
 
-\bibitem{c6} M. S. Mayzner, M. E. Tresselt, Tables of Single-letter and Digram
-Frequency Counts for Various Word-length and Letter-position Combinations, 1965
+\bibitem{c6} Mayzner, Mark S., and Margaret Elizabeth Tresselt. "Tables of
+single-letter and digram frequency counts for various word-length and
+letter-position combinations." Psychonomic monograph supplements (1965).
 
 \bibitem{c7} [online] URL:
 \url{https://w3techs.com/technologies/details/ce-gzipcompression/all/all} [cited
@@ -1857,18 +1867,23 @@ November 2016]
 
 \bibitem{c9} NIST, "Announcing the ADVANCED ENCRYPTION STANDARD (AES)", 2001.
 
-\bibitem{c10} B. Moller, T. Duong, K. Kotowicz, This POODLE Bites: Exploiting the SSL 3.0 Fallback, September 2014.
+\bibitem{c10} Möller, Bodo, Thai Duong, and Krzysztof Kotowicz. "This POODLE
+bites: exploiting the SSL 3.0 fallback." PDF online (2014).
 
-\bibitem{c11} R. Fisher, F. Yates: Statistical tables for biological,
-agricultural and medical research, 1938
+\bibitem{c11} Fisher, Ronald Aylmer, and Frank Yates. Statistical tables for
+biological, agricultural and medical research. Longman, 1938.
 
-\bibitem{c12} John Kelsey, "Compression and information leakage of plaintext", 2002.
+\bibitem{c12} Kelsey, John. "Compression and information leakage of plaintext."
+International Workshop on Fast Software Encryption. Springer Berlin Heidelberg,
+2002.
 
-\bibitem{c13} J. Kelley and R. Tamassia, "Secure Compression: Theory \& Practice",
-2014.
+\bibitem{c13} Kelley, James, and Roberto Tamassia. "Secure Compression: Theory\&
+Practice." IACR Cryptology ePrint Archive 2014 (2014): 113.  2014.
 
-\bibitem{c14} J. Alawatugoda, D. Stebila and C. Boyd, "Protecting encrypted
-cookies from compression side-channel attacks", 2014.
+\bibitem{c14} Alawatugoda, Janaka, Douglas Stebila, and Colin Boyd. "Protecting
+encrypted cookies from compression side-channel attacks." International
+Conference on Financial Cryptography and Data Security. Springer Berlin
+Heidelberg, 2015.
 
 \bibitem{c15} M. West, "First-Party-Only Cookies", RFC Internet-Draft, 2015.
 
