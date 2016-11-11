@@ -142,8 +142,6 @@ lengths of different response packets will reveal properties of the private data
 At this point the privacy of the communication between the user and the website is
 compromised and the adversary has broken the security of TLS.
 
-A description of the above example is included in Appendix \ref{sec:breachmodel}.
-
     \begin{figure}[thpb]
         \centering
             \includegraphics[width=0.48\textwidth]{attack_model.png}
@@ -1646,45 +1644,6 @@ In comparison, disabling compression would again result in 976.8\% load overhead
 and a network transmittion time overhead that, depending on the client's and the
 server's network, may be several seconds.
 
-\section{Application}\label{sec:application}
-
-BREACH is an example of a side-channel attack, that uses reflection in
-order to steal plaintext compressed and encrypted in the web.
-
-\subsection{BREACH as a compression distinguishing
-attack}\label{subsec:breachapp}
-BREACH is an instance of the attack model described in \ref{sec:comattack}.
-
-A secret is defined as any string in the response plaintext of a web page, such
-as authentication tokens, private messages etc.
-
-The property $g$ of the secret that is being compromised is defined as: "What is
-the prefix $p$ of secret $s$, given a known prefix $p_s$, where $|p| - |p_s| =
-1$?".
-
-The distribution $\mathcal{M}$ is ${p_s:t}$, where $t \in \mathcal{S}$ and
-$\mathcal{S}$ is a known alphabet of ASCII symbols.
-
-The rendering function $f$ is the website response code rendering function. This
-function concatenates secret $s$ with static strings $u$, noise $v$ and the
-reflection string $r$.
-
-The compression function is gzip, which implements the DEFLATE algorithm
-\cite{c12}, that is the combination of LZ77 and Huffman coding.
-
-The encryption function is any encryption algorithm used in communications over
-the Internet, most notably AES.
-
-The web application that is being attacked with BREACH offers an endpoint that
-allows requests via HTTP GET, where an HTTP GET parameter is included in the
-response. This endpoint constitutes the reflection oracle.
-
-The adversary should be able to issue requests to the given endpoint and monitor
-the traffic from and to the attacking browser. At this point, the adversary can
-issue requests on different elements of $\mathcal{S}$ and compare the response lengths. As
-long as a difference in lengths across different requests is noticeable, the
-compression distinguishing attack is successful.
-
 \section{Related work}\label{sec:related}
 
 \subsection{Compression attacks in literature}
@@ -1725,7 +1684,7 @@ opt-in. This attribute states that cookies may only be included in a
 "first-party" context, i.e. in same origin requests.
 
 However, the current BREACH application depends on cross-origin requests in
-order to call the reflection oracle, as defined in \ref{subsec:breachapp}.
+order to call the reflection oracle.
 Enabling SameSite cookies would result in the elimination of this reflection
 oracle of the Reflection-Security Game and the effective mitigation of the
 attack.
@@ -1756,8 +1715,8 @@ def apply_masking($m_i, s_i$):
     return $Rep(m, s_i, \beta_1 s_i' \beta_2 m_i \beta_3)$
 \end{lstlisting}
 
-where $Rep$ is the string replacement function defined in
-\ref{subsec:rendering} and $\{\beta_1, \beta_2, \beta_3\}$ are symbols that do not
+where $Rep(a, b, c)$ is a function that replaces all occurences of $b$ in
+$a$ with $c$ and $\{\beta_1, \beta_2, \beta_3\}$ are symbols that do not
 appear in $m$ before masking.
 
 Mask removal should be applied on all masked secrets, marked by the annotation
@@ -1787,180 +1746,6 @@ to avoid significant performance drop.
 
 Masking is a method used by Facebook \cite{c11} in order to protect CSRF tokens
 against BREACH attacks.
-
-\appendices
-
-\section{The compression function assumption}\label{subsec:comfuncassumption}
-
-In BREACH, $\textrm{Com}$ is a variant of LZ77 \cite{c9}. In this compression algorithm,
-repetitions of strings are well-compressed. In our ideal model, we examine a
-simplified version of LZ77 which we describe in this paragraph.
-
-Our version of LZ77 is not composed with a symbol-compressing algorithm such as
-Huffman coding. Therefore, a way is needed to encode literal symbols and
-compression symbols. The LZ77 algorithm treats the uncompressed text as a
-series of bits. Let the plaintext be $p$ and its length be $n = |p|$. The LZ77
-compression function needs to have an alphabet of 2 symbols for representing
-literals (the bits $0$ and $1$ of the plaintext) as well as an alphabet of an
-additional $n$ symbols for representing compression distances from $1$ to $n$
-and lengths from $1$ to $n$ (the same symbol is used to represent a distance
-and a length). This makes an alphabet of a total of $n + 2$ symbols which are
-represented by bit sequences of exactly $\ceil{lg(n + 2)}$ bits each.
-
-We first describe the decompression algorithm. At the beginning of the
-compressed string, the number of characters in the uncompressed plaintext is
-encoded in ASCII followed by the "$\$$" ASCII character as a separator. This
-allows the decoder to compute how many bits are used to represent each symbol
-in the compressed text.
-
-Ordering these bit strings lexicographically, the first two bit strings will
-correspond to the literal "$0$" and "$1$" bits of the plaintext. The next bit
-strings will correspond to \textit{distance} bit sequences of values $1, 2,
-\ldots, n$ respectively.
-
-After the "$\$$" separator, an encoding of the plaintext is given. The encoding
-can be decompressed by linearly reading it one character at a time. If a bit
-sequence corresponding to a literal is given, this is decoded as the respective
-literal bit of the plaintext. If a distance bit sequence of value $a$ is given,
-then another distance bit sequence of value $b$ sequence follows.  Then $a$
-must be less than or equal to the plaintext characters decoded so far, while
-$b$ is arbitrary. This pair of values is decoded as follows. The decompressed
-text beginning at a distance of $a$ bits behind the current position decoding
-position and of length $b$ bits is taken into account. That text is then the
-new decompressed plaintext which is appended to the existing decompressed
-plaintext one bit at a time. This procedure can cause self-overlapping texts.
-In the end, the decoded text must be $n$ bits long, otherwise the compression
-is invalid.
-
-\begin{lstlisting}[texcl,mathescape,basicstyle=\small]
-def $\text{LZ77}^{-1}(c)$:
-    parts = c.split("$\$$")
-    plaintextLength = parse_int(parts[0])
-    bitsPerSymbol = $\ceil{lg(\text{plaintextLength}) + 2}$
-    enc = strToBinArray("".join(parts[1:]))
-
-    plaintext = ''
-    for i in range(0, len(enc), bits):
-        symbol = binaryToInt(enc[i:bits])
-        if symbol = 0:
-            plaintext += '0'
-        else if symbol = 1:
-            plaintext += '1'
-        else:
-            d = symbol - 1
-            i += bits
-            length = int(enc[i:bits])
-            if d > len(plaintext):
-                return $\bot$
-            while length:
-                plaintext += plaintext[-d]
-                length -= 1
-    if len(plaintext) != plaintextLength:
-        return $\bot$
-    else:
-        return plaintext
-\end{lstlisting}
-
-Where negative and range array indexing and the $range$ function is as in
-Python.
-
-Our LZ77 compressor can then be described simply: It chooses the shortest in
-bits compressed text, which, when decoded using the above algorithm yields the
-desired plaintext.
-
-% TODO: Prove that it is a compression function for some $\mathcal{M}$
-
-\section{The BREACH model}\label{sec:breachmodel}
-We now turn our attention to the BREACH attack specifically, which utilizes
-the properties explored above, and we describe that BREACH is a specific
-instance of the general attack.
-
-In the BREACH model, we deal with a specific function $f$, property $Q$,
-compression function $\textrm{Com}$, length-leaking $\textrm{Enc}$, and secret distribution
-$\mathcal{M}$.
-
-In the next paragraphs, we describe a simplified model of the attack that
-lends itself to the formal model, while abstracting away the complex
-practical details of the attack pertaining to the networking and particularities
-of the implementation that are of little significance to the cryptographic
-formalisms presented here.
-
-\subsection{The rendering context assumption}\label{subsec:rendering}
-
-In the modern web, function $f$ represents a specific attack target, which
-constitutes the renderer of a web page, given a specific secret, reflection,
-and noise. Typically, $f$ will concatenate instances of the secret, the
-reflection, and the noise, between some context strings which constitute the
-static portions of the site.
-
-In the case of BREACH, it is typically assumed that $f$ outputs a concatenation
-of various instances of $s$, $r$, and $v$ with arbitrary repetitions, in
-addition to concatenating with some constant context whose position is
-independent of the values of $s, r, v$. The number of repetitions of $s, r, v$
-are also independent of the values of $s, r, v$.
-
-Formally, assume that the symbols $\{\beta_1, \beta_2, \beta_3\}$ do not appear
-in the alphabet of the secret.
-
-Our assumptions for $f$ can be stated as follows. Let
-\begin{equation*}
-\begin{split}
-\exists \mu \in \{0, 1, \beta_1, \beta_2, \beta_3\}^*\\
-\exists u_1, v_1, u_2, v_2, u_3, v_3 \in \{0, 1, \beta_1, \beta_2, \beta_3\}^*\\
-\mu = u_1 \beta_1 v_1 \land\\
-\mu = u_2 \beta_2 v_2 \land\\
-\mu = u_3 \beta_3 v_3 \land\\
-\forall s, r, v \in \{0, 1\}^*\\
-f(s, r, v) = Rep(Rep(Rep(\mu, \beta_1, s), \beta_2, r), \beta_3, v)
-\end{split}
-\end{equation*}
-
-Where $Rep$ is the string replacement function:
-\begin{align*}
-Rep(\epsilon, \alpha, \beta) &\defeq \epsilon\\
-Rep(\alpha:xs, \alpha, \beta) &\defeq \beta:Rep(xs, \alpha, \beta)\\
-Rep(x:xs, \alpha, \beta) &\defeq x:Rep(xs, \alpha, \beta)
-\end{align*}
-
-Where $:$ denotes the concatenation of a symbol with a string.
-
-We call $f$ functions that exhibit such behavior \textit{concatenative}.
-
-\subsection{The full-text predicate assumption}\label{subsec:fulltextassumption}
-
-The BREACH attack is a specific instance of reflection-based attacks in which
-the $Q$ property pertains to a prefix of the secret. It asks "Does the secret
-begin with such text?"
-
-We require $X$ to be of compressible length,
-i.e. the following equation must be satisfied:
-\begin{equation*}
-    |X| > \ceil{lg(f(X, X, \epsilon) + 2)}
-\end{equation*}
-
-In practical terms, this requires the secret that needs to be stolen to be at
-least 3 bytes so that it is better compressed rather than represented as a
-literal.
-
-\subsection{Prefixes are
-compression-detectable}\label{subsec:breachprefix}
-
-Let $startswith(v, s)$ be the $k$-length prefix checking predicate on a
-$\lambda$-bit secret $s$:
-\begin{equation*}
-    startswith(v, s) \defeq \exists w: s = v w
-\end{equation*}
-
-Let $f$ be a concatenative rendering function and let $\textrm{Com} = LZ77$. Then:
-\begin{align*}
-\Pr[startswith(v, \cdot) \textrm{ compression-detectable under } f, \textrm{Com}] =\\ \text{non-negl}(\lambda - k)
-\end{align*}
-
-Where the probability randomness is taken uniformly over all $k$-bit prefixes $v \in \{0, 1\}^k$.
-
-Due to the complexity of the $LZ77$ algorithm, we do not provide a proof of this result. However, the
-result has been experimentally verified against various end-points by our open-source Rupture implementation.
-This result is also supported by the feasibility of BREACH and CRIME.
 
 \begin{thebibliography}{13}
 
