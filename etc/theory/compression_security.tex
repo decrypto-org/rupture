@@ -1653,6 +1653,15 @@ def unhide($s', p$):
     return $s$
 \end{lstlisting}
 
+Our defense is implemented in the application layer and is opt-in. We choose to
+update the rendering function $f$ instead of the compression function
+$\textrm{Com}$ as it is easier that way for web developers to incorporate it in
+their applications. Our proposal requires no changes in the underlying
+compression algorithms in the web server such as Apache's mod\_deflate, which
+would require a huge engineering effort. Instead, our proposed defense requires
+only modifications in the web application layer, which can be relatively easily
+incorporated in existing applications.
+
 \subsection{The CTX defense}\label{subsec:ctx}
 
 \subsubsection{Implementation}
