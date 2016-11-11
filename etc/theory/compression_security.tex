@@ -1787,15 +1787,14 @@ rendering functions is provided in section \ref{subsec:terms}.
 \subsection{Defenses}
 
 Defense against side-channel compression attacks and especially BREACH have been
-proposed in bibliography, including \cite{c3}, \cite{c5} and \cite{c6}.
+proposed in bibliography including \cite{c3}, \cite{c5} and \cite{c6}.
 
 \subsubsection{Disabling compression}\label{subsec:disablecom}
 Compression is the basic assumption for property compressibility. Disabling
-compression would break the adaptive reflection game, since it removes
-the compression part of the encryption function.
+compression would break the adaptive reflection game.
 
-However, this method is not viable, since the performance overhead should it be
-applied overrules the benefits of the defense.
+However, this is not a viable solution. Disabling compression results in a
+performance penalty that outweighs the benefits of the defense.
 
 \subsubsection{SameSite cookies}\label{subsec:samesite}
 SameSite cookies \cite{c10} is a proposed draft for enhancing web security. The
