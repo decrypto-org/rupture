@@ -30,7 +30,7 @@
 \usepackage{amsfonts}
 % \usepackage{amsthm}
 \usepackage{amssymb}
-\usepackage[colorlinks=true,linkcolor=black,citecolor=black]{hyperref}
+\usepackage[colorlinks=true,linkcolor=black,citecolor=black,urlcolor=black]{hyperref}
 
 \usepackage{cite}
 
@@ -76,7 +76,7 @@ compared to previous techniques.
 \section{Introduction}\label{sec:prev}
 
 Compression and encryption composition has caused serious security problems
-in protocols such as TLS \cite{c15} over the years.
+in protocols such as TLS \cite{c1} over the years.
 However, the theoretical models for these classes of attacks has been limited so
 far.
 
@@ -84,7 +84,7 @@ We believe a generalization and abstraction of the rendering process is
 essential to theoretically analyzing the security of compression and rendering
 functions in general. Furthermore, generalized rendering and compression
 functions help better consider specific attacks as realistic instances of the
-model. Such examples are BREACH \cite{c3}, TIME \cite{c2}, and CRIME \cite{c1}, which are expressed as
+model. Such examples are BREACH \cite{c2}, TIME \cite{c3}, and CRIME \cite{c4}, which are expressed as
 instances of compression side-channel attacks in the context of real web
 services and the rendering of web pages.
 
@@ -196,7 +196,7 @@ The HTML response contains multiple data elements. A data element can be a
 A \textit{secret} $s$ is any part of the response that the application wishes to
 remain private. The adversary wishes to learn information about $s$. Examples of
 secrets in an HTML response include private messages, email contents, financial
-data, and web security elements like CSRF tokens \cite{c16}. A secret's alphabet
+data, and web security elements like CSRF tokens \cite{c5}. A secret's alphabet
 is generally printable text characters. In our example, the strings "Bank",
 which is an email topic, and "Routing number: 123", which is the email body, are
 both secrets.
@@ -545,7 +545,7 @@ variables and in fact interdependent. Similarly when sampling two-word sequences
 $\phi = (s, r)$ of the two words $s$ and $r$ from English literature, then $s$
 and $r$ are interdependent. The same occurs for digrams in English. This
 straightforward fact is supported by extensive statistical analyses in the
-scientific literature such as \cite{c18}.
+scientific literature such as \cite{c6}.
 
 While the interdependence assumption is a general notion observed in all common
 plaintexts, it is suitable to mention here how these ideas will emerge as we
@@ -632,14 +632,14 @@ repetitions (LZ77). Second, they are the ones almost exclusively used in
 practice. The DEFLATE algorithm, which is a composition of LZ77 and
 Huffman, is the algorithm used in gzip, which is prevalent on the
 modern web. In 2016, 98.85\% of websites that enabled compression used
-some form of gzip \cite{c19}. We argue that both LZ77 and Huffman are nearly
+some form of gzip \cite{c7}. We argue that both LZ77 and Huffman are nearly
 ideal compression functions. The complexity of the Huffman and
 especially the LZ77 algorithms arises from many intricate technical
 details, such as, for instance, the sliding window size of LZ77. These
 details make it impractical to deal with these functions in analytical
 proofs. Hence, we support our idealness claims in an experimental
 manner in Figure \ref{fig:huffman_idealness}. For reference, the exact definitions of DEFLATE are given in
-\cite{c12}.
+\cite{c8}.
 
     \begin{figure}[thpb]
         \centering
@@ -665,7 +665,7 @@ k_2$ in the key generating function space and string messages $m_1, m_2$:
 If the last inequality becomes strict, we call the encryption function
 \textit{strictly length monotonic}.
 
-A practical instance of a length monotonic encryption function is AES \cite{c8}.
+A practical instance of a length monotonic encryption function is AES \cite{c9}.
 Stream ciphers can be treated as strictly monotonic to the bit level.
 
 \section{Compressibility with respect to predicates}\label{sec:propertycom}
@@ -1269,7 +1269,7 @@ case, plaintext length difference between two messages does not always result in
 length difference between the respective encrypted ciphertext.
 
 It is possible to bypass this problem by using block alignment. Block alignment
-techniques have already been explored in the literature \cite{c14}. This method
+techniques have already been explored in the literature \cite{c10}. This method
 demands issuing multiple requests to the reflection oracle while including
 artificial noise in the reflection string $r$.
 
@@ -1655,8 +1655,8 @@ in poor performance. This is the case with defenses such as secret masking.
 Different-origin secrets are then forced to compress separately, i.e. not
 cross-compress. However, compression is achieved within each context. The
 default origin alphabet is ASCII characters (0 - 128). In order to randomly
-permute the secret alphabet, we use the Fisher--Yates shuffle
-algorithm~\cite{c17}.
+permute the secret alphabet, we use the Fisher-Yates shuffle
+algorithm \cite{c11}.
 
 Secrets are then permuted by the server using the generated permutation of the
 corresponding origin prior to TLS encryption and network transmission. Upon
@@ -1771,13 +1771,14 @@ server's network, may be several seconds.
 
 \subsection{Compression attacks in literature}
 
-The compression side-channel attack technique was first studied by Kelsey \cite{c4} in 2002.
-Kelley and Tamassia\cite{c5} discuss the notion of \textit{entropy-restricted} semantic
+The compression side-channel attack technique was first studied by Kelsey
+\cite{c12} in 2002.
+Kelley and Tamassia\cite{c13} discuss the notion of \textit{entropy-restricted} semantic
 security. However, this only models the case where two secrets compress to the same
 length, making it difficult to capture practical techniques used in attacks
 such as BREACH.
 
-Alawatugoda et al. \cite{c6} introduce a model for \textit{Cookie recovery},
+Alawatugoda et al. \cite{c14} introduce a model for \textit{Cookie recovery},
 \textit{Random cookie indistinguishability}, and \textit{Chosen cookie indistinguishability}.
 Nevertheless, their security models are limited in classes of rendering functions
 that are very specific. In their models, the attacker is able to directly influence
@@ -1786,8 +1787,8 @@ rendering functions is provided in section \ref{subsec:terms}.
 
 \subsection{Defenses}
 
-Defense against side-channel compression attacks and especially BREACH have been
-proposed in bibliography including \cite{c3}, \cite{c5} and \cite{c6}.
+Literature includes many proposed defenses for side-channel compression attacks
+and especially BREACH, some of which are explored in the following sections.
 
 \subsubsection{Disabling compression}\label{subsec:disablecom}
 Compression is the basic assumption for property compressibility. Disabling
@@ -1797,7 +1798,7 @@ However, this is not a viable solution. Disabling compression results in a
 performance penalty that outweighs the benefits of the defense.
 
 \subsubsection{SameSite cookies}\label{subsec:samesite}
-SameSite cookies \cite{c10} is a proposed draft for enhancing web security. The
+SameSite cookies \cite{c15} is a proposed draft for enhancing web security. The
 main puprose of this technique is to mitigate cross-site request forgery
 attacks, although it also mitigates other kinds of cross-origin leakages.
 
@@ -1826,65 +1827,64 @@ is random, and so is the masked secret, so the compression performance is poor.
 Therefore, masking should be applied on high value secrets only, in order to
 avoid significant performance penalties.
 
-Masking is a method used by Facebook \cite{c11} in order to protect CSRF tokens
+Masking is a method used by Facebook \cite{c16} in order to protect CSRF tokens
 against BREACH attacks.
 
 \begin{thebibliography}{13}
 
-\bibitem{c1} J. Rizzo and T. Duong, "The CRIME attack", Ekoparty, 2012.
+\bibitem{c1} T. Dierks, E. Rescorla, The Transport Layer Security (TLS)
+Protocol Version 1.2, August 2008.
 
-\bibitem{c2} Be'ery, T. and A. Shulman, "A Perfect CRIME? Only TIME Will Tell",
-Black Hat Europe 2013, 2013.
-
-\bibitem{c3} Y. Gluck, N. Harris and A. Prado, "BREACH: Reviving the CRIME attack",
+\bibitem{c2} Y. Gluck, N. Harris and A. Prado, "BREACH: Reviving the CRIME attack",
 Black Hat USA, 2013.
 
-\bibitem{c4} John Kelsey, "Compression and information leakage of plaintext", 2002.
+\bibitem{c3} Be'ery, T. and A. Shulman, "A Perfect CRIME? Only TIME Will Tell",
+Black Hat Europe 2013, 2013.
 
-\bibitem{c5} J. Kelley and R. Tamassia, "Secure Compression: Theory \& Practice",
+\bibitem{c4} J. Rizzo and T. Duong, "The CRIME attack", Ekoparty, 2012.
+
+\bibitem{c5} De Ryck, Philippe, et al. "Automatic and precise client-side
+protection against CSRF attacks." European Symposium on Research in Computer
+Security. Springer Berlin Heidelberg, 2011.
+
+\bibitem{c6} M. S. Mayzner, M. E. Tresselt, Tables of Single-letter and Digram
+Frequency Counts for Various Word-length and Letter-position Combinations, 1965
+
+\bibitem{c7} [online] URL:
+\url{https://w3techs.com/technologies/details/ce-gzipcompression/all/all} [cited
+November 2016]
+
+\bibitem{c8} P. Deutsch, "DEFLATE Compressed Data Format Specification version
+1.3", RFC 1951, 1996.
+
+\bibitem{c9} NIST, "Announcing the ADVANCED ENCRYPTION STANDARD (AES)", 2001.
+
+\bibitem{c10} B. Moller, T. Duong, K. Kotowicz, This POODLE Bites: Exploiting the SSL 3.0 Fallback, September 2014.
+
+\bibitem{c11} R. Fisher, F. Yates: Statistical tables for biological,
+agricultural and medical research, 1938
+
+\bibitem{c12} John Kelsey, "Compression and information leakage of plaintext", 2002.
+
+\bibitem{c13} J. Kelley and R. Tamassia, "Secure Compression: Theory \& Practice",
 2014.
 
-\bibitem{c6} J. Alawatugoda, D. Stebila and C. Boyd, "Protecting encrypted
+\bibitem{c14} J. Alawatugoda, D. Stebila and C. Boyd, "Protecting encrypted
 cookies from compression side-channel attacks", 2014.
+
+\bibitem{c15} M. West, "First-Party-Only Cookies", RFC Internet-Draft, 2015.
+
+\bibitem{c16} [online] URL:
+\url{https://www.facebook.com/notes/protect-the-graph/preventing-a-breach-attack/1455331811373632}
+[cited November 2016]
+
+% \bibitem{c9} J. Ziv and A. Lempel, "A universal algorithm for sequential data
+% compression", Information Theory, IEEE Transactions, vol. 23, 1977.
 
 % \bibitem{c7} D. Karakostas and D. Zindros, "Practical New Developments on
 % BREACH", Black Hat Asia, 2016.
 
-\bibitem{c8} NIST, "Announcing the ADVANCED ENCRYPTION STANDARD (AES)", 2001.
-
-\bibitem{c9} J. Ziv and A. Lempel, "A universal algorithm for sequential data
-compression", Information Theory, IEEE Transactions, vol. 23, 1977.
-
-\bibitem{c10} M. West, "First-Party-Only Cookies", RFC Internet-Draft, 2015.
-
-\bibitem{c11} [online] URL:
-\url{https://www.facebook.com/notes/protect-the-graph/preventing-a-breach-attack/1455331811373632}
-[cited November 2016]
-
-\bibitem{c12} P. Deutsch, "DEFLATE Compressed Data Format Specification version
-1.3", RFC 1951, 1996.
-
 % \bibitem{c13} [online] URL: \url{https://ruptureit.com} [cited November 2016]
-
-\bibitem{c14} B. Moller, T. Duong, K. Kotowicz, This POODLE Bites: Exploiting the SSL 3.0 Fallback, September 2014.
-
-\bibitem{c15} T. Dierks, E. Rescorla, The Transport Layer Security (TLS)
-Protocol Version 1.2, August 2008.
-
-\bibitem{c16} [online] URL:
-De Ryck, Philippe, et al. "Automatic and precise client-side protection against
-CSRF attacks." European Symposium on Research in Computer Security. Springer
-Berlin Heidelberg, 2011.
-
-\bibitem{c17} R. Fisher, F. Yates: Statistical tables for biological,
-agricultural and medical research, 1938
-
-\bibitem{c18} M. S. Mayzner, M. E. Tresselt, Tables of Single-letter and Digram
-Frequency Counts for Various Word-length and Letter-position Combinations, 1965
-
-\bibitem{c19} [online] URL:
-\url{https://w3techs.com/technologies/details/ce-gzipcompression/all/all} [cited
-November 2016]
 
 % \bibitem{c20} D. Karakostas, A. Kiayias, E. Sarafianou, D. Zindros: "CTX:
 % Eliminating BREACH with Context Hiding", Black Hat Europe, 2016.
