@@ -1806,65 +1806,25 @@ opt-in. This attribute states that cookies may only be included in a
 "first-party" context, i.e. in same origin requests.
 
 However, the current BREACH application depends on cross-origin requests in
-order to call the reflection oracle.
-Enabling SameSite cookies would result in the elimination of this reflection
-oracle of the Reflection-Security Game and the effective mitigation of the
-attack.
+order to call the reflection oracle. Enabling SameSite cookies would result in
+the elimination of this reflection oracle of the Reflection-Security Game.
 
 \subsubsection{Masking secrets}\label{subsec:masking}
-Masking is a method of hiding secrets' properties per request. A mask is a
-bitstream equal in size with the secret. The masked text contains the result of
-the XOR operation between the secret and the mask concatenated with the mask.
-The secret can be obtained by applying XOR between the first and the second
-half of the masked text.
+Masking is a method of hiding secrets' properties.
 
-A masking function is defined:
+A mask is a bitstream equal in size with the secret. The masked text contains
+the result of the XOR operation between the secret and the mask. The masked
+secret is then concatenated with the mask that was used. The secret can be
+obtained by applying XOR between the masked secret and the mask.
 
-\begin{lstlisting}[texcl,mathescape,basicstyle=\small]
-def masking($s_i$):
-    $l = |s_i|$
-    $m_i \xleftarrow{\$} \{0, 1\}^l\\$
-    $s_i' = m_i \oplus s$
-    return $s_i', m_i$
-\end{lstlisting}
+A new mask is used for each request. That way, the secret's content is secured
+against instances of the attack that require at least two calls to the
+reflection oracle.
 
-Masking can be applied on a rendered secret $s_i$ in the output $m$ of a
-rendering function $f$ as:
-
-\begin{lstlisting}[texcl,mathescape,basicstyle=\small]
-def apply_masking($m_i, s_i$):
-    $s_i', m_i \leftarrow masking(s_i)$
-    return $Rep(m, s_i, \beta_1 s_i' \beta_2 m_i \beta_3)$
-\end{lstlisting}
-
-where $Rep(a, b, c)$ is a function that replaces all occurences of $b$ in
-$a$ with $c$ and $\{\beta_1, \beta_2, \beta_3\}$ are symbols that do not
-appear in $m$ before masking.
-
-Mask removal should be applied on all masked secrets, marked by the annotation
-symbols $\beta_1$, $\beta_2$, $\beta_3$, before the reversing of rendering function $f$:
-
-\begin{lstlisting}[texcl,mathescape,basicstyle=\small]
-def remove_masking($m', \beta_1, \beta_2, \beta_3$):
-    return $Rep(m', \beta_1 s_i' \beta_2 m_i \beta_3, s_i' \oplus m_i)$
-\end{lstlisting}
-
-where $Rep$ is the string replacement function and $\{\beta_1, \beta_2,
-\beta_3\}$ are the annotation symbols used in \texttt{apply\_masking}.
-
-Mask $m_i$ is chosen uniformly at random, so masked secret $s_i'$ is also
-random. This results in $s_i' m_i$ being indistinguishable from $r_1 r_2$ by a
-compression function $\textrm{Com}$, where $r_1$, $r_2$ are random nonces chosen
-uniformly at random.
-
-Masking renews the secret $s_i'$ each time the reflection oracle is called. That
-way, this method secures the secret's content against instances of the attack
-that require at least two calls to the reflection oracle.
-
-Masking doubles the size of the secret that is being protected. Furthermore,
-$m_i$ and $s_i'$ are random, so the compression performance is poor. Therefore,
-masking should be applied with limitation on high value secrets only, in order
-to avoid significant performance drop.
+However, masking doubles the size of the protected secret. Furthermore, the mask
+is random, and so is the masked secret, so the compression performance is poor.
+Therefore, masking should be applied on high value secrets only, in order to
+avoid significant performance penalties.
 
 Masking is a method used by Facebook \cite{c11} in order to protect CSRF tokens
 against BREACH attacks.
