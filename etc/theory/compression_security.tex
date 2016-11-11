@@ -1336,6 +1336,20 @@ $|\mathcal{\Sigma}| = 1$. Each round reduces the alphabet by half, so the comple
 of the attack with the divide and conquer method  is
 $\mathcal{O}(log|\mathcal{\Sigma}|)$.
 
+Figure \ref{fig:divide_and_conquer} shows the reflection sequence for the case
+when the alphabet is the nuber digits. In order to find the correct leaf of the
+tree, we construct two reflections in each round. The two reflections contain
+the children nodes of the parent node that was chosen in the previous round,
+beginning with the root of the tree. After traversing the tree, we reach the
+correct choice which is number 3.
+
+   \begin{figure}[thpb]
+      \centering
+          \includegraphics[width=0.48\textwidth]{divide_and_conquer.png}
+      \caption{The divide \& conquer method}
+      \label{fig:divide_and_conquer}
+   \end{figure}
+
 \subsection{Request parallelization}\label{subsec:parallel}
 The reflection oracle is generally considered as synchronous. However, this is not
 always the case, since it may be able to handle multiple parallel requests from
