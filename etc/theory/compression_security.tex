@@ -1475,12 +1475,13 @@ networks, all controlled by the same central command-and-control channel.
 
 The realtime service is a service which awaits for work requests by clients. It
 can handle multiple targets and victims. It receives command-and-control
-connections from various clients which can live on different networks,
+connections from various clients which may live on different networks,
 orchestrates them, and tells them which ones will remain dormant and which ones
 will receive work, enabling one client per victim.
 
-It maintains open web socket command-and-control connections with clients and
-connects to the backend service, facilitating the communication between the two.
+It maintains open web socket connections with clients and
+connects to the backend service, facilitating the communication between the two
+ends.
 
 \subsubsection{Sniffer}
 
