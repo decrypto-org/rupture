@@ -1236,12 +1236,30 @@ sampleset contains requests on a symbol in alphabet $\mathcal{S}$. Requests in a
 sampleset may be constructed to enable optimization methods described in
 \ref{subsec:blockalign} and \ref{subsec:parallel}.
 
-Rupture issues the attack in rounds. Each round consists of phases, whose result
-leads to the detection of property $Q$, where $Q$ is specified by the method of
-attack described in \ref{subsec:parallel}, with some confidence $n$. Confidence
-is a metric calculated in bytes, that depicts the length difference between a
-pair $r_1, r_2$ of requests that make property $Q$ of secret $s$ compression
-detectable.
+The encrypted data pertaining to one response is a \textit{sample}.  The set of
+samples collected for a particular work are a \textit{sampleset}. A work
+represents the set of requests needed per candidate in the secret's alphabet.
+
+The attack is conducted in \textit{rounds}. In each round, a decision is made
+about the state of the attack and more becomes known about the secret. In a
+round, either the next byte of the secret becomes known, or the known alphabet
+is drilled down to a smaller set. In order to compare various different
+candidate alphabets, the attack executes a series of \textit{batches} of data
+collection for each round.
+
+In each batch, several works are issued and samples are collected from each probability distribution
+pertaining to a candidate alphabet, forming a sampleset. When samplesets of the
+same amount of samples have been collected for all the candidate alphabets,
+a batch is complete and the data is analyzed. The analysis compares the samples
+of different candidates and decides which is optimal, i.e. which candidate is
+contains the correct guess. This decision is made with some \textit{confidence},
+is expressed in bytes. If the confidence is insufficient, an additional
+batch of samplesets is collected, and the analysis is redone until the
+confidence value surpases a given threshold.
+
+Once enough batches have been collected for a decision to be made with good
+confidence, the round of the attack is complete and more information about the
+secret becomes known.
 
 \subsection{Rupture architecture}\label{app:rupture}
 Rupture consists of multiple components that collaborate in executing
@@ -1251,8 +1269,7 @@ communicates with the rest over the network.
 \subsubsection{Client}
 
 The client component is a Javascript code that issues requests towards a chosen
-endpoint. This endpoint should offer the functionality described in
-\ref{subsec:breachapp} and serve as the reflection oracle of the attack. The client
+endpoint. This endpoint serves as the reflection oracle of the attack. The client
 needs to be executed from the browser of the victim that the adversary is trying
 to steal secrets from. That way, the victim's authentication cookies will be
 included in the request and lead to the endpoint including secrets in the
