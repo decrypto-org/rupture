@@ -381,11 +381,11 @@ def $\text{Game}_{\text{REF-SEC}}^{\mathcal{PE},\mathcal{A}}(\lambda, f, \mathca
         return 0
 \end{lstlisting}
 
-Where the reflection oracle provided to the adversary is as follows:
+Where the reflection oracle provided to the adversary is as follows, where
+$\psi$ is a global variable:
 
 \begin{lstlisting}[texcl,mathescape,basicstyle=\small]
-def $\text{Reflect}^{\mathcal{E}_{pk}, \mathcal{V}}(r)$: \textrm{(global variable
-$\psi$)}
+def $\text{Reflect}^{\mathcal{E}_{pk}, \mathcal{V}}(r)$:
     $s \leftarrow \mathcal{M}_\omega$
     $v \leftarrow \mathcal{V}$
     $m = f(s, r, v)$
