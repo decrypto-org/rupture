@@ -253,7 +253,7 @@ on the newly stolen character, and continues similarly with the next stage.
 In some cases, the adversary aims at finding a property of the secret rather
 than the secret itself. This property is $g(s)$ and the guess of the adversary
 is $y$. When $g(s) = y$ the adversary has successfully recognized the property
-$g$ of secret $s$. Finally, a special case of $g$ is a predicate $Q$.
+$g$ of the secret $s$. Finally, a special case of $g$ is a predicate $Q$.
 
 \subsection{Contributions}
 Our contributions are as follows.
@@ -1223,14 +1223,14 @@ lengths. Encrypted network packets serve as the response $c_i$ from the
 reflection oracle and the length of each packet is visible on the network and
 captured.
 
-In addition, Rupture offers multiple instances of oracle $\mathcal{O}_R$, based
+In addition, Rupture offers multiple instances of the oracle $\mathcal{O}_R$, based
 on various $Q$ described in \ref{subsec:parallel}, and enables the automated
 computation of the reflection strings in each stage of the attack.
 
 Finally, it amplifies the attack by issuing multiple requests per candidate
-symbol in alphabet $\Sigma$ in order to demonstrate better probability of
+symbol in the alphabet $\Sigma$ in order to demonstrate better probability of
 success. This is achieved by grouping requests in samplesets, where each
-sampleset contains requests on a symbol in alphabet $\Sigma$. Requests in a
+sampleset contains requests on a symbol in the alphabet $\Sigma$. Requests in a
 sampleset may be constructed to enable optimization methods described in
 \ref{subsec:blockalign} and \ref{subsec:parallel}.
 
@@ -1262,7 +1262,7 @@ secret becomes known.
 \subsection{Block alignment}\label{subsec:blockalign}
 Block ciphers are \textit{length monotonic}, but not \textit{strictly length
 monotonic}, as described in section \ref{subsec:lenmonotone}. Specifically, the
-length of the encrypted text is rounded to a product of $\mu$-bits, where $\mu$
+length of the encrypted text is rounded up to a product of $\mu$-bits, where $\mu$
 is the block size, using added padding. The same applies for stream ciphers,
 whose functionality is similar to block ciphers with block size 1 byte. In this
 case, plaintext length difference between two messages does not always result in
@@ -1295,7 +1295,7 @@ Figure \ref{fig:block_alignment} intuitively depicts the block alignment techniq
    \end{figure}
 
 \subsection{Reflection computation methods}\label{subsec:reflectionmethods}
-Reflection strings $r$ should be polynomially computable, as defined in
+The reflection strings $r$ should be polynomially computable, as defined in
 \ref{sec:propertycom}. BREACH is
 parameterized with an alphabet of ASCII symbols $\Sigma$
 for each character of the
@@ -1308,24 +1308,24 @@ corresponds to a single character of the alphabet. An attack phase is completed
 when requests have been issued for the entire alphabet.
 
 In this case, $Q$ is the predicate "Given a known prefix $p_s$ of secret $s$ and
-a symbol $t \in \Sigma$, is $p_s || t$ a prefix of $s$?" and it holds that $\exists
-s_i \in \Sigma: Q(s_i)$ and $\forall s_j \in \Sigma \setminus \{s_i\}:
-\lnot Q(s_j)$. The complexity of the attack is $\mathcal{O}(|\Sigma|)$ and
-the round ends by finding a character of the secret.
+a symbol $t \in \Sigma$, is $p_s || t$ a prefix of $s$?". The complexity of the attack is $\mathcal{O}(|\Sigma|)$ and
+the round ends by finding a character of the secret. This method is similar to
+how BREACH previously worked.
 
 The second method of attack is divide and conquer. In each phase the alphabet is
 divided into two subsets $\Sigma_1$ and $\Sigma_2 =
 \Sigma
 \setminus \Sigma_1$, where $|\Sigma_1| = |\Sigma_2| =
-\ceil{|\Sigma| / 2}$. The reflection string for $\Sigma_1$ composes of
-$|\Sigma_1|$ substrings divided by an annotation symbol $\beta$. Each
+\ceil{|\Sigma| / 2}$. The reflection string for $\Sigma_1$ consists of
+$|\Sigma_1|$ substrings divided by an annotation symbol $\beta$ which is not
+present in the regular plaintext. Each
 substring consists of the known part of the secret concatenated with a character
 in $\Sigma_1$. The reflection string for $\Sigma_2$ is constructed
 similarly. For example, if $\Sigma_1$ is $\{"1", "2"\}$ and the known prefix is
 "abc", using "-" as $\beta$ the reflection is: "abc1-abc2".
 Each phase consists of one call to the reflection oracle per subset.
 
-The predicate $Q$ in this case is "Given a known prefix $p_s$ of secret $s$, is
+The predicate $Q$ in this case is "Given a known prefix $p_s$ of the secret $s$, is
 $p_s || t$ a
 prefix of $s$, where $t \in \Sigma_1$?". As long as the prefix of the
 secret is \textit{compression-detectable} by each substring of the reflection,
@@ -1369,7 +1369,7 @@ the attack.
 Previous sections demonstrated the need for multiple requests per reflection
 string $r_i$. However, it is often the case that communication with the
 reflection oracle is time
-expensive. In this case, it is preferable to issue multiple indistinguishable
+expensive. In this case, it is preferable to issue multiple
 requests for a candidate and treat them as a set rather than separately.
 
 This technique is useful in the case of BREACH. Communication between the browser and the
@@ -1443,10 +1443,8 @@ The client contains minimal logic. It connects to the realtime service through
 a command-and-control channel and registers itself. Then it waits
 for work instructions by the command-and-control channel. The
 client does not take any decisions or receive data about the progress of the
-attack other than the work it is requested to do. This is intentional so as
-to conceal the analysis mechanisms from the victim
-in case the victim attempts to reverse engineer the attack process.
-Furthermore, it allows the system to be upgraded without having to deploy a
+attack other than the work it is requested to do.
+This allows the system to be upgraded without having to deploy a
 new client at the victim's network.
 
 As a regular user is browsing the Internet, multiple clients will be
@@ -1456,12 +1454,12 @@ with the realtime service. The realtime
 service will activate one of them for this victim while keeping the others
 dormant. The activated one will then receive work instructions. If the enabled
 client dies, for example by closing the browser
-tab, one of the rest of the clients will be waken up to continue the
+tab, one of the rest of the clients will be woken up to continue the
 attack.
 
 \subsubsection{Injector}
 
-The injector component is responsible for injecting code to the victim's
+The injector component is responsible for injecting the client to the victim's
 browser. The injection is performed by ARP spoofing the local
 network and forwarding all traffic in a Man-in-the-Middle manner. The fact that all HTTP
 responses are infected increases robustness.
@@ -1506,7 +1504,7 @@ It communicates with the realtime component in order to guide the client as to
 what requests need to be made at each stage of the attack. Meanwhile, it orders
 the sniffer to listen and report network traffic, which stored
 at the end of each phase of the attack. The backend analyzes the
-network data and calculates the probability of success for the attack. At the
+network data and calculates the confidence in the success for the attack. At the
 end of each round, the predicate $Q$ is detected, depending on which method of
 the ones described
 in \ref{subsec:reflectionmethods} is used.
@@ -1791,7 +1789,7 @@ Literature includes many proposed defenses for side-channel compression attacks
 and especially BREACH, some of which are explored in the following sections.
 
 \subsubsection{Disabling compression}\label{subsec:disablecom}
-Compression is the basic assumption for property compressibility. Disabling
+Compression is the basic assumption for the compression detectability. Disabling
 compression would break the adaptive reflection game.
 
 However, this is not a viable solution. Disabling compression results in a
