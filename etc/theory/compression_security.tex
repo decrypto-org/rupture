@@ -240,11 +240,20 @@ The input of $\mathcal{E}$ is the message $m$ and its output is ciphertext $c$.
 This ciphertext is included in the network response packets and is sniffed by
 the adversary over-the-wire.
 
+The generation of $m$, its compression and encryption and the transmission over
+the network of $c$, as well as the sniffing ability of the adversary, constitute
+the reflection oracle that will further described in following sections.
+
 The adversary issues the attack in stages. In each stage he creates a pool of
 reflections and makes malicious requests for each reflection in the pool. An
 attack stage ends when the adversary has successfully decrypted a single
 character in the secret. He then adaptively changes the reflection pool, based
 on the newly stolen character, and continues similarly with the next stage.
+
+In some cases, the adversary aims at finding a property of the secret rather
+than the secret itself. This property is $g(s)$ and the guess of the adversary
+is $y$. When $g(s) = y$ the adversary has successfully recognized the property
+$g$ of secret $s$. Finally, a special case of $g$ is a predicate $Q$.
 
 \subsection{Contributions}
 Our contributions are as follows.
