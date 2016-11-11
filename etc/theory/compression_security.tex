@@ -652,12 +652,11 @@ manner in Figure \ref{fig:huffman_idealness}. For reference, the exact definitio
 \subsection{Length monotonicity}\label{subsec:lenmonotone}
 
 An important assumption for our attack is that the encryption function
-$\textrm{Enc}$ is
-\textit{length monotonic}. Specifically,
+$\textrm{Enc}$ is \textit{length monotonic}. Specifically, for any keys $k_1
+k_2$ in the key generating function space and string messages $m_1, m_2$:
+
 \begin{equation*}
 \begin{split}
-\forall m_1, m_2 \in \{0, 1\}^*\\
-\forall k_1, k_2 \in KeyGen\\
 |m_2| > |m_1|
 \Rightarrow
 |\textrm{Enc}_{k_1}(m_2)| \geq |\textrm{Enc}_{k_2}(m_1)|
