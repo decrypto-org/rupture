@@ -1553,6 +1553,33 @@ practical compression side-channel attacks such as CRIME, TIME, BREACH, Rupture,
 and HEIST. The full plaintext recovery these attacks perform is no longer
 possible when our defense is applied.
 
+\subsection{Hardness of defending}
+First of all, observe that there is a trivial method of defense, and that is
+disabling compression completely. To see why this successfully defends against
+an adversary in the adaptive reflection game, observe that when $f$ outputs a
+constant length, if Com is the identity function, then the attacker cannot
+obtain any more information than the simulator provided that Enc is a secure
+encryption scheme.
+
+We now point the attention of the reader to the fact that defending against an
+adversary by modifying $f$ is hard in general. We note that $f$ is required to
+be polynomially reversible, meaning it must contain enough information to
+recover $s$. Because Com, as a compression function, must be able to decrease
+the length of various plaintexts, it can output plaintexts of different
+lengths, and hence dependent on the string $s$. Therefore, if Com is
+adversarial, it can easily leak information through the encryption function Enc
+by using its output length. As such, any attempt to generally defend against
+all compression functions Com is necessarily futile.
+
+However, given the fact that it is theoretically difficult to define a generic
+defense should not discourage us from pursuing a practical defense that applies
+in practice given the specific compression functions which are in use in the
+real-world. As mentioned previously, such compression functions are difficult
+to deal with in an analytical manner, as they are technically involved. We
+therefore do not provide a formal proof that our defense method is secure.
+However, we give a series of arguments for why we believe this is the case
+based on our previously developed theory.
+
 \subsection{Attack elements from a defense perspective}
 The basic problem that needs be solved is the compression detectability of
 the predicate $Q$ under this class of attacks. In order to eliminate detectability,
@@ -1561,8 +1588,8 @@ $Q$ under the compression function $\textrm{Com}$ and the rendering function $f$
 achieve this there exist two options - either change the compression or the
 rendering function.
 
-The next step is determining what the form of the needed changes is. In order to
-achieve that, we need to consider the notions that make detectability possible.
+The next step is determining what the form of the needed changes is. We
+therefore consider the notions that make detectability possible.
 These notions are compression idealness and interdependence. The first is part
 of the composition of $\textrm{Com}$ and $f$ whereas the second is part of $f$. That
 said, removing either of these notions from the functions will strip the
