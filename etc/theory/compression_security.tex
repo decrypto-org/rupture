@@ -639,9 +639,15 @@ especially the LZ77 algorithms arises from many intricate technical
 details, such as, for instance, the sliding window size of LZ77. These
 details make it impractical to deal with these functions in analytical
 proofs. Hence, we support our idealness claims in an experimental
-manner. For reference, the exact definitions of DEFLATE are given in
+manner in Figure \ref{fig:huffman_idealness}. For reference, the exact definitions of DEFLATE are given in
 \cite{c12}.
 
+    \begin{figure}[thpb]
+        \centering
+            \includegraphics[width=0.48\textwidth]{idealness_experiments/huffman_idealness.png}
+        \caption{Comparison between Huffman and ideal compression}
+        \label{fig:huffman_idealness}
+    \end{figure}
 
 \subsection{Length monotonicity}\label{subsec:lenmonotone}
 
