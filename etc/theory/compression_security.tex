@@ -1462,12 +1462,12 @@ attack.
 \subsubsection{Injector}
 
 The injector component is responsible for injecting code to the victim's
-computer for execution. The injection is performed by ARP spoofing the local
-network and forwarding all traffic in a Man-in-the-Middle manner. Since all HTTP
-responses are infected, this provides for greatly increased robustness.
+browser. The injection is performed by ARP spoofing the local
+network and forwarding all traffic in a Man-in-the-Middle manner. The fact that all HTTP
+responses are infected increases robustness.
 
-The injector component needs to run on the victim network and as such is
-light-weight and stateless. It can easily be deployed on a small machine and
+The injector component runs on the victim network and is
+light-weight and stateless. It can be easily deployed on a small machine and
 used for massive attacks. Multiple injectors can be deployed to different
 networks, all controlled by the same central command-and-control channel.
 
