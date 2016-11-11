@@ -1321,7 +1321,9 @@ divided into two subsets $\Sigma_1$ and $\Sigma_2 =
 $|\Sigma_1|$ substrings divided by an annotation symbol $\beta$. Each
 substring consists of the known part of the secret concatenated with a character
 in $\Sigma_1$. The reflection string for $\Sigma_2$ is constructed
-similarly. Each phase consists of one call to the reflection oracle per subset.
+similarly. For example, if $\Sigma_1$ is $\{"1", "2"\}$ and the known prefix is
+"abc", using "-" as $\beta$ the reflection is: "abc1-abc2".
+Each phase consists of one call to the reflection oracle per subset.
 
 The predicate $Q$ in this case is "Given a known prefix $p_s$ of secret $s$, is
 $p_s || t$ a
