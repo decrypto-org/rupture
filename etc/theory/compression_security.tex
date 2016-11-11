@@ -1261,6 +1261,107 @@ Once enough batches have been collected for a decision to be made with good
 confidence, the round of the attack is complete and more information about the
 secret becomes known.
 
+\subsection{Block alignment}\label{subsec:blockalign}
+Block ciphers are \textit{length monotonic}, but not \textit{strictly length
+monotonic}, as described in section \ref{subsec:lenmonotone}. Specifically, the
+length of the encrypted text is rounded to a product of $\mu$-bits, where $\mu$
+is the block size, using added padding. The same applies for stream ciphers,
+whose functionality is similar to block ciphers with block size 1 byte. In this
+case, plaintext length difference between two messages does not always result in
+length difference between the respective encrypted ciphertext.
+
+It is possible to bypass this problem by using block alignment. Block alignment
+techniques have already been explored in the literature \cite{c14}. This method
+demands issuing multiple requests to the reflection oracle while including
+artificial noise in the reflection string $r$.
+
+In each request $r_{i, c}$ for each candidate $c$ in the secret alphabet, we add
+increasing artificial noise. That way, all $r_{1, c}$ for all c in candidates
+will contain one character of alignment noise, $r_{2, c}$ will contain two
+characters and so forth. As mentioned above, the difference in length of the
+compressed plaintext for the correct candidate and an incorrect one is 1 byte.
+For some alignment noise length $a \in [0, \mu)$ the reflection of the correct
+candidate will be $(\delta*\mu)$ and for all incorrect candidates
+$(\delta*\mu)+1$. In that case, the incorrect candidates result in one more
+block over the network compared to the correct one.  This ensures that one out
+of $\ceil{\mu / |r_i|}$ requests will result in a block distinction between the
+alphabet candidates.
+
+\subsection{Reflection computation methods}\label{subsec:reflectionmethods}
+Reflection strings $r$ should be polynomially computable, as defined in
+\ref{sec:propertycom}. BREACH is
+parameterized with an alphabet of ASCII symbols $\mathcal{\Sigma}$
+for each character of the
+secret. A successful attack should distinguish a single character of the
+alphabet as the correct one through a series of requests to the reflection
+oracle.
+
+The first method of issuing requests is serial. Each request to the oracle
+corresponds to a single character of the alphabet. An attack phase is completed
+when requests have been issued for the entire alphabet.
+
+In this case, $Q$ is the predicate "Given a known prefix $p_s$ of secret $s$ and
+a symbol $t \in \mathcal{\Sigma}$, is $p_s || t$ a prefix of $s$?" and $\exists
+s_i \in \mathcal{\Sigma}: Q(s_i)$ and $\forall s_j \in \mathcal{\Sigma} \setminus \{s_i\}:
+\lnot Q(s_j)$. The complexity of the attack is $\mathcal{O}(|\mathcal{\Sigma}|)$ and
+the round ends by finding a character of the secret.
+
+The second method of attack is divide and conquer. In each phase the alphabet is
+divided into two subsets $\mathcal{\Sigma}_1$ and $\mathcal{\Sigma}_2 =
+\mathcal{\Sigma}
+\setminus \mathcal{\Sigma}_1$, where $|\mathcal{\Sigma}_1| = |\mathcal{\Sigma}_2| =
+\ceil{|\mathcal{\Sigma}| / 2}$. The reflection string for $\mathcal{\Sigma}_1$ composes of
+$|\mathcal{\Sigma}_1|$ substrings divided by an annotation symbol $\beta$. Each
+substring consists of the known part of the secret concatenated with a character
+in $\mathcal{\Sigma}_1$. The reflection string for $\mathcal{\Sigma}_2$ is constructed
+similarly. Each phase consists of one call to the reflection oracle per subset.
+
+The predicate $Q$ in this case is "Given a known prefix $p_s$ of secret $s$, is
+$p_s || t$ a
+prefix of $s$, where $t \in \mathcal{\Sigma}_1$?". As long as the prefix of the
+secret is \textit{compression-detectable} by each substring of the reflection,
+the end of each phase marks the choice of subset $\mathcal{\Sigma}_i$ that contains
+the correct alphabet symbol and the same method is applied using chosen
+$\mathcal{\Sigma}_i$ as the alphabet $\mathcal{\Sigma}$. The round is complete when
+$|\mathcal{\Sigma}| = 1$. Each round reduces the alphabet by half, so the complexity
+of the attack with the divide and conquer method  is
+$\mathcal{O}(log|\mathcal{\Sigma}|)$.
+
+\subsection{Request parallelization}\label{subsec:parallel}
+The reflection oracle is generally considered as synchronous. However, this is not
+always the case, since it may be able to handle multiple parallel requests from
+the adversary.
+
+This is the case for the oracle in the practical BREACH application. In that case the reflection oracle is an endpoint
+offered by a web application and the communication channel between the adversary
+and the oracle is the end-to-end browser-server network channel.
+
+Modern web servers are able to handle multiple parallel requests and
+browsers can issue a certain amount of parallel requests per domain. This
+functionality enables the adversary to issue multiple parallel requests per
+symbol in alphabet $\mathcal{\Sigma}$ and efficiently reduce the execution time of
+the attack.
+
+\subsection{Request soup}
+Previous sections demonstrated the need for multiple requests per reflection
+string $r_i$. However, it is often the case that communication with the
+reflection oracle given consequent analysis of each single request is time
+expensive. In this case, it is preferable to issue multiple indistinguishable
+requests and treat them as a set for the relative symbol.
+
+This technique is useful in the case of the BREACH attack. In this case, communication between the browser and the
+endpoint that serves as the reflection oracle is encrypted, so the analysis of
+the captured packets is time expensive per request set.
+
+A request set consists of requests for a symbol $s_i$ in alphabet
+$\mathcal{\Sigma}$,
+so bigger request sets result in less time delay. Length calculation per request
+can then be measured as the mean length over the number of requests in the set.
+
+This method can be combined with the methods described in \ref{subsec:parallel}
+in order to utilize the parallelization and reduce the time cost of the
+necessary multiple requests.
+
 \subsection{Rupture architecture}\label{app:rupture}
 Rupture consists of multiple components that collaborate in executing
 compression-based attacks, such as BREACH. Each component is autonomous and
@@ -1357,96 +1458,6 @@ calculated.
       \includegraphics[width=0.48\textwidth]{architecture.png}
       \caption{Rupture Architecture}
    \end{figure}
-
-\subsection{Block alignment}\label{subsec:blockalign}
-Block ciphers are \textit{length monotonic}, but not \textit{strictly length
-monotonic}, as described in section \ref{subsec:lenmonotone}. Specifically, the
-length of the encrypted text is rounded to a product of $\mu$-bits, where $\mu$
-is the block size, using added padding. The same applies for stream ciphers,
-whose functionality is similar to block ciphers with block size 1 byte. In this
-case, plaintext length difference between two messages does not always result in
-length difference between the respective encrypted ciphertext.
-
-It is possible to bypass this problem by using block alignment. Block alignment
-techniques have already been explored in the literature \cite{c14}.  This method
-demands issuing multiple requests to the reflection oracle while including
-artificial noise in the reflection string $r$.  That way, one out of
-$\ceil{\mu / |r^i|}$ requests, where $|r^i|$ is the length of one digit of
-$r$ in bits, will result in a block distinction between different reflection
-strings $r_i$.
-
-\subsection{Reflection computation methods}\label{subsec:reflectionmethods}
-Reflection strings $r$ should be polynomially computable, as defined in
-\ref{sec:propertycom}. BREACH, defined in \ref{subsec:breachapp}, is
-parameterized with an alphabet of ASCII symbols $\mathcal{S}$ for each character of the
-secret. A successful attack should distinguish a single character of the
-alphabet as the correct one through a series of requests to the reflection
-oracle.
-
-The first method of issuing requests is serial. Each request to the oracle
-corresponds to a single character of the alphabet. An attack phase is completed
-when requests have been issued for the entire alphabet.
-
-In this case, $Q$ is the property "Given a known prefix $p_s$ of secret $s$ and
-a symbol $t \in \mathcal{S}$, is $p_s:t$ a prefix of $s$?" and $\exists
-s_i \in \mathcal{S}: Q(s_i)$ and $\forall s_j \in \mathcal{S} \setminus \{s_i\}:
-\lnot Q(s_j)$. The complexity of the attack is $\mathcal{O}(|\mathcal{S}|)$ and
-the round ends by finding a character of the secret.
-
-The second method of attack is divide and conquer. In each phase the alphabet is
-divided into two subsets $\mathcal{S}_1$ and $\mathcal{S}_2 = \mathcal{S}
-\setminus \mathcal{S}_1$, where $|\mathcal{S}_1| = |\mathcal{S}_2| =
-\ceil{|\mathcal{S}| / 2}$. The reflection string for $\mathcal{S}_1$ composes of
-$|\mathcal{S}_1|$ substrings divided by an annotation symbol $\beta$. Each
-substring consists of the known part of the secret concatenated with a character
-in $\mathcal{S}_1$. The reflection string for $\mathcal{S}_2$ is constructed
-similarly. Each phase consists of one call to the reflection oracle per subset.
-
-Property $Q$ is defined "Given a known prefix $p_s$ of secret $s$, is $p_s:t$ a
-prefix of $s$, where $t \in \mathcal{S}_1$?". As long as the prefix of the
-secret is \textit{compression-detectable} by each substring of the reflection,
-the end of each phase marks the choice of subset $\mathcal{S}_i$ that contains
-the correct alphabet symbol and the same method is applied using chosen
-$\mathcal{S}_i$ as the alphabet $\mathcal{S}$. The round is complete when
-$|\mathcal{S}| = 1$. Each round reduces the alphabet by half, so the complexity
-of the attack with the divide and conquer method  is
-$\mathcal{O}(log_2|\mathcal{S}|)$.
-
-\subsection{Request parallelization}\label{subsec:parallel}
-The reflection oracle is generally considered as synchronous. However, this is not
-always the case, since it may be able to handle multiple parallel requests from
-the adversary.
-
-This is the case for the oracle in the practical BREACH application, described
-in \ref{subsec:breachapp}. In that case the reflection oracle is an endpoint
-offered by a web application and the communication channel between the adversary
-and the oracle is the end-to-end browser-server network channel.
-
-Modern web servers are able to handle multiple parallel requests and
-browsers can issue a certain amount of parallel requests per domain. This
-functionality enables the adversary to issue multiple parallel requests per
-symbol in alphabet $\mathcal{S}$ and efficiently reduce the execution time of
-the attack.
-
-\subsection{Request soup}
-Previous sections demonstrated the need for multiple requests per reflection
-string $r_i$. However, it is often the case that communication with the
-reflection oracle given consequent analysis of each single request is time
-expensive. In this case, it is preferable to issue multiple indistinguishable
-requests and treat them as a set for the relative symbol.
-
-This technique is useful in the case of the BREACH attack described in
-\ref{subsec:breachapp}. In this case, communication between the browser and the
-endpoint that serves as the reflection oracle is encrypted, so the analysis of
-the captured packets is time expensive per request set.
-
-A request set consists of requests for a symbol $s_i$ in alphabet $\mathcal{S}$,
-so bigger request sets result in less time delay. Length calculation per request
-can then be measured as the mean length over the number of requests in the set.
-
-This method can be combined with the methods described in \ref{subsec:parallel}
-in order to utilize the parallelization and reduce the time cost of the
-necessary multiple requests.
 
 \section{Defense: Context Hiding}\label{sec:defense}
 Keeping in mind our theoretical model, we determine the key elements that make these
