@@ -670,6 +670,10 @@ A practical instance of a length monotonic encryption function is AES \cite{c8}.
 Stream ciphers can be treated as strictly monotonic to the bit level.
 
 \section{Compressibility with respect to predicates}\label{sec:propertycom}
+In this section we will define compressibility with respect to predicates. We
+show that all ideal compression functions that exhibit interdependence are
+compression detectable by a reflection vector $\overbar{r}$ with respect to a
+predicate $Q$ and a distribution $\mathcal{M}$
 
 Let $\mathcal{M}$ be a plaintext distribution and $Q(s)$ be a predicate on the
 plaintext $s$ drawn from $\mathcal{M}$. Furthermore, we require that $Q$ is not a
@@ -686,7 +690,7 @@ Where $s$ is drawn from $\mathcal{M}$.
 
 Let $\mathcal{V}$ be a noise distribution from which a pair of noises
 $\overbar{v} = (v_1, v_2) \leftarrow \mathcal{V}^2$ is drawn.  Let $\overbar{r}
-= (r_1, r_2) \in \mathcal{M}^2$ be a reflection string pair, $\textrm{Com}$ be a
+= (r_1, r_2) \in \mathcal{M}^2$ be a reflection string pair, $\mathcal{K}$ be an ideal
 compression function, $f$ be a rendering function, and let $\alpha(\lambda)$ be
 a non-negligible function.
 
@@ -719,7 +723,7 @@ The reflection pair $\overbar{r}$ \textit{detects} predicate $Q$ under
 compression function $\kappa$ over the secret distribution $\mathcal{M}$ and
 the noise distribution $\mathcal{V}$ with advantage $\alpha$ when the
 comparison is favourable for both $s_1$ drawn from $\mathcal{M}_Q$ and $s_2$
-drawn from $\mathcal{M}_{\not Q}$. Formally, we define the predicate
+drawn from $\mathcal{M}_{\lnot Q}$. Formally, we define the predicate
 $dtc_\alpha(Q, \overbar{r}, f, \textrm{Com}, \mathcal{M}, \mathcal{V})$ as follows:
 
 \begin{align*}
