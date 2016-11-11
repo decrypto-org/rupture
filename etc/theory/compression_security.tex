@@ -1680,6 +1680,15 @@ def unhide($s', p$):
     return $s$
 \end{lstlisting}
 
+In this defense, note that we have generalized the fact that there is no single
+secret that needs to be protected, which was a simplification of our
+theoretical model. In practice, for the developer, the reflection $r$ and the
+secret $s$ are two secrets that have different origins.
+
+Given the fact that $s$ and $r$ are permuted every time an oracle call is made
+makes it difficult for an adversary controlling $r$ to learn information about
+$s$.
+
 Our defense is implemented in the application layer and is opt-in. We choose to
 update the rendering function $f$ instead of the compression function
 $\textrm{Com}$ as it is easier that way for web developers to incorporate it in
