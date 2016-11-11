@@ -1368,22 +1368,22 @@ the attack.
 \subsection{Request soup}
 Previous sections demonstrated the need for multiple requests per reflection
 string $r_i$. However, it is often the case that communication with the
-reflection oracle given consequent analysis of each single request is time
+reflection oracle is time
 expensive. In this case, it is preferable to issue multiple indistinguishable
-requests and treat them as a set for the relative symbol.
+requests for a candidate and treat them as a set rather than separately.
 
-This technique is useful in the case of the BREACH attack. In this case, communication between the browser and the
-endpoint that serves as the reflection oracle is encrypted, so the analysis of
-the captured packets is time expensive per request set.
+This technique is useful in the case of BREACH. Communication between the browser and the
+endpoint is encrypted, so the time needed for the analysis of
+the captured packets depends on the request set.
 
 A request set consists of requests for a symbol $s_i$ in alphabet
-$\Sigma$,
-so bigger request sets result in less time delay. Length calculation per request
+$\Sigma$.
+Bigger request sets result in less time delay. Length calculation per request
 can then be measured as the mean length over the number of requests in the set.
 
-This method can be combined with the methods described in \ref{subsec:parallel}
-in order to utilize the parallelization and reduce the time cost of the
-necessary multiple requests.
+This method can be combined with the other methods described in this section
+in order to utilize parallelization and boost the performance for
+multiple requests.
 
 \subsection{Rupture architecture}\label{app:rupture}
 Rupture is a service-based architecture system which contains multiple
