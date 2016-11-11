@@ -330,20 +330,22 @@ applications.
 
 \subsection{Adaptive reflection game}\label{subsec:refsecgame}
 
-Let $\mathcal{PE} = (KeyGen, \mathcal{E}, \mathcal{D})$ be a public-key
+Let $\mathcal{PE} = (Gen, \mathcal{E}, \mathcal{D})$ be a public-key
 encryption scheme, $\mathcal{A}$ be an adversary and $\mathcal{S}$ be a
 simulator of $\mathcal{A}$.  The game
 $\text{Game}_{\text{REF-SEC}}^{\mathcal{PE},\mathcal{A}}(\lambda,  f,
-\mathcal{V}, g)$ is parameterized with a rendering function $f(\cdot, \cdot,
+\mathcal{V}, g, \mathcal{M})$ is parameterized with a rendering function $f(\cdot, \cdot,
 \cdot)$, a noise distribution $\mathcal{V}$, the security parameter $\lambda$,
 some function $g$ of the plaintext vector, and a distribution of secrets $\mathcal{M}_\omega$
-such that $\forall \omega \forall s \in \mathcal{M}_\omega: |s| = \lambda$. We
+such that for all $\omega$ and for all secrets $s$ that exist in
+$\mathcal{M}_\omega$ it holds that $|s| = \lambda$. We
 require that the rendering function $f$ is polynomially computable and
-reversible.  Notice that the distribution of secrets is parameterized with the
+reversible. Notice that the distribution of secrets is parameterized with the
 history of execution $\omega$.
 
 The challenger produces a $\lambda$-bit key $(pk, sk) \leftarrow
-KeyGen(\lambda)$. The adversary is given $pk$, $\mathcal{V}$, $g$ and $f$.
+Gen(\lambda)$. The adversary is given $pk$, $\mathcal{V}$, $g$, $f$ and
+$\mathcal{M}$.
 Setting $\omega = ()$, the empty vector, the challenger initially chooses
 a secret $s_0 \leftarrow \mathcal{M}_\omega$.
 
@@ -355,9 +357,11 @@ string $r$ and sends it to the oracle. The oracle produces a noise string
 $v \leftarrow \mathcal{V}$ and computes $m_i = f(s_i, r, v)$. Subsequently
 $m_i$ is encrypted as $c_i = \mathcal{E}_\kappa(m_i)$, and $c_i$ is sent back
 to the adversary. Once $m_i$ is computed, the history vector $\omega$ is updated
-with the rendered message as $\omega = \omega : m_i$ where $:$ denotes appending
-a vector element to an existing vector, and the next secret $s_{i+1} \leftarrow \mathcal{M}_\omega$
-is chosen.
+with the rendered message as $\omega = \omega || m_i$ where $||$ denotes the
+uniquely decodable concatenation of strings, and the next secret $s_{i+1}
+\leftarrow \mathcal{M}_\omega$ is chosen. Note that, because the rendering
+function $f$ is reversible, the history vector $\omega$ can be used to deduce
+the history of all secrets, reflections and noises.
 
 When the adversary decides to complete the game, they output a guess $y$. The
 adversary is successful if $g(\psi) = y$, where $\psi$ is the sequence
@@ -367,9 +371,8 @@ Formally, let the public key adversarial game be defined as follows:
 
 \begin{lstlisting}[texcl,mathescape,basicstyle=\small]
 def $\text{Game}_{\text{REF-SEC}}^{\mathcal{PE},\mathcal{A}}(\lambda, f, \mathcal{V}, \mathcal{M}, g)$:
-    $(pk, sk) \leftarrow KeyGen(\lambda)$
+    $(pk, sk) \leftarrow Gen(\lambda)$
     $\omega = ()$
-    $i = 0$
     $y \leftarrow \mathcal{A}^{\text{Reflect}^{\mathcal{E}_{pk}, \mathcal{V}}}
      (\lambda, f, \mathcal{V}, \mathcal{M}, g)$
     if $y = g(\psi)$:
@@ -381,7 +384,8 @@ def $\text{Game}_{\text{REF-SEC}}^{\mathcal{PE},\mathcal{A}}(\lambda, f, \mathca
 Where the reflection oracle provided to the adversary is as follows:
 
 \begin{lstlisting}[texcl,mathescape,basicstyle=\small]
-def $\text{Reflect}^{\mathcal{E}_{pk}, \mathcal{V}}(r)$: (global variable $\psi$)
+def $\text{Reflect}^{\mathcal{E}_{pk}, \mathcal{V}}(r)$: \textrm{(global variable
+$\psi$)}
     $s \leftarrow \mathcal{M}_\omega$
     $v \leftarrow \mathcal{V}$
     $m = f(s, r, v)$
@@ -396,7 +400,6 @@ Let the simulator game be defined as follows:
 \begin{lstlisting}[texcl,mathescape,basicstyle=\small]
 def $\text{Game}_{\text{REF-SIM}}^{\mathcal{PE},\mathcal{S}}(\lambda, f, \mathcal{V}, \mathcal{M}, g)$:
     $\omega = ()$
-    $i = 0$
     $y \leftarrow \mathcal{A}^{\text{ReflectSim}^{\mathcal{E}_{pk}, \mathcal{V}}}
      (\lambda, f, \mathcal{V}, \mathcal{M}, g)$
     if $y = g( \psi )$:
@@ -428,8 +431,8 @@ Let us now define the advantage of the adversary against a simulator:
 
 \subsection{Adaptive reflection security}\label{subsec:adaptiverefsec}
 
-Given a polynomially computable rendering function $f(\cdot, \cdot, \cdot)$ and
-a  noise distribution $\mathcal{V}$, a public-key encryption scheme
+Given a rendering function $f(\cdot, \cdot, \cdot)$ and
+a noise distribution $\mathcal{V}$, a public-key encryption scheme
 $\mathcal{PE}$ is \textit{reflection-secure} if:
 \begin{align*}
 \forall \mathcal{M}:
@@ -441,16 +444,18 @@ $\mathcal{PE}$ is \textit{reflection-secure} if:
 
 \subsection{Non-adaptive secrets}\label{subsec:refsecnonadapt}
 
-For the rest of this paper, we assume that the distribution $\mathcal{M}$ is
-independent of history $\omega$. Specifically, we assume that $\mathcal{M}_{()}$
-is a distribution of secrets which we denote simply $\mathcal{M}$, and subsequent
-random choices from $\mathcal{M}_\omega$ always return the initial secret $s$.
+For the rest of this paper, we assume $s$ is chosen initially, it subsequently
+remains constant and that the distribution $\mathcal{M}$ is independent of
+history $\omega$. This is a special case of the above game, in the sense that we
+assume that $\mathcal{M}_{()}$ is a distribution of secrets which we denote
+simply $\mathcal{M}$, and subsequent random choices from $\mathcal{M}_\omega$
+always return the initial secret $s$.
 
 This simplifies the game as follows:
 
 \begin{lstlisting}[texcl,mathescape,basicstyle=\small]
 def $\text{Game}_{\text{REF-SEC}}^{\mathcal{PE},\mathcal{A}}(\lambda, f, \mathcal{V}, \mathcal{M}, g)$:
-    $(pk, sk) \leftarrow KeyGen(\lambda)$
+    $(pk, sk) \leftarrow Gen(\lambda)$
     $s \leftarrow \mathcal{M}$
     $y \leftarrow \mathcal{A}^{\text{Reflect}^{\mathcal{E}_{pk}, \mathcal{V}}_s(r)}(\lambda, f, \mathcal{V}, \mathcal{M}, g)$
     if $y = g(s)$:
