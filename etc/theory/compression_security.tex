@@ -569,9 +569,8 @@ indirectly by observing ciphertext lengths.
 \subsection{Composing with compression}\label{subsec:comcompose}
 
 We now shift our interest to algorithms which compose compression and
-encryption. Compression is the central point in the chain of transformations on
-the plaintext. Therefore, we define the composition of a compression algorithm
-with a rendering function and an encryption algorithm.
+encryption. We define the composition of a compression algorithm with a
+rendering function and an encryption algorithm.
 
 The encryption scheme above is treated as a composition of a
 compression and encryption algorithm:
@@ -628,8 +627,8 @@ We now turn our attention to two specific compression functions, the
 LZ77 and Huffman function. These two compression functions are of
 interest for two reasons. First, they are representative of the way
 typical lossless compression functions work internally, by taking
-advantage of letter frequencies (Huffman) or letter-sequence (LZ77)
-repetitions. Second, they are the ones almost exclusively used in
+advantage of letter frequencies (Huffman) or letter-sequence
+repetitions (LZ77). Second, they are the ones almost exclusively used in
 practice. The DEFLATE algorithm, which is a composition of LZ77 and
 Huffman, is the algorithm used in gzip, which is prevalent on the
 modern web. In 2016, 98.85\% of websites that enabled compression used
@@ -1210,14 +1209,13 @@ requests. Also the oracle does not send $c$ to the adversary, but
 rather an approximation of $\rvert c \rvert$.
 
 \section{Rupture: An improved attack}\label{subsec:rupture}
-Our contributions include the development development of a production-grade
+Our contributions include the development of a production-grade
 framework for implementing this class of attacks called Rupture.
 Rupture was developed as part of the work on extending the BREACH attack against
 modern systems and block ciphers.
 
-As long as a vulnerable endpoint described in \ref{sec:comattack} is found,
 Rupture offers the ability to inject malicious code in any computer in the
-network. This code would issue requests to the endpoint and serve as a caller of
+network. This code issues requests to the endpoint and serves as a caller of
 the reflection oracle that is the endpoint.
 
 Furthermore, it enables the traffic inspection and analysis of packet
@@ -1230,9 +1228,9 @@ on various $Q$ described in \ref{subsec:parallel}, and enables the automated
 computation of the reflection strings in each stage of the attack.
 
 Finally, it amplifies the attack by issuing multiple requests per candidate
-symbol in alphabet $\mathcal{\Sigma}$ in order to demonstrate better probability of
+symbol in alphabet $\Sigma$ in order to demonstrate better probability of
 success. This is achieved by grouping requests in samplesets, where each
-sampleset contains requests on a symbol in alphabet $\mathcal{\Sigma}$. Requests in a
+sampleset contains requests on a symbol in alphabet $\Sigma$. Requests in a
 sampleset may be constructed to enable optimization methods described in
 \ref{subsec:blockalign} and \ref{subsec:parallel}.
 
@@ -1299,7 +1297,7 @@ Figure \ref{fig:block_alignment} intuitively depicts the block alignment techniq
 \subsection{Reflection computation methods}\label{subsec:reflectionmethods}
 Reflection strings $r$ should be polynomially computable, as defined in
 \ref{sec:propertycom}. BREACH is
-parameterized with an alphabet of ASCII symbols $\mathcal{\Sigma}$
+parameterized with an alphabet of ASCII symbols $\Sigma$
 for each character of the
 secret. A successful attack should distinguish a single character of the
 alphabet as the correct one through a series of requests to the reflection
@@ -1310,34 +1308,34 @@ corresponds to a single character of the alphabet. An attack phase is completed
 when requests have been issued for the entire alphabet.
 
 In this case, $Q$ is the predicate "Given a known prefix $p_s$ of secret $s$ and
-a symbol $t \in \mathcal{\Sigma}$, is $p_s || t$ a prefix of $s$?" and $\exists
-s_i \in \mathcal{\Sigma}: Q(s_i)$ and $\forall s_j \in \mathcal{\Sigma} \setminus \{s_i\}:
-\lnot Q(s_j)$. The complexity of the attack is $\mathcal{O}(|\mathcal{\Sigma}|)$ and
+a symbol $t \in \Sigma$, is $p_s || t$ a prefix of $s$?" and it holds that $\exists
+s_i \in \Sigma: Q(s_i)$ and $\forall s_j \in \Sigma \setminus \{s_i\}:
+\lnot Q(s_j)$. The complexity of the attack is $\mathcal{O}(|\Sigma|)$ and
 the round ends by finding a character of the secret.
 
 The second method of attack is divide and conquer. In each phase the alphabet is
-divided into two subsets $\mathcal{\Sigma}_1$ and $\mathcal{\Sigma}_2 =
-\mathcal{\Sigma}
-\setminus \mathcal{\Sigma}_1$, where $|\mathcal{\Sigma}_1| = |\mathcal{\Sigma}_2| =
-\ceil{|\mathcal{\Sigma}| / 2}$. The reflection string for $\mathcal{\Sigma}_1$ composes of
-$|\mathcal{\Sigma}_1|$ substrings divided by an annotation symbol $\beta$. Each
+divided into two subsets $\Sigma_1$ and $\Sigma_2 =
+\Sigma
+\setminus \Sigma_1$, where $|\Sigma_1| = |\Sigma_2| =
+\ceil{|\Sigma| / 2}$. The reflection string for $\Sigma_1$ composes of
+$|\Sigma_1|$ substrings divided by an annotation symbol $\beta$. Each
 substring consists of the known part of the secret concatenated with a character
-in $\mathcal{\Sigma}_1$. The reflection string for $\mathcal{\Sigma}_2$ is constructed
+in $\Sigma_1$. The reflection string for $\Sigma_2$ is constructed
 similarly. Each phase consists of one call to the reflection oracle per subset.
 
 The predicate $Q$ in this case is "Given a known prefix $p_s$ of secret $s$, is
 $p_s || t$ a
-prefix of $s$, where $t \in \mathcal{\Sigma}_1$?". As long as the prefix of the
+prefix of $s$, where $t \in \Sigma_1$?". As long as the prefix of the
 secret is \textit{compression-detectable} by each substring of the reflection,
-the end of each phase marks the choice of subset $\mathcal{\Sigma}_i$ that contains
+the end of each phase marks the choice of subset $\Sigma_i$ that contains
 the correct alphabet symbol and the same method is applied using chosen
-$\mathcal{\Sigma}_i$ as the alphabet $\mathcal{\Sigma}$. The round is complete when
-$|\mathcal{\Sigma}| = 1$. Each round reduces the alphabet by half, so the complexity
+$\Sigma_i$ as the alphabet $\Sigma$. The round is complete when
+$|\Sigma| = 1$. Each round reduces the alphabet by half, so the complexity
 of the attack with the divide and conquer method  is
-$\mathcal{O}(log|\mathcal{\Sigma}|)$.
+$\mathcal{O}(log|\Sigma|)$.
 
 Figure \ref{fig:divide_and_conquer} shows the reflection sequence for the case
-when the alphabet is the nuber digits. In order to find the correct leaf of the
+when the alphabet is the number digits. In order to find the correct leaf of the
 tree, we construct two reflections in each round. The two reflections contain
 the children nodes of the parent node that was chosen in the previous round,
 beginning with the root of the tree. After traversing the tree, we reach the
@@ -1362,7 +1360,7 @@ and the oracle is the end-to-end browser-server network channel.
 Modern web servers are able to handle multiple parallel requests and
 browsers can issue a certain amount of parallel requests per domain. This
 functionality enables the adversary to issue multiple parallel requests per
-symbol in alphabet $\mathcal{\Sigma}$ and efficiently reduce the execution time of
+symbol in alphabet $\Sigma$ and efficiently reduce the execution time of
 the attack.
 
 \subsection{Request soup}
@@ -1377,7 +1375,7 @@ endpoint that serves as the reflection oracle is encrypted, so the analysis of
 the captured packets is time expensive per request set.
 
 A request set consists of requests for a symbol $s_i$ in alphabet
-$\mathcal{\Sigma}$,
+$\Sigma$,
 so bigger request sets result in less time delay. Length calculation per request
 can then be measured as the mean length over the number of requests in the set.
 
@@ -1492,10 +1490,9 @@ collects the respective ciphertext requests and ciphertext responses as they
 travel on the network. These encrypted data are then transmitted to the backend
 for further analysis and decryption.
 
-The sniffer component has access to the victim's network traffic and
-keeps track of the encrypted communication between the victim and the endpoint.
-The length of the packets is unencrypted, so the sniffer is able to collenct and
-report the observations on the network to the backend component.
+The sniffer component has access to the victim's network traffic and keeps track
+of the encrypted communication between the victim and the endpoint. The sniffer
+collects and reports the observations on the network to the backend component.
 
 The sniffer exposes an HTTP API which is utilized by the backend for controlling
 when sniffing starts, when it is completed, and to retrieve the data that was
@@ -1514,13 +1511,13 @@ what requests need to be made at each stage of the attack. Meanwhile, it orders
 the sniffer to listen and report network traffic, which is collected and stored
 at the end of each phase of the attack. At each round, the backend analyzes the
 sniffer reports and calculates the probability of success for the attack. At the
-end of each round, property $Q$, which depends on the method of attack described
+end of each round, the predicate $Q$, which depends on the method of attack described
 in \ref{subsec:reflectionmethods}, is detected, until the entire secret is
 calculated.
 
    \begin{figure}[thpb]
       \centering
-      \includegraphics[width=0.48\textwidth]{architecture.png}
+          \includegraphics[width=0.48\textwidth]{architecture.png}
       \caption{Rupture Architecture}
    \end{figure}
 
