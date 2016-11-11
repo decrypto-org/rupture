@@ -566,6 +566,36 @@ definition of compression functions. This will also immediately hint at how the
 attacker is able to perform these measurements of probability inequalities
 indirectly by observing ciphertext lengths.
 
+\subsection{Composing with compression}\label{subsec:comcompose}
+
+We now shift our interest to algorithms which compose compression and
+encryption. Compression is the central point in the chain of transformations on
+the plaintext. Therefore, we define the composition of a compression algorithm
+with a rendering function and an encryption algorithm.
+
+The encryption scheme above is treated as a composition of a
+compression and encryption algorithm:
+\begin{equation*}
+    \mathcal{E} = \textrm{Enc} \circ \textrm{Com}
+\end{equation*}
+
+$\textrm{Com}$ is any polynomially computable reversible function that takes an
+input string and outputs a new string: $\textrm{Com}: \{0, 1\}^* \leftarrow \{0,
+1\}^*$.
+
+$\textrm{Enc}$ denotes an encryption function. We stress our important
+assumption that $\textrm{Enc}$ is defined on $\{0, 1\}^*$ and not on some
+fixed-length input.
+
+The composition of the compression function $\textrm{Com}$ and the rendering function $f$
+is defined:
+\begin{equation*}
+    \mathcal{K} = \textrm{Com} \circ f
+\end{equation*}
+
+We call $\mathcal{K}$ an editing function. For the rest of the paper, we treat
+$\mathcal{K}$ as a compression function.
+
 \subsection{Compression idealness}\label{subsec:com_idealness}
 
 We now move on to define the notion of compression idealness.
@@ -612,29 +642,6 @@ proofs. Hence, we support our idealness claims in an experimental
 manner. For reference, the exact definitions of DEFLATE are given in
 \cite{c12}.
 
-\subsection{Composing with compression}\label{subsec:comcompose}
-
-We now shift our interest to algorithms which compose compression and
-encryption. Compression is the central point in the chain of transformations on
-the plaintext. Therefore, we define the composition of a compression algorithm
-with a rendering function and an encryption algorithm.
-
-The public-key encryption scheme above is treated as a composition of a
-compression and encryption algorithm:
-\begin{equation*}
-    \mathcal{E} = \textrm{Enc} \circ \textrm{Com}
-\end{equation*}
-
-$\textrm{Com}$ denotes a compression function as defined above, while
-$\textrm{Enc}$ denotes an
-encryption function. We stress our important assumption that $\textrm{Enc}$ is defined
-on $\{0, 1\}^*$ and not on some fixed-length input.
-
-The composition of the compression function $\textrm{Com}$ and the rendering function $f$
-is defined:
-\begin{equation*}
-    \mathcal{K} = \textrm{Com} \circ f
-\end{equation*}
 
 \subsection{Length monotonicity}\label{subsec:lenmonotone}
 
