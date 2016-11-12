@@ -423,9 +423,9 @@ Web UI.
 
 ### `/victim`
 
-HTTP POST endpoint.
+HTTP POST and GET endpoint.
 
-Creates a new victim.
+On a POST request, it creates a new victim.
 
 Arguments:
 
@@ -434,3 +434,80 @@ Arguments:
 
 Returns HTTP `200` with a JSON that has a field *victimid*, which contains the
 ID of the new victim.
+
+On a GET request, it asks for  all the stored victims that the attack is still
+running on, has been paused or has been completed.
+
+No arguments
+
+Returns HTTP 200 with a JSON that contains a list of all the stored
+victims.
+
+### `/victim/<victim_id>`
+
+HTTP GET, PUT and DELETE endpoint.
+
+On a GET request, it asks for the general information and details
+for the attack to the victim with the specific victimId.
+
+Arguments:
+
+- victim_id: The id of the victim
+
+Returns HTTP `200` with a JSON with the details for the specific victim.
+
+On a PUT request, it passes the desired state of the attack ("paused" or "running")
+and the victim_id and asks the backend to update the attack state of the victim
+with the specific victim_id, i.e pause or resume running the attack.
+
+Arguments:
+
+- victim_id: The id of the victim
+- state: string (either "running" or "paused")
+
+Returns HTTP 200.
+
+On a DELETE request, the backend deletes the victim with the specific victim_id
+
+Arguments:
+
+- victim_id: The id of the victim
+
+Returns HTTP 200.
+
+### `/victim/not_started`
+
+HTTP GET endpoint.
+
+On a GET request, it asks for all possible victims to attack.
+
+No arguments.
+
+Returns HTTP 200 with a JSON with a list of possible victims' IPs
+and machine names.
+
+### `/target`
+
+HTTP POST and GET endpoint.
+
+On a POST request, it creates a new target.
+
+Arguments:
+
+- name: The target's name
+- endpoint: The target's endpoint
+- prefix: The know prefix of the secret
+- secretlength: The secret's length
+- alphabet: The secret's alphabet
+- alignmentalphabet: The alignment alphabet
+- recordscardinality: The records' cardinality
+- method: The method of the attack, serial or divide & conquer
+
+Returns HTTP 200 with a JSON with the target's name.
+
+On a GET request, it asks for the targets for which the attack is possible.
+
+No arguments.
+
+Returns HTTP `200` with a JSON with a list of possible targets
+and machine names.
