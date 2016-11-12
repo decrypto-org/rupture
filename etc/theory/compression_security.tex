@@ -77,7 +77,7 @@ compared to previous techniques.
 
 Compression and encryption composition has caused serious security problems
 in protocols such as TLS \cite{c1} over the years
-with an array of attacks making major headlines in security dissemination forums,
+with an array of attacks making major headlines in computer security dissemination forums,
 including BREACH \cite{c2}, TIME \cite{c3}, and CRIME \cite{c4}.
 While the idea that compression is a side-channel that can be exploited
 is certainly folklore in the cryptography community and is documented
@@ -89,11 +89,12 @@ Motivated by this, in this paper we introduce
 a general model that incorporates the rendering process that is exploited
 during these attacks and in this way we facilitate a thorough
 theoretical analysis of the security of encryption-compression composition.
-We showcase the power of our framework by (i) showing how attacks like  BREACH \cite{c2}, TIME \cite{c3}, and CRIME \cite{c4}, can be expressed
+We showcase the power of our approach 
+by (i) showing how attacks like  BREACH \cite{c2}, TIME \cite{c3}, and CRIME \cite{c4}, can be expressed
 as instances of our compression side-channel attack template,
 (ii) demonstrating an improved attack framework, called Rupture,
 that improves substantially the performance of previous attacks,
-(iii) a general mitigation strategy, called CTX, that strikes
+(iii) presenting a general mitigation strategy, called CTX, that strikes
 a good balance between security and efficiency and can be readily incorporated
 in a TLS deployment without a significant performance degradation.
 In more details our results are outlined below.
@@ -138,7 +139,7 @@ communication with the server. He is also able to inject code in third-party
 non-encrypted HTTP responses.
 
 Secondly, he should be able to issue any number of malicious requests using the
-user's cookies. This can be achieved by forcing the user's browser to run a
+user's cookies (which will be encrypted). This can be achieved by forcing the user's browser to run a
 piece of code, such as a Javascript script. This script can either be hosted on
 an adversary-controlled website or injected in plain HTTP responses the user
 receives from third websites. This script is executed when loaded in the user's
@@ -154,14 +155,16 @@ Any adversary that fulfills these requirements can issue a compression
 side-channel attack against the user and the web service. The malicious requests
 contain the reflection strings and the user's cookies. The response contains
 both the reflection string and the user's private data. The structure of the
-reflection string depends heavily on properties of the private data and will be
-further explored in the following sections.
+reflection string should depend on any known properties of the private data
+to maximize the adversarial advantage. 
 
 As the attack progresses the adversary collects network data containing multiple
 responses and reflections. Although this data is encrypted, analysis on the
-lengths of different response packets will reveal properties of the private data.
+lengths of different response packets in conjunction with the sequence
+of reflections that has been used will reveal otherwise hidden properties of the private data.
 At this point the privacy of the communication between the user and the website is
-compromised and the adversary has broken the security of TLS.
+compromised and the adversary has broken the confidentiality of the messages
+effectively circumventing TLS security.
 
     \begin{figure}[thpb]
         \centering
@@ -170,7 +173,7 @@ compromised and the adversary has broken the security of TLS.
         \label{fig:attack_model}
     \end{figure}
 
-\subsection{A motivating example}\label{subsec:terms}
+\subsection{A motivating example, concepts and notations}\label{subsec:terms}
 We now describe a concrete example of the website in the previously described
 attack to illustrate the various terms we use in the rest of this paper.  The
 terms that need be explained include the \textit{rendering function} $f$,
@@ -178,9 +181,9 @@ terms that need be explained include the \textit{rendering function} $f$,
 \textit{reflection} $r$ and the distributions $\mathcal{M}$ of secrets and
 $\mathcal{V}$ of noise.
 
-In this case, the target of the attack is the website found in the URL
+In our example, the target of the attack is the website found in the URL
 \textit{mail.example.com}. The victim is the user that is logged in this mail
-service and whose cookies the adversary uses in his requests.
+service and whose cookies the adversary uses in his requests (and aims to learn).
 
 The web page that the adversary exploits is
 \textit{mail.example.com/search?query=attack}. This website provides a HTTP GET
@@ -274,12 +277,12 @@ on the newly stolen character, and continues similarly with the next stage.
 In some cases, the adversary aims at finding a property of the secret rather
 than the secret itself. This property is $g(s)$ and the guess of the adversary
 is $y$. When $g(s) = y$ the adversary has successfully recognized the property
-$g$ of the secret $s$. Finally, a special case of $g$ is a predicate $Q$.
+$g$ of the secret $s$. A special case of $g$ would be a predicate $Q$.
 
 \subsection{Contributions}
 Our contributions are as follows.
 
-First we introduce a novel model for discussing compression and encryption
+First we introduce a novel model for analyzing compression and encryption
 composition attacks, the \textit{adaptive reflection game}, with an accompanying
 security definition. This model is quite general in that it does not describe
 specific instances of the rendering function $f$ or the compression function
@@ -288,7 +291,7 @@ and distributions of noise $\mathcal{V}$ which can affect the rendering. Section
 \ref{sec:refsec} contains the definition of this model.
 
 We wish to prove that all encryption functions are insecure when composed with
-compression. In order to make this proof, we build a series of required
+compression. In order to produce this proof, we build a series of required
 assumptions.
 
 We define \textit{interdependence}, a property that characterizes dependent
@@ -297,7 +300,8 @@ important notion when exploring the effects of the reflection when compressed
 with a secret. We introduce interdependence in section
 \ref{subsec:interdependence}.
 
-Another property of compression functions is \textit{compression idealness}. We
+Another property of compression functions is \textit{compression idealness} with
+respect to a message distribution. We
 define idealness in theory and demonstrate how it applies on the compression
 algorithms that are widely used in section \ref{subsec:com_idealness}.
 
