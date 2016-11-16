@@ -1,7 +1,13 @@
+from __future__ import division
 from django.http import Http404, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from breach.strategy import Strategy
-from breach.models import Victim
+from breach.models.victim import Victim
+from breach.models.target import Target
+from breach.models.round import Round
+from breach.models.sampleset import SampleSet
+from django.core import serializers
+from breach.analyzer import decide_next_world_state
 
 import json
 
@@ -40,3 +46,22 @@ def work_completed(request, victim_id=0):
     return JsonResponse({
         'victory': victory
     })
+
+
+def victimID(request, victim_id=0):
+    if request.method == 'GET':
+        # get victim with the given ID
+        victim = Victim.objects.get(pk=victim_id)
+
+        rounds = Round.objects.filter(victim_id=victim_id)
+        attack_details_list = []
+        for round_details in rounds:
+            attack_details_list.extend(round_details.fetch_per_batch_info())
+
+        return JsonResponse({
+            'victim_ip': victim.sourceip,
+            'target_name': victim.target.name,
+            'attack_details': attack_details_list,
+            'percentage': victim.percentage
+        })
+>>>>>>> 2812c1b... Add /victim/<victim_id> GET endpoint
