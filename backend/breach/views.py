@@ -75,3 +75,10 @@ def victimID(request, victim_id=0):
             victim.state = 'running'
         victim.save()
         return HttpResponse(status=200)
+    elif request.method == 'DELETE':
+        victim = Victim.objects.get(pk=request.DELETE['victim_id'])[0]
+	if not victim.trashed_at:
+	    Victim.delete(victim)
+	if victim.trashed_at:
+            Victim.restore(victim)
+        return HttpResponse(status=200)
