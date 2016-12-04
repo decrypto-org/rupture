@@ -1,5 +1,5 @@
 from __future__ import division
-from django.http import Http404, JsonResponse
+from django.http import Http404, JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from breach.strategy import Strategy
 from breach.models.victim import Victim
@@ -64,4 +64,11 @@ def victimID(request, victim_id=0):
             'attack_details': attack_details_list,
             'percentage': victim.percentage
         })
->>>>>>> 2812c1b... Add /victim/<victim_id> GET endpoint
+    elif request.method == 'PUT':
+        victim = Victim.objects.get(pk=request.PUT['victim_id'])[0]
+        if victim.state == 'running':
+            victim.state = 'paused'
+        elif victim.state == 'paused':
+            victim.state = 'running'
+        victim.save()
+        return HttpResponse(status=200)
