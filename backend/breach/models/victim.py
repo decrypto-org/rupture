@@ -10,6 +10,17 @@ import stat
 
 class Victim(models.Model):
 
+    def delete(self):
+        if not self.trashed_at:
+            self.trashed_at = datetime.now()
+            self.save()
+        else:
+            super(Victim, self).delete()
+
+    def restore(self):
+        self.trashed_at = None
+        self.save()
+
     target = models.ForeignKey(Target)
 
     snifferendpoint = models.CharField(
