@@ -1,6 +1,6 @@
 from django.test import Client, TestCase
 from django.core.urlresolvers import reverse
-from breach.models import Target, Victim
+from breach.models import Target, Victim, Round
 from breach.views import TargetView, VictimListView
 import json
 
@@ -93,3 +93,24 @@ class ViewsTestCase(TestCase):
         response = self.client.post(reverse('VictimListView'), json.dumps(data), content_type='application/json')
         self.assertEqual(response.status_code, 200)
         self.assertEqual(json.loads(response.content)['victim_id'], 1)
+
+    def test_victim_get(self):
+
+        victim = Victim.objects.create(
+            sourceip='192.168.1.5',
+            target=self.target1
+        )
+
+        round_data = {
+            'victim': victim,
+            'index': 1,
+            'amount': self.target1.samplesize,
+            'knownalphabet': 'abcdefghijklmnopqrstuvxyz',
+            'knownsecret': 'imper'
+        }
+        new_round = Round(**round_data)
+        new_round.save()
+
+        response = self.client.get(reverse('VictimListView'))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(json.loads(response.content)['victims'][0]['sourceip'], '192.168.1.5')
