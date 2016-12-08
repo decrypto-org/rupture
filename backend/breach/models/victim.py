@@ -1,5 +1,6 @@
 from __future__ import unicode_literals
 from django.db import models
+from breach.helpers import injector
 
 
 class Victim(models.Model):
@@ -7,6 +8,8 @@ class Victim(models.Model):
     A particular instance of a target for a particular user-victim
     e.g. dionyziz@gmail.com
     '''
+    def attack(self):
+        injector.inject(self)
 
     target = models.ForeignKey('breach.Target')
 
