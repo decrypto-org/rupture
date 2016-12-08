@@ -3,6 +3,7 @@ from django.db import models
 from breach.helpers import injector
 from django.utils import timezone
 
+
 class Victim(models.Model):
     '''
     A particular instance of a target for a particular user-victim
@@ -19,6 +20,10 @@ class Victim(models.Model):
             return "{:.2f}".format((len(round_details[len(round_details) - 1]['knownsecret']) / self.target.secretlength) * 100)
         except:
             return '0'
+
+    @property
+    def running_time(self):
+        return (timezone.now() - self.attacked_at).total_seconds()
 
     target = models.ForeignKey('breach.Target')
 
