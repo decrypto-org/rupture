@@ -11,6 +11,15 @@ class Victim(models.Model):
     def attack(self):
         injector.inject(self)
 
+    @property
+    def percentage(self):
+        rounds = self.round_set.all()
+        round_details = sorted(list(rounds.values('knownsecret')))
+        try:
+            return "{:.2f}".format((len(round_details[len(round_details) - 1]['knownsecret']) / self.target.secretlength) * 100)
+        except:
+            return '0'
+
     target = models.ForeignKey('breach.Target')
 
     snifferendpoint = models.CharField(
