@@ -2,6 +2,8 @@ from __future__ import unicode_literals
 from django.db import models
 import urlparse
 
+from django.core.validators import RegexValidator
+
 
 class Target(models.Model):
     '''
@@ -20,6 +22,8 @@ class Target(models.Model):
     @property
     def host(self):
         return urlparse.urlparse(self.endpoint).hostname
+
+    alphanumeric = RegexValidator(r'^(?:([A-Za-z0-9])(?!.*\1))*$', 'Only alphanumeric characters are allowed.')
 
     name = models.CharField(
         default='',
@@ -49,6 +53,7 @@ class Target(models.Model):
 
     alphabet = models.CharField(
         max_length=255,
+        validators=[alphanumeric],
         help_text=('This set contains all the candidate symbols each ',
                    'character of the secret can be.')
     )
@@ -62,6 +67,7 @@ class Target(models.Model):
     alignmentalphabet = models.CharField(
         max_length=255,
         default='',
+        validators=[alphanumeric],
         help_text=('Alphabet used for block alignment. This will be shuffled '
                    'once per batch.')
     )
