@@ -1,7 +1,7 @@
 from __future__ import unicode_literals
 from django.db import models
 from breach.helpers import injector
-
+from django.utils import timezone
 
 class Victim(models.Model):
     '''
@@ -40,6 +40,19 @@ class Victim(models.Model):
         max_length=255,
         help_text=("Attacking machine's interface that is on the victim's "
                    "network.")
+    )
+
+    state = models.CharField(
+        default='discovered',
+        max_length=255,
+        help_text=("The state of the attack. Possible values are"
+                   "'discovered', 'completed', 'running', 'paused' ")
+    )
+
+    attacked_at = models.DateTimeField(
+        default=timezone.now,
+        max_length=255,
+        help_text=("The start time of the attack")
     )
 
     realtimeurl = models.CharField(
