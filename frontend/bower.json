@@ -1,0 +1,19 @@
+{
+    "name": "Rupture WebUI",
+    "homepage": "https://github.com/dionyziz/rupture",
+    "authors": [
+        "Eva Sarafianou"
+    ],
+    "description": "A web user interface for the rupture BREACH attack framework",
+    "main": "main.js",
+    "license": "MIT",
+    "ignore": [
+        "**/.*",
+        "node_modules",
+        "bower_components"
+    ],
+    "dependencies": {
+        "bootstrap": "~3.3.4",
+        "react": "~0.13.3"
+    }
+}
