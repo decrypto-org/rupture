@@ -4,7 +4,7 @@ import { Form } from 'react-bootstrap';
 import axios from 'axios';
 import CreateTarget from './CreateTarget';
 import VictimIP from './VictimIP';
-import EnumerateTargets from './EnumerateTargets';
+import _ from 'lodash';
 
 export default class ConfigForm extends React.Component {
 
@@ -28,15 +28,46 @@ export default class ConfigForm extends React.Component {
         this.setState({ showModal: false });
     }
 
+    enumerateTargets = () => {
+        return _.map(this.state.targets, (target) => {
+            return(<option key={ target.id } value={ target.name }> { target.name } </option>);
+        })
+    }
+
+    showLoadingIndicator = () => {
+        return(
+            <p className='notification'> Attack is getting initialized </p>
+        );
+    }
+
+    componentDidMount() {
+        this.setState({
+            sourceip: this.props.sourceip,
+            victim_id: this.props.victim_id
+        });
+        axios.get('/breach/target')
+        .then(res => {
+            if (res.data.targets.length > 0) {
+                this.setState({ targets: res.data.targets, targetName: res.data.targets[0].name })
+            }
+            else {
+                this.setState({ showModal: true })
+            }
+        })
+        .catch(error => {
+            console.log(error);
+        });
+    }
+
+    handleIp = (ip) => {
+        this.setState({ sourceip: ip });
+    }
+
     handleTarget = () => {
         if (this.refs.targetName.value === 'new') {
             this.setState({ showModal: true });
         }
         this.setState({ targetName: this.refs.targetName.value });
-    }
-
-    handleIp = (ip) => {
-        this.setState({ sourceip: ip });
     }
 
     createForm = () => {
