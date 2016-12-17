@@ -1,6 +1,7 @@
 import React from 'react';
 import { Modal } from 'react-modal-bootstrap';
 import { Form } from 'react-bootstrap';
+import { browserHistory } from 'react-router';
 import axios from 'axios';
 import CreateTarget from './CreateTarget';
 import VictimIP from './VictimIP';
@@ -43,7 +44,6 @@ export default class ConfigForm extends React.Component {
     componentDidMount() {
         this.setState({
             sourceip: this.props.sourceip,
-            victim_id: this.props.victim_id
         });
         axios.get('/breach/target')
         .then(res => {
@@ -53,6 +53,33 @@ export default class ConfigForm extends React.Component {
             else {
                 this.setState({ showModal: true })
             }
+        })
+        .catch(error => {
+            console.log(error);
+        });
+    }
+
+    handleSubmit = (event) => {
+        event.preventDefault();
+        let data;
+        if (this.props.victim_id === '') {
+            data = {
+                sourceip: this.state.sourceip,
+                target: this.state.targetName
+            }
+        }
+        else {
+            data = {
+                sourceip: this.state.sourceip,
+                id: this.props.victim_id,
+                target: this.state.targetName
+            }
+        }
+        this.setState({ loading: true });
+        axios.post('/breach/attack', data)
+        .then(res => {
+            console.log(res);
+            browserHistory.push('/');
         })
         .catch(error => {
             console.log(error);
@@ -73,7 +100,7 @@ export default class ConfigForm extends React.Component {
     createForm = () => {
         return(
             <div>
-				<Form>
+                <Form onSubmit={ this.handleSubmit }>
                     <div className='form-group'>
                         <div className='row'>
                             <label htmlFor='sel1' className='col-md-4 col-sm-6 attackpagefields'> Choose Target:</label>
