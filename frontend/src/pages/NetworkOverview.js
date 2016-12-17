@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router';
 import axios from 'axios';
-import _ from 'lodash.partition';
+import _ from 'lodash';
 
 import AttackListDetails from '../containers/AttackListDetails';
 import NotStartedVictims from '../containers/NotStartedVictims';
@@ -18,6 +18,21 @@ export default class NetworkOverview extends React.Component {
 
     onScan = (victims) => {
         this.setState({ victims: victims });
+    }
+
+    getVictims = () => {
+        axios.get('/breach/victim')
+        .then(res => {
+            let results = _.partition(res.data['victims'], { state: 'discovered' });
+            this.setState({ victims: results[0], attacks: results[1] })
+        })
+        .catch(error => {
+            console.log(error);
+        });
+    }
+
+    componentDidMount() {
+        this.getVictims();
     }
 
     render() {
