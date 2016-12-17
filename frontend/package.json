@@ -13,6 +13,7 @@
     "react": "^15.4.1",
     "react-bootstrap": "^0.31.0",
     "react-dom": "^15.4.1",
+    "react-modal-bootstrap": "^1.1.0",
     "react-router": "^3.0.0"
   },
   "scripts": {
@@ -20,5 +21,6 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
-  }
+  },
+  "proxy": "http://localhost:8000/"
 }
