@@ -17,7 +17,6 @@ export default class AttackInspection extends React.Component {
     
     handleClick = () => {
         this.setState({ showNotification: true });
-
     }
 
     onUndo = () => {
@@ -26,6 +25,21 @@ export default class AttackInspection extends React.Component {
 
     onVerify = () => {
         this.setState({ showNotification: false });
+        browserHistory.push('/');
+    }
+
+    getVictimDetails = () => {
+        axios.get('/breach/victim/' + this.props.params.victim_id)
+        .then(res => {
+            this.setState({ attack: res.data });
+        })
+        .catch(error => {
+            console.log(error);
+        });
+    }
+
+    componentWillMount = () => {
+        this.getVictimDetails();
     }
 
     render() {
