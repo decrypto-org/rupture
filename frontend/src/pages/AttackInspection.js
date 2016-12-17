@@ -13,10 +13,31 @@ export default class AttackInspection extends React.Component {
             attack: {},
             button: 'Pause'
         };
+	}
+
+    handleVictimState(id, button){
+        if (button === 'Pause') {
+            this.setState({ button: 'Attack' });
+        }
+        else {
+            this.setState({ button: 'Pause' });
+        }
+
+        axios.patch('/breach/victim/' + this.props.attack.id + '/', {
+			victim_id: this.props.attack.id,
+            state: this.state.attackState
+        })
+		.then(res => {
+            console.log(res)
+        })
+        .catch(error => {
+            console.log(error);
+        });
     }
     
     handleClick = () => {
         this.setState({ showNotification: true });
+
     }
 
     onUndo = () => {
@@ -51,7 +72,8 @@ export default class AttackInspection extends React.Component {
                     <button type='button' className='btn btn-danger serialmargin' onClick={ () => this.handleClick(attack.id) }>Delete</button>
                     { this.state.showNotification ? <DeleteNotification onUndo={ () => this.onUndo(attack.id) }
                         onClose={ this.onVerify } /> : null }
-                    <button type='button' className='btn btn-primary serialmargin' >
+                    <button type='button' className='btn btn-primary serialmargin' 
+                        onClick={ () => this.handleVictimState(attack.id, this.state.button) }>
                         { this.state.button }
                     </button>
                 </div>
