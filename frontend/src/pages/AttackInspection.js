@@ -15,7 +15,20 @@ export default class AttackInspection extends React.Component {
         };
 	}
 
-    handleVictimState(id, button){
+    toggleVictim = (deleted) => {
+        axios.patch('/breach/victim/' + this.props.params.victim_id + '/', {
+            victim_id: this.props.params.victim_id,
+            deleted: deleted
+        })
+        .then(res => {
+            console.log(res);
+        })
+        .catch(error => {
+            console.log(error);
+        });
+    }
+
+    handleVictimState(button){
         if (button === 'Pause') {
             this.setState({ button: 'Attack' });
         }
@@ -37,11 +50,13 @@ export default class AttackInspection extends React.Component {
     
     handleClick = () => {
         this.setState({ showNotification: true });
-
+        this.toggleVictim(true);
+        setTimeout(() => { this.setState({ showNotification: false }); browserHistory.push('/');}, 3000);
     }
 
     onUndo = () => {
         this.setState({ showNotification: false });
+        this.toggleVictim(false);
     }
 
     onVerify = () => {
@@ -73,7 +88,7 @@ export default class AttackInspection extends React.Component {
                     { this.state.showNotification ? <DeleteNotification onUndo={ () => this.onUndo(attack.id) }
                         onClose={ this.onVerify } /> : null }
                     <button type='button' className='btn btn-primary serialmargin' 
-                        onClick={ () => this.handleVictimState(attack.id, this.state.button) }>
+                        onClick={ () => this.handleVictimState(this.state.button) }>
                         { this.state.button }
                     </button>
                 </div>
