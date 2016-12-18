@@ -25,6 +25,14 @@ class Victim(models.Model):
     def running_time(self):
         return (timezone.now() - self.attacked_at).total_seconds()
 
+    def delete(self):
+        self.trashed_at = timezone.now()
+        self.save()
+
+    def restore(self):
+        self.trashed_at = None
+        self.save()
+
     target = models.ForeignKey('breach.Target', null=True, blank=True)
 
     snifferendpoint = models.CharField(
