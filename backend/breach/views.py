@@ -4,7 +4,7 @@ from django.views.decorators.csrf import csrf_exempt
 from breach.strategy import Strategy
 from breach.models import Target, Victim
 from django.core import serializers
-from .forms import TargetForm, VictimForm
+from .forms import TargetForm, VictimForm, AttackForm
 import json
 from django.utils import timezone
 import time
@@ -89,4 +89,37 @@ class VictimListView(View):
 
         return JsonResponse({
             'victims': ret_victims,
+        })
+
+
+class AttackView(View):
+    def post(self, request):
+        input_data = json.loads(request.body.decode('utf-8'))
+        if 'id' in input_data:
+            form = AttackForm(input_data)
+            if form.is_valid():
+                target = Target.objects.get(name=input_data['target'])
+                victim_id = input_data['id']
+                victim = Victim.objects.get(pk=victim_id)
+                victim.state = 'running'
+                victim.attacked_at = timezone.now()
+                victim.target = target
+                victim.recordscardinality = target.recordscardinality
+                victim.save()
+        else:
+            form = VictimForm(input_data)
+            if form.is_valid():
+                target = Target.objects.get(name=input_data['target'])
+                victim = Victim.objects.create(
+                    sourceip=input_data['sourceip'],
+                    target=target,
+                    recordscardinality=target.recordscardinality,
+                    state='running',
+                    attacked_at=timezone.now()
+                )
+
+        victim.attack
+
+        return JsonResponse({
+            'victim_id': victim.id
         })
