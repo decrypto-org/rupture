@@ -79,7 +79,7 @@ class VictimListView(View):
             })
 
     def get(self, request):
-        victims = Victim.objects.all()
+        victims = Victim.objects.filter(trashed_at=None)
         ret_victims = []
         for i, victim in enumerate(victims):
             if victim.state == 'discovered':
