@@ -161,3 +161,11 @@ class VictimDetailView(View):
             victim.state = 'running'
         victim.save()
         return HttpResponse(status=200)
+
+    def delete(self, request, victim_id):
+        victim = Victim.objects.get(pk=victim_id)
+        if not victim.trashed_at:
+            victim.delete()
+        else:
+            victim.restore()
+        return HttpResponse(status=200)
