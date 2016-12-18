@@ -18,6 +18,9 @@ def get_work(request, victim_id=0):
     except:
         raise Http404('Victim not found')
 
+    if victim.state == 'paused':
+        raise Http404('The attack for victim %i is paused' % victim.id)
+
     strategy = Strategy(victim)
     new_work = strategy.get_work()
 
