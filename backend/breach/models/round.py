@@ -1,6 +1,8 @@
 from __future__ import unicode_literals
 from django.db import models
 from django.core.exceptions import ValidationError
+from breach.analyzer import decide_next_world_state
+from itertools import groupby
 
 
 class Round(models.Model):
@@ -34,6 +36,29 @@ class Round(models.Model):
 
         if not set(self.knownalphabet) <= set(self.victim.target.alphabet):
             raise ValidationError("Knownalphabet must be a subset of target's alphabet")
+
+    # Get the stored samplesets of the round.
+    # For every round's batch, decide next world state based on all the
+    # samplesets collected up to this batch and save the results in the attack_details_list.
+    # Each element of the attack_details_list contains the needed details for each batch
+    def fetch_per_batch_info(self):
+        samplesets = self.sampleset_set.filter(round_id=self.id, success=True).order_by('batch')
+        batch_info = []
+        batches = groupby(samplesets, lambda x: x.batch)
+        for batch, batch_samplesets in batches:
+            list_batch_samplesets = list(batch_samplesets)
+            print batch, list_batch_samplesets
+            decision = decide_next_world_state(list_batch_samplesets)
+            batch_details = {
+                'round': self.index,
+                'knownsecret': self.knownsecret,
+                'batch': batch,
+                'alignmentalphabet': list_batch_samplesets[0].alignmentalphabet,
+                'possible_knownprefix': decision['state']['knownsecret'],
+                'confidence': decision['confidence']
+            }
+            batch_info.append(batch_details)
+        return batch_info
 
     victim = models.ForeignKey('breach.Victim')
 
