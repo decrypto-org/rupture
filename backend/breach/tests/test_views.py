@@ -1,8 +1,9 @@
 from django.test import Client, TestCase
 from django.core.urlresolvers import reverse
-from breach.models import Target, Victim, Round
+from breach.models import Target, Victim, Round, SampleSet
 from breach.views import TargetView, VictimListView
 import json
+from binascii import hexlify
 
 
 class ViewsTestCase(TestCase):
@@ -144,3 +145,51 @@ class ViewsTestCase(TestCase):
         response = self.client.post(reverse('AttackView'), json.dumps(data), content_type='application/json')
         self.assertEqual(response.status_code, 200)
         self.assertEqual(json.loads(response.content)['victim_id'], victim.id)
+
+    def test_victimID_get(self):
+
+        victim = Victim.objects.create(
+            sourceip='192.168.1.5',
+            target=self.target1
+        )
+
+        victim2 = Victim.objects.create(
+            sourceip='192.168.1.6',
+            target=self.target2
+        )
+
+        round_data = {
+            'victim': victim,
+            'index': 1,
+            'amount': victim.target.samplesize,
+            'knownalphabet': 'abcdefghijklmnopqrstuvxyz',
+            'knownsecret': 'imper'
+        }
+        new_round = Round(**round_data)
+        new_round.save()
+
+        sampleset1_data = {
+            'round': new_round,
+            'candidatealphabet': 'a',
+            'data': hexlify('length'),
+            'success': True,
+            'alignmentalphabet': 'ABCDEFGHIJKLMNOPQRSTUVXYZ'
+        }
+        sampleset = SampleSet(**sampleset1_data)
+        sampleset.save()
+
+        sampleset2_data = {
+            'round': new_round,
+            'candidatealphabet': 'b',
+            'data': hexlify('length2'),
+            'success': True,
+            'alignmentalphabet': 'ABCDEFGHIJKLMNOPQRSTUVXYZ'
+        }
+
+        sampleset2 = SampleSet(**sampleset2_data)
+        sampleset2.save()
+
+        response = self.client.get(reverse('VictimDetailView', kwargs={'victim_id': victim.id}))
+        self.assertEqual(json.loads(response.content)['victim_ip'], '192.168.1.5')
+        self.assertEqual(json.loads(response.content)['target_name'], 'ruptureit')
+        self.assertEqual(json.loads(response.content)['attack_details'][0]['batch'], 0)
