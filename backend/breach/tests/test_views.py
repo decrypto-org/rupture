@@ -209,3 +209,18 @@ class ViewsTestCase(TestCase):
         response = self.client.put(reverse('VictimDetailView', kwargs={'victim_id': victim.id}))
         restarted_victim = Victim.objects.get(pk=victim.id)
         self.assertEqual(restarted_victim.state, 'running')
+
+    def test_victimID_delete(self):
+
+        victim = Victim.objects.create(
+            sourceip='192.168.1.5',
+            target=self.target1,
+        )
+
+        response = self.client.delete(reverse('VictimDetailView', kwargs={'victim_id': victim.id}))
+        self.assertEqual(response.status_code, 200)
+        deleted_victim = Victim.objects.get(pk=victim.id)
+        self.assertNotEqual(deleted_victim.trashed_at, None)
+        response = self.client.delete(reverse('VictimDetailView', kwargs={'victim_id': victim.id}))
+        restored_victim = Victim.objects.get(pk=victim.id)
+        self.assertEqual(restored_victim.trashed_at, None)
