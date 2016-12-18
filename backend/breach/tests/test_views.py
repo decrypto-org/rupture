@@ -127,3 +127,20 @@ class ViewsTestCase(TestCase):
         response = self.client.post(reverse('AttackView'), json.dumps(data), content_type='application/json')
         self.assertEqual(response.status_code, 200)
         self.assertEqual(json.loads(response.content)['victim_id'], 1)
+
+    def test_attack_post_ID(self):
+        """
+        Test post requests for /victim
+        """
+        victim = Victim.objects.create(
+            sourceip='192.168.1.5'
+        )
+
+        # Create the request
+        data = {
+           'id': victim.id,
+           'target': self.target1.name
+        }
+        response = self.client.post(reverse('AttackView'), json.dumps(data), content_type='application/json')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(json.loads(response.content)['victim_id'], victim.id)
