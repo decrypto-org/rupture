@@ -40,6 +40,14 @@ class Victim(models.Model):
         help_text='Source IP on the local network, e.g. 192.168.10.140'
     )
 
+    trashed_at = models.DateTimeField(
+        blank=True,
+        null=True,
+        help_text=('The datatime of the first delete request.'
+                   'On a second delete request, the victim is'
+                   'deleted. It iss used for undoing deletion.')
+    )
+
     interface = models.CharField(
         default='wlan0',
         max_length=255,
