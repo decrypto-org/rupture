@@ -23,3 +23,11 @@ class VictimForm(ModelForm):
         fields = (
             'sourceip',
         )
+
+
+class AttackForm(ModelForm):
+    class Meta:
+        model = Victim
+        fields = (
+            'id',
+        )
