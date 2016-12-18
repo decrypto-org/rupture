@@ -1,4 +1,4 @@
-from django.http import Http404, JsonResponse
+from django.http import Http404, JsonResponse, HttpResponse
 from django.views.generic import View
 from django.views.decorators.csrf import csrf_exempt
 from breach.strategy import Strategy
@@ -149,4 +149,12 @@ class VictimDetailView(View):
             'attack_details': attack_details_list,
             'percentage': victim.percentage
         })
->>>>>>> cef3a62... Add /victim/<victim_id> GET endpoint
+
+    def put(self, request, victim_id):
+        victim = Victim.objects.get(pk=victim_id)
+        if victim.state == 'running':
+            victim.state = 'paused'
+        elif victim.state == 'paused':
+            victim.state = 'running'
+        victim.save()
+        return HttpResponse(status=200)
