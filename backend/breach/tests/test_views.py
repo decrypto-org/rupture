@@ -193,3 +193,19 @@ class ViewsTestCase(TestCase):
         self.assertEqual(json.loads(response.content)['victim_ip'], '192.168.1.5')
         self.assertEqual(json.loads(response.content)['target_name'], 'ruptureit')
         self.assertEqual(json.loads(response.content)['attack_details'][0]['batch'], 0)
+
+    def test_victimID_put(self):
+
+        victim = Victim.objects.create(
+            sourceip='192.168.1.5',
+            target=self.target1,
+            state='running'
+        )
+
+        response = self.client.put(reverse('VictimDetailView', kwargs={'victim_id': victim.id}))
+        self.assertEqual(response.status_code, 200)
+        paused_victim = Victim.objects.get(pk=victim.id)
+        self.assertEqual(paused_victim.state, 'paused')
+        response = self.client.put(reverse('VictimDetailView', kwargs={'victim_id': victim.id}))
+        restarted_victim = Victim.objects.get(pk=victim.id)
+        self.assertEqual(restarted_victim.state, 'running')
