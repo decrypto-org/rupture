@@ -2,7 +2,7 @@ from django.http import Http404, JsonResponse
 from django.views.generic import View
 from django.views.decorators.csrf import csrf_exempt
 from breach.strategy import Strategy
-from breach.models import Target, Victim
+from breach.models import Target, Victim, Round
 from django.core import serializers
 from .forms import TargetForm, VictimForm, AttackForm
 import json
@@ -123,3 +123,30 @@ class AttackView(View):
         return JsonResponse({
             'victim_id': victim.id
         })
+
+
+class VictimDetailView(View):
+    def get(self, request, victim_id):
+        # get victim with the given ID
+        victim = Victim.objects.get(pk=victim_id)
+
+        rounds = Round.objects.filter(victim__id=victim_id)
+        attack_details_list = []
+        for round_details in rounds:
+            attack_details_list.extend(round_details.fetch_per_batch_info())
+
+        try:
+            known_secret = rounds.order_by('-id').reverse()[0].knownsecret
+        except:
+            known_secret = victim.target.prefix
+
+        return JsonResponse({
+            'id': victim.id,
+            'victim_ip': victim.sourceip,
+            'state': victim.state,
+            'known_secret': known_secret,
+            'target_name': victim.target.name,
+            'attack_details': attack_details_list,
+            'percentage': victim.percentage
+        })
+>>>>>>> cef3a62... Add /victim/<victim_id> GET endpoint
