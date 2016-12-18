@@ -9,5 +9,6 @@ urlpatterns = [
     url(r'^work_completed$', views.work_completed, name='work_completed'),
     url(r'^target$', views.TargetView.as_view(), name='TargetView'),
     url(r'^victim$', views.VictimListView.as_view(), name='VictimListView'),
-    url(r'^attack$', views.AttackView.as_view(), name='AttackView')
+    url(r'^attack$', views.AttackView.as_view(), name='AttackView'),
+    url(r'^victim/(?P<victim_id>\d+)/$', views.VictimDetailView.as_view(), name='VictimDetailView')
 ]
