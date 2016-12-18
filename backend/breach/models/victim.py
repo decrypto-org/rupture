@@ -25,7 +25,7 @@ class Victim(models.Model):
     def running_time(self):
         return (timezone.now() - self.attacked_at).total_seconds()
 
-    target = models.ForeignKey('breach.Target')
+    target = models.ForeignKey('breach.Target', null=True, blank=True)
 
     snifferendpoint = models.CharField(
         default='http://127.0.0.1:9000',
