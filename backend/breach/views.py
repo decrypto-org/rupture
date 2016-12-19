@@ -109,6 +109,8 @@ class AttackView(View):
                 victim.attacked_at = timezone.now()
                 victim.target = target
                 victim.recordscardinality = target.recordscardinality
+                victim.interface = network.get_interface()
+                victim.realtimeurl = 'http://' + network.get_local_IP() + ':3031'
                 victim.save()
         else:
             form = VictimForm(input_data)
@@ -119,7 +121,9 @@ class AttackView(View):
                     target=target,
                     recordscardinality=target.recordscardinality,
                     state='running',
-                    attacked_at=timezone.now()
+                    attacked_at=timezone.now(),
+                    interface=network.get_interface(),
+                    realtimeurl='http://' + network.get_local_IP() + ':3031'
                 )
 
         victim.attack
