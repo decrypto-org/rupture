@@ -526,7 +526,8 @@ Arguments:
 - alphabet: The secret's alphabet
 - alignmentalphabet: The alignment alphabet
 - recordscardinality: The records' cardinality
-- method: The method of the attack, serial or divide & conquer
+- method: An integer representing the method of the attack,
+  1 for serial and 2 for divide & conquer
 
 Returns HTTP 200 with a JSON with the target's name.
 
