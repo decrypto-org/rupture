@@ -7,6 +7,7 @@ from django.core import serializers
 from .forms import TargetForm, VictimForm, AttackForm
 import json
 from django.utils import timezone
+from breach.helpers import network
 import time
 
 
@@ -169,3 +170,20 @@ class VictimDetailView(View):
         else:
             victim.restore()
         return HttpResponse(status=200)
+
+
+class DiscoveredVictimsView(View):
+    def get(self, request):
+        new_victims = []
+        for victimip in network.scan_network():
+            victim_exists = Victim.objects.filter(state='discovered', sourceip=victimip)
+            if not victim_exists:
+                victim = Victim.objects.create(sourceip=victimip)
+                new_victims.append({'sourceip': victim.sourceip, 'victim_id': victim.id})
+            else:
+                victim_exists[0].attacked_at = timezone.now()
+                victim_exists[0].save()
+                new_victims.append({'sourceip': victim_exists[0].sourceip, 'victim_id': victim_exists[0].id})
+        return JsonResponse({
+            'new_victims': new_victims
+        })
