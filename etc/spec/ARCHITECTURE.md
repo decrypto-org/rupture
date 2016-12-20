@@ -443,6 +443,31 @@ No arguments
 Returns HTTP 200 with a JSON that contains a list of all the stored
 victims.
 
+### `/attack`
+
+HTTP POST endpoint. It launches an attack.
+
+There are two conditions:
+
+1) The victim already exists
+
+Arguments:
+
+- victim_id: The id of the victim
+- target: string
+
+2) The victim doesn't exist
+
+Arguments:
+
+- sourceip: IP address
+- target: string
+
+Before launching, the attack, the victim is created
+
+Returns HTTP `200` with a JSON that has a field *victimid*, which contains the
+ID of the victim.
+
 ### `/victim/<victim_id>`
 
 HTTP GET, PUT and DELETE endpoint.
@@ -501,7 +526,8 @@ Arguments:
 - alphabet: The secret's alphabet
 - alignmentalphabet: The alignment alphabet
 - recordscardinality: The records' cardinality
-- method: The method of the attack, serial or divide & conquer
+- method: An integer representing the method of the attack,
+  1 for serial and 2 for divide & conquer
 
 Returns HTTP 200 with a JSON with the target's name.
 
