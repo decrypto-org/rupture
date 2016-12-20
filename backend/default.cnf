@@ -1,0 +1,6 @@
+[client]
+database = __DB_NAME__
+host = localhost
+user = __DB_USER__
+password = __DB_PASSWORD__
+default-character-set = utf8

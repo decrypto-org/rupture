@@ -10,6 +10,11 @@ install:
     - cd client && npm install && cd ..
     - cd realtime && npm install && cd ..
     - gem install mdl
+services:
+    - mysql
+before_script:
+    - cd backend && python setup_database.py --db_name rupture --db_user travis && cd ..
+    - mysql -u travis -e "CREATE DATABASE rupture CHARACTER SET UTF8;"
 script:
     - make all
 after_success:
