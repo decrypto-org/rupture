@@ -7,6 +7,7 @@ from django.core import serializers
 from .forms import TargetForm, VictimForm, AttackForm
 import json
 from django.utils import timezone
+from django.utils.decorators import method_decorator
 from breach.helpers import network
 import time
 
@@ -52,6 +53,10 @@ def work_completed(request, victim_id=0):
 
 class TargetView(View):
 
+    @method_decorator(csrf_exempt)
+    def dispatch(self, request, *args, **kwargs):
+        return super(TargetView, self).dispatch(request, *args, **kwargs)
+
     def post(self, request):
         form = TargetForm(json.loads(request.body.decode('utf-8')))
         if form.is_valid():
@@ -67,6 +72,10 @@ class TargetView(View):
 
 
 class VictimListView(View):
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self, request, *args, **kwargs):
+        return super(VictimListView, self).dispatch(request, *args, **kwargs)
 
     def post(self, request):
         input_data = json.loads(request.body.decode('utf-8'))
@@ -97,6 +106,11 @@ class VictimListView(View):
 
 
 class AttackView(View):
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self, request, *args, **kwargs):
+        return super(AttackView, self).dispatch(request, *args, **kwargs)
+
     def post(self, request):
         input_data = json.loads(request.body.decode('utf-8'))
         if 'id' in input_data:
@@ -134,6 +148,11 @@ class AttackView(View):
 
 
 class VictimDetailView(View):
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self, request, *args, **kwargs):
+        return super(VictimDetailView, self).dispatch(request, *args, **kwargs)
+
     def get(self, request, victim_id):
         # get victim with the given ID
         victim = Victim.objects.get(pk=victim_id)
