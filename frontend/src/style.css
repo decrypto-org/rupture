@@ -41,10 +41,13 @@ li.state{
     font-weight: bold;
 }
 .zeropad{
-    padding:0px;
+    padding:0px 0px;
 }
 .progressmargin{
     margin:5px 0px;
+}
+.attackpagefields{
+    margin:10px 0px;
 }
 .ghost{
     margin-top:50px;
@@ -54,7 +57,7 @@ li.state{
 }
 .attack{
     float:right;
-    margin:10px 5px;
+    margin:10px 0px;
 }
 .details{
     padding-top:10px;
@@ -81,7 +84,7 @@ li.state{
     margin-right:40%;
 }
 .vertical{
-    margin-top:2%;
+    margin-top:10%;
 }
 h3{
     text-align:center;
@@ -125,7 +128,10 @@ li.completed:hover .close, li.running:hover .close, li.paused:hover .close {
     outline:none;
     box-shadow:none;
     border-color:transparent;
+    cursor: pointer;
+    cursor: hand;
 }
+
 #mainpage h2.btn{
     float:left;
     clear:both;
@@ -176,4 +182,21 @@ footer{
 }
 footer a{
     color:#808080;
+}
+.welcomemessage{
+    font-size:150%;
+    margin-top: 5%;
+    margin-left: 5%;
+}
+.ip{
+    margin-left:15%;
+}
+.decr{
+    margin-left:5%
+}
+.underline{
+    text-decoration:underline;
+}
+.leftpadding{
+    padding-left: 22%;
 }
