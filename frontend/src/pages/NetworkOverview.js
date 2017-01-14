@@ -20,6 +20,28 @@ export default class NetworkOverview extends React.Component {
         this.setState({ victims: victims });
     }
 
+    scanForVictims = () => {
+        return(
+            <div className='welcomemessage' > 
+                <a href onClick={ this.handleClick }>
+                    Scan for new victims
+                </a> or
+                <Link to='attackconfig'> add a custom one</Link>
+            </div>
+        );
+    }
+
+    handleClick = () => {
+        axios.get('/breach/victim/notstarted')
+        .then(res => {
+            let victims = res.data['new_victims'];
+            this.onScan(victims);
+        })
+        .catch(error => {
+            console.log(error);
+        });
+    }
+
     getVictims = () => {
         axios.get('/breach/victim')
         .then(res => {
@@ -44,6 +66,7 @@ export default class NetworkOverview extends React.Component {
                         <div id='mainpage' className='col-md-8 col-xs-12 col-sm-6 col-lg-8'>
                             { this.state.attacks.length > 0 ? <AttackListDetails attacks={ this.state.attacks } onReload={ this.getVictims }/> : null}
                             { this.state.victims.length > 0 ? <NotStartedVictims victims={ this.state.victims }/> : null}
+                            { this.state.victims.length === 0 && this.state.attacks.length === 0 ? this.scanForVictims() : null}
                         </div>
                         <div className='button col-md-4 col-xs-6 col-lg-4'>
                             <WifiScan onUpdate={ this.onScan }/>
