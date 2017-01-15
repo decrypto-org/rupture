@@ -8,3 +8,8 @@ def get_interface():
 def get_local_IP():
     def_gw_device = get_interface()
     return netifaces.ifaddresses(def_gw_device)[netifaces.AF_INET][0]['addr']
+
+
+def get_netmask():
+    def_gw_device = get_interface()
+    return netifaces.ifaddresses(def_gw_device)[netifaces.AF_INET][0]['netmask']
