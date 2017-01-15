@@ -15,3 +15,6 @@ tags
 *.bbl
 *.out
 .coverage
+client_*
+*.json.gzip
+bower_components
