@@ -224,3 +224,8 @@ class ViewsTestCase(TestCase):
         response = self.client.delete(reverse('VictimDetailView', kwargs={'victim_id': victim.id}))
         restored_victim = Victim.objects.get(pk=victim.id)
         self.assertEqual(restored_victim.trashed_at, None)
+
+    def test_victim_notstarted(self):
+
+        response = self.client.get(reverse('DiscoveredVictimsView'))
+        self.assertEqual(response.status_code, 200)
