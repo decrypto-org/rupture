@@ -52,6 +52,11 @@ def decide_optimal_candidate(candidate_lengths, alignmentsize, samples_per_sampl
     # Extract a confidence value, in bytes, for our decision based on the second-best candidate.
     confidence = float(next_best_candidate['length'] - min_candidate['length']) / samples_per_candidate
 
+    # If alignment was used, the expected confidence is 1 byte per alignment candidate, equally
+    # 1 byte per alignment size
+    if alignmentsize:
+        confidence *= alignmentsize
+
     # Captured bytes are represented as hex string,
     # so we need to convert confidence metric to bytes
     confidence /= 2.0
