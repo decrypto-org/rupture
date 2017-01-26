@@ -373,7 +373,7 @@ class Strategy(object):
         if self._round.check_block_align():
             alignmentalphabet = list(self._round.victim.target.alignmentalphabet)
             random.shuffle(alignmentalphabet)
-            alignmentalphabet = ''.join(alignmentalphabet)
+            alignmentalphabet = ''.join(alignmentalphabet[:self._round.victim.target.alignmentsize])
 
         logger.debug('\tAlignment alphabet: {}'.format(alignmentalphabet))
 
