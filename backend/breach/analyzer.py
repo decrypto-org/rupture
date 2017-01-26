@@ -9,7 +9,7 @@ class AnalyzerError(Exception):
     pass
 
 
-def decide_optimal_candidate(candidate_lengths, samples_per_sampleset):
+def decide_optimal_candidate(candidate_lengths, alignmentsize, samples_per_sampleset):
     '''Take a dictionary of candidate alphabets and their associated
     accumulative lengths and decide which candidate alphabet is the best
     (minimum) with what confidence.
@@ -86,6 +86,7 @@ def decide_next_world_state(samplesets):
     amount = round.amount
     victim = round.victim
     target = victim.target
+    alignmentsize = target.alignmentsize
     for sampleset in samplesets:
         assert(sampleset.round == round)
 
@@ -107,7 +108,7 @@ def decide_next_world_state(samplesets):
     # Ensure we have a decision to make
     assert(len(candidate_lengths) > 1)
 
-    min_vector, confidence = decide_optimal_candidate(candidate_lengths, samples_per_sampleset=amount)
+    min_vector, confidence = decide_optimal_candidate(candidate_lengths, alignmentsize, samples_per_sampleset=amount)
 
     # use minimum group's alphabet vector
     decision_knownalphabet = min_vector
