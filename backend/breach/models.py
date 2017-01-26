@@ -67,6 +67,12 @@ class Target(models.Model):
                    'once per batch.')
     )
 
+    alignmentsize = models.IntegerField(
+        default=16,
+        help_text=('The size of the used alignment alphabet. This should be '
+                   'equal to the block size in bytes.')
+    )
+
     recordscardinality = models.IntegerField(
         default=0,
         help_text=('The amount of expected TLS response records per request. '
