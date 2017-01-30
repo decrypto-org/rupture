@@ -46,7 +46,11 @@ socket.on('connection', (client) => {
         victimId = victim_id;
 
         if (!victims[victimId]) {
+            winston.debug('Client (' + client.id + ') is now active for victim ' + victimId);
             victims[victimId] = client.id;
+        }
+
+        if (victims[victimId] == client.id) {
             winston.debug('Sending server-hello message to client ' + client.id);
             client.emit('server-hello');
         }
