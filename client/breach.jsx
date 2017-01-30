@@ -17,21 +17,21 @@ const BREACHClient = {
             this.doWork(work);
         });
         this._socket.on('server-hello', () => {
+            console.log('Active, requesting work.');
             this.getWork();
-            console.log('Initialized');
         });
         this._socket.on('server-nowork', () => {
             this.noWork(1);
         });
     },
     noWork(flag) {
+        console.log('No work, emitting client-hello message');
         if (flag == 0) {
             this._socket.emit('client-hello', {
                 victim_id: config.VICTIM_ID
             });
         }
         else {
-            console.log('No work');
             setTimeout(
                 () => {
                     this._socket.emit('client-hello', {
