@@ -43,9 +43,9 @@ socket.on('connection', (client) => {
             winston.error('Got invalid client-hello message from client');
             return;
         }
+        victimId = victim_id;
 
-        if (!victims[victim_id]) {
-            victimId = victim_id;
+        if (!victims[victimId]) {
             victims[victimId] = client.id;
             client.emit('server-hello');
             winston.debug('Send server-hello message');
