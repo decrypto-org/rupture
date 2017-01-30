@@ -160,9 +160,10 @@ socket.on('connection', (client) => {
     client.on('disconnect', () => {
         winston.info('Client ' + client.id + ' disconnected');
 
+        // If this client was active, empty the spot of its victim
         for (let i in victims) {
             if (victims[i] == client.id) {
-                victims[i] = null;
+                delete victims[i];
             }
         }
 
