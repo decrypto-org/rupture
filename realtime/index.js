@@ -51,13 +51,14 @@ socket.on('connection', (client) => {
             winston.debug('Send server-hello message');
         }
         else {
-            client.emit('server-nowork');
+            doNoWork();
             winston.debug('There is an other victimId <-> client.id match. Make client idle');
         }
     });
 
     const doNoWork = () => {
-        client.emit('do-work', {});
+        winston.debug('Sending server-nowork to client ' + client.id);
+        client.emit('server-nowork');
     };
 
     const createNewWork = () => {
