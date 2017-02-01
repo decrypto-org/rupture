@@ -1,0 +1,63 @@
+\section{Related work}\label{sec:related}
+
+\subsection{Compression attacks in literature}
+
+The compression side-channel attack technique was first studied by Kelsey
+\cite{kelsey2002compression} in 2002.
+Kelley and Tamassia\cite{kelley2014secure} discuss the notion of \textit{entropy-restricted} semantic
+security. However, this only models the case where two secrets compress to the same
+length, making it difficult to capture practical techniques used in attacks
+such as BREACH.
+
+Alawatugoda et al. \cite{alawatugoda2015protecting} introduce a model for \textit{Cookie recovery},
+\textit{Random cookie indistinguishability}, and \textit{Chosen cookie indistinguishability}.
+Nevertheless, their security models are limited in classes of rendering functions
+that are very specific. In their models, the attacker is able to directly influence
+the output of the rendering function through concatenation. More information on
+rendering functions is provided in section \ref{subsec:terms}.
+
+\subsection{Defenses}
+
+Literature includes many proposed defenses for side-channel compression attacks
+and especially BREACH, some of which are explored in the following sections.
+
+\subsubsection{Disabling compression}\label{subsec:disablecom}
+Compression is the basic assumption for the compression detectability. Disabling
+compression would break the adaptive reflection game.
+
+However, this is not a viable solution. Disabling compression results in a
+performance penalty that outweighs the benefits of the defense.
+
+\subsubsection{SameSite cookies}\label{subsec:samesite}
+SameSite cookies \cite{mwest2015firstparty} is a proposed draft for enhancing
+web security. The main puprose of this technique is to mitigate cross-site
+request forgery attacks, although it also mitigates other kinds of cross-origin
+leakages.
+
+This policy introduces a new attribute for web cookies that web servers may
+opt-in. This attribute states that cookies may only be included in a
+"first-party" context, i.e. in same origin requests.
+
+However, the current BREACH application depends on cross-origin requests in
+order to call the reflection oracle. Enabling SameSite cookies would result in
+the elimination of this reflection oracle of the Reflection-Security Game.
+
+\subsubsection{Masking secrets}\label{subsec:masking}
+Masking is a method of hiding secrets' properties.
+
+A mask is a bitstream equal in size with the secret. The masked text contains
+the result of the XOR operation between the secret and the mask. The masked
+secret is then concatenated with the mask that was used. The secret can be
+obtained by applying XOR between the masked secret and the mask.
+
+A new mask is used for each request. That way, the secret's content is secured
+against instances of the attack that require at least two calls to the
+reflection oracle.
+
+However, masking doubles the size of the protected secret. Furthermore, the mask
+is random, and so is the masked secret, so the compression performance is poor.
+Therefore, masking should be applied on high value secrets only, in order to
+avoid significant performance penalties.
+
+Masking is a method used by Facebook \cite{facebookbreach} in order to protect CSRF tokens
+against BREACH attacks.
