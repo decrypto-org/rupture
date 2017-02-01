@@ -1,51 +1,84 @@
-\documentclass[conference, letterpaper, 10pt]{IEEEtran}
+\documentclass[letterpaper,twocolumn,10pt]{article}
 
-\usepackage[utf8]{inputenc}
+%usenix/complementary_newdefines.cls
+
+\usepackage{usenix,epsfig,endnotes}
+
+%\documentclass[times, 10pt, twocolumn]{article}
+\usepackage{amssymb} %for \varnothing
+\usepackage{times}
+\usepackage{amsfonts}
+%\usepackage{amsthm}
+
+\usepackage{float}
+\usepackage{graphicx, multirow}
+\usepackage{amsmath}
+
+\usepackage{listings}
+\usepackage{url}
+\usepackage{mathtools}
+\usepackage{amssymb}
+\usepackage{cite}
+
+\usepackage[colorlinks=true,linkcolor=black,citecolor=black,urlcolor=black]{hyperref}
+%customized packages
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+
+\newenvironment{proof}[1][Proof]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}]}{\end{trivlist}}
+\newenvironment{definition}[1][Definition]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}]}{\end{trivlist}}
+\newenvironment{example}[1][Example]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}]}{\end{trivlist}}
+\newenvironment{remark}[1][Remark]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}]}{\end{trivlist}}
+
+\newcommand{\qed}{\nobreak \ifvmode \relax \else
+      \ifdim\lastskip<1.5em \hskip-\lastskip
+      \hskip1.5em plus0em minus0.5em \fi \nobreak
+      \vrule height0.75em width0.5em depth0.25em\fi}
+
+\pagestyle{empty}
+
+\DeclarePairedDelimiter{\ceil}{\lceil}{\rceil}
+\let\oldemptyset\emptyset
+\let\emptyset\varnothing
+
+\newcommand\defeq{\stackrel{\mathclap{\normalfont\mbox{def}}}{=}}
+\newcommand{\overbar}[1]{\mkern1.5mu\overline{\mkern-1.5mu#1\mkern-1.5mu}\mkern 1.5mu}
+
+\sloppy
+
+\begin{document}
 
 \title{On the security of encryption and compression composition under reflection attacks}
 
 \author{
     Anonymized submission
 }
-
 %  \author{
-%      \IEEEauthorblockN{Dimitris Karakostas}
-%      \IEEEauthorblockA{University of Athens \\
-%      dimit.karakostas@gmail.com}
+%      \rm Dimitris Karakostas \\
+%      University of Athens \\
+%      dimit.karakostas@gmail.com
 %      \and
-%      \IEEEauthorblockN{Aggelos Kiayias}
-%      \IEEEauthorblockA{University of Edinburgh\\
-%      akiayias@inf.ed.ac.uk}
+%      Aggelos Kiayias \\
+%      University of Edinburgh \\
+%      akiayias@inf.ed.ac.uk
 %      \and
-%      \IEEEauthorblockA{Dionysis Zindros}
-%      \IEEEauthorblockA{University of Athens \\
-%      dionyziz@di.uoa.gr}
+%      Dionysis Zindros \\
+%      University of Athens \\
+%      dionyziz@di.uoa.gr
 %  }
 
-\usepackage{url}
-\usepackage{amsmath}
-\usepackage{graphicx}
-\usepackage{listings}
-\usepackage{mathtools}
-\usepackage{amsfonts}
-% \usepackage{amsthm}
-\usepackage{amssymb}
-\usepackage[colorlinks=true,linkcolor=black,citecolor=black,urlcolor=black]{hyperref}
-
-\usepackage{cite}
-
-\DeclarePairedDelimiter{\ceil}{\lceil}{\rceil}
-\let\oldemptyset\emptyset
-\let\emptyset\varnothing
-
-\newtheorem{lemma}{Lemma}
-
-\newcommand\defeq{\stackrel{\mathclap{\normalfont\mbox{def}}}{=}}
-\newcommand{\overbar}[1]{\mkern 1.5mu\overline{\mkern-1.5mu#1\mkern-1.5mu}\mkern 1.5mu}
-
-\begin{document}
-
 \maketitle
+
+% Use the following at camera-ready time to suppress page numbers.
+% Comment it out when you first submit the paper for review.
+\thispagestyle{empty}
 
 \input{sections/abstract.tex}
 \input{sections/introduction.tex}
