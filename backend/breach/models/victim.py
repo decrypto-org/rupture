@@ -51,9 +51,7 @@ class Victim(models.Model):
     trashed_at = models.DateTimeField(
         blank=True,
         null=True,
-        help_text=('The datatime of the first delete request.'
-                   'On a second delete request, the victim is'
-                   'deleted. It iss used for undoing deletion.')
+        help_text=('The datatime of the delete request.')
     )
 
     interface = models.CharField(
