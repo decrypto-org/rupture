@@ -9,5 +9,7 @@ env/
 .DS_Store
 tags
 *.aux
+*.blg
+*.bbl
 *.out
 .coverage

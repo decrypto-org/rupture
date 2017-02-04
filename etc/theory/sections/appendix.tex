@@ -1,0 +1,271 @@
+\section{Appendix A: Full proofs}
+
+\begin{lemma}[Compression attack]
+\end{lemma}
+
+\begin{proof}
+
+Let $g$ be the boolean function $Q$ on the plaintext. Define the adversary
+$\mathcal{A}$ as follows:
+
+\begin{lstlisting}[texcl,mathescape,basicstyle=\small]
+def $\mathcal{A}(Q, \mathcal{M}, y)$:
+    $(r_1, r_2) \leftarrow \mathcal{O}_R(\textrm{Com}, f, Q, \mathcal{M}, \mathcal{V})$
+
+    $l_1 = |\text{Reflect}^{\mathcal{E}_{pk}, \mathcal{V}}_s(r_1)|$
+    $l_2 = |\text{Reflect}^{\mathcal{E}_{pk}, \mathcal{V}}_s(r_2)|$
+
+    if $l_1 < l_2$:
+        return True
+    else:
+        return False
+\end{lstlisting}
+
+Let $\mathcal{S}$ be an arbitrary simulator. Then we have:
+\begin{align*}
+    \Pr[\text{Game}_{\text{REF-SIM}}^{\mathcal{PE},\mathcal{S}}
+        (\lambda, f, \mathcal{V}, \mathcal{M}, g) = 1] &=\\
+    \Pr_{x \leftarrow \mathcal{M}, b \leftarrow \mathcal{S}(f, \mathcal{V}, \mathcal{M}, g)}
+        [Q(x) = b]
+\end{align*}
+
+Letting the random variables $b$ and $x$:
+\begin{align*}
+    x &\leftarrow \mathcal{M}\\
+    b &\leftarrow \mathcal{S}(f, \mathcal{V}, \mathcal{M}, g)
+\end{align*}
+
+Due to the independence of the simulator's output with the choice of $x$ we have:
+\begin{align*}
+    Pr[b = Q(x)] &=\\
+    Pr[\lnot b|\lnot Q(x)]Pr[\lnot Q(x)] + Pr[b|Q(x)]Pr[Q(x)] &=\\
+    Pr[\lnot b]Pr[\lnot Q(x)] + Pr[b]Pr[Q(x)] &=\\
+    (1 - Pr[b])(1 - Pr[Q]) + Pr[b]Pr[Q(x)] &=\\
+    1 - Pr[Q(x)] - Pr[b] + 2Pr[b]Pr[Q(x)]
+\end{align*}
+
+For a given $\Pr[Q]$, this function is monotonic in $\Pr[b]$ and therefore has
+potential extrema at $\Pr[b] = 0$ or $\Pr[b] = 1$, for which cases the function
+takes the values $1 - \Pr[Q(x)]$ and $\Pr[Q(x)]$ respectively. Therefore, the
+maximum $\Pr[b]$ of the simulator is:
+\begin{equation*}
+    \Pr[Q(x) = b] = max(\Pr[Q(x)], 1 - \Pr[Q(x)]) = \pi
+\end{equation*}
+
+And therefore:
+\begin{align*}
+    \forall \mathcal{S}:\\
+    \Pr[
+        \text{Game}_{\text{REF-SIM}}^{\mathcal{PE},\mathcal{S}}
+        (\lambda, f, \mathcal{V}, \mathcal{M}, g) = 1
+    ]
+    \leq\\
+    max(Pr[Q(x)], 1 - Pr[Q(x)])
+\end{align*}
+
+From the compression detectability of Q we know that:
+\begin{align*}
+    \exists \alpha \text{ non-negl}:\\
+    \Pr_{s_1 \leftarrow \mathcal{M}_Q,
+         s_2 \leftarrow \mathcal{M}_{\lnot Q},
+         \overbar{v} \leftarrow \mathcal{V}^2}
+         [cpr^Q_{\kappa}(s_1, \overbar{r}, \overbar{v}) \land
+          cpr^Q_{\kappa}(s_2, \overbar{r}, \overbar{v})]
+    \geq\\
+    \pi + \alpha(\lambda)
+\end{align*}
+
+Therefore:
+\begin{align*}
+    \Pr_{s_1 \leftarrow \mathcal{M}_Q,
+         \overbar{v} \leftarrow \mathcal{V}^2}
+         [cpr^Q_{\kappa}(s_1, \overbar{r}, \overbar{v})]
+    \geq
+    \pi + \alpha(\lambda) \land\\
+    \Pr_{s_2 \leftarrow \mathcal{M}_{\lnot Q},
+         \overbar{v} \leftarrow \mathcal{V}^2}
+         [cpr^Q_{\kappa}(s_2, \overbar{r}, \overbar{v})]
+    \geq
+    \pi + \alpha(\lambda)
+\end{align*}
+
+And so:
+\begin{align*}
+    \Pr_{s \leftarrow \mathcal{M},
+         \overbar{v} \leftarrow \mathcal{V}^2}
+         [cpr^Q_{\kappa}(s, \overbar{r}, \overbar{v})]
+    =\\
+    \Pr[cpr^Q_{\kappa}(s, \overbar{r}, \overbar{v})|Q(s)]\Pr[Q(s)]
+    +\\
+    \Pr[cpr^Q_{\kappa}(s, \overbar{r}, \overbar{v})|\lnot Q(s)]\Pr[\lnot Q(s)]
+    \geq\\
+    (\pi + \alpha(\lambda))(\Pr[Q(s)] + (1 - \Pr[Q(s)))
+    =\\
+    \pi + \alpha(\lambda)
+\end{align*}
+
+Let us now examine the event of $\mathcal{A}$ being successful, denoted Succ,
+when $cpr^Q_{\kappa}(s, \overbar{r}, \overbar{v})$. Assuming $Q(s)$:
+\begin{align*}
+    \Pr[|\mathcal{K}(s, r_1, v_1)| < |\mathcal{K}(s, r_2, v_2)||Q(s)]
+    = \pi + \alpha(\lambda)
+\end{align*}
+
+And from the strict length monotonicity of $\textrm{Enc}$ it follows that:
+\begin{align*}
+    \Pr[&|\textrm{Enc}(\mathcal{K}(s, r_1, v_1))| <\\&|\textrm{Enc}(\mathcal{K}(s, r_2, v_2))||Q(s)]
+        \geq \pi + \alpha(\lambda)\\
+    \Rightarrow \Pr[&
+        |\text{Reflect}^{\mathcal{E}_{pk}, \mathcal{V}}_s(r_1)|
+        <
+        |\text{Reflect}^{\mathcal{E}_{pk}, \mathcal{V}}_s(r_2)||Q(s)
+    ]
+        \geq \pi + \alpha(\lambda)\\
+    \Rightarrow \Pr[&l_1 < l_2|Q(s)]
+        \geq \pi + \alpha(\lambda)\\
+    \Rightarrow \Pr[&\text{Succ}|Q(s)]
+        \geq \pi + \alpha(\lambda)\\
+\end{align*}
+
+The case for $\lnot Q(s)$ is the same, but with a different inequality direction:
+\begin{align*}
+    \Pr[|\mathcal{K}(s, r_1, v_1)| > |\mathcal{K}(s, r_2, v_2)||\lnot Q(s)]
+        \geq\\
+        \pi + \alpha(\lambda)\\
+    \Rightarrow \Pr[\text{Succ}|\lnot Q(s)] \geq\\
+    \pi + \alpha(\lambda)\\
+\end{align*}
+
+And so the probability of success is given:
+\begin{align*}
+    \Pr[\text{Succ}] =\\
+    \Pr[\text{Succ}|Q(s)]\Pr[Q(s)]
+    +
+    \Pr[\text{Succ}|\lnot Q(s)]\Pr[\lnot Q(s)] \geq\\
+    \pi + \alpha(\lambda)
+\end{align*}
+
+Therefore,
+\begin{align*}
+    \forall PPT \mathcal{S}:
+    \text{Adv}_{\mathcal{SE}(\textrm{Enc}, \textrm{Com}), \mathcal{A}, \mathcal{S}}
+        (\lambda, f, \mathcal{V}, \mathcal{M}, g)
+    \geq\\
+    |\pi + \alpha(\lambda) - \pi| = \alpha(\lambda)
+\end{align*}
+
+Which is non-negligible.
+
+\end{proof}
+
+\begin{lemma}[Amplification]
+\end{lemma}
+
+\begin{proof}
+
+From the fact that $Q$ is compression-detectable and from the Compression Attack Theorem, we have that:
+\begin{align*}
+    \Pr_{s \leftarrow \mathcal{M},
+         \overbar{v} \leftarrow \mathcal{V}^2}
+         [cpr^Q_{\kappa}(s, \overbar{r}, \overbar{v})]
+    =\\
+    \pi + \alpha(\lambda)
+\end{align*}
+
+Some elements $s \in \mathcal{M}$ allow for better compression-detectability than others under the fixed
+reflection vector $\overbar{r}$. Call these elements \textit{amplifiable} and define predicate:
+\begin{align*}
+    Amp(s) \defeq
+    \Pr_{\overbar{v} \leftarrow \mathcal{V}^2}
+    [cpr^Q_{\kappa}
+     (s, \overbar{r}, \overbar{v})]
+    \geq
+    \frac{1}{2} + \frac{\alpha(\lambda)}{2}
+\end{align*}
+
+We will now obtain a lower bound on the probability of an element being amplifiable.
+
+Let:
+
+% B derivation: (where \beta(\lambda) = \alpha(\lambda) / 2)
+% B + (\frac{1}{2} + \alpha(\lambda)/2)(1 - B) = \pi + \alpha(\lambda)
+% B + \frac{1}{2} + \alpha(\lambda)/2 - B(\frac{1}{2} + \beta(\lambda)) = \pi + \alpha(\lambda)
+% \frac{1}{2} + \beta(\lambda) + B(\frac{1}{2} - \beta(\lambda)) = \pi + \alpha(\lambda)
+% B(\frac{1}{2} - \beta(\lambda)) = \pi + \alpha(\lambda) - \frac{1}{2} - \beta(\lambda)
+% B = (\pi + \alpha(\lambda) - \frac{1}{2} - \beta(\lambda)) / (\frac{1}{2} - \beta(\lambda))
+% B = (\pi + \alpha(\lambda) - \frac{1}{2} - \frac{\alpha(\lambda)}{2}) / (\frac{1}{2} - \frac{\alpha(\lambda)}{2})
+% B = (\pi - \frac{1}{2} + \frac{\alpha(\lambda)}{2}) / (\frac{1}{2} - \frac{\alpha(\lambda)}{2})
+% B = \pi / (\frac{1}{2} - \frac{\alpha(\lambda)}{2}) - (\frac{1}{2} - \frac{\alpha(\lambda)}{2}) / (\frac{1}{2} - \frac{\alpha(\lambda)}{2})
+% B = \pi / (\frac{1}{2} - \frac{\alpha(\lambda)}{2}) - 1
+\begin{align*}
+    B = \frac{\pi}{\frac{1}{2} - \frac{\alpha(\lambda)}{2}} - 1
+\end{align*}
+
+$B$ is non-negligible in $\lambda$.
+
+Assume, for the sake of contradiction, that:
+\begin{align*}
+    \Pr_{s \leftarrow \mathcal{M}}
+    [Amp(s)] < B
+\end{align*}
+
+Then we have:
+\begin{align*}
+    \Pr_{s \leftarrow \mathcal{M},
+         \overbar{v} \leftarrow \mathcal{V}^2}
+         [cpr^Q_{\kappa}(s, \overbar{r}, \overbar{v})]
+    =\\
+    \Pr_{s \leftarrow \mathcal{M},
+         \overbar{v} \leftarrow \mathcal{V}^2}
+         [cpr^Q_{\kappa}(s, \overbar{r}, \overbar{v})|Amp(s)]\Pr[Amp(s)]
+    +\\
+    \Pr_{s \leftarrow \mathcal{M},
+         \overbar{v} \leftarrow \mathcal{V}^2}
+         [cpr^Q_{\kappa}(s, \overbar{r}, \overbar{v})|\lnot Amp(s)]\Pr[\lnot Amp(s)]
+    <\\
+    B + (\frac{1}{2} + \frac{\alpha}{2})(1 - B)
+\end{align*}
+
+But then:
+\begin{align*}
+    B + (\frac{1}{2} + \frac{\alpha(\lambda)}{2})(1 - B) =
+    \pi + \alpha(\lambda)
+\end{align*}
+
+And this contradicts the assumption that $Q$ is compression-detectable. Therefore:
+\begin{align*}
+    \Pr_{s \leftarrow \mathcal{M}}
+    [Amp(s)] \geq B
+\end{align*}
+
+It remains to show that the advantage of the adversary can be
+arbitrarily large, i.e. that for some negligible $C$ we have:
+\begin{align*}
+    \text{Adv}_{\mathcal{SE}(\textrm{Enc}, \textrm{Com}), \mathcal{A}, \mathcal{S}_{Amp}}
+    (\lambda, f, \mathcal{V}, \mathcal{M}, g) = 1 - \pi - C
+\end{align*}
+
+Indeed, observe that the amplifying adversary performs a repeated Bernoulli
+trial with $k$ repetitions and extracts a majority. Let $X$ be the number of
+repetitions that are successful for the adversary. Letting $\overbar{v}_i$
+be the noise chosen from $\mathcal{V}^2$ during the $i$-th round, $X$ is defined:
+\begin{align*}
+    X \defeq |\{ i: cpr^Q_{\kappa}(s, \overbar{r}, \overbar{v}_i) \}|
+\end{align*}
+
+$X$ follows the binomial distribution, and therefore its expected value is:
+\begin{align*}
+    E[X] = \frac{k}{2} + \frac{\alpha k}{2}
+\end{align*}
+
+Let Succ denote the event of the amplified adversary succeeding. Then Succ
+is equivalent to $X > \frac{k}{2}$.
+
+Because $\alpha$ is non-negligible and due to the tail bounds of the binomial
+distribution, we have:
+\begin{align*}
+    Pr[Succ] = 1 - C(k)
+\end{align*}
+
+Where $C$ is a negligible function.
+\end{proof}
