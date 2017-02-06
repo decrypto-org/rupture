@@ -179,3 +179,67 @@ challenger.
 In the following proofs, we will assume that the game is played symmetrically.
 As the attack does not pertain to the key exchange mechanism, all theorems can
 be directly translated between the two versions of the game.
+
+\begin{lemma}[Semantic security]
+    Let $(Gen, K, D)$ be a length-preserving reflection-secure encryption
+    scheme. Then it is also semantically secure.
+\end{lemma}
+
+\begin{proof}
+    We will prove that if the scheme is not semantically secure, then it is
+    necessarily not reflection secure. Assume that the scheme is not
+    semantically secure. Then there will exist a PPT adversary $\mathcal{A}$
+    such that for all PPT simulators $\mathcal{S}$ we have that $\mathcal{A}$
+    has non-negligible advantage to $\mathcal{S}$ in the semantic security game.
+
+    We will now construct an adversary $\mathcal{A'}$ for the reflection
+    security game. $\mathcal{A'}$ operates as follows: It makes one query to
+    the reflection oracle setting $r_0 = \epsilon$ and receives a response $c_0
+    = K_k(s, r_0) = K_k(s) = c$. It then passes that $c$ to the semantic
+    security adversary $\mathcal{A}$. It answers all encryption and decryption
+    queries of the semantic security adversary by relaying them to its own
+    encryption and decryption oracle. Finally, when the semantic security
+    adversary outputs $y = y'$, this $y'$ is output by the reflection security
+    adversary. Note that $\mathcal{A}$ cannot distinguish whether they are
+    playing against the actual semantic security game or being simulated by the
+    reflection security adversary, as their view is identical. Therefore:
+
+    \begin{equation}
+        Pr[Game_{REF-SEC}^{\mathcal{A'}} = 1] = Pr[Game_{SEM-SEC}^{\mathcal{A}} = 1]
+    \end{equation}
+
+    It remains to prove that $\mathcal{A'}$ has significant advantage against
+    any reflection simulator $\mathcal{S'}$. Indeed let $\mathcal{S'}$ be any
+    reflection game simulator. We will construct a simulator $\mathcal{S}$ for
+    the semantic security game. Initially, the simulator $\mathcal{S}$ receives
+    the length of the ciphertext $|c|$. They then simulate the reflection game
+    simulator $\mathcal{S'}$ as follows. Upon receiving query $r_i$ from the
+    reflection game simulator, they answer with $|c| + |r_i|$. When the
+    reflection security adversary outputs $y' = y$, this $y$ is output by the
+    semantic security simulator. We observe that the reflection game simulator
+    $\mathcal{S'}$ cannot distinguish whether they are playing against the
+    actual simulated reflection game or being simulated by the semantic
+    security simulator. To see this, note that from the length preservation
+    assumption we have that $|c| + |r_i| = |K(s, r_i)| = |K(s', r_i)| =
+    |K(0^{|s|}, r_i)|$. Therefore:
+
+    \begin{equation}
+        Pr[Game_{SEM-SIM}^{\mathcal{S}} = 1] = Pr[Game_{REF-SIM}^{\mathcal{S'}} = 1]
+    \end{equation}
+
+    From the assumption that the scheme is not semantically insecure, we know
+    that:
+
+    \begin{align*}
+        |Pr[Game_{SEM-SEC}^{\mathcal{A}} = 1] - Pr[Game_{SEM-SIM}^{\mathcal{S}} = 1]| =\\
+        Adv_{\mathcal{A}, \mathcal{S}} = \text{non-negl}
+    \end{align*}
+
+    And therefore, replacing both probabilities with their equals:
+
+    \begin{align*}
+        |Pr[Game_{REF-SEC}^{\mathcal{A'}} = 1] -
+        Pr[Game_{REF-SIM}^{\mathcal{S'}} = 1]| =\\
+        Adv_{\mathcal{A'}, \mathcal{S'}} = \text{non-negl}
+    \end{align*}
+\end{proof}
