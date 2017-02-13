@@ -125,14 +125,14 @@ controlled by the same central command-and-control channel.
 \subsubsection{Realtime}
 
 The realtime service is a service which awaits for work requests by clients. It
-can handle multiple targets and victims. It receives command-and-control
-connections from various clients which may live on different networks,
-orchestrates them, and tells them which ones will remain dormant and which ones
-will receive work, enabling one client per victim.
+receives command-and-control connections from various clients which may live on
+different networks, orchestrates them, and enforces which will remain dormant
+and ones will receive work, enabling one client per victim as described above.
 
-It maintains open web socket connections with clients and
-connects to the backend service, facilitating the communication between the two
-ends.
+It maintains open web socket connections with clients and connects to the
+backend service using HTTP API calls, facilitating the communication between the
+two ends. It is built in Node.js and uses the socket.io framework for
+communication with the clients.
 
 \subsubsection{Sniffer}
 
