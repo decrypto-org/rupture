@@ -26,13 +26,21 @@ degradation.
 \subsection{Contributions}
 Our contributions are as follows.
 
-First we introduce a novel model for analyzing compression and encryption
+First, we implement Rupture\footnotemark[1], a production-grade open source
+framework for conducting compression and encryption composition attacks.  This
+generic framework provides an extensible mechanism for experimentally testing
+attack techniques in a modular setting. We implement specific compression attack
+instances such as BREACH. An extensive description of Rupture's architecture is
+in section \ref{subsec:rupture}. This is the first time a working tool is
+provided for this class of attacks.
+
+We then introduce a novel model for analyzing compression and encryption
 composition attacks, the \textit{adaptive reflection game}, with an accompanying
 security definition. This model is quite general in that it does not describe
 specific instances of the rendering function $f$ or the compression function
-$\textrm{Com}$. Furthermore, it allows for general distributions of secret $\mathcal{M}$
-and distributions of noise $\mathcal{V}$ which can affect the rendering. Section
-\ref{sec:refsec} contains the definition of this model.
+$\textrm{Com}$. Furthermore, it allows for general distributions of secret
+$\mathcal{M}$ and distributions of noise $\mathcal{V}$ which can affect the
+rendering. Section \ref{sec:refsec} contains the definition of this model.
 
 We wish to prove that all encryption functions are insecure when composed with
 compression. In order to produce this proof, we build a series of required
@@ -45,9 +53,9 @@ with a secret. We introduce interdependence in section
 \ref{subsec:interdependence}.
 
 Another property of compression functions is \textit{compression idealness} with
-respect to a message distribution. We
-define idealness in theory and demonstrate how it applies on the compression
-algorithms that are widely used in section \ref{subsec:com_idealness}.
+respect to a message distribution. We define idealness and demonstrate how it
+applies on the compression algorithms that are widely used in section
+\ref{subsec:com_idealness}.
 
 Based on the properties of compression idealness and interdependence, we prove
 that predicates on the secrets can be learned by choosing adversarial
@@ -56,21 +64,15 @@ explore in section \ref{sec:propertycom}.
 
 The final part of our theoretical work on the attack is to show that this
 somewhat innocent property directly allows the construction of an attacker,
-which we prove breaks the security of the scheme in section
-\ref{sec:comattack}. We also prove that such attacks can be amplified to
-achieve better confidence.
+which we prove breaks the security of the scheme in section \ref{sec:comattack}.
+We also prove that such attacks can be amplified to achieve better confidence.
 
-At this point we implement Rupture\footnotemark[1], a production-grade open
-source framework for conducting compression and encryption composition attacks.
-This generic framework provides an extensible mechanism for experimentally
-testing attack techniques in a modular setting. We implement specific
-compression attack instances such as BREACH. This is the first time a working
-tool is provided for this class of attacks.  Based on our attack framework we
-achieve significant improvements in our implementation compared to previous
-attempts. We improve the complexity from linear to logarithmic in the secret
-alphabet's size, we attack block ciphers in addition to stream ciphers and we
-employ practical techniques for network level optimization.  Rupture is further
-described in section \ref{subsec:rupture}.
+Based on our attack framework we achieve significant improvements in our
+implementation compared to previous attempts. We improve the complexity from
+linear to logarithmic in the secret alphabet's size, we attack block ciphers in
+addition to stream ciphers and we employ practical techniques for network level
+optimization. The attack optimizations implemented in Rupture are further
+described in section \ref{subsec:optimizations}.
 
 Having established the attack premises, we shift our interest in defending
 against such attacks. Although there are several proposed defenses, we feel that
