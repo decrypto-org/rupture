@@ -43,36 +43,35 @@ secret have become known.
 
 \subsection{Architecture}\label{app:rupture}
 Rupture is a service-based architecture framework which contains multiple
-independent components. While the components are designed to be able to run
-independently on different networks or computer systems, easy instances of the
-attack can be performed by running all subsystems on an individual system.
+independent components. The components are designed to be able to run
+independently on different networks or computer systems, although easy instances
+of the attack can be performed by running all modules on a single system.
 
-The framework assumes a \textit{target} service to be attacked. Typically
-this target is a web service which uses TLS and
-provides HTTPS endpoints. However, this assumption can
-be relaxed and attacks against other similar protocols are possible. Any
-protocol that exchanges encrypted data on the network and for which
-the attack assumptions hold can in principle be attacked using Rupture. We
-designed Rupture to be a good playground for experimentation for such new
-attacks. Examples of other encrypted protocols for experimentation
-include SMTP and XMPP.
+The framework assumes a \textit{target} service to be attacked. Typically this
+target is a web service which uses TLS and provides HTTPS endpoints. However,
+this assumption can be relaxed and attacks against other similar protocols are
+possible. Any protocol that exchanges encrypted data on the network and for
+which the attack assumptions hold can in principle be attacked using Rupture. We
+have designed Rupture to be a good playground for experimentation for such new
+attacks. Examples of other encrypted protocols for experimentation include SMTP
+and XMPP.
 
 The attack also assumes a user of the target service for which data will be
 decrypted, the \textit{victim}. The victim is associated with a particular
 target.
 
 There are two underlying assumptions in our attack: The injection and the
-sniffing assumptions. These are often, but not necessarily, achieved through the same means.
+sniffing assumptions. These are often, but not necessarily, achieved through the
+same means.
 
 The injection assumption states that the adversary is able to inject code to the
 victim's machine for execution. This code is able to issue adaptive requests to
-the target service. Injection in Rupture is implemented by the
-\textit{injector} component. The code that is injected is the \textit{client}
-component.
+the target service. Injection in Rupture is implemented by the \textit{injector}
+component. The code that is injected is the \textit{client} component.
 
-The sniffing assumption states that the adversary is able to observe encrypted network
-traffic between the victim and the target.
-Sniffing is achieved through the \textit{sniffer}component.
+The sniffing assumption states that the adversary is able to observe encrypted
+network traffic between the victim and the target. Sniffing is achieved through
+the \textit{sniffer} component.
 
 The client must issue adaptive requests. For this purpose, it receives commands
 through a \textit{command-and-control} channel. These commands are sent to the
@@ -81,8 +80,9 @@ persistent connection.
 
 The realtime component is only responsible for communicating with the client.
 The actual decisions for the attack are driven by the \textit{backend}, which
-maintains a persistent attack state. The backend stores persistent data in a
-\textit{database} and receives data from the sniffer to perform analyses.
+maintains a persistent attack state. The backend uses a \textit{database} to
+store the state of the attacks and data received from the sniffer to perform
+analyses.
 
 The various components are described in detail in the next sections.
 
