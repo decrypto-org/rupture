@@ -147,20 +147,21 @@ is built in Python, using Scapy for the network functionality.
 
 \subsubsection{Backend}
 
-The backend component is a Python code that controls the attack execution. It
-initializes the attack and calculates the request sets that should be
-collected. It is responsible for strategic decision taking, statistical
-analysis of collected samples, adaptively advancing the attack, and storing
-persistent data about the attacks in progress for future analysis.
+The backend component controls the attack execution. It initializes the attack
+and calculates the request sets that should be collected. It is responsible for
+strategic decision taking, statistical analysis of collected samples, adaptively
+advancing the attack, and storing persistent data about the attacks in progress
+for future analysis.
 
 It communicates with the realtime component in order to guide the client as to
-what requests need to be made at each stage of the attack. Meanwhile, it orders
-the sniffer to listen and report network traffic, which stored
-at the end of each phase of the attack. The backend analyzes the
-network data and calculates the confidence in the success for the attack. At the
-end of each round, the predicate $Q$ is detected, depending on which method of
-the ones described
-in \ref{subsec:reflectionmethods} is used.
+what work should be forwarded to the clients. Meanwhile, it orders the sniffer
+to listen and report network traffic and analyzes the captured network data to
+calculate the confidence in the success for the attack. At the end of each
+round, a single byte of the secret is decrypted, depending on which method of
+the ones described in \ref{subsec:reflectionmethods} is used.
+
+The backend is built in Python, using the Django framework to launch a web
+service for communicating with the rest of Rupture's modules.
 
    \begin{figure}[thpb]
       \centering
