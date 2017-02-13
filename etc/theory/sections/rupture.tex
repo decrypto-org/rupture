@@ -136,14 +136,14 @@ communication with the clients.
 
 \subsubsection{Sniffer}
 
-The sniffer component is responsible for collecting data from the
-victim's network. As the client issues the requests, the sniffer
-collects the ciphertext of the requests and responses as they
-travel on the network. This encrypted data is then transmitted to the backend
-for further analysis and decryption.
+The sniffer component is responsible for collecting data from the victim's
+network. As the client issues the requests, the sniffer collects the ciphertext
+of the request and response packets on the network. This encrypted data is then
+transmitted to the backend for further analysis.
 
-The sniffer exposes an HTTP API which is utilized by the backend for controlling
-when sniffing starts, when it is completed, and retrieving the sniffed data.
+The sniffer exposes a HTTP API which is utilized by the backend for controlling
+when sniffing starts, when it is completed, and to retrieve the sniffed data. It
+is built in Python, using Scapy for the network functionality.
 
 \subsubsection{Backend}
 
