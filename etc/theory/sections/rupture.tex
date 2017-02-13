@@ -1,30 +1,22 @@
 \section{Rupture: An improved attack}\label{subsec:rupture}
-Our contributions include the development of a production-grade
-framework for implementing this class of attacks called Rupture.
-Rupture was developed as part of the work on extending the BREACH attack against
-modern systems and block ciphers.
+Our contributions include the development of a production-grade framework for
+implementing this class of attacks called Rupture. Rupture was developed as
+part of the work on extending the BREACH attack against modern systems and block
+ciphers.
 
-Rupture offers the ability to inject malicious code in any computer in the
-network. This code issues requests to the endpoint and serves as a caller of
-the reflection oracle that is the endpoint.
+Rupture provides extended functionality regarding the network aspects of the
+attack. It offers the ability to inject malicious code in any computer in the
+network, as well as traffic inspection and analysis of captured packet lengths.
 
-Furthermore, it enables the traffic inspection and analysis of packet
-lengths. Encrypted network packets serve as the response $c_i$ from the
-reflection oracle and the length of each packet is visible on the network and
-captured.
+In addition, Rupture enables the automated computation of the reflection strings
+in each stage of the attack.  It also amplifies the attack by issuing multiple
+requests per candidate symbol in the alphabet $\Sigma$ in order to demonstrate
+better probability of success. This is achieved by grouping requests in
+samplesets, where each sampleset contains requests on a symbol in the alphabet
+$\Sigma$. Requests in a sampleset may be constructed to enable optimization
+methods described in \ref{subsec:blockalign} and \ref{subsec:parallel}.
 
-In addition, Rupture offers multiple instances of the oracle $\mathcal{O}_R$, based
-on various $Q$ described in \ref{subsec:parallel}, and enables the automated
-computation of the reflection strings in each stage of the attack.
-
-Finally, it amplifies the attack by issuing multiple requests per candidate
-symbol in the alphabet $\Sigma$ in order to demonstrate better probability of
-success. This is achieved by grouping requests in samplesets, where each
-sampleset contains requests on a symbol in the alphabet $\Sigma$. Requests in a
-sampleset may be constructed to enable optimization methods described in
-\ref{subsec:blockalign} and \ref{subsec:parallel}.
-
-The encrypted data pertaining to one response is a \textit{sample}.  The set of
+The encrypted data pertaining to one response is a \textit{sample}. The set of
 samples collected for a particular work are a \textit{sampleset}. A work
 represents the set of requests needed per candidate in the secret's alphabet.
 
@@ -35,19 +27,19 @@ is drilled down to a smaller set. In order to compare various different
 candidate alphabets, the attack executes a series of \textit{batches} of data
 collection for each round.
 
-In each batch, several works are issued and samples are collected from each probability distribution
-pertaining to a candidate alphabet, forming a sampleset. When samplesets of the
-same amount of samples have been collected for all the candidate alphabets,
-a batch is complete and the data is analyzed. The analysis compares the samples
-of different candidates and decides which is optimal, i.e. which candidate is
-contains the correct guess. This decision is made with some \textit{confidence},
-is expressed in bytes. If the confidence is insufficient, an additional
-batch of samplesets is collected, and the analysis is redone until the
-confidence value surpases a given threshold.
+In each batch, several works are issued and samples are collected from each
+probability distribution pertaining to a candidate alphabet, forming a
+sampleset. When samplesets of the same amount of samples have been collected for
+all the candidate alphabets, a batch is complete and the data is analyzed. The
+analysis compares the samples of different candidates and decides which is
+optimal, i.e. which candidate is contains the correct guess. This decision is
+made with some \textit{confidence} which is expressed in bytes. If the
+confidence is insufficient, an additional batch of samplesets is collected, and
+the analysis is redone until the confidence is sufficient.
 
 Once enough batches have been collected for a decision to be made with good
-confidence, the round of the attack is complete and more information about the
-secret becomes known.
+confidence, the round of the attack is complete, since new information about the
+secret have become known.
 
 \subsection{Architecture}\label{app:rupture}
 Rupture is a service-based architecture framework which contains multiple
