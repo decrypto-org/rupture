@@ -71,7 +71,7 @@ of the messages effectively circumventing TLS security.
 
 \subsection{A motivating example, concepts and notations}\label{subsec:terms}
 We now describe a concrete example of the website in the previously described
-attack to illustrate the various terms we use in the rest of this paper.  The
+attack to illustrate the various terms we use in the rest of this paper. The
 terms that need be explained include the \textit{rendering function} $f$,
 \textit{rendered message} $m$, \textit{secret} $s$, \textit{noise} $v$,
 \textit{reflection} $r$ and the distributions $\mathcal{M}$ of secrets and
@@ -79,7 +79,8 @@ $\mathcal{V}$ of noise.
 
 In our example, the target of the attack is the website found in the URL
 \textit{mail.example.com}. The victim is the user that is logged in this mail
-service and whose cookies the adversary uses in his requests (and aims to learn).
+service and whose cookies the adversary uses in his requests (and aims to
+learn).
 
 The web page that the adversary exploits is
 \textit{mail.example.com/search?query=attack}. This website provides a HTTP GET
@@ -116,10 +117,10 @@ The HTML response contains multiple data elements. A data element can be a
 A \textit{secret} $s$ is any part of the response that the application wishes to
 remain private. The adversary wishes to learn information about $s$. Examples of
 secrets in an HTML response include private messages, email contents, financial
-data, and web security elements like CSRF tokens \cite{de2011automatic}. A secret's alphabet
-is generally printable text characters. In our example, the strings "Bank",
-which is an email topic, and "Routing number: 123", which is the email body, are
-both secrets.
+data, and web security elements like CSRF tokens \cite{de2011automatic}. A
+secret's alphabet is generally printable text characters. In our example, the
+strings "Bank", which is an email topic, and "Routing number: 123", which is the
+email body, are both secrets.
 
 A \textit{reflection} $r$ is a component crafted by the attacker and can be
 adaptively transformed as the attack progresses. In our example, the HTTP GET
@@ -156,19 +157,19 @@ web server during the communication. The most commonly used symmetric encryption
 algorithm today is AES. We use the function $\mathcal{E}$ to describe the
 composition of $\textrm{Enc}$ and $\textrm{Com}$.
 
-The input of $\mathcal{E}$ is the message $m$ and its output is ciphertext $c$.
-This ciphertext is included in the network response packets and is sniffed by
-the adversary over-the-wire.
+The input of $\mathcal{E}$ is the message $m$ and its output is the ciphertext
+$c$.  This ciphertext is included in the network response packets and is sniffed
+by the adversary over-the-wire.
 
 The generation of $m$, its compression and encryption and the transmission over
 the network of $c$, as well as the sniffing ability of the adversary, constitute
-the reflection oracle that will further described in following sections.
+the reflection oracle that will be further described in following sections.
 
 The adversary issues the attack in stages. In each stage he creates a pool of
 reflections and makes malicious requests for each reflection in the pool. An
 attack stage ends when the adversary has successfully decrypted a single
 character in the secret. He then adaptively changes the reflection pool, based
-on the newly stolen character, and continues similarly with the next stage.
+on the newly stolen character, and continues similarly.
 
 In some cases, the adversary aims at finding a property of the secret rather
 than the secret itself. This property is $g(s)$ and the guess of the adversary
