@@ -203,7 +203,7 @@ compares favourably under $\overbar{r}$:
 
 \begin{equation*}
 \begin{split}
-    cpr^Q_{\kappa}(s, \overbar{r})
+    cpr^Q_{\mathcal{K}}(s, \overbar{r})
     \defeq\\
     \begin{cases}
         |\mathcal{K}(s, r_1)| < |\mathcal{K}(s, r_2)| &\text{ if } Q(s)\\
@@ -213,7 +213,7 @@ compares favourably under $\overbar{r}$:
 \end{equation*}
 
 The reflection pair $\overbar{r}$ \textit{detects} predicate $Q$ under
-compression function $\kappa$ over the secret distribution $\mathcal{M}$ with
+compression function $\mathcal{K}$ over the secret distribution $\mathcal{M}$ with
 advantage $\alpha$ when the comparison is favourable for both $s_1$ drawn from
 $\mathcal{M}_Q$ and $s_2$ drawn from $\mathcal{M}_{\lnot Q}$. Formally, we
 define the predicate $dtc_\alpha(Q, \overbar{r}, f, \textrm{Com}, \mathcal{M})$
@@ -221,8 +221,8 @@ as follows:
 
 \begin{align*}
     \Pr
-        [cpr^Q_{\kappa}(s_1, \overbar{r}) \land
-         cpr^Q_{\kappa}(s_2, \overbar{r})]
+        [cpr^Q_{\mathcal{K}}(s_1, \overbar{r}) \land
+         cpr^Q_{\mathcal{K}}(s_2, \overbar{r})]
     \geq\\
     \pi + \alpha(\lambda)
 \end{align*}
@@ -231,11 +231,11 @@ Where $s_1$ is drawn from $\mathcal{M}_Q$ and $s_2$ is drawn from
 $\mathcal{M}_{\lnot Q}$.
 
 We call $Q$ \textit{compression-detectable} with an advantage $\alpha$ if a pair
-$\overbar{r} = (r_1, r_2)$ exists, such that $dtc_\alpha(Q, \overbar{r}, \kappa,
+$\overbar{r} = (r_1, r_2)$ exists, such that $dtc_\alpha(Q, \overbar{r}, \mathcal{K},
 \mathcal{M})$ holds. Furthermore we require that such a pair $\overbar{r}$ is
 polynomially computable. That is, there exists some polynomial-time
-functionality $\mathcal{O}_R(\kappa, Q, \mathcal{M})$ which produces an
-$\overbar{r}$ such that $dtc_\alpha(Q, \overbar{r}, \kappa, \mathcal{M})$ holds.
+functionality $\mathcal{O}_R(\mathcal{K}, Q, \mathcal{M})$ which produces an
+$\overbar{r}$ such that $dtc_\alpha(Q, \overbar{r}, \mathcal{K}, \mathcal{M})$ holds.
 
 The compression-detectability property exists in all common compression
 functions as long as $s$ and $r$ compress in the same context. We will now
@@ -255,7 +255,7 @@ changing the first part of the plaintext.
 
 More specifically, we model our plaintext input to the compression function as
 the usual pair $(s, r)$ consisting of the secret string $s$ and reflection
-string $r$. When $(s, r)$ are encoded by a compression function $\kappa$ ideal
+string $r$. When $(s, r)$ are encoded by a compression function $\mathcal{K}$ ideal
 under some plaintext distribution $\bar{\mathcal{M}}$, a simple predicate
 allows the distinction between two secrets $s_1$ and $s_2$ using a reflection
 pair $(r_1, r_2)$.
@@ -265,9 +265,9 @@ with the following simplifications. We make the assumption that the
 resulting reflection pair $(r_1, r_2)$ is computable.
 
 \begin{lemma}[Good compression is detectable]
-Let $\kappa$ be an ideal compression function with respect to some
+Let $\mathcal{K}$ be an ideal compression function with respect to some
 interdependent distribution $\bar{\mathcal{M}}$. Then there exists
-some compression-detectable predicate $Q$ for $\kappa$.
+some compression-detectable predicate $Q$ for $\mathcal{K}$.
 \end{lemma}
 
 \begin{proof}
@@ -279,12 +279,12 @@ From the fact that $\bar{\mathcal{M}}$ is interdependent, we have that:
     \Pr[r = r_1|s = s_2] > \Pr[r = r_2|s = s_2]&
 \end{align*}
 
-Using the fact that $\kappa$ is ideal with respect to this distribution,
+Using the fact that $\mathcal{K}$ is ideal with respect to this distribution,
 we deduce that:
 
 \begin{align*}
-    |\kappa(s_1, r_1)| > |\kappa(s_1, r_2)|&\land\\
-    |\kappa(s_2, r_1)| < |\kappa(s_2, r_2)|&
+    |\mathcal{K}(s_1, r_1)| > |\mathcal{K}(s_1, r_2)|&\land\\
+    |\mathcal{K}(s_2, r_1)| < |\mathcal{K}(s_2, r_2)|&
 \end{align*}
 
 We then define $Q(s)$ to be the predicate "$s = s_1$". This partitions
@@ -296,9 +296,9 @@ $Q$ is not trivial, we deduce that $\pi < 1$.
 Observe, then, that letting $\bar{r} = (r_1, r_2)$ we obtain:
 
 \begin{align*}
-    \Pr[cpr^Q_{\kappa}(s_1, \bar{r}, \kappa, \mathcal{M})
+    \Pr[cpr^Q_{\mathcal{K}}(s_1, \bar{r}, \mathcal{K}, \mathcal{M})
     \land
-    cpr^Q_{\kappa}(s_2, \bar{r}, \kappa, \mathcal{M})] = 1
+    cpr^Q_{\mathcal{K}}(s_2, \bar{r}, \mathcal{K}, \mathcal{M})] = 1
 \end{align*}
 
 This completes the proof.
