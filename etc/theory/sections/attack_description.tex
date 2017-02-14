@@ -1,38 +1,32 @@
 \section{The attack}\label{sec:attack}
 
 \subsection{A high-level overview}\label{subsec:example}
-As explained above,  compression side-channel attacks pose a serious threat
-against real-world deployments of TLS and in general of
-any encryption system. While widely received and documented
-by the security community there are still not many mitigation strategies in place
-to thwart them, primarily due to (i) the perceived high performance
-penalty associated with mitigating them, and
-(ii) their perceived complexity and
-the lack of production code tools
-that allow for their robust execution, something that makes some believe
-they are not a realistic threat. In this work we will illustrate that
-these perceptions  are wrong
-and the existence of these attacks
-suggests  a grave situation that is critical to be addressed.
+As explained above, compression side-channel attacks pose a serious threat
+against real-world deployments of TLS and in general of any encryption system.
+While widely received and documented by the security community there are still
+not many mitigation strategies in place to thwart them, primarily due to (i) the
+perceived high performance penalty associated with mitigating them, and (ii)
+their perceived complexity and the lack of production code tools that allow for
+their robust execution, something that makes some believe they are not a
+realistic threat. In this work we will illustrate that these perceptions are
+wrong and the existence of these attacks suggests a grave situation that is
+critical to be addressed.
 
 In order to appreciate the seriousness of these attacks we present a motivating
-example.
-Suppose that  a  user that browses the Internet and a server
-that hosts a website are in active communication.
-This website might be a social network, e-banking, mail
-provider or a similar service that handles sensitive private data. When the
-server receives a request for a web page it collects all needed data, generates
-the HTML code that will be displayed by the user's browser and sends a network
-response containing this code along with other resources such as images and
-libraries. All response data is encrypted under TLS, which ensures privacy and
-integrity for the communication between the user and the server,
-but also compressed for efficiency.
+example. Suppose that a user that browses the Internet and a server that hosts
+a website are in active communication. This website might be a social network,
+e-banking, mail provider or a similar service that handles sensitive private
+data. When the server receives a request for a web page it collects all needed
+data, generates the HTML code that will be displayed by the user's browser and
+sends a network response containing this code along with other resources such as
+images and libraries. All response data is encrypted under TLS, which ensures
+privacy and integrity for the communication between the user and the server, but
+also compressed for efficiency.
 
 Consider now an adversary that aims to break this communication's security.
-This adversary tries to decrypt the communication between
-the user and the server and reveal information about the private data that is
-exchanged. In order to mount a compression side-channel attack certain
-conditions need to be met.
+This adversary tries to decrypt the communication between the user and the
+server and reveal information about the private data that is exchanged. In order
+to mount a compression side-channel attack certain conditions need be met.
 
 Firstly, the adversary is able to handle the user's network traffic. That way he
 is able to collect and analyze the network packets of the encrypted
@@ -40,32 +34,33 @@ communication with the server. He is also able to inject code in third-party
 non-encrypted HTTP responses.
 
 Secondly, he should be able to issue any number of malicious requests using the
-user's cookies (which will be encrypted). This can be achieved by forcing the user's browser to run a
-piece of code, such as a Javascript script. This script can either be hosted on
-an adversary-controlled website or injected in plain HTTP responses the user
-receives from third websites. This script is executed when loaded in the user's
-browser and is able to issue requests to any URL crafted by the adversary.
-Figure \ref{fig:attack_model} elaborates further on this attack mode.
+user's cookies (which will be encrypted). This can be achieved by forcing the
+user's browser to run a piece of code, such as a Javascript script. This script
+can either be hosted on an adversary-controlled website or injected in plain
+HTTP responses the user receives from third websites. This script is executed
+when loaded in the user's browser and is able to issue requests to any URL
+crafted by the adversary. Figure \ref{fig:attack_model} elaborates further on
+this attack mode.
 
 Thirdly, the web service that is under attack should allow the adversary to
 inject data in the encrypted response plaintext. This data takes the form of a
-specially crafted ``reflection'' string which can be added for example by using a
-HTTP GET parameter whose value is included in the HTML response.
+specially crafted ``reflection'' string which can be added for example by using
+a HTTP GET parameter whose value is included in the HTML response.
 
 Any adversary that fulfills these requirements can issue a compression
 side-channel attack against the user and the web service. The malicious requests
 contain the reflection strings and the user's cookies. The response contains
 both the reflection string and the user's private data. The structure of the
-reflection string should depend on any known properties of the private data
-to maximize the adversarial advantage.
+reflection string should depend on any known properties of the private data to
+maximize the adversarial advantage.
 
 As the attack progresses the adversary collects network data containing multiple
 responses and reflections. Although this data is encrypted, analysis on the
-lengths of different response packets in conjunction with the sequence
-of reflections that has been used will reveal otherwise hidden properties of the private data.
-At this point the privacy of the communication between the user and the website is
-compromised and the adversary has broken the confidentiality of the messages
-effectively circumventing TLS security.
+lengths of different response packets in conjunction with the sequence of
+reflections that has been used will reveal otherwise hidden properties of the
+private data.  At this point the privacy of the communication between the user
+and the website is compromised and the adversary has broken the confidentiality
+of the messages effectively circumventing TLS security.
 
     \begin{figure}[thpb]
         \centering
@@ -76,7 +71,7 @@ effectively circumventing TLS security.
 
 \subsection{A motivating example, concepts and notations}\label{subsec:terms}
 We now describe a concrete example of the website in the previously described
-attack to illustrate the various terms we use in the rest of this paper.  The
+attack to illustrate the various terms we use in the rest of this paper. The
 terms that need be explained include the \textit{rendering function} $f$,
 \textit{rendered message} $m$, \textit{secret} $s$, \textit{noise} $v$,
 \textit{reflection} $r$ and the distributions $\mathcal{M}$ of secrets and
@@ -84,7 +79,8 @@ $\mathcal{V}$ of noise.
 
 In our example, the target of the attack is the website found in the URL
 \textit{mail.example.com}. The victim is the user that is logged in this mail
-service and whose cookies the adversary uses in his requests (and aims to learn).
+service and whose cookies the adversary uses in his requests (and aims to
+learn).
 
 The web page that the adversary exploits is
 \textit{mail.example.com/search?query=attack}. This website provides a HTTP GET
@@ -121,10 +117,10 @@ The HTML response contains multiple data elements. A data element can be a
 A \textit{secret} $s$ is any part of the response that the application wishes to
 remain private. The adversary wishes to learn information about $s$. Examples of
 secrets in an HTML response include private messages, email contents, financial
-data, and web security elements like CSRF tokens \cite{de2011automatic}. A secret's alphabet
-is generally printable text characters. In our example, the strings "Bank",
-which is an email topic, and "Routing number: 123", which is the email body, are
-both secrets.
+data, and web security elements like CSRF tokens \cite{de2011automatic}. A
+secret's alphabet is generally printable text characters. In our example, the
+strings "Bank", which is an email topic, and "Routing number: 123", which is the
+email body, are both secrets.
 
 A \textit{reflection} $r$ is a component crafted by the attacker and can be
 adaptively transformed as the attack progresses. In our example, the HTTP GET
@@ -161,19 +157,19 @@ web server during the communication. The most commonly used symmetric encryption
 algorithm today is AES. We use the function $\mathcal{E}$ to describe the
 composition of $\textrm{Enc}$ and $\textrm{Com}$.
 
-The input of $\mathcal{E}$ is the message $m$ and its output is ciphertext $c$.
-This ciphertext is included in the network response packets and is sniffed by
-the adversary over-the-wire.
+The input of $\mathcal{E}$ is the message $m$ and its output is the ciphertext
+$c$.  This ciphertext is included in the network response packets and is sniffed
+by the adversary over-the-wire.
 
 The generation of $m$, its compression and encryption and the transmission over
 the network of $c$, as well as the sniffing ability of the adversary, constitute
-the reflection oracle that will further described in following sections.
+the reflection oracle that will be further described in following sections.
 
 The adversary issues the attack in stages. In each stage he creates a pool of
 reflections and makes malicious requests for each reflection in the pool. An
 attack stage ends when the adversary has successfully decrypted a single
 character in the secret. He then adaptively changes the reflection pool, based
-on the newly stolen character, and continues similarly with the next stage.
+on the newly stolen character, and continues similarly.
 
 In some cases, the adversary aims at finding a property of the secret rather
 than the secret itself. This property is $g(s)$ and the guess of the adversary

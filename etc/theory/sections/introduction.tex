@@ -1,39 +1,46 @@
 \section{Introduction}\label{sec:prev}
 
-Compression and encryption composition has caused serious security problems
-in protocols such as TLS \cite{dierks2008tls} over the years
-with an array of attacks making major headlines in computer security dissemination forums,
-including BREACH \cite{gluck2013breach}, TIME \cite{be2013perfect}, and CRIME \cite{duong2012crime}.
-While the idea that compression is a side-channel that can be exploited
-is certainly folklore in the cryptography community and is documented
-at least as early as Kelsey's work \cite{kelsey2002compression},
-a proper theoretical model  capturing the real-world perspective
-of these side-channel attacks is still elusive.
+Compression and encryption composition has caused serious security problems in
+protocols such as TLS \cite{dierks2008tls} over the years with an array of
+attacks making major headlines in computer security dissemination forums,
+including BREACH \cite{gluck2013breach}, TIME \cite{be2013perfect}, and CRIME
+\cite{duong2012crime}. Although the idea that compression is a side-channel that
+can be exploited is certainly folklore in the cryptography community and is
+documented at least as early as Kelsey's work \cite{kelsey2002compression}, a
+proper theoretical model capturing the real-world perspective of these
+side-channel attacks is still elusive.
 
-Motivated by this, in this paper we introduce
-a general model that incorporates the rendering process that is exploited
-during these attacks and in this way we facilitate a thorough
-theoretical analysis of the security of encryption-compression composition.
-We showcase the power of our approach
-by (i) showing how attacks like  BREACH \cite{gluck2013breach}, TIME \cite{be2013perfect}, and CRIME \cite{duong2012crime}, can be expressed
-as instances of our compression side-channel attack template,
-(ii) demonstrating an improved attack framework, called Rupture,
-that improves substantially the performance of previous attacks,
-(iii) presenting a general mitigation strategy, called CTX, that strikes
-a good balance between security and efficiency and can be readily incorporated
-in a TLS deployment without a significant performance degradation.
-In more details our results are outlined below.
+Motivated by this, in this paper we introduce a general model that incorporates
+the rendering process that is exploited during these attacks and facilitate a
+thorough theoretical analysis of the security of encryption-compression
+composition. We showcase the power of our approach by (i) demonstrating an
+improved attack framework, called Rupture, that improves substantially the
+performance of previous attacks, (ii) showing how attacks like BREACH
+\cite{gluck2013breach}, TIME \cite{be2013perfect}, and CRIME
+\cite{duong2012crime}, can be expressed as instances of our compression
+side-channel attack template, (iii) presenting a general mitigation strategy,
+called CTX, that strikes a good balance between security and efficiency and can
+be readily incorporated in a TLS deployment without a significant performance
+degradation.
 
 \subsection{Contributions}
 Our contributions are as follows.
 
-First we introduce a novel model for analyzing compression and encryption
+First, we implement Rupture\footnotemark[1], a production-grade open source
+framework for conducting compression and encryption composition attacks.  This
+generic framework provides an extensible mechanism for experimentally testing
+attack techniques in a modular setting. We implement specific compression attack
+instances such as BREACH. An extensive description of Rupture's architecture is
+in section \ref{subsec:rupture}. This is the first time a working tool is
+provided for this class of attacks.
+
+We then introduce a novel model for analyzing compression and encryption
 composition attacks, the \textit{adaptive reflection game}, with an accompanying
 security definition. This model is quite general in that it does not describe
 specific instances of the rendering function $f$ or the compression function
-$\textrm{Com}$. Furthermore, it allows for general distributions of secret $\mathcal{M}$
-and distributions of noise $\mathcal{V}$ which can affect the rendering. Section
-\ref{sec:refsec} contains the definition of this model.
+$\textrm{Com}$. Furthermore, it allows for general distributions of secret
+$\mathcal{M}$ and distributions of noise $\mathcal{V}$ which can affect the
+rendering. Section \ref{sec:refsec} contains the definition of this model.
 
 We wish to prove that all encryption functions are insecure when composed with
 compression. In order to produce this proof, we build a series of required
@@ -46,9 +53,9 @@ with a secret. We introduce interdependence in section
 \ref{subsec:interdependence}.
 
 Another property of compression functions is \textit{compression idealness} with
-respect to a message distribution. We
-define idealness in theory and demonstrate how it applies on the compression
-algorithms that are widely used in section \ref{subsec:com_idealness}.
+respect to a message distribution. We define idealness and demonstrate how it
+applies on the compression algorithms that are widely used in section
+\ref{subsec:com_idealness}.
 
 Based on the properties of compression idealness and interdependence, we prove
 that predicates on the secrets can be learned by choosing adversarial
@@ -57,21 +64,15 @@ explore in section \ref{sec:propertycom}.
 
 The final part of our theoretical work on the attack is to show that this
 somewhat innocent property directly allows the construction of an attacker,
-which we prove breaks the security of the scheme in section
-\ref{sec:comattack}. We also prove that such attacks can be amplified to
-achieve better confidence.
+which we prove breaks the security of the scheme in section \ref{sec:comattack}.
+We also prove that such attacks can be amplified to achieve better confidence.
 
-At this point we implement Rupture\footnotemark[1], a production-grade open
-source framework for conducting compression and encryption composition attacks.
-This generic framework provides an extensible mechanism for experimentally
-testing attack techniques in a modular setting. We implement specific
-compression attack instances such as BREACH. This is the first time a working
-tool is provided for this class of attacks.  Based on our attack framework we
-achieve significant improvements in our implementation compared to previous
-attempts. We improve the complexity from linear to logarithmic in the secret
-alphabet's size, we attack block ciphers in addition to stream ciphers and we
-employ practical techniques for network level optimization.  Rupture is further
-described in section \ref{subsec:rupture}.
+Based on our attack framework we achieve significant improvements in our
+implementation compared to previous attempts. We improve the complexity from
+linear to logarithmic in the secret alphabet's size, we attack block ciphers in
+addition to stream ciphers and we employ practical techniques for network level
+optimization. The attack optimizations implemented in Rupture are further
+described in section \ref{subsec:optimizations}.
 
 Having established the attack premises, we shift our interest in defending
 against such attacks. Although there are several proposed defenses, we feel that
