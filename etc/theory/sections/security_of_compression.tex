@@ -185,11 +185,9 @@ For the specific property $Q$ and plaintext distribution $\mathcal{M}$, define:
 
 Where $s$ is drawn from $\mathcal{M}$.
 
-Let $\mathcal{V}$ be a noise distribution from which a pair of noises
-$\overbar{v} = (v_1, v_2) \leftarrow \mathcal{V}^2$ is drawn.  Let $\overbar{r}
-= (r_1, r_2) \in \mathcal{M}^2$ be a reflection string pair, $\mathcal{K}$ be an ideal
-compression function, $f$ be a rendering function, and let $\alpha(\lambda)$ be
-a non-negligible function.
+Let $\overbar{r} = (r_1, r_2) \in \mathcal{M}^2$ be a reflection string pair,
+$\mathcal{K}$ be an ideal compression function, $f$ be a rendering function, and
+let $\alpha(\lambda)$ be a non-negligible function.
 
 We now examine how the lengths of compressing a secret $s$ rendered with
 reflection strings $r_1$ and $r_2$ respectively compare.
@@ -197,50 +195,47 @@ reflection strings $r_1$ and $r_2$ respectively compare.
 The predicate $Q$ partitions the set $\mathcal{M}$ into two partitions
 $\mathcal{M}_Q$ and $\mathcal{M}_{\lnot Q}$. We are interested in reflection
 string pairs $\overbar{r} = (r_1, r_2)$ for which the comparison direction
-depends on which partition $s$ belongs to.  The direction of comparison can
-also depend on a noise vector $\overbar{v}$.  If $s \in \mathcal{M}_Q$, it
-should compress better when reflection $r_1$ is used as compared to when $r_2$
-is used. On the contrary, if $s \in \mathcal{M}_{\lnot Q}$, the opposite
-direction should occur.  If this is the case for the selected reflection pair
-and noise pair, we say that $Q$ compares favourably under $\overbar{r},
-\overbar{v}$:
+depends on which partition $s$ belongs to.  If $s \in \mathcal{M}_Q$, it should
+compress better when reflection $r_1$ is used as compared to when $r_2$ is used.
+On the contrary, if $s \in \mathcal{M}_{\lnot Q}$, the opposite direction should
+occur.  If this is the case for the selected reflection pair, we say that $Q$
+compares favourably under $\overbar{r}$:
 
 \begin{equation*}
 \begin{split}
-    cpr^Q_{\kappa}(s, \overbar{r}, \overbar{v})
+    cpr^Q_{\kappa}(s, \overbar{r})
     \defeq\\
     \begin{cases}
-        |\mathcal{K}(s, r_1, v_1)| < |\mathcal{K}(s, r_2, v_2)| &\text{ if } Q(s)\\
-        |\mathcal{K}(s, r_1, v_1)| \geq |\mathcal{K}(s, r_2, v_2)| &\text{ otherwise}
+        |\mathcal{K}(s, r_1)| < |\mathcal{K}(s, r_2)| &\text{ if } Q(s)\\
+        |\mathcal{K}(s, r_1)| \geq |\mathcal{K}(s, r_2)| &\text{ otherwise}
     \end{cases}
 \end{split}
 \end{equation*}
 
 The reflection pair $\overbar{r}$ \textit{detects} predicate $Q$ under
-compression function $\kappa$ over the secret distribution $\mathcal{M}$ and
-the noise distribution $\mathcal{V}$ with advantage $\alpha$ when the
-comparison is favourable for both $s_1$ drawn from $\mathcal{M}_Q$ and $s_2$
-drawn from $\mathcal{M}_{\lnot Q}$. Formally, we define the predicate
-$dtc_\alpha(Q, \overbar{r}, f, \textrm{Com}, \mathcal{M}, \mathcal{V})$ as follows:
+compression function $\kappa$ over the secret distribution $\mathcal{M}$ with
+advantage $\alpha$ when the comparison is favourable for both $s_1$ drawn from
+$\mathcal{M}_Q$ and $s_2$ drawn from $\mathcal{M}_{\lnot Q}$. Formally, we
+define the predicate $dtc_\alpha(Q, \overbar{r}, f, \textrm{Com}, \mathcal{M})$
+as follows:
 
 \begin{align*}
     \Pr
-        [cpr^Q_{\kappa}(s_1, \overbar{r}, \overbar{v}) \land
-         cpr^Q_{\kappa}(s_2, \overbar{r}, \overbar{v})]
+        [cpr^Q_{\kappa}(s_1, \overbar{r}) \land
+         cpr^Q_{\kappa}(s_2, \overbar{r})]
     \geq\\
     \pi + \alpha(\lambda)
 \end{align*}
 
-Where $s_1$ is drawn from $\mathcal{M}_Q$, $s_2$ is drawn from
-$\mathcal{M}_{\lnot Q}$, and $v_1, v_2$ are drawn from $\mathcal{V}$.
+Where $s_1$ is drawn from $\mathcal{M}_Q$ and $s_2$ is drawn from
+$\mathcal{M}_{\lnot Q}$.
 
-We call $Q$ \textit{compression-detectable} with an advantage $\alpha$ if a
-pair $\overbar{r} = (r_1, r_2)$ exists, such that $dtc_\alpha(Q, \overbar{r},
-\kappa, \mathcal{M}, \mathcal{V})$ holds. Furthermore we require that such a
-pair $\overbar{r}$ is polynomially computable. That is, there exists some
-polynomial-time functionality $\mathcal{O}_R(\kappa, Q, \mathcal{M},
-\mathcal{V})$ which produces an $\overbar{r}$ such that $dtc_\alpha(Q,
-\overbar{r}, \kappa, \mathcal{M}, \mathcal{V})$ holds.
+We call $Q$ \textit{compression-detectable} with an advantage $\alpha$ if a pair
+$\overbar{r} = (r_1, r_2)$ exists, such that $dtc_\alpha(Q, \overbar{r}, \kappa,
+\mathcal{M})$ holds. Furthermore we require that such a pair $\overbar{r}$ is
+polynomially computable. That is, there exists some polynomial-time
+functionality $\mathcal{O}_R(\kappa, Q, \mathcal{M})$ which produces an
+$\overbar{r}$ such that $dtc_\alpha(Q, \overbar{r}, \kappa, \mathcal{M})$ holds.
 
 The compression-detectability property exists in all common compression
 functions as long as $s$ and $r$ compress in the same context. We will now
@@ -266,9 +261,8 @@ allows the distinction between two secrets $s_1$ and $s_2$ using a reflection
 pair $(r_1, r_2)$.
 
 In the following theorem, we prove compression detectability of a predicate
-with the following simplifications. First, we make the assumption that the
-resulting reflection pair $(r_1, r_2)$ is computable; second, for this proof
-we ignore the existence of noise.
+with the following simplifications. We make the assumption that the
+resulting reflection pair $(r_1, r_2)$ is computable.
 
 \begin{lemma}[Good compression is detectable]
 Let $\kappa$ be an ideal compression function with respect to some
