@@ -103,7 +103,7 @@ deploy a new client at the victim's network.
 
 As the victim is browsing the Internet, multiple clients will be injected in
 insecure pages and run under various contexts. All of them register and maintain
-an open connection using sockets with the realtime service. The realtime service
+an open connection using web sockets with the realtime service. The realtime service
 will activate one of them for the victim while keeping the others dormant. The
 activate will then receive work instructions. If the active client dies, for
 example by closing its browser tab, one of the dormant clients will be woken up
