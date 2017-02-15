@@ -62,22 +62,20 @@ circumventing TLS security.
     \end{figure}
 
 \subsection{A motivating example, concepts and notations}\label{subsec:terms}
-We now describe a concrete example of the website in the previously described
-attack to illustrate the various terms we use in the rest of this paper. The
-terms that need be explained include the \textit{rendering function} $f$,
-\textit{rendered message} $m$, \textit{secret} $s$, \textit{noise} $v$,
-\textit{reflection} $r$ and the distributions $\mathcal{M}$ of secrets and
-$\mathcal{V}$ of noise.
+We now describe a concrete example of the website in the previous section to
+illustrate the various terms we use in the rest of this paper. The terms that
+need be explained include the \textit{rendering function} $f$, \textit{rendered
+message} $m$, \textit{secret} $s$, \textit{noise} $v$, \textit{reflection} $r$
+and the distribution $\mathcal{M}$ of secrets.
 
-In our example, the target of the attack is the website found in the URL
-\textit{mail.example.com}. The victim is the user that is logged in this mail
-service and whose cookies the adversary uses in his requests (and aims to
-learn).
+The target of the attack is the mail service found in the URL
+\textit{mail.example.com}. The victim is the user that is logged in this service
+and whose cookies are used in the malicious requests.
 
 The web page that the adversary exploits is
-\textit{mail.example.com/search?query=attack}. This website provides a HTTP GET
-parameter called \textit{query} and the adversary uses the reflection string
-\textit{attack}. The HTML response is included below:
+\textit{mail.example.com/search?query=attack}. This website provides the HTTP
+GET parameter \textit{query} and the adversary uses the reflection string
+\textit{attack}. The HTML response is:
 
 \begin{lstlisting}[basicstyle=\small\ttfamily]
 <div>
@@ -96,62 +94,47 @@ parameter called \textit{query} and the adversary uses the reflection string
 \end{lstlisting}
 
 The server's HTML generator is an instance of the \textit{rendering function}
-$f$. This function implements the rendering of the HTML code based on
-blueprints.
+$f$.  The output of $f$ is the \textit{rendered message} $m$. This is the HTML
+response code that is rendered by the user's browser.
 
-The output of $f$ is the \textit{rendered message} $m$. This is the generated
-HTML response code that contains response data and is rendered by the user's
-browser.
-
-The HTML response contains multiple data elements. A data element can be a
+The response contains multiple data elements. A data element can be a
 \textit{secret}, \textit{noise}, \textit{static}, or a \textit{reflection}.
 
 A \textit{secret} $s$ is any part of the response that the application wishes to
-remain private. The adversary wishes to learn information about $s$. Examples of
-secrets in an HTML response include private messages, email contents, financial
-data, and web security elements like CSRF tokens \cite{de2011automatic}. A
-secret's alphabet is generally printable text characters. In our example, the
-strings "Bank", which is an email topic, and "Routing number: 123", which is the
-email body, are both secrets.
+keep private. Examples of secrets include private messages, email contents,
+financial data, and web security elements like CSRF tokens
+\cite{de2011automatic}. In our example, the strings "Bank", which is an email
+topic, and "Routing number: 123", which is the email body, are both secrets.
 
-A \textit{reflection} $r$ is a component crafted by the attacker and can be
+A \textit{reflection} $r$ is a component crafted by the attacker that can be
 adaptively transformed as the attack progresses. In our example, the HTTP GET
-value "attack" of the parameter "query" is used as a reflection. This string is
-included in the response in the message "You searched for: attack". This serves
-as an information message for the user and reflects in every search request the
-value of the GET parameter "query".
+value "attack" is a reflection. This string is included in the response in "You
+searched for: attack", an information message for the user reflected in every
+search request for the value of the GET parameter "query".
 
-The \textit{noise} $v$ is a value that changes in every request regardless of
-the requested content. Examples of noise include timestamps and ads. The noise
-follows a random distribution and its alphabet consists of printable characters.
-In our example, the string "12:40:00" is noise.
+The \textit{noise} $v$ is a value that changes in every request independently
+from the requested content. Examples of noise include timestamps and ads. like
+the string "12:40:00" in our example.
 
 \textit{Static} is any content that remains unchanged across requests. Typical
-examples of static data are HTML $<$div$>$ tags and CSS code. Static content is
-predictable and thus irrelevant in the attack. Strings like "div", "ul", "Your
-inbox:" are considered static in our example.
+examples of static data is HTML CSS code, like "div", "ul", "Your inbox:" in our
+example. Static content is predictable and thus irrelevant to the attack.
 
-Secrets and reflections are chosen from the distribution $\mathcal{M}$.
-$\mathcal{M}$ in our example contains all routing numbers and 4-letter strings
-like "Bank".
-
-Finally, each noise element is chosen from the distribution $\mathcal{V}$. In
-our example, $\mathcal{V}$ contains all 24hr timestamps. In every request, a new
-noise element is chosen from $\mathcal{V}$. In this case it is "12:40:00".
+Secrets are chosen from the distribution $\mathcal{M}$. $\mathcal{M}$ in our
+example contains all routing numbers and 4-letter strings like "Bank".
 
 The compression function $\textrm{Com}$ is the compression algorithm used on the
 HTML response plaintext. In our example, this algorithm is DEFLATE, the most
-common compression algorithm in the web. The composition of $\textrm{Com}$ and
-the rendering function $f$ is the encoding function $\mathcal{K}$.
+common compression algorithm in the web.
 
 The encryption function $\textrm{Enc}$ is the encryption algorithm used by the
-web server during the communication. The most commonly used symmetric encryption
-algorithm today is AES. We use the function $\mathcal{E}$ to describe the
-composition of $\textrm{Enc}$ and $\textrm{Com}$.
+web server. The most commonly used symmetric encryption algorithm today is AES.
+We use the function $\mathcal{E}$ to describe the composition of $\textrm{Enc}$
+and $\textrm{Com}$.
 
 The input of $\mathcal{E}$ is the message $m$ and its output is the ciphertext
-$c$.  This ciphertext is included in the network response packets and is sniffed
-by the adversary over-the-wire.
+$c$ that is sent in the response packets and is sniffed by the adversary
+over-the-wire.
 
 The generation of $m$, its compression and encryption and the transmission over
 the network of $c$, as well as the sniffing ability of the adversary, constitute
@@ -160,5 +143,4 @@ the reflection oracle that will be further described in following sections.
 The adversary issues the attack in stages. In each stage he creates a pool of
 reflections and makes malicious requests for each reflection in the pool. An
 attack stage ends when the adversary has successfully decrypted a single
-character in the secret. He then adaptively changes the reflection pool, based
-on the newly stolen character, and continues similarly.
+character in the secret.
