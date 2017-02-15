@@ -24,13 +24,6 @@ and sends it to the oracle. The oracle computes $m = f(s, r)$. Subsequently $m$
 is encrypted as $c = \mathcal{E}_\kappa(m)$, and $c$ is sent back to the
 adversary.
 
-In our previous example, the reflection oracle takes the form of the vulnerable
-endpoint in the target service. This endpoint allows the adversary to issue an
-arbitrary amount of requests containing a chosen parameter $r$ which is then
-reflected in the plaintext response from the service, along with the secret $s$.
-Since the adversary has network access via the sniffer component, he is able to
-observe the response packets and collect the response ciphertext $c$.
-
 When the adversary decides to complete the game, they output a guess $y$. The
 adversary is successful if $g(s) = y$. In the case of Rupture, a successful
 attack results in the decryption of a single character that extends the known
