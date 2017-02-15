@@ -45,7 +45,7 @@ Formally, let the public key adversarial game be defined as follows:
 def $\text{Game}_{\text{REF-SEC}}^{\mathcal{PE},\mathcal{A}}(\lambda, f, \mathcal{M}, g)$:
     $k \leftarrow Gen(1^\lambda)$
     $s \leftarrow \mathcal{M}$
-    $y \leftarrow \mathcal{A}^{\text{Reflect}^{\mathcal{E}_{k}}_s(r)}(\lambda, f, \mathcal{M}, g)$
+    $y \leftarrow \mathcal{A}^{\text{Reflect}^{k}_s(r)}(1^\lambda, f, \mathcal{M}, g)$
     if $y = g(s)$:
         return 1
     else:
@@ -55,7 +55,7 @@ def $\text{Game}_{\text{REF-SEC}}^{\mathcal{PE},\mathcal{A}}(\lambda, f, \mathca
 Where the reflection oracle provided to the adversary is as follows:
 
 \begin{lstlisting}[texcl,mathescape,basicstyle=\small]
-def $\text{Reflect}^{\mathcal{E}_{k}}_s(r)$:
+def $\text{Reflect}^{k}_s(r)$:
     $m = f(s, r)$
     $c \leftarrow \mathcal{E}_{k}(m)$
     return $c$
