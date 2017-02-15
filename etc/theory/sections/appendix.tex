@@ -62,6 +62,44 @@
     \end{align*}
 \end{proof}
 
+\begin{lemma}[Good compression is detectable]
+\end{lemma}
+
+\begin{proof}
+
+From the fact that $\bar{\mathcal{M}}$ is interdependent, we have that:
+
+\begin{align*}
+    \Pr[r = r_1|s = s_1] < \Pr[r = r_2|s = s_1]&\land\\
+    \Pr[r = r_1|s = s_2] > \Pr[r = r_2|s = s_2]&
+\end{align*}
+
+Using the fact that $\mathcal{K}$ is ideal with respect to this distribution,
+we deduce that:
+
+\begin{align*}
+    |\mathcal{K}(s_1, r_1)| > |\mathcal{K}(s_1, r_2)|&\land\\
+    |\mathcal{K}(s_2, r_1)| < |\mathcal{K}(s_2, r_2)|&
+\end{align*}
+
+We then define $Q(s)$ to be the predicate "$s = s_1$". This partitions
+$\mathcal{M}$ into the distributions $\mathcal{M}_Q$ and
+$\mathcal{M}_{\lnot Q}$ both of which are non-empty, as $\mathcal{M}_Q$
+contains $s_1$ and $\mathcal{M}_{\lnot Q}$ contains $s_2$. From the fact that
+$Q$ is not trivial, we deduce that $\pi < 1$.
+
+Observe, then, that letting $\bar{r} = (r_1, r_2)$ we obtain:
+
+\begin{align*}
+    \Pr[cpr^Q_{\mathcal{K}}(s_1, \bar{r}, \mathcal{K}, \mathcal{M})
+    \land
+    cpr^Q_{\mathcal{K}}(s_2, \bar{r}, \mathcal{K}, \mathcal{M})] = 1
+\end{align*}
+
+This completes the proof.
+
+\end{proof}
+
 \begin{lemma}[Compression attack]
 \end{lemma}
 
