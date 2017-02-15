@@ -24,7 +24,7 @@ def $\mathcal{A}(Q, \mathcal{M}, y)$:
 Let $\mathcal{S}$ be an arbitrary simulator. Then we have:
 \begin{align*}
     \Pr[\text{Game}_{\text{REF-SIM}}^{\mathcal{PE},\mathcal{S}}
-        (\lambda, f, \mathcal{M}, g) = 1] &=\\
+        (\lambda) = 1] &=\\
     \Pr_{x \leftarrow \mathcal{M}, b \leftarrow \mathcal{S}(f, \mathcal{M}, g)}
         [Q(x) = b]
 \end{align*}
@@ -57,7 +57,7 @@ And therefore:
     \forall \mathcal{S}:\\
     \Pr[
         \text{Game}_{\text{REF-SIM}}^{\mathcal{PE},\mathcal{S}}
-        (\lambda, f, \mathcal{M}, g) = 1
+        (\lambda) = 1
     ]
     \leq\\
     max(Pr[Q(x)], 1 - Pr[Q(x)])
