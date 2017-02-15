@@ -22,21 +22,6 @@ Then:
 
 \end{lemma}
 
-The non-negligible advantage is achieved by the following adversary:
-
-\begin{lstlisting}[texcl,mathescape,basicstyle=\small]
-def $\mathcal{A}(Q, \mathcal{M}, y)$:
-    $(r_1, r_2) \leftarrow \mathcal{O}_R(\kappa, Q, \mathcal{M})$
-
-    $l_1 = |\text{Reflect}^{\mathcal{E}_{pk}}_s(r_1)|$
-    $l_2 = |\text{Reflect}^{\mathcal{E}_{pk}}_s(r_2)|$
-
-    if $l_1 < l_2$:
-        return True
-    else:
-        return False
-\end{lstlisting}
-
 For a full proof, see Appendix A.
 
 \subsection{Amplified attack}\label{subsec:amplification}
