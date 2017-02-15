@@ -152,9 +152,9 @@ would require a huge engineering effort. Instead, our proposed defense requires
 only modifications in the web application layer, which can be relatively easily
 incorporated in existing applications.
 
-\subsection{The CTX defense}\label{subsec:ctx}
+\section{CTX: Mitigating BREACH with Context Hiding }\label{sec:ctx}
 
-\subsubsection{Implementation}
+\subsection{Implementation}
 Our contributions include the development of the CTX defense. CTX is an
 implementation of the context hiding method described in the previous section
 for HTML web pages.
@@ -196,7 +196,7 @@ perform multiple requests to the target website while the transmitted secret
 remains the same. Since new alphabet permutations are generated per HTTPS
 response, the statistical analysis performed by Rupture is no longer feasible.
 
-\subsubsection{Experimental results}\label{subsubsec:ctx_experiments}
+\subsection{Experimental results}\label{subsec:ctx_experiments}
 
 We have conducted several experiments to evaluate the performance of web
 services protected by CTX. The results of these experiments are overwhelmingly
