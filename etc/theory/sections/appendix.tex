@@ -12,8 +12,8 @@ $\mathcal{A}$ as follows:
 def $\mathcal{A}(Q, \mathcal{M}, y)$:
     $(r_1, r_2) \leftarrow \mathcal{O}_R(\textrm{Com}, f, Q, \mathcal{M})$
 
-    $l_1 = |\text{Reflect}^{\mathcal{E}_{pk}}_s(r_1)|$
-    $l_2 = |\text{Reflect}^{\mathcal{E}_{pk}}_s(r_2)|$
+    $l_1 = |\text{Reflect}^{k}_s(r_1)|$
+    $l_2 = |\text{Reflect}^{k}_s(r_2)|$
 
     if $l_1 < l_2$:
         return True
@@ -112,9 +112,9 @@ And from the strict length monotonicity of $\textrm{Enc}$ it follows that:
     \Pr[&|\textrm{Enc}(\mathcal{K}(s, r_1))| <\\&|\textrm{Enc}(\mathcal{K}(s, r_2))||Q(s)]
         \geq \pi + \alpha(\lambda)\\
     \Rightarrow \Pr[&
-        |\text{Reflect}^{\mathcal{E}_{pk}}_s(r_1)|
+        |\text{Reflect}^{k}_s(r_1)|
         <
-        |\text{Reflect}^{\mathcal{E}_{pk}}_s(r_2)||Q(s)
+        |\text{Reflect}^{k}_s(r_2)||Q(s)
     ]
         \geq \pi + \alpha(\lambda)\\
     \Rightarrow \Pr[&l_1 < l_2|Q(s)]
