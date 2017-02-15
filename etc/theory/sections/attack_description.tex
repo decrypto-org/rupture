@@ -3,64 +3,56 @@
 \subsection{A high-level overview}\label{subsec:example}
 As explained above, compression side-channel attacks pose a serious threat
 against real-world deployments of TLS and in general of any encryption system.
-While widely received and documented by the security community there are still
-not many mitigation strategies in place to thwart them, primarily due to (i) the
-perceived high performance penalty associated with mitigating them, and (ii)
-their perceived complexity and the lack of production code tools that allow for
-their robust execution, something that makes some believe they are not a
-realistic threat. In this work we will illustrate that these perceptions are
-wrong and the existence of these attacks suggests a grave situation that is
-critical to be addressed.
+Although widely received and documented by the security community, there are
+still not many existing mitigation strategies to thwart them, primarily due to
+(i) the perceived high performance penalty associated with mitigating them, and
+(ii) their perceived complexity and the lack of production code tools that allow
+for their robust execution, something that makes some believe they are not a
+realistic threat. In this work we illustrate that these perceptions are
+wrong and the continuous existence of these attacks suggests a grave
+situation that needs to be addressed.
 
 In order to appreciate the seriousness of these attacks we present a motivating
-example. Suppose that a user that browses the Internet and a server that hosts
-a website are in active communication. This website might be a social network,
-e-banking, mail provider or a similar service that handles sensitive private
-data. When the server receives a request for a web page it collects all needed
-data, generates the HTML code that will be displayed by the user's browser and
-sends a network response containing this code along with other resources such as
-images and libraries. All response data is encrypted under TLS, which ensures
-privacy and integrity for the communication between the user and the server, but
-also compressed for efficiency.
+example. Suppose that a user browses the Internet and accesses a website, like a
+social network, e-banking, mail provider or a similar service that handles
+sensitive private data. When the server receives a request for a page it
+collects all needed data, generates the HTML code for the page and sends a
+network response containing this code along with other resources such as images
+and libraries. All response data is encrypted under TLS, which ensures privacy
+and integrity for the communication between the user and the server, and
+compressed for efficiency.
 
 Consider now an adversary that aims to break this communication's security.
-This adversary tries to decrypt the communication between the user and the
-server and reveal information about the private data that is exchanged. In order
-to mount a compression side-channel attack certain conditions need be met.
+This adversary tries to decrypt parts of the communication and reveal
+information about the exchanged private data. However, in order to mount a
+compression side-channel attack certain conditions need be met.
 
 Firstly, the adversary is able to handle the user's network traffic. That way he
 is able to collect and analyze the network packets of the encrypted
-communication with the server. He is also able to inject code in third-party
+communication with the server, as well as inject code in third-party
 non-encrypted HTTP responses.
 
-Secondly, he should be able to issue any number of malicious requests using the
-user's cookies (which will be encrypted). This can be achieved by forcing the
-user's browser to run a piece of code, such as a Javascript script. This script
-can either be hosted on an adversary-controlled website or injected in plain
-HTTP responses the user receives from third websites. This script is executed
-when loaded in the user's browser and is able to issue requests to any URL
-crafted by the adversary. Figure \ref{fig:attack_model} elaborates further on
-this attack mode.
+Secondly, he is able to issue any number of malicious requests using the user's
+cookies (which will be encrypted). This can be achieved by forcing the user's
+browser to run a piece of code, such as a Javascript script. This script can be
+either hosted on an adversary-controlled website or injected in plain HTTP
+responses from third websites. This script is executed when loaded in the user's
+browser and issues requests to any URL crafted by the adversary. Figure
+\ref{fig:attack_model} elaborates further on this attack mode.
 
-Thirdly, the web service that is under attack should allow the adversary to
-inject data in the encrypted response plaintext. This data takes the form of a
-specially crafted ``reflection'' string which can be added for example by using
-a HTTP GET parameter whose value is included in the HTML response.
-
-Any adversary that fulfills these requirements can issue a compression
-side-channel attack against the user and the web service. The malicious requests
-contain the reflection strings and the user's cookies. The response contains
-both the reflection string and the user's private data. The structure of the
-reflection string should depend on any known properties of the private data to
-maximize the adversarial advantage.
+Thirdly, the web service under attack should allow data injection in the
+encrypted response plaintext. This data takes the form of a specially crafted
+``reflection'' string, e.g. a HTTP GET parameter whose value is included
+in the HTML response. The malicious requests will include such reflections
+crafted by the adversary.
 
 As the attack progresses the adversary collects network data containing multiple
-responses and reflections. Although this data is encrypted, analysis on the
-lengths of different response packets in conjunction with the sequence of
-reflections that has been used will reveal otherwise hidden properties of the
-private data.  At this point the privacy of the communication between the user
-and the website is compromised and the adversary has broken the confidentiality
-of the messages effectively circumventing TLS security.
+reflections. Although this data is encrypted, analysis on the lengths of
+different response packets in conjunction with the used reflection sequence will
+reveal otherwise hidden properties of the private data. At this point the
+privacy of the communication between the user and the website is compromised and
+the adversary has broken the confidentiality of the messages by effectively
+circumventing TLS security.
 
     \begin{figure}[thpb]
         \centering
