@@ -16,7 +16,7 @@ In the case of the example described above, the rendering function $f$ is the
 rendering of the HTML response along with compression that is applied on it.
 Function $g$ represents the prefix of the secret $s$ in the plaintext response.
 
-The challenger produces a $\lambda$-bit key $k \leftarrow Gen(\lambda)$. The
+The challenger produces a $\lambda$-bit key $k \leftarrow Gen(1^\lambda)$. The
 challenger initially chooses a secret $s \leftarrow \mathcal{M}$. The adversary
 is given $g$, $f$ and $\mathcal{M}$.
 
@@ -43,7 +43,7 @@ Formally, let the public key adversarial game be defined as follows:
 
 \begin{lstlisting}[texcl,mathescape,basicstyle=\small]
 def $\text{Game}_{\text{REF-SEC}}^{\mathcal{PE},\mathcal{A}}(\lambda, f, \mathcal{M}, g)$:
-    $k \leftarrow Gen(\lambda)$
+    $k \leftarrow Gen(1^\lambda)$
     $s \leftarrow \mathcal{M}$
     $y \leftarrow \mathcal{A}^{\text{Reflect}^{\mathcal{E}_{k}}_s(r)}(\lambda, f, \mathcal{M}, g)$
     if $y = g(s)$:
