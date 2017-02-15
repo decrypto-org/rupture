@@ -8,12 +8,12 @@ including Rupture, as instances of the theoretical model we introduces.
 
 \subsection{The reflection game}\label{subsec:refsecgame}
 
-Let $\mathcal{PE} = (Gen, \mathcal{E}, \mathcal{D})$ be a private-key encryption
+Let $\mathcal{SE} = (Gen, \mathcal{E}, \mathcal{D})$ be a private-key encryption
 scheme, $\mathcal{A}$ be an adversary and $\mathcal{S}$ be a simulator of
 $\mathcal{A}$. Also let a rendering function $f(\cdot, \cdot)$, some function
 $g$ of a plaintext, and a distribution of secrets $\mathcal{M}$. We require that
 the rendering function $f$ is polynomially computable and reversible. The game
-$\text{Game}_{\text{REF-SEC}}^{\mathcal{PE},\mathcal{A}}(\lambda)$ is
+$\text{Game}_{\text{REF-SEC}}^{\mathcal{SE},\mathcal{A}}(\lambda)$ is
 parameterized with the security parameter $\lambda$.
 
 In the case of the example described above, the rendering function $f$ is the
@@ -38,7 +38,7 @@ prefix of secret $s$.
 Formally, let the public key adversarial game be defined as follows:
 
 \begin{lstlisting}[texcl,mathescape,basicstyle=\small]
-def $\text{Game}_{\text{REF-SEC}}^{\mathcal{PE},\mathcal{A}}(\lambda)$:
+def $\text{Game}_{\text{REF-SEC}}^{\mathcal{SE},\mathcal{A}}(\lambda)$:
     $k \leftarrow Gen(1^\lambda)$
     $s \leftarrow \mathcal{M}$
     $y \leftarrow \mathcal{A}^{\text{Reflect}^{k}_s(r)}(1^\lambda)$
@@ -60,7 +60,7 @@ def $\text{Reflect}^{k}_s(r)$:
 Let the simulator game be defined as follows:
 
 \begin{lstlisting}[texcl,mathescape,basicstyle=\small]
-def $\text{Game}_{\text{REF-SIM}}^{\mathcal{PE},\mathcal{S}}(\lambda)$:
+def $\text{Game}_{\text{REF-SIM}}^{\mathcal{SE},\mathcal{S}}(\lambda)$:
     $y \leftarrow \mathcal{S}(f, \mathcal{M}, g)$
     $s \leftarrow \mathcal{M}$
     if $y = g(s)$:
@@ -84,21 +84,21 @@ The reflection game is depicted in Figure \ref{fig:refgame}.
 
 Let us now define the advantage of the adversary against a simulator:
 \begin{align*}
-    \text{Adv}_{\mathcal{PE}, \mathcal{A}, \mathcal{S}}&(\lambda) &\defeq\\
-    |\Pr[\text{Game}_{\text{REF-SEC}}^{\mathcal{PE},\mathcal{A}}(\lambda) = 1] &-\\
-    \Pr[\text{Game}_{\text{REF-SIM}}^{\mathcal{PE},\mathcal{S}}(\lambda) = 1]| &
+    \text{Adv}_{\mathcal{SE}, \mathcal{A}, \mathcal{S}}&(\lambda) &\defeq\\
+    |\Pr[\text{Game}_{\text{REF-SEC}}^{\mathcal{SE},\mathcal{A}}(\lambda) = 1] &-\\
+    \Pr[\text{Game}_{\text{REF-SIM}}^{\mathcal{SE},\mathcal{S}}(\lambda) = 1]| &
 \end{align*}
 
 \subsection{Adaptive reflection security}\label{subsec:adaptiverefsec}
 
 Given a rendering function $f(\cdot, \cdot)$, a public-key encryption
-scheme $\mathcal{PE}$ is \textit{reflection-secure} if:
+scheme $\mathcal{SE}$ is \textit{reflection-secure} if:
 \begin{align*}
     \forall \mathcal{M}:
     \forall g:
     \forall PPT \mathcal{A}:
     \exists PPT \mathcal{S}:\\
-    \text{Adv}_{\mathcal{PE}, \mathcal{A}, \mathcal{S}}(\lambda) = negl(\lambda)
+    \text{Adv}_{\mathcal{SE}, \mathcal{A}, \mathcal{S}}(\lambda) = negl(\lambda)
 \end{align*}
 
 \begin{lemma}[Semantic security]
