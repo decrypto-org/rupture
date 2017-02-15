@@ -6,7 +6,7 @@ Let $\mathcal{PE} = (Gen, \mathcal{E}, \mathcal{D})$ be a private-key encryption
 scheme, $\mathcal{A}$ be an adversary and $\mathcal{S}$ be a simulator of
 $\mathcal{A}$. The game
 $\text{Game}_{\text{REF-SEC}}^{\mathcal{PE},\mathcal{A}}(\lambda,  f, g,
-\mathcal{M})$ is parameterized with a rendering function $f(\cdot, \cdot,
+\mathcal{M})$ is parameterized with a rendering function $f(\cdot,
 \cdot)$, the security parameter $\lambda$, some function $g$ of the plaintext,
 and a distribution of secrets $\mathcal{M}$ such that secrets $s$ that exist in
 $\mathcal{M}$ it holds that $|s| = \lambda$. We require that the rendering
@@ -95,7 +95,7 @@ Let us now define the advantage of the adversary against a simulator:
 
 \subsection{Adaptive reflection security}\label{subsec:adaptiverefsec}
 
-Given a rendering function $f(\cdot, \cdot, \cdot)$, a public-key encryption
+Given a rendering function $f(\cdot, \cdot)$, a public-key encryption
 scheme $\mathcal{PE}$ is \textit{reflection-secure} if:
 \begin{align*}
     \forall \mathcal{M}:
