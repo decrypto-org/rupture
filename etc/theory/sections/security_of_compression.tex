@@ -4,7 +4,6 @@ Let $\bar{\mathcal{M}}$ be a joint distribution from which the random variables
 $(s, r)$ are drawn. We say that $s$ and $r$ are interdependent when there exist
 $s_1, r_1$ and $s_2, r_2$ in the support of $\bar{\mathcal{M}}$ with $s_1 \neq
 s_2$ such that:
-
 \begin{align*}
     \Pr[(s, r) = (s_1, r_1)] &< \Pr[(s, r) = (s_1, r_2)]
 \land\\
@@ -87,7 +86,6 @@ support is a subset of the domain of $\mathcal{K}$.  We say that $\mathcal{K}$
 is an ideal compression function with respect to the distribution
 $\bar{\mathcal{M}}$ when for every $w_1, w_2$ in the support of
 $\bar{\mathcal{M}}$ we have:
-
 \begin{equation*}
 \Pr[w = w_1] < \Pr[w = w_2] \iff \lvert\mathcal{K}(w_1)\rvert > \lvert\mathcal{K}(w_2)\rvert
 \end{equation*}
@@ -143,7 +141,6 @@ in descending order of occurencies for both the ideal and the Huffman functions.
 An important assumption for our attack is that the encryption function
 $\textrm{Enc}$ is \textit{length monotonic}. Specifically, for any keys $k_1
 k_2$ in the key generating function space and string messages $m_1, m_2$:
-
 \begin{equation*}
 \begin{split}
 |m_2| > |m_1|
@@ -192,7 +189,6 @@ compress better when reflection $r_1$ is used as compared to when $r_2$ is used.
 On the contrary, if $s \in \mathcal{M}_{\lnot Q}$, the opposite direction should
 occur.  If this is the case for the selected reflection pair, we say that $Q$
 compares favourably under $\overbar{r}$:
-
 \begin{equation*}
 \begin{split}
     cpr^Q_{\mathcal{K}}(s, \overbar{r})
@@ -210,7 +206,6 @@ advantage $\alpha$ when the comparison is favourable for both $s_1$ drawn from
 $\mathcal{M}_Q$ and $s_2$ drawn from $\mathcal{M}_{\lnot Q}$. Formally, we
 define the predicate $dtc_\alpha(Q, \overbar{r}, f, \textrm{Com}, \mathcal{M})$
 as follows:
-
 \begin{align*}
     \Pr
         [cpr^Q_{\mathcal{K}}(s_1, \overbar{r}) \land
