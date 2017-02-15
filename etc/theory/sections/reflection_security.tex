@@ -4,21 +4,18 @@
 
 Let $\mathcal{PE} = (Gen, \mathcal{E}, \mathcal{D})$ be a private-key encryption
 scheme, $\mathcal{A}$ be an adversary and $\mathcal{S}$ be a simulator of
-$\mathcal{A}$. The game
-$\text{Game}_{\text{REF-SEC}}^{\mathcal{PE},\mathcal{A}}(\lambda,  f, g,
-\mathcal{M})$ is parameterized with a rendering function $f(\cdot,
-\cdot)$, the security parameter $\lambda$, some function $g$ of the plaintext,
-and a distribution of secrets $\mathcal{M}$ such that secrets $s$ that exist in
-$\mathcal{M}$ it holds that $|s| = \lambda$. We require that the rendering
-function $f$ is polynomially computable and reversible.
+$\mathcal{A}$. Also let a rendering function $f(\cdot, \cdot)$, some function
+$g$ of a plaintext, and a distribution of secrets $\mathcal{M}$. We require that
+the rendering function $f$ is polynomially computable and reversible. The game
+$\text{Game}_{\text{REF-SEC}}^{\mathcal{PE},\mathcal{A}}(\lambda)$ is
+parameterized with the security parameter $\lambda$.
 
 In the case of the example described above, the rendering function $f$ is the
 rendering of the HTML response along with compression that is applied on it.
 Function $g$ represents the prefix of the secret $s$ in the plaintext response.
 
 The challenger produces a $\lambda$-bit key $k \leftarrow Gen(1^\lambda)$. The
-challenger initially chooses a secret $s \leftarrow \mathcal{M}$. The adversary
-is given $g$, $f$ and $\mathcal{M}$.
+challenger initially chooses a secret $s \leftarrow \mathcal{M}$.
 
 The adversary is then allowed to run and make arbitrary calls to a reflection
 oracle. The oracle is parameterized by $s$, the secret unknown to the adversary.
@@ -42,10 +39,10 @@ prefix of secret $s$.
 Formally, let the public key adversarial game be defined as follows:
 
 \begin{lstlisting}[texcl,mathescape,basicstyle=\small]
-def $\text{Game}_{\text{REF-SEC}}^{\mathcal{PE},\mathcal{A}}(\lambda, f, \mathcal{M}, g)$:
+def $\text{Game}_{\text{REF-SEC}}^{\mathcal{PE},\mathcal{A}}(\lambda)$:
     $k \leftarrow Gen(1^\lambda)$
     $s \leftarrow \mathcal{M}$
-    $y \leftarrow \mathcal{A}^{\text{Reflect}^{k}_s(r)}(1^\lambda, f, \mathcal{M}, g)$
+    $y \leftarrow \mathcal{A}^{\text{Reflect}^{k}_s(r)}(1^\lambda)$
     if $y = g(s)$:
         return 1
     else:
@@ -64,7 +61,7 @@ def $\text{Reflect}^{k}_s(r)$:
 Let the simulator game be defined as follows:
 
 \begin{lstlisting}[texcl,mathescape,basicstyle=\small]
-def $\text{Game}_{\text{REF-SIM}}^{\mathcal{PE},\mathcal{S}}(\lambda, f, \mathcal{M}, g)$:
+def $\text{Game}_{\text{REF-SIM}}^{\mathcal{PE},\mathcal{S}}(\lambda)$:
     $y \leftarrow \mathcal{S}(f, \mathcal{M}, g)$
     $s \leftarrow \mathcal{M}$
     if $y = g(s)$:
@@ -88,9 +85,9 @@ The reflection game is depicted in Figure \ref{fig:refgame}.
 
 Let us now define the advantage of the adversary against a simulator:
 \begin{align*}
-    \text{Adv}_{\mathcal{PE}, \mathcal{A}, \mathcal{S}}&(\lambda, f, \mathcal{M}, g) &\defeq\\
-    |\Pr[\text{Game}_{\text{REF-SEC}}^{\mathcal{PE},\mathcal{A}}(\lambda, f, \mathcal{M}, g) = 1] &-\\
-    \Pr[\text{Game}_{\text{REF-SIM}}^{\mathcal{PE},\mathcal{S}}(\lambda, f, \mathcal{M}, g) = 1]| &
+    \text{Adv}_{\mathcal{PE}, \mathcal{A}, \mathcal{S}}&(\lambda) &\defeq\\
+    |\Pr[\text{Game}_{\text{REF-SEC}}^{\mathcal{PE},\mathcal{A}}(\lambda) = 1] &-\\
+    \Pr[\text{Game}_{\text{REF-SIM}}^{\mathcal{PE},\mathcal{S}}(\lambda) = 1]| &
 \end{align*}
 
 \subsection{Adaptive reflection security}\label{subsec:adaptiverefsec}
@@ -102,7 +99,7 @@ scheme $\mathcal{PE}$ is \textit{reflection-secure} if:
     \forall g:
     \forall PPT \mathcal{A}:
     \exists PPT \mathcal{S}:\\
-    \text{Adv}_{\mathcal{PE}, \mathcal{A}, \mathcal{S}}(\lambda, f, \mathcal{M}, g) = negl(\lambda)
+    \text{Adv}_{\mathcal{PE}, \mathcal{A}, \mathcal{S}}(\lambda) = negl(\lambda)
 \end{align*}
 
 \begin{lemma}[Semantic security]
