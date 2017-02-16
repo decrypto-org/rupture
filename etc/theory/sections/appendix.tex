@@ -66,8 +66,13 @@
 \end{lemma}
 
 \begin{proof}
-
-We make the assumption that a reflection pair $(r_1, r_2)$ is computable.
+We model our plaintext input to the compression function as the usual pair $(s,
+r)$ consisting of the secret string $s$ and reflection string $r$. When $(s, r)$
+are encoded by a compression function $\mathcal{K}$ ideal under some plaintext
+distribution $\bar{\mathcal{M}}$, a simple predicate allows the distinction
+between two secrets $s_1$ and $s_2$ using a reflection pair $(r_1, r_2)$.  We
+make the assumption that the resulting reflection pair $(r_1, r_2)$ is
+efficiently computable.
 
 \begin{align*}
     \Pr[r = r_1|s = s_1] < \Pr[r = r_2|s = s_1]&\land\\
@@ -109,8 +114,8 @@ Let $g$ be the boolean function $Q$ on the plaintext. Define the adversary
 $\mathcal{A}$ as follows:
 
 \begin{lstlisting}[texcl,mathescape,basicstyle=\small]
-def $\mathcal{A}(Q, \mathcal{M}, y)$:
-    $(r_1, r_2) \leftarrow \mathcal{O}_R(\textrm{Com}, f, Q, \mathcal{M})$
+def $\mathcal{A}(1^\lambda)$:
+    $(r_1, r_2) \leftarrow \mathcal{O}_R(1^\lambda)$
 
     $l_1 = |\text{Reflect}^{k}_s(r_1)|$
     $l_2 = |\text{Reflect}^{k}_s(r_2)|$
@@ -125,14 +130,14 @@ Let $\mathcal{S}$ be an arbitrary simulator. Then we have:
 \begin{align*}
     \Pr[\text{Game}_{\text{REF-SIM}}^{\mathcal{SE},\mathcal{S}}
         (\lambda) = 1] &=\\
-    \Pr_{x \leftarrow \mathcal{M}, b \leftarrow \mathcal{S}(f, \mathcal{M}, g)}
+    \Pr_{x \leftarrow \mathcal{M}, b \leftarrow \mathcal{S}(1^\lambda)}
         [Q(x) = b]
 \end{align*}
 
 Letting the random variables $b$ and $x$:
 \begin{align*}
     x &\leftarrow \mathcal{M}\\
-    b &\leftarrow \mathcal{S}(f, \mathcal{M}, g)
+    b &\leftarrow \mathcal{S}(1^\lambda)
 \end{align*}
 
 Due to the independence of the simulator's output with the choice of $x$ we have:
@@ -245,7 +250,7 @@ Therefore,
 \begin{align*}
     \forall PPT \mathcal{S}:
     \text{Adv}_{\mathcal{SE}(\textrm{Enc}, \textrm{Com}), \mathcal{A}, \mathcal{S}}
-        (\lambda, f, \mathcal{M}, g)
+        (1^\lambda)
     \geq\\
     |\pi + \alpha(\lambda) - \pi| = \alpha(\lambda)
 \end{align*}
@@ -333,7 +338,7 @@ It remains to show that the advantage of the adversary can be
 arbitrarily large, i.e. that for some negligible $C$ we have:
 \begin{align*}
     \text{Adv}_{\mathcal{SE}(\textrm{Enc}, \textrm{Com}), \mathcal{A}, \mathcal{S}_{Amp}}
-    (\lambda, f, \mathcal{M}, g) = 1 - \pi - C
+    (1^\lambda) = 1 - \pi - C
 \end{align*}
 
 Indeed, observe that the amplifying adversary performs a repeated Bernoulli
