@@ -1,12 +1,9 @@
-\section{The security of compression}\label{sec:comsec}
-
 \subsection{The interdependence assumption}\label{subsec:interdependence}
 
 Let $\bar{\mathcal{M}}$ be a joint distribution from which the random variables
 $(s, r)$ are drawn. We say that $s$ and $r$ are interdependent when there exist
 $s_1, r_1$ and $s_2, r_2$ in the support of $\bar{\mathcal{M}}$ with $s_1 \neq
 s_2$ such that:
-
 \begin{align*}
     \Pr[(s, r) = (s_1, r_1)] &< \Pr[(s, r) = (s_1, r_2)]
 \land\\
@@ -76,12 +73,6 @@ $\textrm{Enc}$ denotes an encryption function. We stress our important
 assumption that $\textrm{Enc}$ is defined on $\{0, 1\}^*$ and not on some
 fixed-length input.
 
-The composition of the compression function $\textrm{Com}$ and the rendering function $f$
-is defined:
-\begin{equation*}
-    \mathcal{K} = \textrm{Com} \circ f
-\end{equation*}
-
 We call $\mathcal{K}$ an editing function. For the rest of the paper, we treat
 $\mathcal{K}$ as a compression function.
 
@@ -95,7 +86,6 @@ support is a subset of the domain of $\mathcal{K}$.  We say that $\mathcal{K}$
 is an ideal compression function with respect to the distribution
 $\bar{\mathcal{M}}$ when for every $w_1, w_2$ in the support of
 $\bar{\mathcal{M}}$ we have:
-
 \begin{equation*}
 \Pr[w = w_1] < \Pr[w = w_2] \iff \lvert\mathcal{K}(w_1)\rvert > \lvert\mathcal{K}(w_2)\rvert
 \end{equation*}
@@ -113,45 +103,14 @@ However, such compression functions try to learn the distribution of
 the plaintext they are about to compress by observing frequencies of
 occurrences and taking advantage of them.
 
-We now turn our attention to two specific compression functions, the
-LZ77 and Huffman function. These two compression functions are of
-interest for two reasons. First, they are representative of the way
-typical lossless compression functions work internally, by taking
-advantage of letter frequencies (Huffman) or letter-sequence
-repetitions (LZ77). Second, they are the ones almost exclusively used in
-practice. The DEFLATE algorithm \cite{deutsch1996deflate}, which is a composition of LZ77 and
-Huffman, is the algorithm used in gzip, which is prevalent on the
-modern web. In 2016, 98.85\% of websites that enabled compression used
-some form of gzip. We argue that both LZ77 and Huffman are nearly
-ideal compression functions. The complexity of the Huffman and
-especially the LZ77 algorithms arises from many intricate technical
-details, such as, for instance, the sliding window size of LZ77. These
-details make it impractical to deal with these functions in analytical
-proofs.
-
-We support our idealness claims in an experimental manner. Our experiment
-measured the compression performance of the Huffman and an ideal function on a
-text of English literature\footnote{The screenplay of the movie "The Social
-Network".}. First, we calculated the occurences of each character (letters and
-digits) in the text. Second, we generated the Huffman
-table for this text and the table of an ideal function based on the character
-frequencies. Each character is represented by a bitstream in both tables. Figure
-\ref{fig:huffman_idealness} depicts the length of the bitstreams of characters
-in descending order of occurencies for both the ideal and the Huffman functions.
-
-    \begin{figure}[thpb]
-        \centering
-            \includegraphics[width=0.48\textwidth]{idealness_experiments/huffman_idealness.png}
-        \caption{Comparison between Huffman and ideal compression}
-        \label{fig:huffman_idealness}
-    \end{figure}
+We extensively investigate the idealness aspect of the LZ77 and Huffman compression
+functions in Appendix C.
 
 \subsection{Length monotonicity}\label{subsec:lenmonotone}
 
 An important assumption for our attack is that the encryption function
 $\textrm{Enc}$ is \textit{length monotonic}. Specifically, for any keys $k_1
 k_2$ in the key generating function space and string messages $m_1, m_2$:
-
 \begin{equation*}
 \begin{split}
 |m_2| > |m_1|
@@ -166,7 +125,7 @@ If the last inequality becomes strict, we call the encryption function
 A practical instance of a length monotonic encryption function is AES \cite{standard2001announcing}.
 Stream ciphers can be treated as strictly monotonic to the bit level.
 
-\section{Compressibility with respect to predicates}\label{sec:propertycom}
+\subsection{Compressibility with respect to predicates}\label{subsec:propertycom}
 In this section we will define compressibility with respect to predicates. We
 show that all ideal compression functions that exhibit interdependence are
 compression detectable by a reflection vector $\overbar{r}$ with respect to a
@@ -200,7 +159,6 @@ compress better when reflection $r_1$ is used as compared to when $r_2$ is used.
 On the contrary, if $s \in \mathcal{M}_{\lnot Q}$, the opposite direction should
 occur.  If this is the case for the selected reflection pair, we say that $Q$
 compares favourably under $\overbar{r}$:
-
 \begin{equation*}
 \begin{split}
     cpr^Q_{\mathcal{K}}(s, \overbar{r})
@@ -218,7 +176,6 @@ advantage $\alpha$ when the comparison is favourable for both $s_1$ drawn from
 $\mathcal{M}_Q$ and $s_2$ drawn from $\mathcal{M}_{\lnot Q}$. Formally, we
 define the predicate $dtc_\alpha(Q, \overbar{r}, f, \textrm{Com}, \mathcal{M})$
 as follows:
-
 \begin{align*}
     \Pr
         [cpr^Q_{\mathcal{K}}(s_1, \overbar{r}) \land
@@ -253,54 +210,10 @@ compresses. An attacker that is able to measure how well a string compresses
 can use this to detect a predicate on the second part of the plaintext by
 changing the first part of the plaintext.
 
-More specifically, we model our plaintext input to the compression function as
-the usual pair $(s, r)$ consisting of the secret string $s$ and reflection
-string $r$. When $(s, r)$ are encoded by a compression function $\mathcal{K}$ ideal
-under some plaintext distribution $\bar{\mathcal{M}}$, a simple predicate
-allows the distinction between two secrets $s_1$ and $s_2$ using a reflection
-pair $(r_1, r_2)$.
-
-In the following theorem, we prove compression detectability of a predicate
-with the following simplifications. We make the assumption that the
-resulting reflection pair $(r_1, r_2)$ is computable.
-
 \begin{lemma}[Good compression is detectable]
 Let $\mathcal{K}$ be an ideal compression function with respect to some
 interdependent distribution $\bar{\mathcal{M}}$. Then there exists
 some compression-detectable predicate $Q$ for $\mathcal{K}$.
 \end{lemma}
 
-\begin{proof}
-
-From the fact that $\bar{\mathcal{M}}$ is interdependent, we have that:
-
-\begin{align*}
-    \Pr[r = r_1|s = s_1] < \Pr[r = r_2|s = s_1]&\land\\
-    \Pr[r = r_1|s = s_2] > \Pr[r = r_2|s = s_2]&
-\end{align*}
-
-Using the fact that $\mathcal{K}$ is ideal with respect to this distribution,
-we deduce that:
-
-\begin{align*}
-    |\mathcal{K}(s_1, r_1)| > |\mathcal{K}(s_1, r_2)|&\land\\
-    |\mathcal{K}(s_2, r_1)| < |\mathcal{K}(s_2, r_2)|&
-\end{align*}
-
-We then define $Q(s)$ to be the predicate "$s = s_1$". This partitions
-$\mathcal{M}$ into the distributions $\mathcal{M}_Q$ and
-$\mathcal{M}_{\lnot Q}$ both of which are non-empty, as $\mathcal{M}_Q$
-contains $s_1$ and $\mathcal{M}_{\lnot Q}$ contains $s_2$. From the fact that
-$Q$ is not trivial, we deduce that $\pi < 1$.
-
-Observe, then, that letting $\bar{r} = (r_1, r_2)$ we obtain:
-
-\begin{align*}
-    \Pr[cpr^Q_{\mathcal{K}}(s_1, \bar{r}, \mathcal{K}, \mathcal{M})
-    \land
-    cpr^Q_{\mathcal{K}}(s_2, \bar{r}, \mathcal{K}, \mathcal{M})] = 1
-\end{align*}
-
-This completes the proof.
-
-\end{proof}
+A full proof can be found on Appendix A.

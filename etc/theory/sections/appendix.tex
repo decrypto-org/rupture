@@ -1,5 +1,105 @@
 \section*{Appendix A: Full proofs}
 
+\begin{lemma}[Semantic security]
+\end{lemma}
+
+\begin{proof}
+    We will prove that if the scheme is not semantically secure, then it is
+    necessarily not reflection secure. Assume that the scheme is not
+    semantically secure. Then there will exist a PPT adversary $\mathcal{A}$
+    such that for all PPT simulators $\mathcal{S}$ we have that $\mathcal{A}$
+    has non-negligible advantage to $\mathcal{S}$ in the semantic security game.
+
+    We will now construct an adversary $\mathcal{A'}$ for the reflection
+    security game. $\mathcal{A'}$ operates as follows: It makes one query to
+    the reflection oracle setting $r_0 = \epsilon$ and receives a response $c_0
+    = K_k(s, r_0) = K_k(s) = c$. It then passes that $c$ to the semantic
+    security adversary $\mathcal{A}$. It answers all encryption and decryption
+    queries of the semantic security adversary by relaying them to its own
+    encryption and decryption oracle. Finally, when the semantic security
+    adversary outputs $y = y'$, this $y'$ is output by the reflection security
+    adversary. Note that $\mathcal{A}$ cannot distinguish whether they are
+    playing against the actual semantic security game or being simulated by the
+    reflection security adversary, as their view is identical. Therefore:
+
+    \begin{equation}
+        Pr[Game_{REF-SEC}^{\mathcal{A'}} = 1] = Pr[Game_{SEM-SEC}^{\mathcal{A}} = 1]
+    \end{equation}
+
+    It remains to prove that $\mathcal{A'}$ has significant advantage against
+    any reflection simulator $\mathcal{S'}$. Indeed let $\mathcal{S'}$ be any
+    reflection game simulator. We will construct a simulator $\mathcal{S}$ for
+    the semantic security game. Initially, the simulator $\mathcal{S}$ receives
+    the length of the ciphertext $|c|$. They then simulate the reflection game
+    simulator $\mathcal{S'}$ as follows. Upon receiving query $r_i$ from the
+    reflection game simulator, they answer with $|c| + |r_i|$. When the
+    reflection security adversary outputs $y' = y$, this $y$ is output by the
+    semantic security simulator. We observe that the reflection game simulator
+    $\mathcal{S'}$ cannot distinguish whether they are playing against the
+    actual simulated reflection game or being simulated by the semantic
+    security simulator. To see this, note that from the length preservation
+    assumption we have that $|c| + |r_i| = |K(s, r_i)| = |K(s', r_i)| =
+    |K(0^{|s|}, r_i)|$. Therefore:
+
+    \begin{equation}
+        Pr[Game_{SEM-SIM}^{\mathcal{S}} = 1] = Pr[Game_{REF-SIM}^{\mathcal{S'}} = 1]
+    \end{equation}
+
+    From the assumption that the scheme is not semantically insecure, we know
+    that:
+
+    \begin{align*}
+        |Pr[Game_{SEM-SEC}^{\mathcal{A}} = 1] - Pr[Game_{SEM-SIM}^{\mathcal{S}} = 1]| =\\
+        Adv_{\mathcal{A}, \mathcal{S}} = \text{non-negl}
+    \end{align*}
+
+    And therefore, replacing both probabilities with their equals:
+
+    \begin{align*}
+        |Pr[Game_{REF-SEC}^{\mathcal{A'}} = 1] -
+        Pr[Game_{REF-SIM}^{\mathcal{S'}} = 1]| =\\
+        Adv_{\mathcal{A'}, \mathcal{S'}} = \text{non-negl}
+    \end{align*}
+\end{proof}
+
+\begin{lemma}[Good compression is detectable]
+\end{lemma}
+
+\begin{proof}
+
+We make the assumption that a reflection pair $(r_1, r_2)$ is computable.
+
+\begin{align*}
+    \Pr[r = r_1|s = s_1] < \Pr[r = r_2|s = s_1]&\land\\
+    \Pr[r = r_1|s = s_2] > \Pr[r = r_2|s = s_2]&
+\end{align*}
+
+Using the fact that $\mathcal{K}$ is ideal with respect to this distribution,
+we deduce that:
+
+\begin{align*}
+    |\mathcal{K}(s_1, r_1)| > |\mathcal{K}(s_1, r_2)|&\land\\
+    |\mathcal{K}(s_2, r_1)| < |\mathcal{K}(s_2, r_2)|&
+\end{align*}
+
+We then define $Q(s)$ to be the predicate "$s = s_1$". This partitions
+$\mathcal{M}$ into the distributions $\mathcal{M}_Q$ and
+$\mathcal{M}_{\lnot Q}$ both of which are non-empty, as $\mathcal{M}_Q$
+contains $s_1$ and $\mathcal{M}_{\lnot Q}$ contains $s_2$. From the fact that
+$Q$ is not trivial, we deduce that $\pi < 1$.
+
+Observe, then, that letting $\bar{r} = (r_1, r_2)$ we obtain:
+
+\begin{align*}
+    \Pr[cpr^Q_{\mathcal{K}}(s_1, \bar{r}, \mathcal{K}, \mathcal{M})
+    \land
+    cpr^Q_{\mathcal{K}}(s_2, \bar{r}, \mathcal{K}, \mathcal{M})] = 1
+\end{align*}
+
+This completes the proof.
+
+\end{proof}
+
 \begin{lemma}[Compression attack]
 \end{lemma}
 
@@ -10,10 +110,10 @@ $\mathcal{A}$ as follows:
 
 \begin{lstlisting}[texcl,mathescape,basicstyle=\small]
 def $\mathcal{A}(Q, \mathcal{M}, y)$:
-    $(r_1, r_2) \leftarrow \mathcal{O}_R(\textrm{Com}, f, Q, \mathcal{M}, \mathcal{V})$
+    $(r_1, r_2) \leftarrow \mathcal{O}_R(\textrm{Com}, f, Q, \mathcal{M})$
 
-    $l_1 = |\text{Reflect}^{\mathcal{E}_{pk}, \mathcal{V}}_s(r_1)|$
-    $l_2 = |\text{Reflect}^{\mathcal{E}_{pk}, \mathcal{V}}_s(r_2)|$
+    $l_1 = |\text{Reflect}^{k}_s(r_1)|$
+    $l_2 = |\text{Reflect}^{k}_s(r_2)|$
 
     if $l_1 < l_2$:
         return True
@@ -23,16 +123,16 @@ def $\mathcal{A}(Q, \mathcal{M}, y)$:
 
 Let $\mathcal{S}$ be an arbitrary simulator. Then we have:
 \begin{align*}
-    \Pr[\text{Game}_{\text{REF-SIM}}^{\mathcal{PE},\mathcal{S}}
-        (\lambda, f, \mathcal{V}, \mathcal{M}, g) = 1] &=\\
-    \Pr_{x \leftarrow \mathcal{M}, b \leftarrow \mathcal{S}(f, \mathcal{V}, \mathcal{M}, g)}
+    \Pr[\text{Game}_{\text{REF-SIM}}^{\mathcal{SE},\mathcal{S}}
+        (\lambda) = 1] &=\\
+    \Pr_{x \leftarrow \mathcal{M}, b \leftarrow \mathcal{S}(f, \mathcal{M}, g)}
         [Q(x) = b]
 \end{align*}
 
 Letting the random variables $b$ and $x$:
 \begin{align*}
     x &\leftarrow \mathcal{M}\\
-    b &\leftarrow \mathcal{S}(f, \mathcal{V}, \mathcal{M}, g)
+    b &\leftarrow \mathcal{S}(f, \mathcal{M}, g)
 \end{align*}
 
 Due to the independence of the simulator's output with the choice of $x$ we have:
@@ -56,8 +156,8 @@ And therefore:
 \begin{align*}
     \forall \mathcal{S}:\\
     \Pr[
-        \text{Game}_{\text{REF-SIM}}^{\mathcal{PE},\mathcal{S}}
-        (\lambda, f, \mathcal{V}, \mathcal{M}, g) = 1
+        \text{Game}_{\text{REF-SIM}}^{\mathcal{SE},\mathcal{S}}
+        (\lambda) = 1
     ]
     \leq\\
     max(Pr[Q(x)], 1 - Pr[Q(x)])
@@ -67,37 +167,33 @@ From the compression detectability of Q we know that:
 \begin{align*}
     \exists \alpha \text{ non-negl}:\\
     \Pr_{s_1 \leftarrow \mathcal{M}_Q,
-         s_2 \leftarrow \mathcal{M}_{\lnot Q},
-         \overbar{v} \leftarrow \mathcal{V}^2}
-         [cpr^Q_{\kappa}(s_1, \overbar{r}, \overbar{v}) \land
-          cpr^Q_{\kappa}(s_2, \overbar{r}, \overbar{v})]
+         s_2 \leftarrow \mathcal{M}_{\lnot Q}}
+         [cpr^Q_{\kappa}(s_1, \overbar{r}) \land
+          cpr^Q_{\kappa}(s_2, \overbar{r})]
     \geq\\
     \pi + \alpha(\lambda)
 \end{align*}
 
 Therefore:
 \begin{align*}
-    \Pr_{s_1 \leftarrow \mathcal{M}_Q,
-         \overbar{v} \leftarrow \mathcal{V}^2}
-         [cpr^Q_{\kappa}(s_1, \overbar{r}, \overbar{v})]
+    \Pr_{s_1 \leftarrow \mathcal{M}_Q}
+         [cpr^Q_{\kappa}(s_1, \overbar{r})]
     \geq
     \pi + \alpha(\lambda) \land\\
-    \Pr_{s_2 \leftarrow \mathcal{M}_{\lnot Q},
-         \overbar{v} \leftarrow \mathcal{V}^2}
-         [cpr^Q_{\kappa}(s_2, \overbar{r}, \overbar{v})]
+    \Pr_{s_2 \leftarrow \mathcal{M}_{\lnot Q}}
+         [cpr^Q_{\kappa}(s_2, \overbar{r})]
     \geq
     \pi + \alpha(\lambda)
 \end{align*}
 
 And so:
 \begin{align*}
-    \Pr_{s \leftarrow \mathcal{M},
-         \overbar{v} \leftarrow \mathcal{V}^2}
-         [cpr^Q_{\kappa}(s, \overbar{r}, \overbar{v})]
+    \Pr_{s \leftarrow \mathcal{M}}
+         [cpr^Q_{\kappa}(s, \overbar{r})]
     =\\
-    \Pr[cpr^Q_{\kappa}(s, \overbar{r}, \overbar{v})|Q(s)]\Pr[Q(s)]
+    \Pr[cpr^Q_{\kappa}(s, \overbar{r})|Q(s)]\Pr[Q(s)]
     +\\
-    \Pr[cpr^Q_{\kappa}(s, \overbar{r}, \overbar{v})|\lnot Q(s)]\Pr[\lnot Q(s)]
+    \Pr[cpr^Q_{\kappa}(s, \overbar{r})|\lnot Q(s)]\Pr[\lnot Q(s)]
     \geq\\
     (\pi + \alpha(\lambda))(\Pr[Q(s)] + (1 - \Pr[Q(s)))
     =\\
@@ -105,20 +201,20 @@ And so:
 \end{align*}
 
 Let us now examine the event of $\mathcal{A}$ being successful, denoted Succ,
-when $cpr^Q_{\kappa}(s, \overbar{r}, \overbar{v})$. Assuming $Q(s)$:
+when $cpr^Q_{\kappa}(s, \overbar{r})$. Assuming $Q(s)$:
 \begin{align*}
-    \Pr[|\mathcal{K}(s, r_1, v_1)| < |\mathcal{K}(s, r_2, v_2)||Q(s)]
+    \Pr[|\mathcal{K}(s, r_1)| < |\mathcal{K}(s, r_2)||Q(s)]
     = \pi + \alpha(\lambda)
 \end{align*}
 
 And from the strict length monotonicity of $\textrm{Enc}$ it follows that:
 \begin{align*}
-    \Pr[&|\textrm{Enc}(\mathcal{K}(s, r_1, v_1))| <\\&|\textrm{Enc}(\mathcal{K}(s, r_2, v_2))||Q(s)]
+    \Pr[&|\textrm{Enc}(\mathcal{K}(s, r_1))| <\\&|\textrm{Enc}(\mathcal{K}(s, r_2))||Q(s)]
         \geq \pi + \alpha(\lambda)\\
     \Rightarrow \Pr[&
-        |\text{Reflect}^{\mathcal{E}_{pk}, \mathcal{V}}_s(r_1)|
+        |\text{Reflect}^{k}_s(r_1)|
         <
-        |\text{Reflect}^{\mathcal{E}_{pk}, \mathcal{V}}_s(r_2)||Q(s)
+        |\text{Reflect}^{k}_s(r_2)||Q(s)
     ]
         \geq \pi + \alpha(\lambda)\\
     \Rightarrow \Pr[&l_1 < l_2|Q(s)]
@@ -129,7 +225,7 @@ And from the strict length monotonicity of $\textrm{Enc}$ it follows that:
 
 The case for $\lnot Q(s)$ is the same, but with a different inequality direction:
 \begin{align*}
-    \Pr[|\mathcal{K}(s, r_1, v_1)| > |\mathcal{K}(s, r_2, v_2)||\lnot Q(s)]
+    \Pr[|\mathcal{K}(s, r_1)| > |\mathcal{K}(s, r_2)||\lnot Q(s)]
         \geq\\
         \pi + \alpha(\lambda)\\
     \Rightarrow \Pr[\text{Succ}|\lnot Q(s)] \geq\\
@@ -149,7 +245,7 @@ Therefore,
 \begin{align*}
     \forall PPT \mathcal{S}:
     \text{Adv}_{\mathcal{SE}(\textrm{Enc}, \textrm{Com}), \mathcal{A}, \mathcal{S}}
-        (\lambda, f, \mathcal{V}, \mathcal{M}, g)
+        (\lambda, f, \mathcal{M}, g)
     \geq\\
     |\pi + \alpha(\lambda) - \pi| = \alpha(\lambda)
 \end{align*}
@@ -165,9 +261,8 @@ Which is non-negligible.
 
 From the fact that $Q$ is compression-detectable and from the Compression Attack Theorem, we have that:
 \begin{align*}
-    \Pr_{s \leftarrow \mathcal{M},
-         \overbar{v} \leftarrow \mathcal{V}^2}
-         [cpr^Q_{\kappa}(s, \overbar{r}, \overbar{v})]
+    \Pr_{s \leftarrow \mathcal{M}}
+         [cpr^Q_{\kappa}(s, \overbar{r})]
     =\\
     \pi + \alpha(\lambda)
 \end{align*}
@@ -176,9 +271,8 @@ Some elements $s \in \mathcal{M}$ allow for better compression-detectability tha
 reflection vector $\overbar{r}$. Call these elements \textit{amplifiable} and define predicate:
 \begin{align*}
     Amp(s) \defeq
-    \Pr_{\overbar{v} \leftarrow \mathcal{V}^2}
-    [cpr^Q_{\kappa}
-     (s, \overbar{r}, \overbar{v})]
+    \Pr[cpr^Q_{\kappa}
+     (s, \overbar{r})]
     \geq
     \frac{1}{2} + \frac{\alpha(\lambda)}{2}
 \end{align*}
@@ -211,17 +305,14 @@ Assume, for the sake of contradiction, that:
 
 Then we have:
 \begin{align*}
-    \Pr_{s \leftarrow \mathcal{M},
-         \overbar{v} \leftarrow \mathcal{V}^2}
-         [cpr^Q_{\kappa}(s, \overbar{r}, \overbar{v})]
+    \Pr_{s \leftarrow \mathcal{M}}
+         [cpr^Q_{\kappa}(s, \overbar{r})]
     =\\
-    \Pr_{s \leftarrow \mathcal{M},
-         \overbar{v} \leftarrow \mathcal{V}^2}
-         [cpr^Q_{\kappa}(s, \overbar{r}, \overbar{v})|Amp(s)]\Pr[Amp(s)]
+    \Pr_{s \leftarrow \mathcal{M}}
+         [cpr^Q_{\kappa}(s, \overbar{r})|Amp(s)]\Pr[Amp(s)]
     +\\
-    \Pr_{s \leftarrow \mathcal{M},
-         \overbar{v} \leftarrow \mathcal{V}^2}
-         [cpr^Q_{\kappa}(s, \overbar{r}, \overbar{v})|\lnot Amp(s)]\Pr[\lnot Amp(s)]
+    \Pr_{s \leftarrow \mathcal{M}}
+         [cpr^Q_{\kappa}(s, \overbar{r})|\lnot Amp(s)]\Pr[\lnot Amp(s)]
     <\\
     B + (\frac{1}{2} + \frac{\alpha}{2})(1 - B)
 \end{align*}
@@ -242,15 +333,14 @@ It remains to show that the advantage of the adversary can be
 arbitrarily large, i.e. that for some negligible $C$ we have:
 \begin{align*}
     \text{Adv}_{\mathcal{SE}(\textrm{Enc}, \textrm{Com}), \mathcal{A}, \mathcal{S}_{Amp}}
-    (\lambda, f, \mathcal{V}, \mathcal{M}, g) = 1 - \pi - C
+    (\lambda, f, \mathcal{M}, g) = 1 - \pi - C
 \end{align*}
 
 Indeed, observe that the amplifying adversary performs a repeated Bernoulli
 trial with $k$ repetitions and extracts a majority. Let $X$ be the number of
-repetitions that are successful for the adversary. Letting $\overbar{v}_i$
-be the noise chosen from $\mathcal{V}^2$ during the $i$-th round, $X$ is defined:
+repetitions that are successful for the adversary. $X$ is defined:
 \begin{align*}
-    X \defeq |\{ i: cpr^Q_{\kappa}(s, \overbar{r}, \overbar{v}_i) \}|
+    X \defeq |\{ i: cpr^Q_{\kappa}(s, \overbar{r}) \}|
 \end{align*}
 
 $X$ follows the binomial distribution, and therefore its expected value is:
