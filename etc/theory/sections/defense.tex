@@ -126,12 +126,12 @@ impossible for an adversary controlling $r$ to learn information about $s$.
 
 Our defense is implemented in the application layer and is opt-in. We choose to
 update the rendering function $f$ instead of the compression function
-$\textrm{Com}$ as it is easier that way for web developers to incorporate it in
-their applications. Our proposal requires no changes in the underlying
-compression algorithms in the web server such as Apache's mod\_deflate, which
-would require a huge engineering effort. Instead, our proposed defense requires
-only modifications in the web application layer, which can be relatively easily
-incorporated in existing applications.
+$\textrm{Com}$ as it is easier for web developers to incorporate it in their
+applications. Our proposal requires no changes in the underlying compression
+algorithms in the web server such as Apache's mod\_deflate, which would require
+a huge engineering effort. Instead, it only requires modifications in the web
+application layer and can be relatively easily incorporated in existing
+applications.
 
 \section{CTX: Mitigating BREACH with Context Hiding }\label{sec:ctx}
 
@@ -142,22 +142,20 @@ for HTML web pages.
 
 It is up to the application developer to decide which portions of the response
 are sensitive and must be protected as secrets. Sensitive data does not only
-include high-value secrets such as passwords and CSRF tokens, but also user data
+include high-value secrets such as passwords and CSRF tokens, but also any data
 that the developer wishes to keep private. Some examples are the bodies of email
-messages in Gmail, the chat messages received or sent to a friend on Facebook,
-the contents of documents and spreadsheets in Google Docs and the list of online
-friends on Facebook or Google Hangouts, as they contain all the important
-contacts of the victim. Practically any piece of information which is only
-accessible when logged in is potentially a secret and should be CTX protected.
-On the other hand, some data do not typically need compression-security
-protection, e.g. static HTML portions that are accessible on a website even when
-logged out.
+messages, chat messages, or the contents of documents and spreadsheets, as they
+contain all the important contacts of the victim. Practically any piece of
+information which is only accessible when logged in is a secret and should be
+CTX protected. On the other hand, some data do not typically need
+compression-security protection, e.g. static HTML portions that are accessible
+on a website even when logged out.
 
 The minimum amount of origins is one origin for the entire response, in which
 case CTX is not protecting any part of the plaintext, and the maximum is one
 origin per character. The latter would result in the best possible security
-under CTX, although compression would be effectively disabled - possibly resulting
-in poor performance. This is the case with defenses such as secret masking.
+under CTX, although compression would be effectively disabled. This is the case
+with defenses such as secret masking.
 
 Different-origin secrets are then forced to compress separately, i.e. not
 cross-compress. However, compression is achieved within each context. The
@@ -166,16 +164,15 @@ permute the secret alphabet, we use the Fisher-Yates shuffle
 algorithm \cite{fisher1938statistical}.
 
 Secrets are then permuted by the server using the generated permutation of the
-corresponding origin prior to TLS encryption and network transmission. Upon
-arrival on the client side, the inverse permutation is applied to decode the
-secret. The same permutation is applied to all secrets of the same origin. That
-way, better compression is achieved intra-origin.
+secret's origin, encrypted by TLS, and sent over the network. Upon arrival on
+the client side, the inverse permutation is applied to decode the secret.
 
 Each time the server issues an HTTPS response, new per-origin permutations are
-generated. Compression side-channel attacks in general rely on the assumption that we can
-perform multiple requests to the target website while the transmitted secret
-remains the same. Since new alphabet permutations are generated per HTTPS
-response, the statistical analysis performed by Rupture is no longer feasible.
+generated. Compression side-channel attacks in general rely on the assumption
+that we can perform multiple requests to the target website while the
+transmitted secret remains the same. Since new alphabet permutations are
+generated per HTTPS response, the statistical analysis performed by Rupture is
+no longer feasible.
 
 \subsection{Experimental results}\label{subsec:ctx_experiments}
 
