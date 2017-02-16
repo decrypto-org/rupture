@@ -109,8 +109,8 @@ Let $g$ be the boolean function $Q$ on the plaintext. Define the adversary
 $\mathcal{A}$ as follows:
 
 \begin{lstlisting}[texcl,mathescape,basicstyle=\small]
-def $\mathcal{A}(Q, \mathcal{M}, y)$:
-    $(r_1, r_2) \leftarrow \mathcal{O}_R(\textrm{Com}, f, Q, \mathcal{M})$
+def $\mathcal{A}(1^\lambda)$:
+    $(r_1, r_2) \leftarrow \mathcal{O}_R(1^\lambda)$
 
     $l_1 = |\text{Reflect}^{k}_s(r_1)|$
     $l_2 = |\text{Reflect}^{k}_s(r_2)|$
@@ -125,14 +125,14 @@ Let $\mathcal{S}$ be an arbitrary simulator. Then we have:
 \begin{align*}
     \Pr[\text{Game}_{\text{REF-SIM}}^{\mathcal{SE},\mathcal{S}}
         (\lambda) = 1] &=\\
-    \Pr_{x \leftarrow \mathcal{M}, b \leftarrow \mathcal{S}(f, \mathcal{M}, g)}
+    \Pr_{x \leftarrow \mathcal{M}, b \leftarrow \mathcal{S}(1^\lambda)}
         [Q(x) = b]
 \end{align*}
 
 Letting the random variables $b$ and $x$:
 \begin{align*}
     x &\leftarrow \mathcal{M}\\
-    b &\leftarrow \mathcal{S}(f, \mathcal{M}, g)
+    b &\leftarrow \mathcal{S}(1^\lambda)
 \end{align*}
 
 Due to the independence of the simulator's output with the choice of $x$ we have:
@@ -245,7 +245,7 @@ Therefore,
 \begin{align*}
     \forall PPT \mathcal{S}:
     \text{Adv}_{\mathcal{SE}(\textrm{Enc}, \textrm{Com}), \mathcal{A}, \mathcal{S}}
-        (\lambda, f, \mathcal{M}, g)
+        (1^\lambda)
     \geq\\
     |\pi + \alpha(\lambda) - \pi| = \alpha(\lambda)
 \end{align*}
@@ -333,7 +333,7 @@ It remains to show that the advantage of the adversary can be
 arbitrarily large, i.e. that for some negligible $C$ we have:
 \begin{align*}
     \text{Adv}_{\mathcal{SE}(\textrm{Enc}, \textrm{Com}), \mathcal{A}, \mathcal{S}_{Amp}}
-    (\lambda, f, \mathcal{M}, g) = 1 - \pi - C
+    (1^\lambda) = 1 - \pi - C
 \end{align*}
 
 Indeed, observe that the amplifying adversary performs a repeated Bernoulli
