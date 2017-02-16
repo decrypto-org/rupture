@@ -66,8 +66,13 @@
 \end{lemma}
 
 \begin{proof}
-
-We make the assumption that a reflection pair $(r_1, r_2)$ is computable.
+We model our plaintext input to the compression function as the usual pair $(s,
+r)$ consisting of the secret string $s$ and reflection string $r$. When $(s, r)$
+are encoded by a compression function $\mathcal{K}$ ideal under some plaintext
+distribution $\bar{\mathcal{M}}$, a simple predicate allows the distinction
+between two secrets $s_1$ and $s_2$ using a reflection pair $(r_1, r_2)$.  We
+make the assumption that the resulting reflection pair $(r_1, r_2)$ is
+efficiently computable.
 
 \begin{align*}
     \Pr[r = r_1|s = s_1] < \Pr[r = r_2|s = s_1]&\land\\
