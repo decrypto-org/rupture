@@ -5,56 +5,63 @@ part of the work on extending the BREACH attack against modern systems and block
 ciphers.
 
 Rupture provides extended functionality regarding the network aspects of the
-attack. It offers the ability to inject malicious code in any computer in the
+attack. It offers the ability to inject malicious code in any computer on the
 network, as well as traffic inspection and analysis of captured packet lengths.
 
 In addition, Rupture enables the automated computation of the reflection strings
-in each stage of the attack.  It also amplifies the attack by issuing multiple
-requests per candidate symbol in the alphabet $\Sigma$ in order to demonstrate
-better probability of success. This is achieved by grouping requests in
-samplesets, where each sampleset contains requests on a symbol in the alphabet
-$\Sigma$. Requests in a sampleset may be constructed to enable optimization
-methods described in \ref{subsec:blockalign} and \ref{subsec:parallel}.
+in each round of the attack. For this computation, the adversary should firstly
+know a prefix of the secret. This prefix is needed to build the reflection
+strings and bootstrap the attack.
 
-The encrypted data pertaining to one response is a \textit{sample}. The set of
-samples collected for a particular work are a \textit{sampleset}. A work
-represents the set of requests needed per candidate in the secret's alphabet.
+Each reflection consists of the known prefix concatenated with a character in
+the candidate alphabet. The candidate alphabet initially is equal to the
+alphabet of the secret and, as the attack progresses, it may be reduced to a
+smaller set of symbols. This construction method ensures that a reflection in
+the reflection vector $\bar{r} = <r_1, r_2, ...>$ will match the secret.
+
+The adversary issues consecutive requests, each containing a different
+reflection. The goal is to recognize which one matches the secret.
+
+In the case when $r$ matches the secret $s$, the compression will be better that
+a case of no-match. Therefore, the network response packets for the matching
+reflection will be smaller than the incorrect reflection packets.
+
+The encrypted data pertaining to one response for a single reflection is a
+\textit{sample}. The set of samples collected for a particular reflection is a
+\textit{sampleset}. The collected samplesets for all candidates in the alphabet
+form a \textit{batch}.
 
 The attack is conducted in \textit{rounds}. In each round, a decision is made
-about the state of the attack and more becomes known about the secret. In a
-round, either the next byte of the secret becomes known, or the known alphabet
-is drilled down to a smaller set. In order to compare various different
-candidate alphabets, the attack executes a series of \textit{batches} of data
-collection for each round.
+about the state of the attack, so either the next byte of the secret becomes
+known or the candidate alphabet is drilled down to a smaller set. Rupture
+amplifies the results by issuing multiple requests per reflection in each
+sampleset in order to achieve better probability of success. Therefore the
+analysis uses the collected samplesets, compares the mean length of the
+responses for all candidates, and chooses the candidate regarding the smaller
+mean response length as the correct one.
 
-In each batch, several works are issued and samples are collected from each
-probability distribution pertaining to a candidate alphabet, forming a
-sampleset. When samplesets of the same amount of samples have been collected for
-all the candidate alphabets, a batch is complete and the data is analyzed. The
-analysis compares the samples of different candidates and decides which is
-optimal, i.e. which candidate is contains the correct guess. This decision is
-made with some \textit{confidence} which is expressed in bytes. If the
-confidence is insufficient, an additional batch of samplesets is collected, and
-the analysis is redone until the confidence is sufficient.
+This decision is made with some \textit{confidence} which is expressed in bytes.
+If the confidence is insufficient, an additional batch is collected and the
+analysis is redone using the aggregated lengths from all collected batches until
+the confidence is sufficient.
 
 Once enough batches have been collected for a decision to be made with good
-confidence, the round of the attack is complete, since new information about the
-secret have become known.
+confidence, the round of the attack is complete.  Each stage of the attack
+consists of multiple rounds and is concluded by decrypting a signle byte of the
+secret.
 
 \subsection{Architecture}\label{app:rupture}
 Rupture is a service-based architecture framework which contains multiple
 independent components. The components are designed to be able to run
-independently on different networks or computer systems, although easy instances
+on different networks, although easy instances
 of the attack can be performed by running all modules on a single system.
 
-The framework assumes a \textit{target} service to be attacked. Typically this
-target is a web service which uses TLS and provides HTTPS endpoints. However,
-this assumption can be relaxed and attacks against other similar protocols are
-possible. Any protocol that exchanges encrypted data on the network and for
-which the attack assumptions hold can in principle be attacked using Rupture. We
-have designed Rupture to be a good playground for experimentation for such new
-attacks. Examples of other encrypted protocols for experimentation include SMTP
-and XMPP.
+The framework assumes a \textit{target} service to be attacked. This target is a
+web service which uses TLS and provides HTTPS endpoints. However, this
+assumption can be relaxed and attacks against other similar protocols are
+possible.  We have designed Rupture to be a good playground for experimentation
+for such new attacks. Examples of other encrypted protocols for experimentation
+include SMTP and XMPP.
 
 The attack also assumes a user of the target service for which data will be
 decrypted, the \textit{victim}. The victim is associated with a particular
@@ -62,16 +69,13 @@ target.
 
 There are two underlying assumptions in our attack: The injection and the
 sniffing assumptions. These are often, but not necessarily, achieved through the
-same means.
-
-The injection assumption states that the adversary is able to inject code to the
-victim's machine for execution. This code is able to issue adaptive requests to
-the target service. Injection in Rupture is implemented by the \textit{injector}
-component. The code that is injected is the \textit{client} component.
-
-The sniffing assumption states that the adversary is able to observe encrypted
-network traffic between the victim and the target. Sniffing is achieved through
-the \textit{sniffer} component.
+same means. The injection assumption states that the adversary is able to
+inject code to the victim's machine for execution. This code is able to issue
+adaptive requests to the target service. Injection in Rupture is implemented by
+the \textit{injector} component. The code that is injected is the
+\textit{client} component.  The sniffing assumption states that the adversary is
+able to observe encrypted network traffic between the victim and the target.
+Sniffing is achieved through the \textit{sniffer} component.
 
 The client must issue adaptive requests. For this purpose, it receives commands
 through a \textit{command-and-control} channel. These commands are sent to the
@@ -88,34 +92,35 @@ The various components are described in detail in the next sections.
 
 \subsubsection{Client}
 
-The client component is a Javascript code that issues requests towards a chosen
-endpoint. The client needs to be executed from the browser of the victim that
-the adversary is trying to steal secrets from. That way, the victim's
-authentication cookies are included in the request and the secrets are included
-in the response.
+The client component is Javascript code issues requests towards a chosen
+endpoint. It needs to be executed from the browser of the victim that the
+adversary is trying to steal secrets from. That way, the victim's authentication
+cookies are included in the request and the secrets are included in the
+response.
 
 The client contains minimal logic. It connects to the realtime service through a
 command-and-control channel and registers itself. It then waits for work
 instructions by the command-and-control channel. The client does not take any
-decisions or receive data about the progress of the attack other than the work
-it is requested to do. This allows the system to be upgraded without having to
-deploy a new client at the victim's network.
+decisions or receive data about the progress of the attack other than the
+sampleset it is requested to collect. This allows the system to be upgraded
+without having to deploy a new client at the victim's network.
 
 As the victim is browsing the Internet, multiple clients will be injected in
 insecure pages and run under various contexts. All of them register and maintain
 an open connection using web sockets with the realtime service. The realtime service
 will activate one of them for the victim while keeping the others dormant. The
-activate will then receive work instructions. If the active client dies, for
+activate client will then receive work instructions. If the active client dies, for
 example by closing its browser tab, one of the dormant clients will be woken up
 to continue the attack.
 
 \subsubsection{Injector}
 
 The injector component is responsible for injecting the client to the victim's
-browser. The injection is performed by ARP spoofing the local network and
-forwarding all traffic in a Man-in-the-Middle manner. The fact that all HTTP
-responses are infected increases robustness. In order to build the injector
-module and perform the above we have reused Bettercap.
+browser. The injection is performed by ARP spoofing (or NDP poisoning in the
+case of IPv6) the local network and forwarding all traffic in a
+Man-in-the-Middle manner. The fact that all HTTP responses are infected
+increases robustness. In order to build the injector module and perform the
+above we have used Bettercap.
 
 The injector component runs on the victim's network and is light-weight and
 stateless. It can be easily deployed on a small machine and used for massive
@@ -127,12 +132,12 @@ controlled by the same central command-and-control channel.
 The realtime service is a service which awaits for work requests by clients. It
 receives command-and-control connections from various clients which may live on
 different networks, orchestrates them, and enforces which will remain dormant
-and ones will receive work, enabling one client per victim as described above.
+and which ones will receive work, enabling one client per victim as described above.
 
 It maintains open web socket connections with clients and connects to the
 backend service using HTTP API calls, facilitating the communication between the
-two ends. It is built in Node.js and uses the socket.io framework for
-communication with the clients.
+two endpoints. It is built in Node.js \cite{tilkov2010node} and uses the
+socket.io framework \cite{rai2013socket} for communication with the clients.
 
 \subsubsection{Sniffer}
 
@@ -148,17 +153,16 @@ is built in Python, using Scapy \cite{biondi2010scapy} for the network functiona
 \subsubsection{Backend}
 
 The backend component controls the attack execution. It initializes the attack
-and calculates the request sets that should be collected. It is responsible for
+and calculates the samplesets that should be collected. It is responsible for
 strategic decision taking, statistical analysis of collected samples, adaptively
 advancing the attack, and storing persistent data about the attacks in progress
 for future analysis.
 
-It communicates with the realtime component in order to guide the client as to
+It communicates with the realtime component in order to guide it as to
 what work should be forwarded to the clients. Meanwhile, it orders the sniffer
 to listen and report network traffic and analyzes the captured network data to
-calculate the confidence in the success for the attack. At the end of each
-round, a single byte of the secret is decrypted, depending on which method of
-the ones described in \ref{subsec:reflectionmethods} is used.
+calculate the attack confidence. At the end of each
+round, information about a single byte of the secret becomes known.
 
 The backend is built in Python, using the Django framework to launch a web
 service for communicating with the rest of Rupture's modules.
