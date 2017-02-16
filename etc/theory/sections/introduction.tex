@@ -16,46 +16,32 @@ the rendering process that is exploited during these attacks and facilitate a
 thorough theoretical analysis of the security of encryption-compression
 composition. We showcase the power of our approach by (i) demonstrating an
 improved attack framework, called Rupture, that improves substantially the
-performance of previous attacks, (ii) showing how attacks like BREACH
-\cite{gluck2013breach}, TIME \cite{be2013perfect}, and CRIME
-\cite{duong2012crime}, can be expressed as instances of our compression
-side-channel attack template, (iii) presenting a general mitigation strategy,
-called CTX, that strikes a good balance between security and efficiency and can
-be readily incorporated in a TLS deployment without a significant performance
-degradation.
+performance of previous attacks, (ii) showing the above attacks can be expressed
+as instances of our compression side-channel attack template, (iii) presenting a
+general mitigation strategy, called CTX, that strikes a good balance between
+security and efficiency and can be readily incorporated in a TLS deployment
+without a significant performance degradation.
 
 \noindent
 \textbf{Our contributions.} First, we implement Rupture\footnotemark[1], a
 production-grade open source framework for conducting compression and encryption
 composition attacks. This generic framework provides an extensible mechanism
 for experimentally testing attack techniques in a modular setting. We implement
-specific compression attack instances such as BREACH. An extensive
+the specific compression attack instance of BREACH. An extensive
 description of Rupture's architecture is in section \ref{subsec:rupture}.
 This is the first time a working tool is provided for this class of attacks.
 
-We then introduce a novel model for analyzing compression and encryption
-composition attacks, the \textit{adaptive reflection game}, with an accompanying
-security definition. This model is quite general in that it does not describe
-specific instances of the rendering function $f$ or the compression function
-$\textrm{Com}$. Furthermore, it allows for general distributions of secret
-$\mathcal{M}$ and distributions of noise $\mathcal{V}$ which can affect the
-rendering. Section \ref{sec:refsec} contains the definition of this model.
+We then introduce a model for analyzing compression and encryption composition
+attacks, the \textit{adaptive reflection game}, with an accompanying security
+definition. This model is novel as it generalizes the concept and the properties
+of these attacks. Section \ref{sec:refsec} contains the definition of this
+model.
 
-We wish to prove that all encryption functions are insecure when composed with
-compression. In order to produce this proof, we build a series of required
-assumptions. We define \textit{interdependence}, a property that characterizes
-dependent random variables drawn from a joint distribution. Interdependence is
-an important notion when exploring the effects of the reflection when compressed
-with a secret.  Another important property is \textit{compression idealness}
-with respect to a message distribution. We define idealness and demonstrate how
-it applies on widely used compression algorithms that are widely used.  Based on
-the properties of compression idealness and interdependence, we prove that
-predicates on the secrets can be learned by choosing adversarial reflections, a
-property we call\textit{compression detectability}. The final part of our
-theoretical work on the attack is to show that this somewhat innocent property
-directly allows the construction of an attacker, which we prove breaks the
-security of the scheme. We also prove that such attacks can be amplified to
-achieve better confidence.
+We prove that all encryption functions are insecure when composed with
+compression, based on a series of required assumptions. We define the properties
+\textit{interdependence} and \textit{compression idealness} and show that these
+somewhat innocent properties enable the construction of an attacker, which we
+prove breaks the security of the scheme.
 
 Based on our attack framework we achieve significant improvements in our
 implementation compared to previous attempts. We improve the complexity from
@@ -65,7 +51,7 @@ optimization.
 
 Having established the attack premises, we shift our interest in defending
 against such attacks. Although there are several proposed defenses, we feel that
-none achieves good compression performance in real-world system terms. In this
+none achieves good compression performance in real-world systems. In this
 direction, we propose \textit{context hiding}, a method that mitigates a class
 of practical compression side-channel attacks like BREACH.
 
@@ -73,12 +59,12 @@ Our implementation of the context hiding defense technique is called
 CTX\footnote[1]{The GitHub repositories of the Rupture and CTX projects make the
 source code openly available but have been removed for anonymization purposes
 and can be provided upon request.}. CTX runs at the application layer of web
-services and is opt-in. It is implemented in Python and Javascript and can be
-used in the common web frameworks Django, Flask and Node.js. CTX achieves
-balance between security and compression performance that is unprecedented
-compared to existing defense methods.
+services, is opt-in, and achieves better balance between security and
+compression performance compared to existing defense methods.
 
-We experimentally show that CTX performs well in the space time and space.
-Specifically, we find that the performance penalty of CTX compared to other
-proposed methods, like secret masking, is significantly lower and within
-accepted rates for real-world applications.
+We experimentally show that CTX performs well in time and space. Specifically,
+we find that the performance penalty of CTX compared to other proposed methods
+is significantly lower and within accepted rates for real-world applications.
+
+Finally, we provide theoretical arguments as to why CTX is an effective defense
+method.

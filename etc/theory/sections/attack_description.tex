@@ -6,31 +6,28 @@ against real-world deployments of TLS and in general of any encryption system.
 Although widely received and documented by the security community, there are
 still not many existing mitigation strategies to thwart them, primarily due to
 (i) the perceived high performance penalty associated with mitigating them, and
-(ii) their perceived complexity and the lack of production code tools that allow
-for their robust execution, something that makes some believe they are not a
-realistic threat. In this work we illustrate that these perceptions are
-wrong and the continuous existence of these attacks suggests a grave
-situation that needs to be addressed.
+(ii) the perceived complexity and the lack of production code tools to allow for
+the robust execution of such attacks. In this work we illustrate that these
+perceptions are wrong and the continuous existence of such realistic threats
+suggests a grave situation that needs to be addressed.
 
-In order to appreciate the seriousness of these attacks we present a motivating
-example. Suppose that a user browses the Internet and accesses a website, like a
-social network, e-banking, mail provider or a similar service that handles
-sensitive private data. When the server receives a request for a page it
-collects all needed data, generates the HTML code for the page and sends a
-network response containing this code along with other resources such as images
-and libraries. All response data is encrypted under TLS, which ensures privacy
-and integrity for the communication between the user and the server, and
-compressed for efficiency.
+In order to appreciate the seriousness of these attacks we present a high-level
+overview. Suppose that a user browses the Internet and accesses a website, like
+a social network or a similar service that handles sensitive private data. When
+the server receives a request for a page it collects all needed data, generates
+the HTML code for the page and sends a network response containing this HTML.
+All response data is encrypted under TLS, which ensures privacy and integrity
+for the communication between the user and the server, and compressed for
+efficiency.
 
 Consider now an adversary that aims to break this communication's security.
 This adversary tries to decrypt parts of the communication and reveal
 information about the exchanged private data. However, in order to mount a
 compression side-channel attack certain conditions need be met.
 
-Firstly, the adversary is able to handle the user's network traffic. That way he
-is able to collect and analyze the network packets of the encrypted
-communication with the server, as well as inject code in third-party
-non-encrypted HTTP responses.
+Firstly, we assume that the adversary is able to handle the user's network
+traffic. That way he is able to collect and analyze the network packets of the
+encrypted communication with the server.
 
 Secondly, he is able to issue any number of malicious requests using the user's
 cookies (which will be encrypted). This can be achieved by forcing the user's
@@ -42,17 +39,17 @@ browser and issues requests to any URL crafted by the adversary. Figure
 
 Thirdly, the web service under attack should allow data injection in the
 encrypted response plaintext. This data takes the form of a specially crafted
-``reflection'' string, e.g. a HTTP GET parameter whose value is included
-in the HTML response. The malicious requests will include such reflections
-crafted by the adversary.
+``reflection'' string included in the malicious requests.
 
 As the attack progresses the adversary collects network data containing multiple
 reflections. Although this data is encrypted, analysis on the lengths of
 different response packets in conjunction with the used reflection sequence will
-reveal otherwise hidden properties of the private data. At this point the
-privacy of the communication between the user and the website is compromised and
-the adversary has broken the confidentiality of the messages by effectively
-circumventing TLS security.
+reveal otherwise hidden properties of the private data. We will elaborate on the
+analysis in section \ref{subsec:rupture}.
+
+At this point the privacy of the communication between the user and the website
+is compromised and the adversary has broken the confidentiality of the messages
+by effectively circumventing TLS security.
 
     \begin{figure}[thpb]
         \centering
@@ -63,10 +60,7 @@ circumventing TLS security.
 
 \subsection{A motivating example, concepts and notations}\label{subsec:terms}
 We now describe a concrete example of the website in the previous section to
-illustrate the various terms we use in the rest of this paper. The terms that
-need be explained include the \textit{rendering function} $f$, \textit{rendered
-message} $m$, \textit{secret} $s$, \textit{noise} $v$, \textit{reflection} $r$
-and the distribution $\mathcal{M}$ of secrets.
+illustrate the various terms we use in the rest of this paper.
 
 The target of the attack is the mail service found in the URL
 \textit{mail.example.com}. The victim is the user that is logged in this service
@@ -88,57 +82,45 @@ GET parameter \textit{query} and the adversary uses the reflection string
     <li>[Bank] Routing number: 123</li>
     </ul>
 </div>
-<div>
-    <p>Current Time: 12:40:00</p>
-</div>
 \end{lstlisting}
 
 The server's HTML generator is an instance of the \textit{rendering function}
-$f$.  The output of $f$ is the \textit{rendered message} $m$. This is the HTML
-response code that is rendered by the user's browser.
+$f$. The output of $f$ is the \textit{rendered message} $m$, in our example the
+HTML response.
 
 The response contains multiple data elements. A data element can be a
-\textit{secret}, \textit{noise}, \textit{static}, or a \textit{reflection}.
+\textit{secret}, \textit{static}, or a \textit{reflection}.
 
 A \textit{secret} $s$ is any part of the response that the application wishes to
-keep private. Examples of secrets include private messages, email contents,
-financial data, and web security elements like CSRF tokens
-\cite{de2011automatic}. In our example, the strings "Bank", which is an email
-topic, and "Routing number: 123", which is the email body, are both secrets.
-
-A \textit{reflection} $r$ is a component crafted by the attacker that can be
-adaptively transformed as the attack progresses. In our example, the HTTP GET
-value "attack" is a reflection. This string is included in the response in "You
-searched for: attack", an information message for the user reflected in every
-search request for the value of the GET parameter "query".
-
-The \textit{noise} $v$ is a value that changes in every request independently
-from the requested content. Examples of noise include timestamps and ads. like
-the string "12:40:00" in our example.
+keep private. Examples of secrets include private messages, financial data, and
+web security elements like CSRF tokens \cite{de2011automatic}. In our example,
+the strings ``Bank", which is an email topic, and ``Routing number: 123", which
+is the email body, are both secrets.
 
 \textit{Static} is any content that remains unchanged across requests. Typical
-examples of static data is HTML CSS code, like "div", "ul", "Your inbox:" in our
+examples of static data is HTML code, like ``div" or ``Your inbox:" in our
 example. Static content is predictable and thus irrelevant to the attack.
 
-Secrets are chosen from the distribution $\mathcal{M}$. $\mathcal{M}$ in our
-example contains all routing numbers and 4-letter strings like "Bank".
+A \textit{reflection} $r$ is a component crafted by the attacker that can be
+adaptively transformed as the attack progresses. In this case, the HTTP GET
+value ``attack" is a reflection. This string is included in the response in ``You
+searched for: attack", an information message for the user reflected in every
+search request.
+
+Secrets are chosen from the distribution $\mathcal{M}$, which contains here all
+routing numbers and 4-letter strings like ``Bank".
 
 The compression function $\textrm{Com}$ is the compression algorithm used on the
 HTML response plaintext. In our example, this algorithm is DEFLATE, the most
-common compression algorithm in the web.
+common compression algorithm on the web.
 
 The encryption function $\textrm{Enc}$ is the encryption algorithm used by the
-web server. The most commonly used symmetric encryption algorithm today is AES.
-We use the function $\mathcal{E}$ to describe the composition of $\textrm{Enc}$
-and $\textrm{Com}$.
+web server, the most common algorithm today being AES.  We use the function
+$\mathcal{E}$ to describe the composition of $\textrm{Enc}$ and $\textrm{Com}$.
 
-The input of $\mathcal{E}$ is the message $m$ and its output is the ciphertext
-$c$ that is sent in the response packets and is sniffed by the adversary
-over-the-wire.
-
-The generation of $m$, its compression and encryption and the transmission over
-the network of $c$, as well as the sniffing ability of the adversary, constitute
-the reflection oracle that will be further described in following sections.
+The input of $\mathcal{E}$ is the compression of $m$ and its output is the
+ciphertext $c$ that is sent in the response packets and is sniffed by the
+adversary over-the-wire.
 
 The adversary issues the attack in stages. In each stage he creates a pool of
 reflections and makes malicious requests for each reflection in the pool. An

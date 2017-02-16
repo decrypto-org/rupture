@@ -8,19 +8,21 @@ $\mu$ is the block size. This results in plaintext length difference between two
 messages not always resulting in length difference between the respective
 encrypted ciphertext.
 
-We bypass this problem by using block alignment techniques
+We bypass this problem by using known block alignment techniques
 \cite{moller2014poodle}. This method demands issuing multiple requests to the
-reflection oracle while including artificial noise.  In each request $r_{i, c}$
-for each candidate $c$ in the secret alphabet, we add increasing artificial
-noise. That way, all $r_{1, c}$ for the candidates will contain one
-character of alignment noise, $r_{2, c}$ two characters and so forth.
-Therefore, for some alignment noise length $a \in [0, \mu)$ the reflection
-of the correct candidate will be $(\delta*\mu)$ and for all incorrect
-candidates $(\delta*\mu)+1$. In that case, the incorrect candidates result
-in one more block compared to the correct one. This ensures that one out of
-$\ceil{\mu / |r_i|}$ requests will result in a block distinction between the
-alphabet candidates. Figure \ref{fig:block_alignment} depicts the block
-alignment technique intuitively.
+reflection oracle and including artificial noise. In each request $r_{i, c_j}$
+for each candidate $c_j$ in the secret alphabet, we add increasing artificial
+noise of specific length. That way, $r_{1, c_j}$ will contain one character
+of alignment noise, $r_{2, c_j}$ two characters and so forth. Therefore, for
+some alignment noise length $a \in [0, \mu)$ the reflection of the correct
+candidate will be $(\delta*\mu)$ and for all incorrect candidates
+$(\delta*\mu)+1$. In that case, the incorrect candidates result in one more
+block compared to the correct one. This ensures that one out of $\ceil{\mu /
+|r_i|}$ requests will result in a block distinction between the alphabet
+candidates.
+
+Figure \ref{fig:block_alignment} depicts the block alignment technique
+intuitively.
 
    \begin{figure}[thpb]
       \centering
@@ -31,32 +33,28 @@ alignment technique intuitively.
 
 \subsection{Reflection computation methods}\label{subsec:reflectionmethods}
 The reflection strings $r$ should be polynomially computable, as defined in
-\ref{subsec:propertycom}. BREACH is parameterized with an alphabet of ASCII
-symbols $\Sigma$ for each character of the secret and a successful attack should
-distinguish a single character of the alphabet through a series of requests.
+\ref{subsec:propertycom}. BREACH is parameterized with the secret alphabet
+$\Sigma$ and should successfully distinguish a single character of the alphabet
+through a series of requests.
 
-The first method of issuing these requests is serial. Each request contains to a
-single character of the alphabet and an attack phase is completed when requests
-have been issued for the entire alphabet. The complexity of this attack is
-$\mathcal{O}(|\Sigma|)$ and the round ends by finding a character of the secret.
-This method is similar to how BREACH previously worked.
+The first method of issuing these requests is serial, as described in section
+\ref{subsec:rupture}.  The complexity of this attack is $\mathcal{O}(|\Sigma|)$
+and the round ends by finding a character of the secret.
 
-The second method of attack is divide and conquer. In each phase the alphabet is
-divided into two subsets $\Sigma_1$ and $\Sigma_2 = \Sigma \setminus \Sigma_1$,
-where $|\Sigma_1| = |\Sigma_2| = \ceil{|\Sigma| / 2}$. The reflection string for
+The second method of attack is divide and conquer. The alphabet is now divided
+into two subsets $\Sigma_1$ and $\Sigma_2 = \Sigma \setminus \Sigma_1$, where
+$|\Sigma_1| = |\Sigma_2| = \ceil{|\Sigma| / 2}$. The reflection string for
 $\Sigma_1$ consists of $|\Sigma_1|$ substrings separated by an annotation symbol
-$\beta$.  Each substring consists of the known prefix concatenated with a
-candidate in $\Sigma_1$.  For example, if $\Sigma_1$ is $\{"1", "2"\}$ and the
-known prefix is "abc", using "-" as $\beta$ the reflection is: "abc1-abc2". The
-reflection string for $\Sigma_2$ is constructed similarly.
+$\beta$. Each substring is built by concatenatin the known prefix with a
+candidate in $\Sigma_1$. For example, if $\Sigma_1$ is $\{"1", "2"\}$ and the
+known prefix is ``abc", using ``-" as $\beta$ the reflection is ``abc1-abc2".
+The reflection string for $\Sigma_2$ is constructed similarly.
 
-As long as the prefix of the secret is \textit{compression-detectable} by each
-substring of the reflection, the end of each phase marks the choice of subset
-$\Sigma_i$ that contains the correct alphabet symbol.  When $|\Sigma| = 1$ the
-round is complete. Each round reduces the alphabet by half, so the complexity of
-this attack is $\mathcal{O}(log|\Sigma|)$. Figure \ref{fig:divide_and_conquer}
-depicts the reflection sequence for the case when the alphabet consists of
-number digits.
+The end of each round marks the choice of subset $\Sigma_i$ that contains the
+correct alphabet symbol and when $|\Sigma_i| = 1$ the attack stage is complete.
+Each round reduces the alphabet by half, so the complexity of this attack is
+$\mathcal{O}(log|\Sigma|)$. Figure \ref{fig:divide_and_conquer} depicts the
+reflection sequence for the case when the alphabet consists of number digits.
 
    \begin{figure}[thpb]
       \centering
@@ -68,11 +66,10 @@ number digits.
 \subsection{Request parallelization}\label{subsec:parallel}
 The reflection oracle is generally synchronous, although it may be able to
 handle multiple parallel requests from the adversary.  This is the case in
-BREACH.  Modern web servers are able to handle multiple parallel requests and
+BREACH. Modern web servers are able to handle multiple parallel requests and
 browsers can issue a certain amount of parallel requests per domain. This
 functionality enables the adversary to issue multiple parallel requests per
-symbol in alphabet $\Sigma$ and efficiently reduce the execution time of the
-attack.
+candidate and efficiently reduce the execution time of the attack.
 
 \subsection{Request soup}
 Previous sections demonstrated the need for multiple requests per reflection

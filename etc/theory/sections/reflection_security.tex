@@ -4,21 +4,20 @@ We now define the theoretical model for reflection attacks. We propose a
 cryptographic game and present proofs of insecurity under the assumptions
 mentioned above. We then move on to describe the necessary properties of the
 various elements in the game and describe existing compression attacks,
-including Rupture, as instances of the theoretical model we introduces.
+including Rupture, as instances of the theoretical model we introduce.
 
 \subsection{The reflection game}\label{subsec:refsecgame}
 
 Let $\mathcal{SE} = (Gen, \mathcal{E}, \mathcal{D})$ be a private-key encryption
-scheme, $\mathcal{A}$ be an adversary and $\mathcal{S}$ be a simulator of
-$\mathcal{A}$. Also let a rendering function $f(\cdot, \cdot)$, some function
-$g$ of a plaintext, and a distribution of secrets $\mathcal{M}$. We require that
-the rendering function $f$ is polynomially computable and reversible. The game
+scheme, $\mathcal{A}$ be an adversary and $\mathcal{S}$ be a simulator. Also let
+some function $f(\cdot, \cdot)$, some function
+$g$ of the plaintext, some function $Com(\cdot)$, and a distribution of secrets
+$\mathcal{M}$. We call $f$ a rendering function and require that it
+is polynomially computable and reversible. We call $Com$ the compression
+function and require that it is a deterministic polynomially computable and
+reversible bijection. The game
 $\text{Game}_{\text{REF-SEC}}^{\mathcal{SE},\mathcal{A}}(\lambda)$ is
 parameterized with the security parameter $\lambda$.
-
-In the case of the example described above, the rendering function $f$ is the
-rendering of the HTML response along with compression that is applied on it.
-Function $g$ represents the prefix of the secret $s$ in the plaintext response.
 
 The challenger produces a $\lambda$-bit key $k \leftarrow Gen(1^\lambda)$. The
 challenger initially chooses a secret $s \leftarrow \mathcal{M}$.
@@ -35,7 +34,7 @@ adversary is successful if $g(s) = y$. In the case of Rupture, a successful
 attack results in the decryption of a single character that extends the known
 prefix of secret $s$.
 
-Formally, let the public key adversarial game be defined as follows:
+Formally, let the secret key adversarial game be defined as follows:
 
 \begin{lstlisting}[texcl,mathescape,basicstyle=\small]
 def $\text{Game}_{\text{REF-SEC}}^{\mathcal{SE},\mathcal{A}}(\lambda)$:
@@ -79,6 +78,9 @@ def $\text{Reflect}^{k}_{s'}(r)$:
     $c \leftarrow \mathcal{E}_{k}(m)$
     return $c$
 \end{lstlisting}
+
+Both the adversary are given access to an encryption and decryption oracle, but
+are not allowed to call the decryption oracle with the reflection oracle output.
 
 The reflection game is depicted in Figure \ref{fig:refgame}.
 
