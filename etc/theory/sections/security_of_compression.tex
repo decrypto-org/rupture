@@ -26,13 +26,11 @@ $r = r_2$.
 We observe that commonly compressed texts such as HTML content exhibit
 interdependence almost everywhere. To be more precise, if we sample, for
 example, digrams (two-letter sequences) in HTML content of popular websites and
-treat this two-letter sequence $\phi = (s, r)$ of the two characters $s$ and
-$r$ as a random variable $\phi$, we notice that $s$ and $r$ are dependent
-variables and in fact interdependent. Similarly when sampling two-word sequences
-$\phi = (s, r)$ of the two words $s$ and $r$ from English literature, then $s$
-and $r$ are interdependent. The same occurs for digrams in English. This
-straightforward fact is supported by extensive statistical analyses in the
-scientific literature such as \cite{mayzner1965tables}.
+treat this two-letter sequence $\phi = (s, r)$ of the two characters $s$ and $r$
+as a random variable $\phi$, we notice that $s$ and $r$ are dependent variables
+and in fact interdependent. This straightforward fact is supported by extensive
+statistical analyses in the scientific literature such as
+\cite{mayzner1965tables}.
 
 While the interdependence assumption is a general notion observed in all common
 plaintexts, it is suitable to mention here how these ideas will emerge as we
@@ -46,12 +44,6 @@ of $s$ is in use. If $s = s_1$, then the attacker will observe the inequality
 $\Pr[(s, r) = (s_1, r_1)] < \Pr[(s, r) = (s_1, r_2)]$, but when $s = s_2$, the
 attacker will observe the different inequality $\Pr[(s, r) = (s_2, r_1)] >
 \Pr[(s, r) = (s_2, r_2)]$.
-
-The necessity of the assumption that the plaintext being compressed follows an
-interdependent distribution will become clear shortly, when we introduce our
-definition of compression functions. This will also immediately hint at how the
-attacker is able to perform these measurements of probability inequalities
-indirectly by observing ciphertext lengths.
 
 \subsection{Composing with compression}\label{subsec:comcompose}
 
