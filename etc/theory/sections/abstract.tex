@@ -1,24 +1,22 @@
-\begin{abstract}
-When compression is composed with encryption, unexpected vulnerabilities can
-arise. Such vulnerabilities have been explored in practical attacks against TLS
-such as CRIME, TIME, and BREACH, even after TLS 1.3. Motivated by the lack of
-production-grade testing tools, we provide Rupture, a modular scalable
-open-source generic attack framework that implements compression side-channel
-attacks in a robust manner. We introduce an abstract theoretical cryptographic
-model to express such attacks, the \textit{adaptive reflection security} game
-with the relevant security definitions. We propose a model for
-\textit{compression idealness} and experimentally show that typical compression
-functions expose partially ideal behavior. We then experimentally show that
+\begin{abstract} When compression is composed with encryption, unexpected
+vulnerabilities can arise. Such vulnerabilities have been explored in practical
+attacks against TLS such as CRIME, TIME, and BREACH, even after TLS 1.3.
+Motivated by the lack of production-grade testing tools, we provide Rupture, a
+modular scalable open-source generic attack framework that implements
+compression side-channel attacks in a robust manner. We introduce an abstract
+theoretical cryptographic model to express such attacks, the \textit{adaptive
+reflection security} game with the relevant security definitions. We propose a
+model for \textit{compression idealness} and experimentally show that typical
+compression functions expose partially ideal behavior. We then argue that
 typical plaintexts used in practice follow an interdependent joint distribution,
 a stronger notion of dependent joint distributions. Based on these two
 properties, we prove that \textit{compression-detectability} of predicates
 arises, i.e. the ability to extract a predicate of the plaintext using
 reflection. We then prove that all length-preserving encryption schemes are
-insecure when composed with such functions. Our attack model describes two modes
-of attack, one-shot and amplified. Finally, we propose a novel defense protocol,
-\textit{context hiding}, that effectively eliminates the threat these attacks
-pose. This protocol modifies the plaintext joint distribution in order to remove
-the interdependence and mitigate the problem. We show that our method of defense
-performs significantly more favourably in terms of compression rate compared to
-previous techniques.
-\end{abstract}
+insecure when composed with such functions.  Finally, we propose a novel defense
+protocol, \textit{context hiding}, that effectively eliminates the threat these
+attacks pose. This protocol modifies the plaintext joint distribution in order
+to remove the interdependence and mitigate the problem.  We argue about the
+security of our defense method. We show that our method of defense performs
+significantly more favourably in terms of compression rate compared to previous
+techniques.\end{abstract}
