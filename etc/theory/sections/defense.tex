@@ -9,53 +9,45 @@ possible when our defense is applied.
 
 \subsection{Hardness of defending}
 First of all, observe that there is a trivial method of defense, and that is
-disabling compression completely. To see why this successfully defends against
-an adversary in the adaptive reflection game, observe that when $f$ outputs a
-constant length, if Com is the identity function, then the attacker cannot
-obtain any more information than the simulator provided that Enc is a secure
-encryption scheme.
+disabling compression completely.
 
-We now point the attention of the reader to the fact that defending against an
-adversary by modifying $f$ is hard in general. We note that $f$ is required to
-be polynomially reversible, meaning it must contain enough information to
-recover $s$. Because Com, as a compression function, must be able to decrease
-the length of various plaintexts, it can output plaintexts of different
-lengths, and hence dependent on the string $s$. Therefore, if Com is
-adversarial, it can easily leak information through the encryption function Enc
-by using its output length. As such, any attempt to generally defend against
-all compression functions Com is necessarily futile.
+However, defending against an adversary by modifying $f$ is hard in general. We
+note that $f$ is required to be polynomially reversible, meaning it must contain
+enough information to recover $s$. Because $Com$ must be able to decrease the
+length of various plaintexts, it can output plaintexts of different lengths
+dependent on $s$. Therefore, if $Com$ is adversarial, it can easily leak
+information through the encryption function $Enc$ by using its output length. As
+such, any attempt to generally defend against all compression functions $Com$ is
+necessarily futile.
 
-However, given the fact that it is theoretically difficult to define a generic
-defense should not discourage us from pursuing a practical defense that applies
-in practice given the specific compression functions which are in use in the
-real-world. As mentioned previously, such compression functions are difficult
-to deal with in an analytical manner, as they are technically involved. We
-therefore do not provide a formal proof that our defense method is secure.
-However, we give a series of arguments for why we believe this is the case
-based on our previously developed theory.
+However, the fact that it is theoretically difficult to define a generic defense
+should not discourage us from pursuing a practical defense that applies in
+practice given the specific compression functions currently in use in the
+real-world.  In this direction, we give a series of arguments for why we believe
+our defense method is secure based on our previously developed theory.
 
 \subsection{Attack elements from a defense perspective}
-The basic problem that needs be solved is the compression detectability of
-the predicate $Q$ under this class of attacks. In order to eliminate detectability,
+The basic problem that needs be solved is the compression detectability of the
+predicate $Q$ under this class of attacks. In order to eliminate detectability,
 it should be made impossible for any pair of reflections $\overbar{r}$ to detect
-$Q$ under the compression function $\textrm{Com}$ and the rendering function $f$. In order to
-achieve this there exist two options - either change the compression or the
-rendering function.
+$Q$ under the compression function $\textrm{Com}$ and the rendering function
+$f$. In order to achieve this there exist two options - either change the
+compression or the rendering function.
 
-The next step is determining what the form of the needed changes is. We
-therefore consider the notions that make detectability possible.
-These notions are compression idealness and interdependence. The first is part
-of the composition of $\textrm{Com}$ and $f$ whereas the second is part of $f$. That
-said, removing either of these notions from the functions will strip the
-adversary the ability to detect $Q$.
+The next step is determining what what kind of changes are needed. We therefore
+consider the notions that make detectability possible. These notions are
+compression idealness and interdependence. The first is part of the composition
+of $\textrm{Com}$ and $f$ whereas the second is part of $f$. That said, removing
+either of these notions from the functions will strip the adversary the ability
+to detect $Q$.
 
 The first choice is forcing the compression function to act non-ideally in the
 cases of secrets. Proposed defenses like disabling compression for annotated
-secrets, or for the whole response, serve this exact idea.
+secrets incorporate this exact idea.
 
 The second choice is removing the interdependece between reflections and
-secrets. In order to achieve that we need to decorrelate the probability of each
-secret from the reflection. A method that uses this option is secret masking,
+secrets. In order to achieve that we need to decorrelate the probability of
+secrets and reflections. A method that acts similarly is secret masking,
 described in section \ref{subsec:masking}. Context hiding also builds on this
 option and is described in the following sections.
 
@@ -63,44 +55,41 @@ option and is described in the following sections.
 
 Context hiding is built on the premise of separating secrets in a per-origin
 manner in order to avoid cross-compression. In order to achieve this we define
-what constitutes an origin and what properties same-origin secrets share. This
-section describes the key components of the defense and the code implementation.
+what constitutes an origin and what properties same-origin secrets share.
 
 \subsubsection{Origins}
 An origin is a uniquely identifiable party that generates content. A party can
-be either a physical entity, like a user, or an application that provides a
-service. It is important to properly identify the party that generated, or could
-have generated, a piece of content. The definition of origins should reflect the
-ability to generate all content that is assigned to each origin.
+be either a physical entity, like a user, or an application. It is important to
+properly identify the party that generated a piece of content, as the definition
+of origins reflects the amount of knowledge on same-origin content.
 
 \subsubsection{Same-origin secrets}
-Defining origins is the first step to identifying same-origin secrets. Secrets
-are content pieces that are assinged to origins. Secrets that are assigned to an
-origin should have been generated by the party that this origin identifies.
-Also the origin's party has access to all content in this origin. This results
-in a secret $a$ being insecure for all other secrets belonging in $a$'s origin.
+After defining the origins, we separate the secrets as content pieces assigned
+to origins. All secrets assigned to an origin should have been generated by the
+party that this origin identifies. An immediate result of this definition is
+that anyone with access to a secret $s$ of origin $o$ also has access to all
+other secrets $s'$ of the same origin $o$.
 
 \subsection{Context hiding functionality}
-Our defense method proposes disabling cross-compression by applying a simple
-substitution cipher derived from a random permutation of the plaintext alphabet.
+Our defense method disables cross-compression by applying a simple substitution
+cipher derived from a random permutation of the plaintext alphabet.
 
-Firstly, we identify the origins based on the output $m$ of rendering function
-$f$ and store them in array $origins$. Each secret $s_i$ in $m$ is then
-separated based on its origin. Each origin is uniquely identified by an integer
-in range $[0, |origins|-1)$.
+Firstly, we identify the origins of the plaintext $m$ and store them in the
+array $origins$. Each secret $s_i$ in $m$ is identified by its origin. Each
+origin is uniquely identified by an integer in range $[0, |origins|-1)$.
 
-Secondly, we identify the alphabet for each origin. An origin's alphabet
-consists of all possible characters that a secret of this origin may contain.
-For each origin, we generate a random permutation of the origin's alphabet and
-store it in the array $permutations$. The first element in the $permutations$
-array corresponds to the first origin in the $origins$ array and so forth.
+Secondly, we identify the alphabet for each origin. An origin's alphabet is the
+set of characters of all secrets in this origin. For each origin, we generate a
+random permutation of the origin's alphabet and store it in the array
+$permutations$. The first element in the $permutations$ array corresponds to the
+first origin in the $origins$ array and so forth.
 
-In order to secure a secret $s$ we apply a hiding function. The hiding function
+In order to secure the secret $s$ we apply a hiding function. This function
 \textit{hide} takes two arguments, the secret $s$ and the permutation $p$ of the
 secret's origin. It applies the substitution cipher on each character in $s$ and
 returns the permuted secret $s'$. The substitution cipher is implemented in the
-function $Permute_p(c)$, which finds the index $i$ of character $c$ in the sorted
-permutation $p$ and replaces it with the $i$-th character in $p$.
+function $Permute_p(c)$, which returns the $i$-th character in $p$, $i$ being
+the index of $c$ in the clear alphabet.
 
 \begin{lstlisting}[texcl,mathescape,basicstyle=\small]
 def hide($s, p$):
@@ -112,36 +101,28 @@ def hide($s, p$):
 
 The protected secret $s'$ is annotated by the special characters
 $\beta_{start}^i$, $\beta_{end}^i$ that mark the start and the end of any
-substring that needs to be unpermuted.
+substring that needs to be unpermuted and are unique per origin. The output $m'$
+that is produced after hiding all secrets consists of all permuted texts
+concatenated with the permutation array $permutations$.
 
-The output $m'$ that is produced after hiding all secrets includes the
-permutation array $permutations$, so that applying the reverse permutation on
-all secrets is possible.
-
-The permuted secrets in $m'$ can be retrieved using the special annotation
-characters $\beta_{start}^i$ and $\beta_{end}^i$ that are unique per origin.
-
-The initial secret $s$ can be retrieved from the protected secret $s'$
-using the \textit{unhide} function. This function takes secret $s'$ and
-permutation $p$ of the secret's origin and applies the reverse permutation on
-$s'$, returning the unpermuted secret $s$.
+The initial secret $s$ can be retrieved from the protected secret $s'$ using the
+\textit{unhide} function. This function takes $s'$ and permutation $p$ of the
+secret's origin, applies the reverse permutation on $s'$, and returns the
+unpermuted secret $s$.
 
 \begin{lstlisting}[texcl,mathescape,basicstyle=\small]
 def unhide($s', p$):
     $s = ''$
     for $ch \in s'$:
-        $s = s || Unpermute_p(ch)$
+        $s = s || Permute_p^{-1}(ch)$
     return $s$
 \end{lstlisting}
 
-In this defense, note that we have generalized the fact that there is no single
-secret that needs to be protected, which was a simplification of our
-theoretical model. In practice, for the developer, the reflection $r$ and the
-secret $s$ are two secrets that have different origins.
-
-Given the fact that $s$ and $r$ are permuted every time an oracle call is made
-makes it difficult for an adversary controlling $r$ to learn information about
-$s$.
+In our theoretical model, we assume that there exists a single secret. However,
+in this section we generalize this and, in practice, the reflection $r$ and the
+secret $s$ are handled as two secrets that have different origins. The fact
+that $s$ and $r$ are permuted every time an oracle call is made makes it
+impossible for an adversary controlling $r$ to learn information about $s$.
 
 Our defense is implemented in the application layer and is opt-in. We choose to
 update the rendering function $f$ instead of the compression function
