@@ -61,15 +61,24 @@ Let the simulator game be defined as follows:
 
 \begin{lstlisting}[texcl,mathescape,basicstyle=\small]
 def $\text{Game}_{\text{REF-SIM}}^{\mathcal{SE},\mathcal{S}}(\lambda)$:
-    $y \leftarrow \mathcal{S}(1^\lambda)$
     $s \leftarrow \mathcal{M}$
+    $s' = 0^{|s|}$
+    $y \leftarrow \mathcal{S}^{\text{Reflect}^{k}_s(r)}(1^\lambda, {|Com(s)|})$
     if $y = g(s)$:
         return 1
     else:
         return 0
 \end{lstlisting}
 
-Where the simulator does not require an oracle for its execution.
+Where $Com$ is an efficiently computable deterministic function. The reflection
+oracle provided to the simulator is as follows:
+
+\begin{lstlisting}[texcl,mathescape,basicstyle=\small]
+def $\text{Reflect}^{k}_{s'}(r)$:
+    $m = f(s', r)$
+    $c \leftarrow \mathcal{E}_{k}(m)$
+    return $c$
+\end{lstlisting}
 
 The reflection game is depicted in Figure \ref{fig:refgame}.
 
