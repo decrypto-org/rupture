@@ -210,17 +210,6 @@ compresses. An attacker that is able to measure how well a string compresses
 can use this to detect a predicate on the second part of the plaintext by
 changing the first part of the plaintext.
 
-More specifically, we model our plaintext input to the compression function as
-the usual pair $(s, r)$ consisting of the secret string $s$ and reflection
-string $r$. When $(s, r)$ are encoded by a compression function $\mathcal{K}$ ideal
-under some plaintext distribution $\bar{\mathcal{M}}$, a simple predicate
-allows the distinction between two secrets $s_1$ and $s_2$ using a reflection
-pair $(r_1, r_2)$.
-
-In the following theorem, we prove compression detectability of a predicate
-with the following simplifications. We make the assumption that the
-resulting reflection pair $(r_1, r_2)$ is computable.
-
 \begin{lemma}[Good compression is detectable]
 Let $\mathcal{K}$ be an ideal compression function with respect to some
 interdependent distribution $\bar{\mathcal{M}}$. Then there exists
