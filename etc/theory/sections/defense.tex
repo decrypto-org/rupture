@@ -272,3 +272,20 @@ and a network transmittion time overhead that, depending on the client's and the
 server's network, may be several seconds.
 
 
+In order to back our claim, we perform the following experiment. We choose a
+fixed secret $s$, 100 characters long. We then choose the reflections $r_i,
+i\in[0, 50]$, where $|r_i| = 50 + i*20$. For each $r_i$ we calculate the
+length of separate compression using gzip $|gzip(s)||gzip(r_i)|$ and the length
+of the compressed CTX'ed secret and reflection $|gzip(ctx(s), ctx(r_i))|$, where $s$
+and $r_i$ belong to different origins.
+
+The results are shown in figure \ref{fig:defense_experiment}. It can be seen
+that the outputs of these two methods are linearly correlated, while also the
+Pearson correlation coefficient of the two variables is 0.998712.
+
+    \begin{figure}[thpb]
+        \centering
+            \includegraphics[width=0.48\textwidth]{defense_experiments/ctx_experiment.png}
+        \caption{CTX/Theoretical security comparison}
+        \label{fig:defense_experiment}
+    \end{figure}
