@@ -288,228 +288,39 @@ security of various schemes which are defined by their output. For example,
 when we say that $E(s) || E(r)$ is reflection secure, we mean that the function
 defined as $\widetilde{E}(s, r) = E(s) || E(r)$ is reflection secure.
 
+Complete proofs of all lemmas can be found in Appendix A.
+
 \begin{lemma}[Reflection-independent security]
     Let $E$ be a length-preserving semantically secure encryption schema and
     $Com$ be any function. Then $E(s)$ is reflection secure.
 \end{lemma}
 
-\begin{proof}
-    Let $\mathcal{A}$ be a reflection security adversary for $E(s)$. We will
-    construct a semantic security adversary $\mathcal{A'}$ for $E$. Our semantic
-    security adversary will break semantic security for \textit{multiple
-    messages}. Let $\mathcal{M}$ be the distribution that $\mathcal{A}$
-    attacks. Because $\mathcal{A}$ is a probabilistic polynomial-time
-    adversary, there is a polynomial bound $t(\lambda)$ for its execution time.
-    The number of reflection queries conducted by $\mathcal{A}$ is then also
-    bound by $t(\lambda)$.
-
-    Define $\mathcal{M'}$ by the following procedure: First, $s$ is chosen
-    out of the distribution $\mathcal{M}$. Then that same $s$ is repeated
-    $t(\lambda)$ times to obtain the vector of plaintexts $\overbar{s}$.
-
-    Upon execution, $\mathcal{A'}$ receives from its challenger the encrypted
-    vector $\overbar{c}$ where the same plaintext has been independently
-    encrypted $t(\lambda)$ times.
-    $\mathcal{A'}$ answers encryption and decryption queries of $\mathcal{A}$
-    by forwarding them to its own encryption and
-    decryption oracles. For reflection queries, because the schema trivially
-    ignores $r$ since $E(s)$ is independent of $r$, the semantic security
-    adversary is able to answer each query $r_i$ with $c_i$.
-
-    Clearly, the view of the simulated reflection adversary is the same as if
-    it were run in an actual reflection game. Therefore we have:
-
-    \begin{align*}
-        Pr[\text{Game}_{\text{REF-SEC}}^{\mathcal{A}}(1^{\lambda})
-        = 1]
-        =
-        Pr[\text{Game}_{\text{SEM-SEC}}^{\mathcal{A'}}(1^{\lambda})
-        = 1]
-    \end{align*}
-
-    We now prove that the adversary $\mathcal{A'}$ obtains a non-negligible gap
-    against any semantic security simulator $\mathcal{S'}$. Indeed let
-    $\mathcal{S'}$ be any semantic security simulator. We will construct a
-    reflection security simulator $\mathcal{S}$. $\mathcal{S}$ works as
-    follows: It obtains $|Com(s)|$ from its challenger which it ignores. It
-    then issues a single reflection query $r_1 = \epsilon$, to which the
-    challenger responds with $c = E(s')$. But $|c| = |E(s')| = |s'| =
-    |0^{|s|}| = |s| = |E(s)| = |c|$ due to length preservation. This $|c|$ is
-    then used to start the semantic security simulator.
-
-    The view of the simulated semantic simulator is the same as if it were run
-    in an actual semantic simulation game. Therefore we have:
-
-    \begin{align*}
-        Pr[\text{Game}_{\text{REF-SIM}}^{\mathcal{S}}(1^{\lambda})
-        = 1]
-        =
-        Pr[\text{Game}_{\text{SEM-SIM}}^{\mathcal{S'}}(1^{\lambda})
-        = 1]
-    \end{align*}
-
-    Because there exists a non-negligible advantage between $\mathcal{A}$ and
-    any simulator $\mathcal{S}$, this gap will also exist between the
-    constructed simulator $\mathcal{S}$. Therefore, we have:
-
-    \begin{align*}
-        \text{non-negl} = \text{Adv}_{\text{REF} \mathcal{A}, \mathcal{S}}\\
-        =
-        Pr[\text{Game}_{\text{REF-SEC}}^{\mathcal{A}}
-        = 1] -
-        Pr[\text{Game}_{\text{REF-SIM}}^{\mathcal{S}}
-        = 1]\\
-        =
-        Pr[\text{Game}_{\text{SEM-SEC}}^{\mathcal{A'}}
-        = 1]
-        -
-        Pr[\text{Game}_{\text{SEM-SIM}}^{\mathcal{S'}}
-        = 1]\\
-        =
-        \text{Adv}_{\text{SEM} \mathcal{A'}, \mathcal{S'}}
-    \end{align*}
-
-    For clarity, we have omitted the security parameters from the games.
-    This completes the proof.
-\end{proof}
-
 \begin{lemma}
     Under the above assumptions, $E(s) || r$ is reflection secure.
 \end{lemma}
-
-\begin{proof}
-    The construction is identical to the previous proof. However, the
-    reflection queries of the reflection adversary $\mathcal{A}$ must be
-    answered correctly. As $r_i$ is known to the semantic security adversary,
-    this can be done in the obvious way by setting $c_i' = c_i || r_i$.
-
-    The reflection security simulator is not affected, as it receives $|c| =
-    |Enc(s) || \epsilon| = |Enc(s)|$.
-\end{proof}
 
 \begin{lemma}
     Under the above assumptions and letting $Com$ be a deterministic
     efficiently computable function, $E(s) || Com(r)$ is reflection secure.
 \end{lemma}
 
-\begin{proof}
-    The construction is the same as before. Because the semantic security
-    adversary has access to the $Com$ function, it can calculcate $Com(r_i)$
-    upon receiving the query $r_i$. Then setting $c_i = E(s) || Com(r_i)$ it
-    responds as usual.
-
-    The reflection simulator on the other hand will be affected by this
-    construction. Indeed $|c| = |E(s') || Com(\epsilon)|$. However,
-    $|Com(\epsilon)|$ can be computed by the simulator, and therefore the value
-    given to the semantic simulator can be obtained as $|c'| = |E(s)| = |E(s')|
-    = |c| - |Com(\epsilon)|$.
-\end{proof}
-
 \begin{lemma}
     Under the above assumptions and additionally requiring that $Com$ is a
     bijection which is also efficiently reversible, $E(Com(s))$ is reflection secure.
 \end{lemma}
-
-\begin{proof}
-    This construction is slightly more complicated. Assuming $\mathcal{A}$ is a
-    reflection-security adversary which works against the distribution
-    $\mathcal{M}$ we will construct a multiple messages semantic security
-    adversary as before. However, the distribution $\mathcal{M'}$ will now be
-    obtained by the following procedure: Initially, $s$ is chosen out of
-    $\mathcal{M}$. Then $Com(s)$ is calculated. This value is then repeated
-    $t(\lambda)$ times. Our semantic security adversary will work against
-    $\mathcal{M'}$.
-
-    When the challenger produces the encrypted vector $\overbar{c}$, it will
-    contain $t(\lambda)$ encryptions of the plaintext $Com(s)$. These can
-    readily now be passed to the reflection adversary as reflection query
-    responses as before.
-
-    The reflection security simulator now makes use of the $|Com(s)|$ input,
-    which it uses to start up the semantic security simulator.
-
-    We now argue that the advantage obtained pertains to a valid predicate on
-    the compressed plaintexts space. Indeed, without loss of generality assume
-    that $g$ is a predicate. Then $g$ partitions the plaintext space into two
-    partitions. Due to $Com$ being a bijection, these partitions are preserved
-    after compression and the plaintext predicate $g$ is isomorphic to a
-    compressed text predicate $g'$. Therefore, the semantic security adversary
-    is able to obtain a non-negligible advantage for a different predicate.
-\end{proof}
 
 \begin{lemma}
     Under the above assumptions, $E(Com(s)) || r)$, $E(Com(s)) || E(r))$, and
     $E(Com(s)) || E(Com(r))$ are all reflection secure.
 \end{lemma}
 
-\begin{proof}
-    The proofs for the above schemas can be combined in the obvious way to
-    obtain the result needed.
-\end{proof}
-
 \begin{lemma}
     Under the above assumptions, $E(s || r)$ is reflection secure.
 \end{lemma}
 
-\begin{proof}
-    We provide a sketch of this proof.
-
-    To obtain this proof, we construct a semantic security adversary which
-    works against a distribution $\mathcal{M'}$ defined as follows. First, $s$
-    is chosen out of $\mathcal{M}$. Because the reflection security adversary
-    is bounded in time by $t(\lambda)$, therefore each of the reflection
-    queries $r_i$ must be $|r_i| < t(\lambda)$. The distribution $\mathcal{M'}$
-    then will contain $t(\lambda)$ different vectors, each of dimension
-    $t(\lambda)$. We require that the $j$-th $t$-dimensional vector contains
-    the same secret text $s$ and an independently chosen reflection text $r$
-    with $|r| = j$.
-
-    Then the semantic security adversary $\mathcal{A'}$ works as follows: Upon
-    receiving the reflection query $r_i$ from the reflection adversary, it
-    responds with a fresh element from the $i$-th vector, which contains the
-    encryption of an incorrect reflection string chosen uniformly at random. We
-    call these \textit{mock} reflections, and notice that the mock reflection
-    has the same length as the actual reflection query.
-
-    We now argue that either this semantic security adversary is able to obtain
-    a valid predicate for $s$, or that we have obtained a distinguisher for the
-    value $r$.
-
-    To do this, invoke a hybrid argument on the sequence of adversaries $B_i$
-    such that the $i$-th adversary works as follows: It responds to the
-    reflection queries $r_1, r_2, \cdots, r_i$ as $\mathcal{A'}$ would,
-    using the mock reflections, but responds to the queries $r_{i+1},
-    \cdots, r_{t(\lambda)}$ using the correct reflections. Clearly,
-    $\mathcal{A'} = B_{t(\lambda)}$. If for all $j$ we have that $B_j$'s output
-    is computationally indistinguishable from $B_{j+1}$'s output, we are done,
-    since this would allow the construction of $\mathcal{A'}$ that obtains a
-    non-negligible advantage. However, if for some $j$ we have that $B_j$'s
-    output is computationally distinguishable from $B_{j+1}$, then this
-    directly allows the construction of a semantic security adversary which is
-    able to distinguish between different $r$ values. The intuition behind this
-    is that since the mock and actual reflection queries have the same length,
-    the assumption of semantic security should not allow the reflection
-    adversary to tell apart the two reflection responses.
-\end{proof}
-
 \begin{lemma}
     Under the above assumptions, $E(Com(s) || Com(r))$ is reflection secure.
 \end{lemma}
-
-\begin{proof}
-    The above lemma follows directly from the fact that $E(s || r)$ is
-    reflection secure using the techniques previously used to obtain the
-    reflection security of $E(Com(s))$ and $E(Com(s)) || E(Com(r))$. For the
-    compression of the secret, the key intuition is that the reflection
-    adversary has access to $|Com(s)|$, that the predicate attacked will be an
-    isomorphic predicate on compression space instead of plaintext space, and
-    that the distribution attacked will be the compression distribution instead
-    of the plaintext distribution. This is readily obtained from the fact that
-    $Com$ is a bijection. For the $Com(r)$ portion, the only
-    requirement is that the compression function is accessible to both the
-    semantic security adversary as well as the reflection security simulator,
-    which is true under the assumption that $Com(r)$ is deterministic.
-\end{proof}
 
 We are now ready to argue for the security of CTX. Let the function $ctx(s)$
 denote the substitution cipher applied on $s$ using a uniformly random alphabet
