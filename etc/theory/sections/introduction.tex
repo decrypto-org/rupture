@@ -8,8 +8,7 @@ including BREACH \cite{gluck2013breach}, TIME \cite{be2013perfect}, and CRIME
 can be exploited is certainly folklore in the cryptography community and is
 documented at least as early as Kelsey's work \cite{kelsey2002compression}, a
 proper theoretical model capturing the real-world perspective of these
-side-channel attacks is still elusive. More information on related work can be
-found on Appendix B.
+side-channel attacks is still elusive.
 
 Motivated by this, in this paper we introduce a general model that incorporates
 the rendering process that is exploited during these attacks and facilitate a
@@ -18,12 +17,15 @@ composition. We showcase the power of our approach by (i) demonstrating an
 improved attack framework, called Rupture, that improves substantially the
 performance of previous attacks, (ii) showing the above attacks can be expressed
 as instances of our compression side-channel attack template, (iii) presenting a
-general mitigation strategy, called CTX, that strikes a good balance between
+general mitigation strategy, called context hiding, or CTX, that strikes a good balance between
 security and efficiency and can be readily incorporated in a TLS deployment
 without a significant performance degradation.
 
+% More information on related work can be
+%found on Appendix B.
+
 \noindent
-\textbf{Our contributions.} First, we implement Rupture\footnotemark[1], a
+\textbf{Our contributions.} First, we implement Rupture,\footnotemark[1] a
 production-grade open source framework for conducting compression and encryption
 composition attacks. This generic framework provides an extensible mechanism
 for experimentally testing attack techniques in a modular setting. We implement
