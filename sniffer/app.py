@@ -3,6 +3,8 @@ from time import sleep
 from sniffer import Sniffer
 from flask import Flask, request, jsonify
 
+import ctypes
+
 app = Flask(__name__)
 
 sniffers = {}
@@ -144,8 +146,7 @@ def delete():
         return msg, 404
 
     # Stop the sniffer capture and wait for the thread to join
-    sniffer.stop()
-    sniffer.join()
+    terminate_thread(sniffer)
 
     # Delete the sniffer entries from both dictionaries
     del sniffers[(source_ip, destination_host)]
@@ -154,6 +155,26 @@ def delete():
     logger.debug(msg)
 
     return msg, 200
+
+
+def terminate_thread(thread):
+    """Terminates a python thread from another thread.
+
+    :param thread: a threading.Thread instance
+
+    http://stackoverflow.com/a/15274929/5993306
+    """
+    if not thread.isAlive():
+        return
+
+    exc = ctypes.py_object(SystemExit)
+    res = ctypes.pythonapi.PyThreadState_SetAsyncExc(
+        ctypes.c_long(thread.ident), exc)
+    if res == 0:
+        raise ValueError("nonexistent thread id")
+    elif res > 1:
+        ctypes.pythonapi.PyThreadState_SetAsyncExc(thread.ident, None)
+        raise SystemError("PyThreadState_SetAsyncExc failed")
 
 
 if __name__ == '__main__':
