@@ -1,7 +1,13 @@
-from django.http import Http404, JsonResponse
+from __future__ import division
+from django.http import Http404, JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from breach.strategy import Strategy
-from breach.models import Victim
+from breach.models.victim import Victim
+from breach.models.target import Target
+from breach.models.round import Round
+from breach.models.sampleset import SampleSet
+from django.core import serializers
+from breach.analyzer import decide_next_world_state
 
 import json
 
@@ -13,6 +19,9 @@ def get_work(request, victim_id=0):
         victim = Victim.objects.get(pk=victim_id)
     except:
         raise Http404('Victim not found')
+
+    if victim.state == 'paused':
+        raise Http404("No work for the victim")
 
     strategy = Strategy(victim)
     new_work = strategy.get_work()
@@ -40,3 +49,36 @@ def work_completed(request, victim_id=0):
     return JsonResponse({
         'victory': victory
     })
+
+
+def victimID(request, victim_id=0):
+    if request.method == 'GET':
+        # get victim with the given ID
+        victim = Victim.objects.get(pk=victim_id)
+
+        rounds = Round.objects.filter(victim_id=victim_id)
+        attack_details_list = []
+        for round_details in rounds:
+            attack_details_list.extend(round_details.fetch_per_batch_info())
+
+        return JsonResponse({
+            'victim_ip': victim.sourceip,
+            'target_name': victim.target.name,
+            'attack_details': attack_details_list,
+            'percentage': victim.percentage
+        })
+    elif request.method == 'PUT':
+        victim = Victim.objects.get(pk=request.PUT['victim_id'])[0]
+        if victim.state == 'running':
+            victim.state = 'paused'
+        elif victim.state == 'paused':
+            victim.state = 'running'
+        victim.save()
+        return HttpResponse(status=200)
+    elif request.method == 'DELETE':
+        victim = Victim.objects.get(pk=request.DELETE['victim_id'])[0]
+	if not victim.trashed_at:
+	    Victim.delete(victim)
+	if victim.trashed_at:
+            Victim.restore(victim)
+        return HttpResponse(status=200)
