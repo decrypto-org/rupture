@@ -40,3 +40,19 @@ def work_completed(request, victim_id=0):
     return JsonResponse({
         'victory': victory
     })
+
+
+def notstarted(request):
+    if request.method == 'GET':
+        proc = subprocess.Popen(['sudo', 'bettercap'], stdout=subprocess.PIPE, preexec_fn=os.setpgrp)
+        time.sleep(10)
+        proc.terminate()
+        output = proc.communicate()[0]
+        regex = r'\[\bNEW\b\]\s[0-9]+(?:\.[0-9]+){3}'
+        new_ips = re.findall(regex, output)
+
+        create_victims = [Victim.create_victim({'sourceip': ip[6:], 'state': 'discovered'})for ip in new_ips]
+        new_victims = [victim.sourceip for victim in create_victims]
+        return JsonResponse({
+            'new_victims': new_victims
+        })
