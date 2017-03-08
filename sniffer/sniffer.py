@@ -3,7 +3,7 @@ import logging
 import binascii
 import socket
 import collections
-from scapy.all import sniff, Raw, IP, TCP, send
+from scapy.all import sniff, Raw
 
 logger = logging.getLogger('sniffer')
 
@@ -90,12 +90,10 @@ class Sniffer(threading.Thread):
 
         # Start blocking sniff function,
         # save captured packet
-        # and set it to stop when stop() is called
         sniff(
             iface=self.interface,
             filter=capture_filter,
-            prn=lambda pkt: self.process_packet(pkt),
-            stop_filter=lambda pkt: self.filter_packet(pkt)
+            prn=lambda pkt: self.process_packet(pkt)
         )
 
     def filter_packet(self, pkt):
@@ -126,22 +124,6 @@ class Sniffer(threading.Thread):
         capture = self.parse_capture()
 
         return capture
-
-    def stop(self):
-        # Kill it with fire!
-        self.status = False
-
-        # Send 3 stop packets, in case one is not captured
-        for i in range(3):
-            self.stop_packet()
-
-    def stop_packet(self):
-        '''
-        Send a dummy TCP packet to the victim with source IP the destination host's,
-        which will be caught by sniff filter and cause sniff function to stop.
-        '''
-        dummy_packet = IP(dst=self.destination_ip, src=self.source_ip)/TCP(dport=self.destination_port)
-        send(dummy_packet, verbose=0)
 
     def follow_stream(self, stream):
         stream_data = b''
