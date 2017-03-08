@@ -53,6 +53,8 @@ class StrategyTestCase(RuptureTestCase):
             prefix='test',
             alphabet='0123456789',
             name='webuoagr',
+            samplesize=1,
+            alignmentsize=0,
             confidence_threshold=1.0
         )
 

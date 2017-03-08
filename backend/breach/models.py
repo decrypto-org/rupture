@@ -67,6 +67,12 @@ class Target(models.Model):
                    'once per batch.')
     )
 
+    alignmentsize = models.IntegerField(
+        default=16,
+        help_text=('The size of the used alignment alphabet. This should be '
+                   'equal to the block size in bytes.')
+    )
+
     recordscardinality = models.IntegerField(
         default=0,
         help_text=('The amount of expected TLS response records per request. '
@@ -264,8 +270,6 @@ class SampleSet(models.Model):
             raise ValidationError('Sampleset alphabet should be at least minroundcardinality sized.')
         if set(self.candidatealphabet) > set(self.round.knownalphabet):
             raise ValidationError("Candidate alphabet must be a subset of round's known alphabet")
-        if set(self.alignmentalphabet) != set(self.round.victim.target.alignmentalphabet):
-            raise ValidationError("Alignment alphabet must be a permutation of target's alignmentalphabet")
 
     @staticmethod
     def create_sampleset(params):

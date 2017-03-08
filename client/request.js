@@ -60,7 +60,7 @@ const Collection = {
         let antiBrowserCaching = Math.random() * Number.MAX_SAFE_INTEGER;
 
         for (let i = 0; i < amount; ++i) {
-            let alignmentPadding = alignmentalphabet.substr(0, i % 16);
+            let alignmentPadding = alignmentalphabet.substr(0, i % alignmentalphabet.length);
             let request = Request.make(url + alignmentPadding + this._SENTINEL + '&' + (antiBrowserCaching + i), oneLoaded.bind({}, i));
             requests.push(request);
         }
