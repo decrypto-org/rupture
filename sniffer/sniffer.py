@@ -59,7 +59,7 @@ class Sniffer(threading.Thread):
             raise ValueError('Invalid argument dictionary - Not enough parameters')
 
         try:
-            self.destination_ip = socket.gethostbyaddr(self.destination_host)[-1][0]
+            self.destination_ip = socket.gethostbyname(self.destination_host)
         except socket.herror, err:
             raise ValueError('socket.herror - {}'.format(str(err)))
 
