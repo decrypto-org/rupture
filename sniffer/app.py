@@ -96,13 +96,13 @@ def read():
     source_ip = request.args.get('source_ip')
     destination_host = request.args.get('destination_host')
 
-    # Get the sniffer, if exists, else return status 404
-    try:
-        sniffer = sniffers[(source_ip, destination_host)]
-    except KeyError:
+    # Get the sniffer, if exists and recording, else return status 404
+    if (source_ip, destination_host) not in sniffers or not sniffers[(source_ip, destination_host)].is_recording():
         msg = '(get_sniff) 404 Not Found: Sniffer (source_ip : {}, destination_host: {})'.format(source_ip, destination_host)
         logger.warning(msg)
         return msg, 404
+    else:
+        sniffer = sniffers[(source_ip, destination_host)]
 
     # Use the sniffer's get_capture() method to get the captured packets
     try:
@@ -138,17 +138,17 @@ def delete():
     logger.debug('Deleting sniffer (source_ip : {}, destination_host: {})...'.format(source_ip, destination_host))
 
     # Get the sniffer object and its source_ip and destination_host, if exists
-    try:
-        sniffer = sniffers[(source_ip, destination_host)]
-    except KeyError:
-        msg = '(get_sniff) 404 Not found: Sniffer (source_ip : {}, destination_host: {})'.format(source_ip, destination_host)
+    if (source_ip, destination_host) not in sniffers or not sniffers[(source_ip, destination_host)].is_recording():
+        msg = '(delete) 404 Not Found: Sniffer (source_ip : {}, destination_host: {})'.format(source_ip, destination_host)
         logger.warning(msg)
         return msg, 404
+    else:
+        sniffer = sniffers[(source_ip, destination_host)]
 
     # Stop the sniffer capture
     sniffer.stop()
 
-    msg = '(get_sniff) Sniffer (source_ip : {}, destination_host: {}) was deleted.'.format(source_ip, destination_host)
+    msg = '(delete) Sniffer (source_ip : {}, destination_host: {}) was deleted.'.format(source_ip, destination_host)
     logger.debug(msg)
 
     return msg, 200
