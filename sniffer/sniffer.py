@@ -3,7 +3,7 @@ import logging
 import binascii
 import socket
 import collections
-from scapy.all import sniff, Raw, IP, TCP, send
+from scapy.all import sniff, Raw
 
 logger = logging.getLogger('sniffer')
 
@@ -92,9 +92,6 @@ class Sniffer(threading.Thread):
             prn=lambda pkt: self.process_packet(pkt)
         )
 
-    def filter_packet(self, pkt):
-        return not self.is_alive()
-
     def process_packet(self, pkt):
         if self._recording:
             # Check for retransmission of same packet
@@ -110,10 +107,6 @@ class Sniffer(threading.Thread):
 
             self.port_streams[pkt.dport].append(pkt)
 
-    def is_alive(self):
-        # Return if thread is dead or alive
-        return self.status
-
     def get_capture(self):
         # Get the data that were captured so far
         capture = self.parse_capture()
@@ -124,14 +117,6 @@ class Sniffer(threading.Thread):
         # Stop recording whatever you listen and erase your memory
         self._recording = False
         self.port_streams = collections.defaultdict(lambda: [])
-
-    def stop_packet(self):
-        '''
-        Send a dummy TCP packet to the victim with source IP the destination host's,
-        which will be caught by sniff filter and cause sniff function to stop.
-        '''
-        dummy_packet = IP(dst=self.destination_ip, src=self.source_ip)/TCP(dport=self.destination_port)
-        send(dummy_packet, verbose=0)
 
     def is_recording(self):
         return self._recording
