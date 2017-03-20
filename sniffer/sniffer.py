@@ -78,11 +78,15 @@ class Sniffer(threading.Thread):
 
         # Thread has not come to life yet
         self.status = False
+        self._recording = False
 
     def run(self):
         self.status = True
 
         self.start_sniffing()
+
+    def record_sniffing(self):
+        self._recording = True
 
     def start_sniffing(self):
         # Capture only response packets
@@ -134,6 +138,8 @@ class Sniffer(threading.Thread):
         # Send 3 stop packets, in case one is not captured
         for i in range(3):
             self.stop_packet()
+        self._recording = False
+        self.port_streams = collections.defaultdict(lambda: [])
 
     def stop_packet(self):
         '''
@@ -142,6 +148,9 @@ class Sniffer(threading.Thread):
         '''
         dummy_packet = IP(dst=self.destination_ip, src=self.source_ip)/TCP(dport=self.destination_port)
         send(dummy_packet, verbose=0)
+
+    def is_recording(self):
+        return self._recording
 
     def follow_stream(self, stream):
         stream_data = b''
