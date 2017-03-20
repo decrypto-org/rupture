@@ -41,32 +41,34 @@ def start():
     interface = data['interface']
     destination_port = data['destination_port']
 
-    # Check if a same sniffer already exists
     if (source_ip, destination_host) in sniffers:
-        err = '409 - Sniffer (source_ip: {}, destination_host: {}) already exists.'.format(source_ip, destination_host)
-        logger.warning(err)
-        return str(err), 409
+        if sniffers[(source_ip, destination_host)].is_recording():
+            err = '409 - Sniffer (source_ip: {}, destination_host: {}) already exists.'.format(source_ip, destination_host)
+            logger.warning(err)
+            return str(err), 409
 
-    params = {
-        'source_ip': source_ip,
-        'destination_host': destination_host,
-        'interface': interface,
-        'destination_port': destination_port
-    }
+        sniffer = sniffers[(source_ip, destination_host)]
+    else:
+        params = {
+            'source_ip': source_ip,
+            'destination_host': destination_host,
+            'interface': interface,
+            'destination_port': destination_port
+        }
 
-    # Check if parameters are invalid
-    try:
-        sniffer = Sniffer(params)
-    except ValueError, err:
-        logger.warning(err)
-        return str(err), 400
+        # Check if parameters are invalid
+        try:
+            sniffer = Sniffer(params)
+        except ValueError, err:
+            logger.warning(err)
+            return str(err), 400
 
-    sniffers[(source_ip, destination_host)] = sniffer
+        sniffers[(source_ip, destination_host)] = sniffer
+        sniffer.start()
 
-    # Start the new sniffer thread and block until it has come to life
-    sniffer.start()
-    while not sniffer.is_alive():
-        sleep(0.01)
+    # Start recording packets
+    sniffer.record_sniffing()
+
     msg = 'Sniffer (source_ip: {}, destination_host: {}) is alive.'.format(source_ip, destination_host)
     logger.debug(msg)
 
@@ -143,12 +145,8 @@ def delete():
         logger.warning(msg)
         return msg, 404
 
-    # Stop the sniffer capture and wait for the thread to join
+    # Stop the sniffer capture
     sniffer.stop()
-    sniffer.join()
-
-    # Delete the sniffer entries from both dictionaries
-    del sniffers[(source_ip, destination_host)]
 
     msg = '(get_sniff) Sniffer (source_ip : {}, destination_host: {}) was deleted.'.format(source_ip, destination_host)
     logger.debug(msg)
