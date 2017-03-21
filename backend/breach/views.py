@@ -113,38 +113,37 @@ class AttackView(View):
 
     def post(self, request):
         input_data = json.loads(request.body.decode('utf-8'))
+
+        try:
+            target = Target.objects.get(name=input_data['target'])
+            input_data['target'] = target.id
+        except:
+            return HttpResponse(status=500)
+
         if 'id' in input_data:
-            form = AttackForm(input_data)
-            if form.is_valid():
-                target = Target.objects.get(name=input_data['target'])
-                victim_id = input_data['id']
-                victim = Victim.objects.get(pk=victim_id)
-                victim.state = 'running'
-                victim.attacked_at = timezone.now()
-                victim.target = target
-                victim.recordscardinality = target.recordscardinality
-                victim.interface = network.get_interface()
-                victim.realtimeurl = 'http://' + network.get_local_IP() + ':3031'
-                victim.save()
+            victim = Victim.objects.get(pk=input_data['id'])
+            input_data['sourceip'] = victim.sourceip
+            form = AttackForm(input_data, instance=victim)
         else:
-            form = VictimForm(input_data)
-            if form.is_valid():
-                target = Target.objects.get(name=input_data['target'])
-                victim = Victim.objects.create(
-                    sourceip=input_data['sourceip'],
-                    target=target,
-                    recordscardinality=target.recordscardinality,
-                    state='running',
-                    attacked_at=timezone.now(),
-                    interface=network.get_interface(),
-                    realtimeurl='http://' + network.get_local_IP() + ':3031'
-                )
+            form = AttackForm(input_data)
 
-        victim.attack
+        if form.is_valid():
+            victim = form.save(commit=False)
+            victim.state = 'running'
+            victim.attacked_at = timezone.now()
+            victim.target = target
+            victim.recordscardinality = victim.target.recordscardinality
+            victim.interface = network.get_interface()
+            victim.realtimeurl = 'http://' + network.get_local_IP() + ':3031'
+            victim.save()
 
-        return JsonResponse({
-            'victim_id': victim.id
-        })
+            victim.attack()
+
+            return JsonResponse({
+               'victim_id': victim.id
+            })
+
+        return HttpResponse(status=500)
 
 
 class VictimDetailView(View):
