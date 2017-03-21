@@ -176,21 +176,19 @@ class VictimDetailView(View):
             'percentage': victim.percentage
         })
 
-    def put(self, request, victim_id):
-        victim = Victim.objects.get(pk=victim_id)
-        if victim.state == 'running':
-            victim.state = 'paused'
-        elif victim.state == 'paused':
-            victim.state = 'running'
-        victim.save()
-        return HttpResponse(status=200)
-
-    def delete(self, request, victim_id):
-        victim = Victim.objects.get(pk=victim_id)
-        if not victim.trashed_at:
-            victim.delete()
-        else:
-            victim.restore()
+    def patch(self, request, victim_id):
+        if 'state' in request.body.decode('utf-8'):
+            state = json.loads(request.body.decode('utf-8'))['state']
+            victim = Victim.objects.get(pk=victim_id)
+            victim.state = state
+            victim.save()
+        elif 'deleted' in request.body.decode('utf-8'):
+            deleted = json.loads(request.body.decode('utf-8'))['deleted']
+            victim = Victim.objects.get(pk=victim_id)
+            if deleted:
+                victim.delete()
+            else:
+                victim.restore()
         return HttpResponse(status=200)
 
 
