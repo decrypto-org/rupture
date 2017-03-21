@@ -431,7 +431,7 @@ class Strategy(object):
                 if self._victim.recordscardinality:
                     expected_records = self._victim.target.samplesize * self._victim.recordscardinality
                     if capture['records'] != expected_records:
-                        if capture['records'] % self._victim.target.samplesize:
+                        if capture['records'] == 0 or capture['records'] % self._victim.target.samplesize:
                             logger.debug('Records not multiple of samplesize. Checking need for calibration...')
                             if self._need_for_calibration():
                                 self._victim.calibration_wait += CALIBRATION_STEP
