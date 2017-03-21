@@ -29,5 +29,6 @@ class AttackForm(ModelForm):
     class Meta:
         model = Victim
         fields = (
-            'id',
+            'sourceip',
+            'target'
         )
