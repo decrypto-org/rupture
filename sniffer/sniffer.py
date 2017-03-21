@@ -3,7 +3,7 @@ import logging
 import binascii
 import socket
 import collections
-from scapy.all import sniff, Raw, IP, TCP, send
+from scapy.all import sniff, Raw
 
 logger = logging.getLogger('sniffer')
 
@@ -76,50 +76,36 @@ class Sniffer(threading.Thread):
         # and value the data stream corresponding to that port
         self.port_streams = collections.defaultdict(lambda: [])
 
-        # Thread has not come to life yet
-        self.status = False
+        self._recording = False
+
+    def record_sniffing(self):
+        self._recording = True
 
     def run(self):
-        self.status = True
-
-        self.start_sniffing()
-
-    def start_sniffing(self):
         # Capture only response packets
         capture_filter = 'tcp and src host {} and src port {} and dst host {}'.format(self.destination_ip, self.destination_port, self.source_ip)
 
-        # Start blocking sniff function,
-        # save captured packet
-        # and set it to stop when stop() is called
+        # Start blocking sniff function and parse captured packets
         sniff(
             iface=self.interface,
             filter=capture_filter,
-            prn=lambda pkt: self.process_packet(pkt),
-            stop_filter=lambda pkt: self.filter_packet(pkt)
+            prn=lambda pkt: self.process_packet(pkt)
         )
 
-    def filter_packet(self, pkt):
-        return not self.is_alive()
-
     def process_packet(self, pkt):
-        # logger.debug(pkt.summary())
+        if self._recording:
+            # Check for retransmission of same packet
+            try:
+                previous_packet = self.port_streams[pkt.dport][-1]
+                if previous_packet[Raw] == pkt[Raw]:
+                    return
+            except IndexError:
+                # Either stream list is empty
+                # or one of the two packets does not have Raw data.
+                # In either case, the packet is OK to be saved.
+                pass
 
-        # Check for retransmission of same packet
-        try:
-            previous_packet = self.port_streams[pkt.dport][-1]
-            if previous_packet[Raw] == pkt[Raw]:
-                return
-        except IndexError:
-            # Either stream list is empty
-            # or one of the two packets does not have Raw data.
-            # In either case, the packet is OK to be saved.
-            pass
-
-        self.port_streams[pkt.dport].append(pkt)
-
-    def is_alive(self):
-        # Return if thread is dead or alive
-        return self.status
+            self.port_streams[pkt.dport].append(pkt)
 
     def get_capture(self):
         # Get the data that were captured so far
@@ -128,20 +114,12 @@ class Sniffer(threading.Thread):
         return capture
 
     def stop(self):
-        # Kill it with fire!
-        self.status = False
+        # Stop recording whatever you listen and erase your memory
+        self._recording = False
+        self.port_streams = collections.defaultdict(lambda: [])
 
-        # Send 3 stop packets, in case one is not captured
-        for i in range(3):
-            self.stop_packet()
-
-    def stop_packet(self):
-        '''
-        Send a dummy TCP packet to the victim with source IP the destination host's,
-        which will be caught by sniff filter and cause sniff function to stop.
-        '''
-        dummy_packet = IP(dst=self.destination_ip, src=self.source_ip)/TCP(dport=self.destination_port)
-        send(dummy_packet, verbose=0)
+    def is_recording(self):
+        return self._recording
 
     def follow_stream(self, stream):
         stream_data = b''
