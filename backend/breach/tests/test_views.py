@@ -194,35 +194,39 @@ class ViewsTestCase(TestCase):
         self.assertEqual(json.loads(response.content)['target_name'], 'ruptureit')
         self.assertEqual(json.loads(response.content)['attack_details'][0]['batch'], 0)
 
-    def test_victimID_put(self):
+    def test_victimID_patch_state(self):
 
         victim = Victim.objects.create(
             sourceip='192.168.1.5',
             target=self.target1,
-            state='running'
         )
+        data1 = {'state': 'paused'}
+        data2 = {'state': 'running'}
 
-        response = self.client.put(reverse('VictimDetailView', kwargs={'victim_id': victim.id}))
+        response = self.client.patch(reverse('VictimDetailView', kwargs={'victim_id': victim.id}), json.dumps(data1), content_type='application/json', )
         self.assertEqual(response.status_code, 200)
         paused_victim = Victim.objects.get(pk=victim.id)
         self.assertEqual(paused_victim.state, 'paused')
-        response = self.client.put(reverse('VictimDetailView', kwargs={'victim_id': victim.id}))
+        response = self.client.patch(reverse('VictimDetailView', kwargs={'victim_id': victim.id}), json.dumps(data2), content_type='application/json', )
         restarted_victim = Victim.objects.get(pk=victim.id)
         self.assertEqual(restarted_victim.state, 'running')
 
-    def test_victimID_delete(self):
+    def test_victimID_patch_delete(self):
 
         victim = Victim.objects.create(
             sourceip='192.168.1.5',
             target=self.target1,
         )
+        data1 = {'deleted': True}
+        data2 = {'deleted': False}
 
-        response = self.client.delete(reverse('VictimDetailView', kwargs={'victim_id': victim.id}))
+        response = self.client.patch(reverse('VictimDetailView', kwargs={'victim_id': victim.id}), json.dumps(data1), content_type='application/json', )
         self.assertEqual(response.status_code, 200)
         deleted_victim = Victim.objects.get(pk=victim.id)
         self.assertNotEqual(deleted_victim.trashed_at, None)
-        response = self.client.delete(reverse('VictimDetailView', kwargs={'victim_id': victim.id}))
+        response = self.client.patch(reverse('VictimDetailView', kwargs={'victim_id': victim.id}), json.dumps(data2), content_type='application/json', )
         restored_victim = Victim.objects.get(pk=victim.id)
+        self.assertEqual(response.status_code, 200)
         self.assertEqual(restored_victim.trashed_at, None)
 
     def test_victim_notstarted(self):
