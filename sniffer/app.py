@@ -65,6 +65,8 @@ def start():
 
         sniffers[(source_ip, destination_host)] = sniffer
         sniffer.start()
+        while not sniffer.isAlive():
+            sleep(0.01)
 
     # Start recording packets
     sniffer.record_sniffing()
