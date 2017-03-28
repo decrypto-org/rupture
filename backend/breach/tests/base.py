@@ -1,6 +1,6 @@
 from django.utils import timezone
 from django.test import TestCase
-from breach.models import SampleSet, Victim, Target, Round
+from breach.models import Target, Victim, Round, SampleSet
 
 
 class RuptureTestCase(TestCase):

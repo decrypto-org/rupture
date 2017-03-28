@@ -1,5 +1,7 @@
 node_modules
 dist
+client_*
+*.json.gzip
 *.tmp
 *.swp
 *.pyc

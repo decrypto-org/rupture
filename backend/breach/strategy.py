@@ -3,7 +3,7 @@ from django.db.models import Max
 from django.core.exceptions import ValidationError
 
 from breach.analyzer import decide_next_world_state
-from breach.models import SampleSet, Round, Target
+from breach.models import Target, Round, SampleSet
 from breach.sniffer import Sniffer
 
 import string
