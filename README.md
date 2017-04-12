@@ -1,5 +1,5 @@
 [![Build
-Status](https://travis-ci.org/dionyziz/rupture.svg?branch=develop)](https://travis-ci.org/dionyziz/rupture)
+Status](https://travis-ci.org/decrypto-org/rupture.svg?branch=develop)](https://travis-ci.org/decrypto-org/rupture)
 
 Rupture
 =======
