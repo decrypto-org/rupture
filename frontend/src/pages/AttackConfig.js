@@ -1,4 +1,6 @@
 import React from 'react';
+import axios from 'axios';
+
 import ConfigForm from '../containers/ConfigForm';
 
 export default class AttackConfig extends React.Component {
@@ -10,14 +12,21 @@ export default class AttackConfig extends React.Component {
         };
     }
     
-    componentWillMount() {
-        if (this.props.location.state) {
-            this.setState({ sourceip: this.props.location.state.sourceip,
-                            victim_id: this.props.location.state.victim_id});
+    componentWillMount = () => {
+        if (this.props.params.id) {
+            this.setState({ victim_id: this.props.params.id });
+            axios.get('/breach/victim/' + this.props.params.id)
+            .then(res => {
+                this.setState({ sourceip: res.data.victim_ip });
+            })
+            .catch(error => {
+                console.log(error);
+            });
         }
     }
 
     render() {
+        console.log(this.state.sourceip);
         return(
             <div className='container'>
                 <div className='row ghost formformat'>
