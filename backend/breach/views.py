@@ -164,14 +164,22 @@ class VictimDetailView(View):
         try:
             known_secret = rounds.order_by('-id').reverse()[0].knownsecret
         except:
-            known_secret = victim.target.prefix
+            try:
+                known_secret = victim.target.prefix
+            except:  # target not set
+                known_secret = ''
+
+        try:
+            target_name = victim.target.name
+        except:  # target not set
+            target_name = ''
 
         return JsonResponse({
             'id': victim.id,
             'victim_ip': victim.sourceip,
             'state': victim.state,
             'known_secret': known_secret,
-            'target_name': victim.target.name,
+            'target_name': target_name,
             'attack_details': attack_details_list,
             'percentage': victim.percentage
         })
