@@ -111,3 +111,17 @@ class Round(models.Model):
         max_length=255,
         help_text='The candidate alphabet for the next unknown character'
     )
+
+    started = models.DateTimeField(
+        default=None,
+        null=True,
+        blank=True,
+        help_text='Date and time since round was started'
+    )
+
+    completed = models.DateTimeField(
+        default=None,
+        null=True,
+        blank=True,
+        help_text='When we stopped round, successfully or not'
+    )
