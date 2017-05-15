@@ -1,88 +1,47 @@
-\documentclass[letterpaper,twocolumn,10pt]{article}
+\documentclass[sigconf, anonymous]{acmart}
 
-%usenix/complementary_newdefines.cls
+\fancyhf{} % Remove fancy page headers
+\fancyhead[C]{Anonymous submission \#9999 to ACM CCS 2017} % TODO: replace 9999 with your paper number
+\fancyfoot[C]{\thepage}
 
-\usepackage{usenix,epsfig,endnotes}
+\setcopyright{none} % No copyright notice required for submissions
+\acmConference[Anonymous Submission to ACM CCS 2017]{ACM Conference on Computer and Communications Security}{Due 19 May 2017}{Dallas, Texas}
+\acmYear{2017}
 
-%\documentclass[times, 10pt, twocolumn]{article}
-\usepackage{amssymb} %for \varnothing
-\usepackage{times}
-\usepackage{amsfonts}
-%\usepackage{amsthm}
+\settopmatter{printacmref=false, printccs=true, printfolios=true} % We want page numbers on submissions
 
-\usepackage{float}
-\usepackage{graphicx, multirow}
-\usepackage{amsmath}
-
+%%\ccsPaper{9999} % TODO: replace with your paper number once obtained
 \usepackage{listings}
-\usepackage{url}
-\usepackage{mathtools}
+\usepackage{amsmath}
 \usepackage{amssymb}
-\usepackage{cite}
-
-\usepackage[colorlinks=true,linkcolor=black,citecolor=black,urlcolor=black]{hyperref}
-%customized packages
-
-\newtheorem{theorem}{Theorem}[section]
-\newtheorem{lemma}[theorem]{Lemma}
-\newtheorem{proposition}[theorem]{Proposition}
-\newtheorem{corollary}[theorem]{Corollary}
-
-\newenvironment{proof}[1][Proof]{\begin{trivlist}
-\item[\hskip \labelsep {\bfseries #1}]}{\end{trivlist}$\hfill\blacksquare$}
-\newenvironment{definition}[1][Definition]{\begin{trivlist}
-\item[\hskip \labelsep {\bfseries #1}]}{\end{trivlist}}
-\newenvironment{example}[1][Example]{\begin{trivlist}
-\item[\hskip \labelsep {\bfseries #1}]}{\end{trivlist}}
-\newenvironment{remark}[1][Remark]{\begin{trivlist}
-\item[\hskip \labelsep {\bfseries #1}]}{\end{trivlist}}
-
-\newcommand{\qed}{\nobreak \ifvmode \relax \else
-      \ifdim\lastskip<1.5em \hskip-\lastskip
-      \hskip1.5em plus0em minus0.5em \fi \nobreak
-      \vrule height0.75em width0.5em depth0.25em\fi}
-
-\pagestyle{empty}
+\usepackage{mathtools}
+\usepackage{url}
 
 \DeclarePairedDelimiter{\ceil}{\lceil}{\rceil}
-\let\oldemptyset\emptyset
-\let\emptyset\varnothing
-
-\newcommand\defeq{\stackrel{\mathclap{\normalfont\mbox{def}}}{=}}
 \newcommand{\overbar}[1]{\mkern1.5mu\overline{\mkern-1.5mu#1\mkern-1.5mu}\mkern 1.5mu}
-
-\DeclareMathAlphabet{\mathcal}{OMS}{cmsy}{m}{n}
-
-\sloppy
+\newcommand\defeq{\stackrel{\mathclap{\normalfont\mbox{def}}}{=}}
 
 \begin{document}
+\title{On the (in)security of encryption over compression in TLS} % TODO: replace with your title
 
-\title{On the (in)security of encryption over compression in TLS}
+\input{sections/abstract.tex}
 
-\author{
-    Anonymized submission
-}
-%  \author{
-%      \rm Dimitris Karakostas \\
-%      University of Athens \\
-%      dimit.karakostas@gmail.com
-%      \and
-%      Aggelos Kiayias \\
-%      University of Edinburgh \\
-%      akiayias@inf.ed.ac.uk
-%      \and
-%      Dionysis Zindros \\
-%      University of Athens \\
-%      dionyziz@di.uoa.gr
-%  }
+\begin{CCSXML}
+    <ccs2012>
+    <concept>
+    <concept_id>10002978.10003022.10003026</concept_id>
+    <concept_desc>Security and privacy~Web application security</concept_desc>
+    <concept_significance>500</concept_significance>
+    </concept>
+    </ccs2012>
+\end{CCSXML}
+
+\ccsdesc[500]{Security and privacy~Web application security}
+
+\keywords{compression, BREACH, CRIME, web security, defense, reflection security} % TODO: replace with your keywords
 
 \maketitle
 
-% Use the following at camera-ready time to suppress page numbers.
-% Comment it out when you first submit the paper for review.
-\thispagestyle{empty}
-
-\input{sections/abstract.tex}
 \input{sections/introduction.tex}
 \input{sections/attack_description.tex}
 \input{sections/rupture.tex}
@@ -92,7 +51,7 @@
 \input{sections/rupture_optimizations.tex}
 \input{sections/defense.tex}
 
-\bibliographystyle{abbrv}
+\bibliographystyle{ACM-Reference-Format}
 \bibliography{citations}
 
 \input{sections/appendix.tex}
