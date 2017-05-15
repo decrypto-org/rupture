@@ -272,7 +272,7 @@ From the fact that $Q$ is compression-detectable and from the Compression Attack
     \pi + \alpha(\lambda)
 \end{align*}
 
-Some elements $s \in \mathcal{M}$ allow for better compression-detectability than others under the fixed
+Some elements $s \in \mathcal{M}$ allow for better compression detectability than others under the fixed
 reflection vector $\overbar{r}$. Call these elements \textit{amplifiable} and define predicate:
 \begin{align*}
     Amp(s) \defeq
@@ -466,7 +466,7 @@ Where $C$ is a negligible function.
 
 \begin{lemma}
     Under the above assumptions and letting $Com$ be a deterministic
-    efficiently computable function, $E(s) || Com(r)$ is reflection secure.
+    efficiently computable function, $E(s)$ $||$ $Com(r)$ is reflection secure.
 \end{lemma}
 
 \begin{proof}
@@ -515,7 +515,7 @@ Where $C$ is a negligible function.
 \end{proof}
 
 \begin{lemma}
-    Under the above assumptions, $E(Com(s)) || r)$, $E(Com(s)) || E(r))$, and
+    Under the above assumptions, $E(Com(s)) || r)$, \break$E(Com(s)) || E(r))$, and
     $E(Com(s)) || E(Com(r))$ are all reflection secure.
 \end{lemma}
 
@@ -570,13 +570,13 @@ Where $C$ is a negligible function.
 \end{proof}
 
 \begin{lemma}
-    Under the above assumptions, $E(Com(s) || Com(r))$ is reflection secure.
+    Under the above assumptions, $E(Com(s)$ $||$ $Com(r))$ is reflection secure.
 \end{lemma}
 
 \begin{proof}
     The above lemma follows directly from the fact that $E(s || r)$ is
     reflection secure using the techniques previously used to obtain the
-    reflection security of $E(Com(s))$ and $E(Com(s)) || E(Com(r))$. For the
+    reflection security of $E(Com(s))$ and $E(Com(s))$ $||$ $E(Com(r))$. For the
     compression of the secret, the key intuition is that the reflection
     adversary has access to $|Com(s)|$, that the predicate attacked will be an
     isomorphic predicate on compression space instead of plaintext space, and

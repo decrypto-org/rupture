@@ -301,7 +301,7 @@ Complete proofs of all lemmas can be found in Appendix A.
 
 \begin{lemma}
     Under the above assumptions and letting $Com$ be a deterministic
-    efficiently computable function, $E(s) || Com(r)$ is reflection secure.
+    efficiently computable function, $E(s)$ $||$ $Com(r)$ is reflection secure.
 \end{lemma}
 
 \begin{lemma}
@@ -310,7 +310,7 @@ Complete proofs of all lemmas can be found in Appendix A.
 \end{lemma}
 
 \begin{lemma}
-    Under the above assumptions, $E(Com(s)) || r)$, $E(Com(s)) || E(r))$, and
+    Under the above assumptions, $E(Com(s)) || r)$, \break$E(Com(s)) || E(r))$, and
     $E(Com(s)) || E(Com(r))$ are all reflection secure.
 \end{lemma}
 
@@ -319,7 +319,7 @@ Complete proofs of all lemmas can be found in Appendix A.
 \end{lemma}
 
 \begin{lemma}
-    Under the above assumptions, $E(Com(s) || Com(r))$ is reflection secure.
+    Under the above assumptions, $E(Com(s)$ $||$ $Com(r))$ is reflection secure.
 \end{lemma}
 
 We are now ready to argue for the security of CTX. Let the function $ctx(s)$
@@ -329,7 +329,7 @@ ciphertext where the substitution cipher has been applied and that the exact
 permutation required to reverse the substitution cipher is sent through a
 separate secure channel.
 
-Under the assumption that $|Com(s) || Com(r)| = |Com(ctx(s) || ctx(r))|$, we
+Under the assumption that \[|Com(s) || Com(r)| = |Com(ctx(s) || ctx(r))|\] we
 see that the semantically secure function $E$ will not allow distinguishing
 between the two distributions $Com(s) || Com(r)$ and $Com(ctx(s) || ctx(r))$.
 
