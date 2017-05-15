@@ -3,6 +3,7 @@
 # http://stackoverflow.com/questions/11587044/how-can-i-create-a-tree-for-huffman-encoding-and-decoding
 
 import Queue
+from collections import OrderedDict
 
 
 class HuffmanNode(object):
@@ -45,6 +46,8 @@ def get_huffman_tree(freq_list):
     node = create_tree(freq_list)
     code = walk_tree(node)
     tree.append('Char\t#\tHuff.codelen\tHuff.code')
+    plot_data = OrderedDict()
     for i in sorted(freq_list, reverse=True):
         tree.append('{}\t{}\t{}\t\t{}'.format(repr(i[1]), i[0], len(code[i[1]]), code[i[1]]))
-    return '\n'.join(tree)
+        plot_data[i[1]] = len(code[i[1]])
+    return '\n'.join(tree), plot_data
