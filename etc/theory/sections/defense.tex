@@ -247,7 +247,9 @@ Figure \ref{fig:total_response_ctx} depicts the results of this experiment. A 13
 CTX overhead, which corresponds to a 228\% increase in compressed response. On the
 other hand, CTX will add only 7KB of compressed data for a 650KB web page, which
 results in a 12\% increase. Disabling compression entirely would add overhead
-that ranges from 500\% to 1000\% for the tested web pages.
+that ranges from 500\% to 1000\% for the tested web pages. For this last case
+of the 650KB web page, the secret masking method previously suggested in the
+literature achieves a 21\% overhead.
 
 The third parameter is the total amount of secrets in the response. In our
 example we use a 650KB web page with 50 CTX origins. The secrets range from 1\%
