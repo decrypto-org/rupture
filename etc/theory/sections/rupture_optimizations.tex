@@ -1,6 +1,6 @@
-\section{Rupture Optimizations}\label{subsec:optimizations}
+\subsection{Optimizations}\label{subsec:optimizations}
 
-\subsection{Block alignment}\label{subsec:blockalign}
+\subsubsection{Block alignment}\label{subsec:blockalign}
 Block ciphers are \textit{length monotonic}, but not \textit{strictly length
 monotonic}, as described in section \ref{subsec:lenmonotone}. Specifically, the
 length of the encrypted text is rounded up to a product of $\mu$-bits, where
@@ -31,7 +31,7 @@ intuitively.
       \label{fig:block_alignment}
    \end{figure}
 
-\subsection{Reflection computation methods}\label{subsec:reflectionmethods}
+\subsubsection{Reflection computation methods}\label{subsec:reflectionmethods}
 The reflection strings $r$ should be polynomially computable, as defined in
 \ref{subsec:propertycom}. BREACH is parameterized with the secret alphabet
 $\Sigma$ and should successfully distinguish a single character of the alphabet
@@ -63,7 +63,7 @@ reflection sequence for the case when the alphabet consists of number digits.
       \label{fig:divide_and_conquer}
    \end{figure}
 
-\subsection{Request parallelization}\label{subsec:parallel}
+\subsubsection{Request parallelization}\label{subsec:parallel}
 The reflection oracle is generally synchronous, although it may be able to
 handle multiple parallel requests from the adversary.  This is the case in
 BREACH. Modern web servers are able to handle multiple parallel requests and
@@ -71,7 +71,7 @@ browsers can issue a certain amount of parallel requests per domain. This
 functionality enables the adversary to issue multiple parallel requests per
 candidate and efficiently reduce the execution time of the attack.
 
-\subsection{Request soup}
+\subsubsection{Request soup}
 Previous sections demonstrated the need for multiple requests per reflection
 string $r_i$. However, communication with the reflection oracle is time
 expensive, so it may be preferable to issue multiple requests for a candidate
