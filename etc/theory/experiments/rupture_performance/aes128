@@ -1,0 +1,53 @@
+[14/May/2017 18:09:39] DEBUG [breach.strategy:306] Checking max reflection length...
+[14/May/2017 18:09:39] DEBUG [breach.strategy:359] 	Known alphabet: abcdefghijklmnopqrstuvwxyz
+[14/May/2017 18:09:39] DEBUG [breach.strategy:360] 	Amount: 32
+[14/May/2017 18:09:39] DEBUG [breach.strategy:379] 	Alignment alphabet: SOKXBIGTEHDJUWLRMNQVPYZFAC
+
+[14/May/2017 18:09:57] DEBUG [breach.strategy:265] 	state: {'knownalphabet': u'abcdefghijklmnopqrstuvwxyz', 'knownsecret': u'bib'}
+[14/May/2017 18:09:57] DEBUG [breach.strategy:265] 	confidence: 0.46875
+
+[14/May/2017 18:10:14] DEBUG [breach.strategy:265] 	state: {'knownalphabet': u'abcdefghijklmnopqrstuvwxyz', 'knownsecret': u'bibe'}
+[14/May/2017 18:10:14] DEBUG [breach.strategy:265] 	confidence: 0.09375
+[14/May/2017 18:10:29] DEBUG [breach.strategy:265] 	state: {'knownalphabet': u'abcdefghijklmnopqrstuvwxyz', 'knownsecret': u'bibe'}
+[14/May/2017 18:10:29] DEBUG [breach.strategy:265] 	confidence: 0.46875
+
+[14/May/2017 18:10:42] DEBUG [breach.strategy:265] 	state: {'knownalphabet': u'abcdefghijklmnopqrstuvwxyz', 'knownsecret': u'biben'}
+[14/May/2017 18:10:42] DEBUG [breach.strategy:265] 	confidence: 0.625
+
+[14/May/2017 18:10:55] DEBUG [breach.strategy:265] 	state: {'knownalphabet': u'abcdefghijklmnopqrstuvwxyz', 'knownsecret': u'bibend'}
+[14/May/2017 18:10:55] DEBUG [breach.strategy:265] 	confidence: 0.40625
+
+[14/May/2017 18:11:09] DEBUG [breach.strategy:265] 	state: {'knownalphabet': u'abcdefghijklmnopqrstuvwxyz', 'knownsecret': u'bibendu'}
+[14/May/2017 18:11:09] DEBUG [breach.strategy:265] 	confidence: 1.0
+
+[14/May/2017 18:11:23] DEBUG [breach.strategy:265] 	state: {'knownalphabet': u'abcdefghijklmnopqrstuvwxyz', 'knownsecret': u'bibendul'}
+[14/May/2017 18:11:23] DEBUG [breach.strategy:265] 	confidence: 0.25
+[14/May/2017 18:11:38] DEBUG [breach.strategy:265] 	state: {'knownalphabet': u'abcdefghijklmnopqrstuvwxyz', 'knownsecret': u'bibendum'}
+[14/May/2017 18:11:38] DEBUG [breach.strategy:265] 	confidence: 0.09375
+[14/May/2017 18:11:52] DEBUG [breach.strategy:265] 	state: {'knownalphabet': u'abcdefghijklmnopqrstuvwxyz', 'knownsecret': u'bibendum'}
+[14/May/2017 18:11:52] DEBUG [breach.strategy:265] 	confidence: 0.145833333333
+[14/May/2017 18:12:06] DEBUG [breach.strategy:265] 	state: {'knownalphabet': u'abcdefghijklmnopqrstuvwxyz', 'knownsecret': u'bibendum'}
+[14/May/2017 18:12:06] DEBUG [breach.strategy:265] 	confidence: 0.1328125
+[14/May/2017 18:12:19] DEBUG [breach.strategy:265] 	state: {'knownalphabet': u'abcdefghijklmnopqrstuvwxyz', 'knownsecret': u'bibendum'}
+[14/May/2017 18:12:19] DEBUG [breach.strategy:265] 	confidence: 0.14375
+[14/May/2017 18:12:33] DEBUG [breach.strategy:265] 	state: {'knownalphabet': u'abcdefghijklmnopqrstuvwxyz', 'knownsecret': u'bibendum'}
+[14/May/2017 18:12:33] DEBUG [breach.strategy:265] 	confidence: 0.208333333333
+[14/May/2017 18:12:47] DEBUG [breach.strategy:265] 	state: {'knownalphabet': u'abcdefghijklmnopqrstuvwxyz', 'knownsecret': u'bibendum'}
+[14/May/2017 18:12:47] DEBUG [breach.strategy:265] 	confidence: 0.214285714286
+[14/May/2017 18:13:01] DEBUG [breach.strategy:265] 	state: {'knownalphabet': u'abcdefghijklmnopqrstuvwxyz', 'knownsecret': u'bibendum'}
+[14/May/2017 18:13:01] DEBUG [breach.strategy:265] 	confidence: 0.2421875
+[14/May/2017 18:13:14] DEBUG [breach.strategy:265] 	state: {'knownalphabet': u'abcdefghijklmnopqrstuvwxyz', 'knownsecret': u'bibendum'}
+[14/May/2017 18:13:14] DEBUG [breach.strategy:265] 	confidence: 0.274305555556
+[14/May/2017 18:13:29] DEBUG [breach.strategy:265] 	state: {'knownalphabet': u'abcdefghijklmnopqrstuvwxyz', 'knownsecret': u'bibendum'}
+[14/May/2017 18:13:29] DEBUG [breach.strategy:265] 	confidence: 0.265625
+[14/May/2017 18:13:44] DEBUG [breach.strategy:265] 	state: {'knownalphabet': u'abcdefghijklmnopqrstuvwxyz', 'knownsecret': u'bibendum'}
+[14/May/2017 18:13:44] DEBUG [breach.strategy:265] 	confidence: 0.309659090909
+
+b - 18
+e - 32
+n - 13
+d - 13
+u - 14
+m - 155
+
+total: 245
