@@ -2,9 +2,19 @@ import matplotlib.pyplot as plt
 from collections import OrderedDict
 
 letters = [i for i in range(0, 7)]
+'''
+# Serial plain on ruptureit
 seconds = OrderedDict([
     ('aes128gcm', [0, 18, 32, 13, 13, 14, 155]),
     ('aes256gcm', [0, 17, 33, 49, 18, 17, 33])
+])
+'''
+# Divide&conquer adaptive (keeping only the last 2 known chars) on ruptureit
+seconds = OrderedDict([
+    ('aes128cbc', [0, 11, 8, 5, 6, 6, 11]),
+    ('aes128gcm', [0, 6, 8, 6, 5, 6, 7]),
+    ('aes256cbc', [0, 7, 7, 5, 6, 6, 9]),
+    ('aes256gcm', [0, 10, 8, 6, 8, 9, 7])
 ])
 
 aggregated_seconds = OrderedDict()
