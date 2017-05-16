@@ -125,3 +125,8 @@ class Round(models.Model):
         blank=True,
         help_text='When we stopped round, successfully or not'
     )
+
+    accumulated_probability = models.FloatField(
+        default=1.0,
+        help_text='Accumulated probability of current round\'s given knownsecret. '
+    )
