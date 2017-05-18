@@ -259,7 +259,8 @@ class Strategy(object):
         '''Analyzes the current round samplesets to extract a decision.'''
 
         current_round_samplesets = SampleSet.objects.filter(round=self._round, success=True)
-        self._decision = decide_next_world_state(current_round_samplesets)
+        self._decision = decide_next_world_state(current_round_samplesets,
+                                                 self._round.accumulated_probability)
 
         logger.debug(75 * '#')
         logger.debug('Decision:')

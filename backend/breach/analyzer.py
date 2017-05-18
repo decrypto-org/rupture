@@ -50,7 +50,7 @@ def get_accumulated_probabilities(sorted_candidate_lengths, current_round_acc_pr
 
     return accumulated_probabilities
 
-def decide_optimal_candidates(candidate_lengths, samples_per_sampleset):
+def decide_optimal_candidates(candidate_lengths, samples_per_sampleset, accumulated_prob):
     '''Take a dictionary of candidate alphabets and their associated
     accumulative lengths and decide which candidate alphabets are the best
     (below average value) with what confidence(worst optimal candidate's
@@ -106,12 +106,13 @@ def decide_optimal_candidates(candidate_lengths, samples_per_sampleset):
     return optimal_candidates, confidence
 
 
-def decide_next_world_state(samplesets):
+def decide_next_world_state(samplesets, accumulated_prob):
     '''Take a list of samplesets and extract a decision for a state transition
     with some confidence.
 
-    Argument:
+    Arguments:
     samplesets -- a list of samplesets.
+    accumulated_prob -- the accumulated probability of current knownalpahbet.
 
     This list must must contain at least two elements so that we have some basis
     for comparison. Each of the list's elements must share the same world state
@@ -154,7 +155,9 @@ def decide_next_world_state(samplesets):
     # Ensure we have a decision to make
     assert(len(candidate_lengths) > 1)
 
-    optimal_candidates, confidence = decide_optimal_candidates(candidate_lengths, samples_per_sampleset=amount)
+    optimal_candidates, confidence = decide_optimal_candidates(candidate_lengths,
+                                                               samples_per_sampleset=amount,
+                                                               accumulated_prob)
 
     state = []
     # All optimal candidates are returned in order to create new rounds.
