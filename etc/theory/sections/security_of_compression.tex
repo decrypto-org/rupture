@@ -65,8 +65,9 @@ $\textrm{Enc}$ denotes an encryption function. We stress our important
 assumption that $\textrm{Enc}$ is defined on $\{0, 1\}^*$ and not on some
 fixed-length input.
 
-We call $\mathcal{K}$ an editing function. For the rest of the paper, we treat
-$\mathcal{K}$ as a compression function.
+Also, a text transformation function $\mathcal{K}$ is a function that has the
+properties defined above and, for the rest of the paper, we treat it as a
+compression function.
 
 \subsection{Compression idealness}\label{subsec:com_idealness}
 
@@ -87,7 +88,7 @@ Where $w$ is a random variable drawn from $\bar{\mathcal{M}}$.
 The intuitive notion behind compression idealness is that the encoding
 function is somehow perfectly aware of the input distribution. It
 exploits this knowledge of the input space to encode each possible
-input in an ideal way – more often occurring plaintexts are compressed
+input in an ideal way - more often occurring plaintexts are compressed
 better, i.e. in shorter length, than rarely occurring plaintexts.
 Practical compression functions are not perfectly ideal, because the
 distribution of plaintexts they try to cover is broad and ill-defined.
@@ -95,13 +96,13 @@ However, such compression functions try to learn the distribution of
 the plaintext they are about to compress by observing frequencies of
 occurrences and taking advantage of them.
 
-We extensively investigate the idealness aspect of the LZ77 and Huffman compression
-functions in Appendix C.
+We extensively investigate experimentally the idealness aspect of the LZ77 and
+Huffman compression functions in Appendix \ref{subsec:idealness_experiment}.
 
 \subsection{Length monotonicity}\label{subsec:lenmonotone}
 
 An important assumption for our attack is that the encryption function
-$\textrm{Enc}$ is \textit{length monotonic}. Specifically, for any keys $k_1
+$\textrm{Enc}$ is \textit{length monotonic}. Specifically, for any keys $k_1,
 k_2$ in the key generating function space and string messages $m_1, m_2$:
 \begin{equation*}
 \begin{split}
@@ -114,20 +115,19 @@ k_2$ in the key generating function space and string messages $m_1, m_2$:
 If the last inequality becomes strict, we call the encryption function
 \textit{strictly length monotonic}.
 
-A practical instance of a length monotonic encryption function is AES
-\cite{daemen2013design} in GCM mode \cite{mcgrew2005galois}. Stream
-ciphers can be treated as strictly monotonic to the bit level.
+A practical instance of a length monotonic encryption function is AES in GCM
+mode. Stream ciphers can be treated as strictly monotonic to the bit level.
 
 \subsection{Compressibility with respect to predicates}\label{subsec:propertycom}
 In this section we will define compressibility with respect to predicates. We
 show that all ideal compression functions that exhibit interdependence are
 compression detectable by a reflection vector $\overbar{r}$ with respect to a
-predicate $Q$ and a distribution $\mathcal{M}$
+predicate $Q$ and a distribution $\mathcal{M}$.
 
 Let $\mathcal{M}$ be a plaintext distribution and $Q(s)$ be a predicate on the
 plaintext $s$ drawn from $\mathcal{M}$. Furthermore, we require that $Q$ is not a
 trivial predicate; that is, there must exist elements for which $Q$ is true and
-others for which it is false.  Let us use $\mathcal{M}_Q$ to denote the
+others for which it is false. Let us use $\mathcal{M}_Q$ to denote the
 distribution $\mathcal{M}$ conditioned on the predicate $Q$.
 
 For the specific property $Q$ and plaintext distribution $\mathcal{M}$, define:
@@ -138,8 +138,8 @@ For the specific property $Q$ and plaintext distribution $\mathcal{M}$, define:
 Where $s$ is drawn from $\mathcal{M}$.
 
 Let $\overbar{r} = (r_1, r_2) \in \mathcal{M}^2$ be a reflection string pair,
-$\mathcal{K}$ be an ideal compression function, $f$ be a rendering function, and
-let $\alpha(\lambda)$ be a non-negligible function.
+$\mathcal{K}$ be an ideal compression function, and let $\alpha(\lambda)$ be a
+non-negligible function.
 
 We now examine how the lengths of compressing a secret $s$ rendered with
 reflection strings $r_1$ and $r_2$ respectively compare.
@@ -167,7 +167,7 @@ The reflection pair $\overbar{r}$ \textit{detects} predicate $Q$ under
 compression function $\mathcal{K}$ over the secret distribution $\mathcal{M}$ with
 advantage $\alpha$ when the comparison is favourable for both $s_1$ drawn from
 $\mathcal{M}_Q$ and $s_2$ drawn from $\mathcal{M}_{\lnot Q}$. Formally, we
-define the predicate $dtc_\alpha(Q, \overbar{r}, f, \textrm{Com}, \mathcal{M})$
+define the predicate $dtc_\alpha(Q, \overbar{r}, \mathcal{K}, \mathcal{M})$
 as follows:
 \begin{align*}
     \Pr
@@ -204,8 +204,8 @@ can use this to detect a predicate on the second part of the plaintext by
 changing the first part of the plaintext.
 
 In the following theorem, we prove compression detectability of a predicate with
-the following simplification. We make the assumption that the resulting
-reflection pair $(r_1, r_2)$ is efficiently computable.
+the simplification that the resulting reflection pair $(r_1, r_2)$ is
+efficiently computable.
 
 
 \begin{lemma}[Good compression is detectable]
