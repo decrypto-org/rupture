@@ -4,24 +4,23 @@ attacks against TLS such as CRIME, TIME, and BREACH, even after TLS 1.3.
 In this work we perform a thorough and systematic study of these attacks
 and provide both practical and theoretical contributions.
 First, motivated by the lack of production-grade testing tools, we provide Rupture, a
-modular scalable open-source generic attack framework that implements
+modular scalable open-source attack framework that implements
 compression side-channel attacks in a robust manner. Second, we introduce an abstract
 theoretical cryptographic model to express such attacks, the \textit{adaptive
-reflection security} ``game.'' Specifically, we
+reflection security} ``game''. Specifically, we
 express \textit{compression idealness} and experimentally show that typical
 compression functions exhibit partially ideal behavior. We then argue that
- plaintext distributions used in practice follow an interdependent joint distribution,
+plaintext distributions used in practice follow an \textit{interdependent} joint distribution,
 a stronger notion of dependent joint distributions. Based on these two
 properties, we prove that \textit{compression-detectability} of predicates
-arises, i.e., the ability to compute a predicate of the plaintext using
+arises, i.e. the ability to compute a predicate of the plaintext using
 a reflection attack. Using this we demonstrate that {\em all}
-length-preserving encryption schemes are
-insecure when composed with such functions.  Finally,  we propose a novel defense
-protocol, \textit{context hiding}, that effectively eliminates the threat these
-attacks pose with minimum performance and deployment overhead.
-This technique modifies the plaintext joint distribution in order
-to remove interdependence.  We argue about the
-security of our defense method in our model. We also demonstrate
-that context hiding performs
-significantly more favourably in terms of compression rate compared to previous defence
-techniques.\end{abstract}
+length-preserving encryption schemes are insecure when composed with such
+functions. Finally, we propose a novel defense protocol, \textit{context
+hiding}, and provide an implementation of it, \textit{CTX}, that effectively
+eliminates the threat these attacks pose with minimum performance and
+deployment overhead. We argue about the security of our defense method based on
+our model, as this technique modifies the plaintext joint distribution in
+order to remove interdependence. We also demonstrate that CTX performs
+significantly more favorably in terms of compression rate compared to previous
+defense techniques.\end{abstract}
