@@ -2,13 +2,7 @@ import matplotlib.pyplot as plt
 from collections import OrderedDict
 
 '''
-# Serial plain on ruptureit
-seconds = OrderedDict([
-    ('aes128gcm', [0, 18, 32, 13, 13, 14, 155]),
-    ('aes256gcm', [0, 17, 33, 49, 18, 17, 33])
-])
-'''
-# Divide&conquer adaptive (keeping only the last 2 known chars) on ruptureit
+# Divide&conquer adaptive (keeping only the last 2 known chars) on ruptureit, try 1
 seconds = OrderedDict([
     ('aes128cbc', [0, 11, 8, 5, 6, 6, 11]),  # 47
     ('aes128gcm', [0, 6, 8, 6, 5, 6, 7]),  # 38
@@ -16,7 +10,29 @@ seconds = OrderedDict([
     ('aes256gcm', [0, 10, 8, 6, 8, 9, 7])  # 48
 ])
 title = 'Rupture divide&conquer against block ciphers'
-filename = 'rupture_div_conq_performance.png'
+filename = 'div_1.png'
+'''
+'''
+# Divide&conquer adaptive (keeping only the last 2 known chars) on ruptureit, try 2
+seconds = OrderedDict([
+    ('aes128cbc', [0, 10, 11, 4, 6, 10, 17]),  # 58
+    ('aes128gcm', [0, 7, 6, 5, 6, 7, 6]),  # 37
+    ('aes256cbc', [0, 8, 7, 20, 7, 14, 14]),  # 70
+    ('aes256gcm', [0, 8, 6, 6, 5, 7, 7]),  # 39
+])
+title = 'Rupture divide&conquer against block ciphers'
+filename = 'div_2.png'
+'''
+'''
+# Divide&conquer adaptive (keeping only the last 2 known chars) on ruptureit, try 3
+seconds = OrderedDict([
+    ('aes128cbc', [0, 9, 7, 5, 8, 7, 8]),  # 44
+    ('aes128gcm', [0, 7, 9, 5, 6, 6, 7]),  # 40
+    ('aes256cbc', [0, 15, 7, 8, 8, 8, 14]),  # 60
+    ('aes256gcm', [0, 10, 6, 6, 5, 7, 6]),  # 40
+])
+title = 'Rupture divide&conquer against block ciphers'
+filename = 'div_3.png'
 '''
 # Serial adaptive (keeping only the last 2 known chars) on ruptureit
 seconds = OrderedDict([
@@ -27,7 +43,6 @@ seconds = OrderedDict([
 ])
 title = 'Rupture serial against block ciphers'
 filename = 'rupture_serial_performance.png'
-'''
 
 letters = [i for i in range(len(seconds['aes128cbc']))]
 
