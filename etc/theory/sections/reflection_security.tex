@@ -1,9 +1,9 @@
 \section{Reflection security}\label{sec:refsec}
 
 We now define the theoretical model for reflection attacks. We propose a
-cryptographic game and present proofs of insecurity under the assumptions
-mentioned above. We then move on to describe the necessary properties of the
-various elements in the game and describe existing compression attacks,
+cryptographic game for a simulation-based model and present proofs of insecurity
+under the necessary assumptions. We then move on to describe the properties of
+the various elements in the game and describe existing compression attacks,
 including Rupture, as instances of the theoretical model we introduce.
 
 \subsection{The reflection game}\label{subsec:refsecgame}
@@ -15,12 +15,12 @@ $g$ of the plaintext, some function $Com(\cdot)$, and a distribution of secrets
 $\mathcal{M}$. We call $f$ a rendering function and require that it
 is polynomially computable and reversible. We call $Com$ the compression
 function and require that it is a deterministic polynomially computable and
-reversible bijection. The game
-$\text{Game}_{\text{REF-SEC}}^{\mathcal{SE},\mathcal{A}}(\lambda)$ is
-parameterized with the security parameter $\lambda$.
+reversible bijection.
 
-The challenger produces a $\lambda$-bit key $k \leftarrow Gen(1^\lambda)$. The
-challenger initially chooses a secret $s \leftarrow \mathcal{M}$.
+The game $\text{Game}_{\text{REF-SEC}}^{\mathcal{SE},\mathcal{A}}(\lambda)$ is
+parameterized with the security parameter $\lambda$. The challenger produces a
+$\lambda$-bit key $k \leftarrow Gen(1^\lambda)$ and initially
+chooses a secret $s \leftarrow \mathcal{M}$.
 
 The adversary is then allowed to run and make arbitrary calls to a reflection
 oracle. The oracle is parameterized by $s$, the secret unknown to the adversary.
@@ -69,8 +69,7 @@ def $\text{Game}_{\text{REF-SIM}}^{\mathcal{SE},\mathcal{S}}(\lambda)$:
         return 0
 \end{lstlisting}
 
-Where $Com$ is an efficiently computable deterministic function. The reflection
-oracle provided to the simulator is as follows:
+The reflection oracle provided to the simulator is as follows:
 
 \begin{lstlisting}[texcl,mathescape,basicstyle=\small]
 def $\text{Reflect}^{k}_{s'}(r)$:
@@ -79,7 +78,7 @@ def $\text{Reflect}^{k}_{s'}(r)$:
     return $c$
 \end{lstlisting}
 
-Both the adversary are given access to an encryption and decryption oracle, but
+Both the adversary and the simulator are given access to an encryption and decryption oracle, but
 are not allowed to call the decryption oracle with the reflection oracle output.
 
 The reflection game is depicted in Figure \ref{fig:refgame}.
@@ -102,7 +101,7 @@ Let us now define the advantage of the adversary against a simulator:
 
 \subsection{Adaptive reflection security}\label{subsec:adaptiverefsec}
 
-Given a rendering function $f(\cdot, \cdot)$, a public-key encryption
+Given a rendering function $f(\cdot, \cdot)$, a private-key encryption
 scheme $\mathcal{SE}$ is \textit{reflection-secure} if:
 \begin{align*}
     \forall \mathcal{M}:
