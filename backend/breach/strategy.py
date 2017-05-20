@@ -276,14 +276,14 @@ class Strategy(object):
         assert(self._analyzed)
 
         # Do we need to collect more samplesets to build up confidence?
-        return self._decision['confidence'] > self._victim.target.confidence_threshold
+        return True
 
     def _create_new_rounds(self):
         assert(self._round_is_completed())
 
         # Create round for every optimal candidate.
-        for i in range(0, len(self._decision['state'])):
-            self._create_round(self._decision['state'][i])
+        for i in range(len(self._decision)):
+            self._create_round(self._decision[i])
             self._create_round_samplesets()
 
     def _set_round_cardinalities(self, candidate_alphabets):
@@ -340,7 +340,8 @@ class Strategy(object):
             index=self._round.index + 1 if hasattr(self, '_round') else 1,
             amount=self._victim.target.samplesize,
             knownalphabet=state['knownalphabet'],
-            knownsecret=state['knownsecret']
+            knownsecret=state['knownsecret'],
+            accumulated_probability=state['probability']
         )
         next_round.save()
         self._round = next_round
