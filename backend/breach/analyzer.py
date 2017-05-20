@@ -79,31 +79,23 @@ def decide_optimal_candidates(candidate_lengths, samples_per_sampleset, accumula
     )
 
     optimal_candidates = []
-    average_threshold = sum(item['length'] for item in sorted_candidate_lengths) / len(sorted_candidate_lengths)
+    candidates_probabilities = get_accumulated_probabilities(sorted_candidate_lengths,
+                                                             accumulated_prob)
 
-    # Candidates with accumulated length below average value have a possible
-    # secret match, so they are returned.
+    # Pick the first two optimal candidates.
+    for i in range(2):
+        optimal_candidates.append({
+            'candidate': candidates_probabilities[i]['candidate_alphabet'],
+            'probability': candidates_probabilities[i]['accumulated_probability']
+        })
+
     logger.debug('\n' + 75 * '#')
     logger.debug('Candidate scoreboard:')
     for cand in sorted_candidate_lengths:
         logger.debug('\t{}: {}'.format(cand['candidate_alphabet'], cand['length']))
-        if(cand['length'] < average_threshold):
-            optimal_candidates.append({
-                'candidate': cand['candidate_alphabet'],
-                'length': cand['length']
-            })
 
-    samples_per_candidate = samplesets_per_candidate * samples_per_sampleset
 
-    # Extract a confidence value, in bytes, for our decision based on the worst optimal candidate's
-    # distance from average value.
-    confidence = float(average_threshold - optimal_candidates[-1]['length']) / samples_per_candidate
-
-    # Captured bytes are represented as hex string,
-    # so we need to convert confidence metric to bytes
-    confidence /= 2.0
-
-    return optimal_candidates, confidence
+    return optimal_candidates
 
 
 def decide_next_world_state(samplesets, accumulated_prob):
@@ -155,7 +147,7 @@ def decide_next_world_state(samplesets, accumulated_prob):
     # Ensure we have a decision to make
     assert(len(candidate_lengths) > 1)
 
-    optimal_candidates, confidence = decide_optimal_candidates(candidate_lengths,
+    optimal_candidates = decide_optimal_candidates(candidate_lengths,
                                                                samples_per_sampleset=amount,
                                                                accumulated_prob)
 
@@ -164,10 +156,8 @@ def decide_next_world_state(samplesets, accumulated_prob):
     for i in optimal_candidates:
         state.append({
             'knownsecret': knownsecret + i['candidate'],
+            'probability': i['probability'],
             'knownalphabet': target.alphabet
         })
 
-    return {
-        'state': state,
-        'confidence': confidence
-    }
+    return state
