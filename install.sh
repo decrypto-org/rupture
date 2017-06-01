@@ -36,6 +36,10 @@ function error_checking() {
     return 0
 }
 
+install_bettercap() {
+    sudo apt-get install build-essential ruby-dev libpcap-dev
+    sudo gem install bettercap
+}
 
 USAGE="Usage: $0 options
 options:
@@ -75,10 +79,7 @@ for var in "$@"; do
         npm install) ##install required packages for compilation of the client code
         ;;
     injection)
-        sudo apt-get install ruby rubygems build-essential
-        sudo gem install syslog-logger #install syslog-logger from local directory or remote server
-        sudo apt-get install build-essential ruby-dev libpcap-dev #install dependencies
-        sudo gem install bettercap
+        install_bettercap
         ;;
     realtime)
         install_nvm_node
@@ -99,13 +100,10 @@ for var in "$@"; do
     all)
         install_nvm_node
         (cd client
-        npm install) ##install required packages for compilation of the client code
-        sudo apt-get install ruby rubygems build-essential
-        sudo gem install syslog-logger #install syslog-logger from local directory or remote server
-        sudo apt-get install build-essential ruby-dev libpcap-dev #install dependencies
-        sudo gem install bettercap
+        npm install)
+        install_bettercap
         (cd realtime
-        npm install) ##install required packages for compilation of the client code
+        npm install)
         install_python
         (cd backend
         activate_virtualenv
