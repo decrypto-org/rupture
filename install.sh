@@ -67,7 +67,6 @@ for var in "$@"; do
     case "$var" in
     client)
 	install_nodejs_npm
-	sudo npm install -g gulp
 	(cd client
 	npm install) ##install required packages for compilation of the client code
 	;;
@@ -95,7 +94,6 @@ for var in "$@"; do
 	;;
     all)
         install_nodejs_npm
-        sudo npm install -g gulp
         (cd client
         npm install) ##install required packages for compilation of the client code
         sudo apt-get install ruby rubygems build-essential
