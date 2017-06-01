@@ -1,12 +1,5 @@
 #!/bin/bash
 
-function install_nodejs_npm {
-    sudo apt-get install curl
-    curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -   ## install or update nodejs with npm
-    sudo apt-get install -y nodejs
-    sudo apt-get install -y build-essential ##needed so as to be able to install native addons from npm
-}
-
 function install_python {
     sudo apt-get install -y python2.7
     sudo apt-get install -y python-pip
@@ -20,6 +13,17 @@ function activate_virtualenv {
     pip install -r requirements.txt
 }
 
+install_nvm_node() {
+    if [ -z "$NVM_DIR" ]; then
+        sudo apt-get install -y build-essential libssl-dev curl
+        curl https://raw.githubusercontent.com/creationix/nvm/v0.33.2/install.sh | bash
+
+        export NVM_DIR="$HOME/.nvm"
+    fi
+    [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+    nvm install 6.3
+    nvm use 6.3
+}
 
 function error_checking() {
     for arg in "$@";
@@ -66,7 +70,7 @@ fi
 for var in "$@"; do
     case "$var" in
     client)
-        install_nodejs_npm
+        install_nvm_node
         (cd client
         npm install) ##install required packages for compilation of the client code
         ;;
@@ -77,7 +81,7 @@ for var in "$@"; do
         sudo gem install bettercap
         ;;
     realtime)
-        install_nodejs_npm
+        install_nvm_node
         (cd realtime
         npm install) ##install required packages for deploying the realtime server
         ;;
@@ -93,7 +97,7 @@ for var in "$@"; do
         activate_virtualenv)
         ;;
     all)
-        install_nodejs_npm
+        install_nvm_node
         (cd client
         npm install) ##install required packages for compilation of the client code
         sudo apt-get install ruby rubygems build-essential
