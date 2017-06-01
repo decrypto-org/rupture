@@ -101,7 +101,8 @@ class Strategy(object):
         '''Given a state of the world, produce a list of candidate alphabets.'''
         methods = {
             Target.SERIAL: self._build_candidates_serial,
-            Target.DIVIDE_CONQUER: self._build_candidates_divide_conquer
+            Target.DIVIDE_CONQUER: self._build_candidates_divide_conquer,
+            Target.BACKTRACKING: self._build_candidates_serial
         }
         return methods[self._round.get_method()](state)
 
