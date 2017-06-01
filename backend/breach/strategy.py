@@ -50,11 +50,41 @@ class Strategy(object):
                 # If the initial round or samplesets cannot be created, end the analysis
                 return
 
-        self._round = Round.objects.filter(
-            victim=self._victim,
-            index=current_round_index
-        )[0]
+        self._choose_next_round(self._victim.target.method, current_round_index)
+
         self._analyzed = False
+
+    def _choose_next_round(self, method, current_round_index):
+        # Choose next round to analyze, based on the execution method.
+        if method == Target.BACKTRACKING:
+            max_accumulated_prob = Round.objects.filter(
+                victim=self._victim,
+                completed=None
+            ).aggregate(Max('accumulated_probability'))
+
+            # Check if more than one objects have the same accumulated
+            # probability.
+            if isinstance(max_accumulated_prob, list):
+                max_value = max_accumulated_prob[0]['accumulated_probability__max']
+                self._round = Round.objects.get(
+                    victim=self._victim,
+                    completed=None,
+                    accumulated_probability=max_value)[0]
+            else:
+                max_value = max_accumulated_prob['accumulated_probability__max']
+                self._round = Round.objects.get(
+                    victim=self._victim,
+                    completed=None,
+                    accumulated_probability=max_value)
+
+            if not self._round.started:
+                self._round.started = timezone.now()
+                self._round.save()
+        else:
+            self._round = Round.objects.filter(
+                victim=self._victim,
+                index=current_round_index
+            )[0]
 
     def _build_candidates_divide_conquer(self, state):
         candidate_alphabet_cardinality = len(state['knownalphabet']) / 2
@@ -256,7 +286,25 @@ class Strategy(object):
         '''Analyzes the current round samplesets to extract a decision.'''
 
         current_round_samplesets = SampleSet.objects.filter(round=self._round, success=True)
+<<<<<<< HEAD
         self._decision = decide_next_world_state(current_round_samplesets)
+=======
+        logger.debug(75 * '#')
+
+        if self._round.get_method() == Target.BACKTRACKING:
+            self._decision = decide_next_backtracking_world_state(current_round_samplesets,
+                                                                  self._round.accumulated_probability)
+
+            logger.debug('Optimal Candidates:')
+            for i in self._decision:
+                logger.debug('{}'.format(i))
+        else:
+            self._decision = decide_next_world_state(current_round_samplesets)
+
+            logger.debug('Decision:')
+            for i in self._decision:
+                logger.debug('\t{}: {}'.format(i, self._decision[i]))
+>>>>>>> e473bdc... fixup! Add choose_next_round to strategy
 
         logger.debug(75 * '#')
         logger.debug('Decision:')
