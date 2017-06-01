@@ -3,6 +3,7 @@ from django.db.models import Max
 from django.core.exceptions import ValidationError
 
 from breach.analyzer import decide_next_world_state
+from breach.backtracking_analyzer import decide_next_backtracking_world_state
 from breach.models import Target, Round, SampleSet
 from breach.sniffer import Sniffer
 
@@ -287,9 +288,7 @@ class Strategy(object):
         '''Analyzes the current round samplesets to extract a decision.'''
 
         current_round_samplesets = SampleSet.objects.filter(round=self._round, success=True)
-<<<<<<< HEAD
         self._decision = decide_next_world_state(current_round_samplesets)
-=======
         logger.debug(75 * '#')
 
         if self._round.get_method() == Target.BACKTRACKING:
@@ -305,14 +304,24 @@ class Strategy(object):
             logger.debug('Decision:')
             for i in self._decision:
                 logger.debug('\t{}: {}'.format(i, self._decision[i]))
->>>>>>> e473bdc... fixup! Add choose_next_round to strategy
 
         logger.debug(75 * '#')
-        logger.debug('Decision:')
-        for i in self._decision:
-            logger.debug('\t{}: {}'.format(i, self._decision[i]))
-        logger.debug(75 * '#')
 
+        if self._round.get_method() == Target.BACKTRACKING:
+            self._decision = decide_next_backtracking_world_state(current_round_samplesets,
+                                                                  self._round.accumulated_probability)
+
+            logger.debug('Optimal Candidates:')
+            for i in self._decision:
+                logger.debug('\n{}'.format(i))
+        else:
+            self._decision = decide_next_world_state(current_round_samplesets)
+
+            logger.debug('Decision:')
+            for i in self._decision:
+                logger.debug('\t{}: {}'.format(i, self._decision[i]))
+
+        logger.debug(75 * '#')
         self._analyzed = True
 
     def _round_is_completed(self):
