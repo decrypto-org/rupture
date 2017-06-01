@@ -66,32 +66,32 @@ fi
 for var in "$@"; do
     case "$var" in
     client)
-	install_nodejs_npm
-	(cd client
-	npm install) ##install required packages for compilation of the client code
-	;;
+        install_nodejs_npm
+        (cd client
+        npm install) ##install required packages for compilation of the client code
+        ;;
     injection)
-	sudo apt-get install ruby rubygems build-essential
-	sudo gem install syslog-logger #install syslog-logger from local directory or remote server
-	sudo apt-get install build-essential ruby-dev libpcap-dev #install dependencies
-	sudo gem install bettercap
-	;;
+        sudo apt-get install ruby rubygems build-essential
+        sudo gem install syslog-logger #install syslog-logger from local directory or remote server
+        sudo apt-get install build-essential ruby-dev libpcap-dev #install dependencies
+        sudo gem install bettercap
+        ;;
     realtime)
-	install_nodejs_npm
-	(cd realtime
-	npm install) ##install required packages for deploying the realtime server
-	;;
+        install_nodejs_npm
+        (cd realtime
+        npm install) ##install required packages for deploying the realtime server
+        ;;
     backend)
-	install_python
-	(cd backend
-	activate_virtualenv
-	python manage.py migrate)
-	;;
+        install_python
+        (cd backend
+        activate_virtualenv
+        python manage.py migrate)
+        ;;
     sniffer)
         install_python
         (cd sniffer
         activate_virtualenv)
-	;;
+        ;;
     all)
         install_nodejs_npm
         (cd client
@@ -102,15 +102,15 @@ for var in "$@"; do
         sudo gem install bettercap
         (cd realtime
         npm install) ##install required packages for compilation of the client code
-	 install_python
+        install_python
         (cd backend
         activate_virtualenv
         python manage.py migrate)
         (cd sniffer
         activate_virtualenv)
-	 echo '##########################################################################'
-	 echo "# Don't forget to create your population scripts or update existing ones #"
-	 echo '##########################################################################'
-	;;
+        echo '##########################################################################'
+        echo "# Don't forget to create your population scripts or update existing ones #"
+        echo '##########################################################################'
+        ;;
   esac
 done
