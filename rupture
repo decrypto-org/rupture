@@ -44,9 +44,18 @@ where <parameter> is:
 
 PARAMETER=$1
 
+use_nvm() {
+    if [ -z "$NVM_DIR" ]; then
+        export NVM_DIR="$HOME/.nvm"
+    fi
+    [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+    nvm use 6.3
+}
+
 setup() {
     $BASEDIR/backend/setup_backend.sh
     $BASEDIR/backend/setup_targets.sh
+    use_nvm
     $BASEDIR/backend/setup_victims.sh
 }
 
@@ -54,6 +63,7 @@ attack() {
     echo "[*] Deploying Rupture..."
     $BASEDIR/backend/deploy_backend.sh &>/dev/null &
     $BASEDIR/sniffer/deploy_sniffer.sh &>/dev/null &
+    use_nvm
     $BASEDIR/realtime/deploy_realtime.sh &>/dev/null &
     echo "[*] Rupture is live."
 
@@ -64,10 +74,10 @@ attack() {
 case $PARAMETER in
     "setup" ) setup;;
     "target" ) $BASEDIR/backend/setup_targets.sh;;
-    "victim" ) $BASEDIR/backend/setup_victims.sh;;
+    "victim" ) use_nvm && $BASEDIR/backend/setup_victims.sh;;
     "backend" ) $BASEDIR/backend/deploy_backend.sh;;
     "sniffer" ) $BASEDIR/sniffer/deploy_sniffer.sh;;
-    "realtime" ) $BASEDIR/realtime/deploy_realtime.sh;;
+    "realtime" ) use_nvm && $BASEDIR/realtime/deploy_realtime.sh;;
     "attack" ) attack;;
     *) usage;;
 esac
