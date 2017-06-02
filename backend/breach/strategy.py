@@ -330,7 +330,11 @@ class Strategy(object):
         assert(self._analyzed)
 
         # Do we need to collect more samplesets to build up confidence?
-        return self._decision['confidence'] > self._victim.target.confidence_threshold
+        if self._round.get_method() != Target.BACKTRACKING:
+            return self._decision['confidence'] > self._victim.target.confidence_threshold
+        else:
+            # If backtracking is enabled we don't have to build extra confidence.
+            return True
 
     def _create_next_round(self):
         assert(self._round_is_completed())
