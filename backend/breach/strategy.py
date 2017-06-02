@@ -446,6 +446,9 @@ class Strategy(object):
     def _attack_is_completed(self):
         return len(self._round.knownsecret) == self._victim.target.secretlength
 
+    def _check_branch_length(self):
+        return self._round.knownsecret == self._victim.target.secretlength
+
     def _need_for_calibration(self):
         started_samplesets = SampleSet.objects.filter(round=self._round).exclude(started=None)
         minimum_samplesets = len(started_samplesets) >= CALIBRATION_SAMPLESET_WINDOW_CHECK
