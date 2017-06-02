@@ -599,6 +599,22 @@ class Strategy(object):
 
         return False
 
+    def _complete_backtracking_round(self):
+        self._round.completed = timezone.now()
+        self._round.save()
+
+        if not self._check_branch_length():
+            try:
+                self._create_new_rounds()
+                return False
+            except MaxReflectionLengthError:
+                # If a new round cannot be created, end the attack.
+                return True
+
+        # If current branch is completed, then we already matched the
+        # secretlength.
+        return True
+
     def _begin_attack(self):
         self._create_round(self._get_first_round_state())
         self._create_round_samplesets()
