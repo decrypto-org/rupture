@@ -582,6 +582,15 @@ class Strategy(object):
         # All batches are completed.
         self._analyze_current_round()
 
+        # Serial and divide and conquer methods require a certain confidence to
+        # complete current round, whereas backtracking only checks if final
+        # secret is recovered.
+        if self._victim.target.method == Target.BACKTRACKING:
+            return self._complete_backtracking_round()
+        else:
+            return self._complete_round()
+
+    def _complete_round(self):
         if self._round_is_completed():
             # Advance to the next round.
             try:
