@@ -341,6 +341,14 @@ class Strategy(object):
 
         self._create_round(self._decision['state'])
 
+    def _create_new_rounds(self):
+        assert(self._round_is_completed())
+
+        # Create round for every optimal candidate.
+        for candidate in self._decision:
+            self._create_round(candidate)
+            self._create_round_samplesets()
+
     def _set_round_cardinalities(self, candidate_alphabets):
         self._round.maxroundcardinality = max(map(len, candidate_alphabets))
         self._round.minroundcardinality = min(map(len, candidate_alphabets))
