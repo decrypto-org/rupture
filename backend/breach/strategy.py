@@ -396,14 +396,29 @@ class Strategy(object):
 
         assert(self._analyzed)
 
+        # If backtracking is enabled, we need to pass the accumulated
+        # probability of the given candidate. Else we pass the default value.
+        #
+        # Next round index is calculated by incrementing current round index.
+        # However backtracking does not always analyzes the round with maximum
+        # index so each time we need to extract that value for the rounds to
+        # come.
+        prob = 1.0
+        max_index = self._round.index + 1 if hasattr(self, '_round') else 1
+        if self._victim.target.method == Target.BACKTRACKING:
+            prob = state['probability']
+            if max_index != 1:
+                max_index = Round.objects.filter(victim=self._victim).aggregate(Max('index'))['index__max'] + 1
+
         # This next round could potentially be the final round.
         # A final round has the complete secret stored in knownsecret.
         next_round = Round(
             victim=self._victim,
-            index=self._round.index + 1 if hasattr(self, '_round') else 1,
+            index=max_index,
             amount=self._victim.target.samplesize,
             knownalphabet=state['knownalphabet'],
-            knownsecret=state['knownsecret']
+            knownsecret=state['knownsecret'],
+            accumulated_probability=prob
         )
         next_round.save()
         self._round = next_round
