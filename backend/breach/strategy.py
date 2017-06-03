@@ -111,7 +111,8 @@ class Strategy(object):
         return {
             'knownsecret': self._victim.target.prefix,
             'candidatealphabet': self._victim.target.alphabet,
-            'knownalphabet': self._victim.target.alphabet
+            'knownalphabet': self._victim.target.alphabet,
+            'probability': 1.0
         }
 
     def _get_unstarted_samplesets(self):
