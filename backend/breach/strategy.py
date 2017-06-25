@@ -52,8 +52,11 @@ class Strategy(object):
 
         self._round = Round.objects.filter(
             victim=self._victim,
-            index=current_round_index
+            completed=None
         )[0]
+        if not self._round.started:
+            self._round.started = timezone.now()
+            self._round.save()
         self._analyzed = False
 
     def _build_candidates_divide_conquer(self, state):
@@ -256,7 +259,8 @@ class Strategy(object):
         '''Analyzes the current round samplesets to extract a decision.'''
 
         current_round_samplesets = SampleSet.objects.filter(round=self._round, success=True)
-        self._decision = decide_next_world_state(current_round_samplesets)
+        self._decision = decide_next_world_state(current_round_samplesets,
+                                                 self._round.accumulated_probability)
 
         logger.debug(75 * '#')
         logger.debug('Decision:')
@@ -272,12 +276,15 @@ class Strategy(object):
         assert(self._analyzed)
 
         # Do we need to collect more samplesets to build up confidence?
-        return self._decision['confidence'] > self._victim.target.confidence_threshold
+        return True
 
-    def _create_next_round(self):
+    def _create_new_rounds(self):
         assert(self._round_is_completed())
 
-        self._create_round(self._decision['state'])
+        # Create round for every optimal candidate.
+        for i in range(len(self._decision)):
+            self._create_round(self._decision[i])
+            self._create_round_samplesets()
 
     def _set_round_cardinalities(self, candidate_alphabets):
         self._round.maxroundcardinality = max(map(len, candidate_alphabets))
@@ -333,7 +340,8 @@ class Strategy(object):
             index=self._round.index + 1 if hasattr(self, '_round') else 1,
             amount=self._victim.target.samplesize,
             knownalphabet=state['knownalphabet'],
-            knownsecret=state['knownsecret']
+            knownsecret=state['knownsecret'],
+            accumulated_probability=state['probability']
         )
         next_round.save()
         self._round = next_round
@@ -384,6 +392,9 @@ class Strategy(object):
                 'alignmentalphabet': alignmentalphabet,
                 'batch': self._round.batch
             })
+
+    def _check_branch_length(self):
+        return self._round.knownsecret == self._victim.target.secretlength - 1
 
     def _attack_is_completed(self):
         return len(self._round.knownsecret) == self._victim.target.secretlength
@@ -495,15 +506,20 @@ class Strategy(object):
         self._analyze_current_round()
 
         if self._round_is_completed():
-            # Advance to the next round.
-            try:
-                self._create_next_round()
-            except MaxReflectionLengthError:
-                # If a new round cannot be created, end the attack
-                return True
+            # Mark this round as completed and advance to the next rounds.
+            self._round.completed = timezone.now()
+            self._round.save()
 
-            if self._attack_is_completed():
-                return True
+            # Check if this branch is equal to the secret length.
+            if not self._check_branch_length():
+                try:
+                    self._create_new_rounds()
+                    return False
+                except MaxReflectionLengthError:
+                    # If a new round cannot be created, end the attack
+                    return True
+            # If current branch is completed, get work for a new branch which is already created.
+            return False
 
         # Not enough confidence, we need to create more samplesets to be
         # collected for this round.
@@ -513,4 +529,6 @@ class Strategy(object):
 
     def _begin_attack(self):
         self._create_round(self._get_first_round_state())
+        self._round.started = timezone.now()
+        self._round.save()
         self._create_round_samplesets()

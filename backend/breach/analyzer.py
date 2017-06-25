@@ -9,13 +9,55 @@ class AnalyzerError(Exception):
     pass
 
 
-def decide_optimal_candidate(candidate_lengths, samples_per_sampleset):
+def get_accumulated_probabilities(sorted_candidate_lengths, current_round_acc_probability):
+    '''Take a dictionary of sorted candidate alphabets  and calculate the
+    relative probability of each candidate being in the target secret based on
+    their associated accumulative lengths. Then associate the relative values
+    with the probability of the parent Round and calculate the final accumulated
+    probability.
+
+    Returns a dictionary containing every possible candidate alphabet and its
+    accumulated probability value.
+    '''
+    compression_function_factor = 1.3
+    relative_probability_sum = 0.0
+    min_candidate_value = sorted_candidate_lengths[0]['length']
+    round_factor = 4
+    amplification_factor = 1.2
+
+    # Calculate relative probability sum based on each candidate's length.
+    for length in sorted_candidate_lengths.values():
+        relative_probability_sum += (compression_function_factor ** (-abs(length
+                                                                          - min_candidate_value)))
+
+        relative_probability_sum = round(relative_probability_sum, round_factor)
+
+    accumulated_probabilities = []
+
+    # Calculate every candidate's accumulated probability by multiplying its
+    # parent's probability with the relative value of this round and an amplification
+    # factor.
+    for candidate, length in sorted_candidate_lengths.iteritems():
+        relative_prob = (round(float(compression_function_factor
+                                     ** (-abs(length - min_candidate_value))), round_factor)
+                                     / relative_probability_sum)
+
+        accumulated_value = amplification_factor * current_round_acc_probability * relative_prob
+        accumulated_probabilities.append({
+            'candidate_alphabet': candidate,
+            'accumulated_probability': accumulated_value
+        })
+
+    return accumulated_probabilities
+
+def decide_optimal_candidates(candidate_lengths, samples_per_sampleset, accumulated_prob):
     '''Take a dictionary of candidate alphabets and their associated
-    accumulative lengths and decide which candidate alphabet is the best
-    (minimum) with what confidence.
+    accumulative lengths and decide which candidate alphabets are the best
+    (below average value) with what confidence(worst optimal candidate's
+    distance from average value).
 
     Returns a pair with the decision. The first element of the pair is which
-    candidate alphabet is best; the second element is the confidence level for
+    candidate alphabets are best; the second element is the confidence level for
     the decision.
     '''
 
@@ -36,35 +78,33 @@ def decide_optimal_candidate(candidate_lengths, samples_per_sampleset):
         key=operator.itemgetter('length')
     )
 
+    optimal_candidates = []
+    candidates_probabilities = get_accumulated_probabilities(sorted_candidate_lengths,
+                                                             accumulated_prob)
+
+    # Pick the first two optimal candidates.
+    for i in range(2):
+        optimal_candidates.append({
+            'candidate': candidates_probabilities[i]['candidate_alphabet'],
+            'probability': candidates_probabilities[i]['accumulated_probability']
+        })
+
     logger.debug('\n' + 75 * '#')
     logger.debug('Candidate scoreboard:')
     for cand in sorted_candidate_lengths:
         logger.debug('\t{}: {}'.format(cand['candidate_alphabet'], cand['length']))
 
-    # Extract candidate with minimum length and the next best competitor
-    # candidate. In case of binary search, these will be the only two
-    # candidates.
-    min_candidate = sorted_candidate_lengths[0]
-    next_best_candidate = sorted_candidate_lengths[1]
 
-    samples_per_candidate = samplesets_per_candidate * samples_per_sampleset
-
-    # Extract a confidence value, in bytes, for our decision based on the second-best candidate.
-    confidence = float(next_best_candidate['length'] - min_candidate['length']) / samples_per_candidate
-
-    # Captured bytes are represented as hex string,
-    # so we need to convert confidence metric to bytes
-    confidence /= 2.0
-
-    return min_candidate['candidate_alphabet'], confidence
+    return optimal_candidates
 
 
-def decide_next_world_state(samplesets):
+def decide_next_world_state(samplesets, accumulated_prob):
     '''Take a list of samplesets and extract a decision for a state transition
     with some confidence.
 
-    Argument:
+    Arguments:
     samplesets -- a list of samplesets.
+    accumulated_prob -- the accumulated probability of current knownalpahbet.
 
     This list must must contain at least two elements so that we have some basis
     for comparison. Each of the list's elements must share the same world state
@@ -74,8 +114,8 @@ def decide_next_world_state(samplesets):
     over the same candidate alphabet.
 
     Returns a pair with the decision. The first element of the pair is the new
-    state of the world; the second element of the pair is the confidence with
-    which the analyzer is suggesting the state transition.
+    state of every optimal candidate; the second element of the pair is the
+    confidence with which the analyzer is suggesting the state transition.
     '''
     # Ensure we have enough sample sets to compare.
     assert(len(samplesets) > 1)
@@ -107,24 +147,17 @@ def decide_next_world_state(samplesets):
     # Ensure we have a decision to make
     assert(len(candidate_lengths) > 1)
 
-    min_vector, confidence = decide_optimal_candidate(candidate_lengths, samples_per_sampleset=amount)
+    optimal_candidates = decide_optimal_candidates(candidate_lengths,
+                                                               samples_per_sampleset=amount,
+                                                               accumulated_prob)
 
-    # use minimum group's alphabet vector
-    decision_knownalphabet = min_vector
-    # known secret remains the same as in all current samplesets
-    decision_knownsecret = knownsecret
+    state = []
+    # All optimal candidates are returned in order to create new rounds.
+    for i in optimal_candidates:
+        state.append({
+            'knownsecret': knownsecret + i['candidate'],
+            'probability': i['probability'],
+            'knownalphabet': target.alphabet
+        })
 
-    if len(decision_knownalphabet) == 1:
-        # decision vector was one character, so we can extend the known secret
-        decision_knownsecret += decision_knownalphabet
-        decision_knownalphabet = target.alphabet
-
-    state = {
-        'knownsecret': decision_knownsecret,
-        'knownalphabet': decision_knownalphabet
-    }
-
-    return {
-        'state': state,
-        'confidence': confidence
-    }
+    return state

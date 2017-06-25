@@ -4,10 +4,11 @@ from breach.analyzer import decide_next_world_state
 
 class AnalyzerTestCase(RuptureTestCase):
     def test_decide(self):
-        decision = decide_next_world_state(self.samplesets)
+        decision = decide_next_world_state(self.samplesets,
+                                           self.samplesets[0].round.accumulated_probability)
 
         state = decision['state']
         confidence = decision['confidence']
 
-        self.assertEqual(state['knownsecret'], 'testsecret1')
-        self.assertEqual(state['knownalphabet'], '0123456789')
+        self.assertEqual(state[0]['knownsecret'], 'testsecret1')
+        self.assertEqual(state[0]['knownalphabet'], '0123456789')
