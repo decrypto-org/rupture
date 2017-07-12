@@ -78,8 +78,17 @@ class Sniffer(threading.Thread):
 
         self._recording = False
 
+        self.record_lock = threading.Lock()
+
     def record_sniffing(self):
+        logger.debug('Acquiring lock to start _recording')
+        self.record_lock.acquire()
+
+        logger.debug('Lock acquired, starting recording')
         self._recording = True
+
+        logger.debug('Releasing lock from start _recording')
+        self.record_lock.release()
 
     def run(self):
         # Capture only response packets
@@ -93,6 +102,10 @@ class Sniffer(threading.Thread):
         )
 
     def process_packet(self, pkt):
+        logger.debug('Acquiring lock to process packet')
+        self.record_lock.acquire()
+
+        logger.debug('Lock acquired, parsing packet')
         if self._recording:
             # Check for retransmission of same packet
             try:
@@ -107,6 +120,9 @@ class Sniffer(threading.Thread):
 
             self.port_streams[pkt.dport].append(pkt)
 
+        logger.debug('Releasing lock from packet process')
+        self.record_lock.release()
+
     def get_capture(self):
         # Get the data that were captured so far
         capture = self.parse_capture()
@@ -115,8 +131,15 @@ class Sniffer(threading.Thread):
 
     def stop(self):
         # Stop recording whatever you listen and erase your memory
+        logger.debug('Acquiring lock to stop recording')
+        self.record_lock.acquire()
+
+        logger.debug('Lock acquired, stopping recording')
         self._recording = False
         self.port_streams = collections.defaultdict(lambda: [])
+
+        logger.debug('Releasing lock from stop recording')
+        self.record_lock.release()
 
     def is_recording(self):
         return self._recording

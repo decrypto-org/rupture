@@ -26,7 +26,8 @@ class BaseTestCase(ThreadAwareTestCase):
         )
 
     @patch('app.Sniffer.start', return_value=None)
-    def _request(self, url, patched_sniffer_start):
+    @patch('app.Sniffer.isAlive', return_value=True)
+    def _request(self, url, patched_sniffer_start, patched_sniffer_isAlive):
         return self.app.post(
             url,
             data=json.dumps(self.data),
