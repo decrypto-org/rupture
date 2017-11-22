@@ -7,9 +7,9 @@ syntax:
 	# Syntax check sniffer python
 	find sniffer -iname "*.py"|grep -v '/env/'|xargs pep8 --ignore E501,E226
 	# Syntax check realtime JS
-	find realtime -iname "*.js"|grep -v '/node_modules/'|xargs jshint
+	find realtime -iname "*.js"|grep -v '/node_modules/'|xargs node_modules/jshint/bin/jshint
 	# Syntax check client JS
-	find client -iname "*.js"|grep -v '/node_modules/'|grep -v '/dist/'|xargs jshint
+	find client -iname "*.js"|grep -v '/node_modules/'|grep -v '/dist/'|xargs node_modules/jshint/bin/jshint
 	# Syntax check MD files
 	mdl --rules ~MD036 etc
 test:
