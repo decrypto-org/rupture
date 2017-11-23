@@ -41,6 +41,46 @@ class ManagedHTTPTLSConnection(HTTPTLSConnection):
         return self.debug_socket.sent
 
 
+class MockSniffer(object):
+    def __init__(self, params):
+        self.endpoint = params['snifferendpoint']
+        self.source_ip = params['sourceip']
+        self.destination_host = params['host']
+        self.interface = params['interface']
+        self.destination_port = params['port']
+        self.calibration_wait = params['calibration_wait']
+
+        self.samplesize = 64
+
+    def get_sniffer_state(self):
+        state = {
+            'source_ip': self.source_ip,
+            'destination_host': self.destination_host,
+            'interface': self.interface,
+            'destination_port': self.destination_port,
+            'calibration_wait': self.calibration_wait
+        }
+        return state
+
+    def set_samplesize(self, size):
+        self.samplesize = size
+
+    def set_data(self, data):
+        self.app_data = data
+
+    def start(self):
+        self.app_data = ''
+
+    def read(self):
+        return {
+            'records': self.samplesize,
+            'data': self.app_data
+        }
+
+    def delete(self):
+        self.app_data = ''
+
+
 def parse(data):
     if not data:
         return ''
