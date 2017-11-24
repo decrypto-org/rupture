@@ -68,12 +68,12 @@ class StrategyTestCase(RuptureTestCase):
             SampleSet.objects.create(
                 round=dif_batch_round,
                 candidatealphabet='0',
-                data=hexlify('length2')
+                datalength=len(hexlify('length2'))
             ),
             SampleSet.objects.create(
                 round=dif_batch_round,
                 candidatealphabet='1',
-                data=hexlify('length')
+                datalength=len(hexlify('length'))
             )
         ]
 
@@ -203,12 +203,12 @@ class StrategyTestCase(RuptureTestCase):
             SampleSet.objects.create(
                 round=next_round,
                 candidatealphabet='0',
-                data='bigbignextround'
+                datalength=len('bigbignextround')
             ),
             SampleSet.objects.create(
                 round=next_round,
                 candidatealphabet='1',
-                data='smallround'
+                datalength=len('smallround')
             )
         ]
 
