@@ -124,7 +124,7 @@ def decide_next_backtracking_world_state(samplesets, accumulated_prob):
     candidate_lengths = collections.defaultdict(lambda: [])
     candidate_count_samplesets = collections.defaultdict(lambda: 0)
     for sampleset in samplesets:
-        candidate_lengths[sampleset.candidatealphabet].append(len(sampleset.data))
+        candidate_lengths[sampleset.candidatealphabet].append(sampleset.datalength)
         candidate_count_samplesets[sampleset.candidatealphabet] += 1
 
     candidate_count_samplesets = candidate_count_samplesets.items()

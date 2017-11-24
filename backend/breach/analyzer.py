@@ -52,10 +52,6 @@ def decide_optimal_candidate(candidate_lengths, samples_per_sampleset):
     # Extract a confidence value, in bytes, for our decision based on the second-best candidate.
     confidence = float(next_best_candidate['length'] - min_candidate['length']) / samples_per_candidate
 
-    # Captured bytes are represented as hex string,
-    # so we need to convert confidence metric to bytes
-    confidence /= 2.0
-
     return min_candidate['candidate_alphabet'], confidence
 
 
@@ -94,7 +90,7 @@ def decide_next_world_state(samplesets):
     candidate_lengths = collections.defaultdict(lambda: [])
     candidate_count_samplesets = collections.defaultdict(lambda: 0)
     for sampleset in samplesets:
-        candidate_lengths[sampleset.candidatealphabet].append(len(sampleset.data))
+        candidate_lengths[sampleset.candidatealphabet].append(sampleset.datalength)
         candidate_count_samplesets[sampleset.candidatealphabet] += 1
 
     candidate_count_samplesets = candidate_count_samplesets.items()

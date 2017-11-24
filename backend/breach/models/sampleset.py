@@ -63,9 +63,9 @@ class SampleSet(models.Model):
                    'target alignment alphabet.')
     )
 
-    data = models.TextField(
-        default='',
-        help_text='The raw data collected on the network for this sampleset'
+    datalength = models.IntegerField(
+        default=0,
+        help_text='The length of the raw data collected on the network for this sampleset'
     )
 
     records = models.IntegerField(

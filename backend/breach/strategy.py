@@ -258,7 +258,7 @@ class Strategy(object):
         or mark sampleset as failed and create new sampleset for the same element that failed.'''
         if capture:
             sampleset.success = True
-            sampleset.data = capture['data']
+            sampleset.datalength = len(capture['data'])
             sampleset.records = capture['records']
             sampleset.save()
         else:
