@@ -1,9 +1,9 @@
 from django.test import Client, TestCase
 from django.core.urlresolvers import reverse
 from breach.models import Target, Victim, Round, SampleSet
-from breach.views import TargetView, VictimListView
 import json
 from binascii import hexlify
+from mock import patch
 
 
 class ViewsTestCase(TestCase):
@@ -116,7 +116,8 @@ class ViewsTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(json.loads(response.content)['victims'][0]['sourceip'], '192.168.1.5')
 
-    def test_attack_post_noID(self):
+    @patch('breach.models.Victim.attack')
+    def test_attack_post_noID(self, attack):
         """
         Test post requests for /victim
         """
@@ -129,7 +130,8 @@ class ViewsTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(json.loads(response.content)['victim_id'], 1)
 
-    def test_attack_post_ID(self):
+    @patch('breach.models.Victim.attack')
+    def test_attack_post_ID(self, attack):
         """
         Test post requests for /victim
         """
@@ -139,8 +141,8 @@ class ViewsTestCase(TestCase):
 
         # Create the request
         data = {
-           'id': victim.id,
-           'target': self.target1.name
+            'id': victim.id,
+            'target': self.target1.name
         }
         response = self.client.post(reverse('AttackView'), json.dumps(data), content_type='application/json')
         self.assertEqual(response.status_code, 200)
@@ -229,7 +231,8 @@ class ViewsTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(restored_victim.trashed_at, None)
 
-    def test_victim_notstarted(self):
+    @patch('breach.helpers.network.scan_network')
+    def test_victim_notstarted(self, scan_network):
 
         response = self.client.get(reverse('DiscoveredVictimsView'))
         self.assertEqual(response.status_code, 200)
