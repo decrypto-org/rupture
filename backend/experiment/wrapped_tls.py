@@ -41,6 +41,22 @@ class ManagedHTTPTLSConnection(HTTPTLSConnection):
         return self.debug_socket.sent
 
 
+def parse(data):
+    if not data:
+        return ''
+
+    TLS_HEADER_LENGTH = 5
+    TLS_CONTENT_TYPE = 0
+    TLS_LENGTH_MAJOR = 3
+    TLS_LENGTH_MINOR = 4
+
+    tls_type = ord(data[TLS_CONTENT_TYPE])
+    length = 256 * ord(data[TLS_LENGTH_MAJOR]) + ord(data[TLS_LENGTH_MINOR])
+
+    app_data = data[TLS_HEADER_LENGTH:TLS_HEADER_LENGTH + length] if tls_type == 23 else ''
+    return app_data + parse(data[TLS_HEADER_LENGTH + length:])
+
+
 def get_response(url):
     parsed = urlparse(url)
     h = ManagedHTTPTLSConnection(parsed.netloc, 443)
@@ -49,6 +65,8 @@ def get_response(url):
     }
     h.request("GET", parsed.path + '?' + parsed.query, '', headers)
     h.getresponse()
+    app_data = parse(h.get_encrypted_response())
+    return app_data
 
 
 if __name__ == '__main__':
