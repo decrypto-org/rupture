@@ -1,0 +1,77 @@
+\subsection{One-shot attack}
+
+\begin{lemma}[Compression attack]
+
+Let $\textrm{Com}$ be a compression function, $\textrm{Enc}$ be a strictly length-monotonic
+encryption function, $f$ be a rendering function and $Q$ be a plaintext
+predicate detectable with non-negligible advantage $\alpha$ over plaintext
+distribution $\mathcal{M}$.
+
+Then:
+\begin{align*}
+    \exists \alpha \text{ non-negl}:
+    \forall \textrm{Enc}:
+    \exists g:\\
+    \exists PPT \mathcal{A}:
+    \forall PPT \mathcal{S}:\\
+    \text{Adv}_{\mathcal{SE}(\textrm{Enc}, \textrm{Com}), \mathcal{A}, \mathcal{S}}
+    (\lambda, f, \mathcal{M}, g) = \alpha(\lambda)
+\end{align*}
+
+\end{lemma}
+
+For a full proof, see Appendix A.
+
+\subsection{Amplified attack}\label{subsec:amplification}
+
+We can now amplify the attack to achieve a better probability of success by a small modification in our adversary.
+The amplification is parameterized by an odd parameter $k$.
+
+Let the amplification adversary be defined as follows:
+
+\begin{lstlisting}[texcl,mathescape,basicstyle=\small]
+def $\mathcal{A}(Q, \mathcal{M})$:
+    $(r_1, r_2) \leftarrow \mathcal{O}_R(\textrm{Com}, f, Q, \mathcal{M})$
+
+    $low = 0$
+    $high = 0$
+
+    for $i$ = $0$ to $k$:
+        $l_1 = |\text{Reflect}^{\mathcal{E}_{pk}}_s(r_1)|$
+        $l_2 = |\text{Reflect}^{\mathcal{E}_{pk}}_s(r_2)|$
+
+        if $l_1 < l_2$:
+            $low = low + 1$
+        else:
+            $high = high + 1$
+
+    if $low > high$:
+        return True
+    else:
+        return False
+\end{lstlisting}
+
+\begin{lemma}[Amplification]
+
+Under the assumptions of the Compression Attack Theorem against $f, \textrm{Com}$
+and compression-detectable predicate $Q$ with non-negligible
+detectability margin $\alpha(\lambda)$,
+the amplified adversary achieves an arbitrarily large advantage
+against a non-negligible subset of elements, the
+\textit{amplifiable elements} distinguished by predicate $Amp$.
+\begin{align*}
+    \forall \textrm{Enc}:
+    \exists g:\\
+    \exists PPT \mathcal{A}:
+    \forall PPT \mathcal{S}:\\
+    \exists Amp:
+    \exists B \text{ non-negl}:
+    \exists C \text{ negl}:\\
+    \Pr_{s \leftarrow \mathcal{M}}[Amp(s)] = B(\lambda) \land\\
+    \text{Adv}_{\mathcal{SE}(\textrm{Enc}, \textrm{Com}), \mathcal{A}, \mathcal{S}_{Amp}}
+    (\lambda, f, \mathcal{M}, g) = 1 - \pi - C(k)
+\end{align*}
+
+\end{lemma}
+
+The complete proof can be found in Appendix A.

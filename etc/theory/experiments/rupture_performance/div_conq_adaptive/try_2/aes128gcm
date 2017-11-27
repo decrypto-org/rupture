@@ -1,0 +1,1177 @@
+[19/May/2017 10:52:35] DEBUG [breach.strategy:308] Checking max reflection length...
+[19/May/2017 10:52:35] DEBUG [breach.strategy:359] Created new round:
+[19/May/2017 10:52:35] DEBUG [breach.strategy:360] 	Known secret: bi
+[19/May/2017 10:52:35] DEBUG [breach.strategy:361] 	Known alphabet: abcdefghijklmnopqrstuvwxyz
+[19/May/2017 10:52:35] DEBUG [breach.strategy:362] 	Amount: 32
+[19/May/2017 10:52:35] DEBUG [breach.strategy:381] 	Alignment alphabet: XBWMKFNPYATUSOVJHCZGEDRLQI
+[19/May/2017 10:52:35] DEBUG [breach.strategy:195] Found 2 unstarted samplesets
+[19/May/2017 10:52:35] DEBUG [breach.strategy:205] Giving work:
+[19/May/2017 10:52:35] DEBUG [breach.strategy:206] 	Candidate: abcdefghijklm
+[19/May/2017 10:52:35] DEBUG [breach.strategy:207] 	Endpoint: https://aes128gcm.ruptureit.com/test2.php?reflection=%s
+[19/May/2017 10:52:35] "GET /breach/get_work/187 HTTP/1.1" 200 222
+[19/May/2017 10:52:36] WARNING [breach.strategy:461] Caught 422 while trying to collect capture and delete sniffer.
+[19/May/2017 10:52:36] DEBUG [breach.strategy:246] Marking sampleset as completed:
+[19/May/2017 10:52:36] DEBUG [breach.strategy:247] 	candidatealphabet: abcdefghijklm
+[19/May/2017 10:52:36] DEBUG [breach.strategy:248] 	roundknownalphabet: abcdefghijklmnopqrstuvwxyz
+[19/May/2017 10:52:36] "POST /breach/work_completed/187 HTTP/1.1" 200 18
+[19/May/2017 10:52:36] DEBUG [breach.strategy:195] Found 2 unstarted samplesets
+[19/May/2017 10:52:36] DEBUG [breach.strategy:205] Giving work:
+[19/May/2017 10:52:36] DEBUG [breach.strategy:206] 	Candidate: nopqrstuvwxyz
+[19/May/2017 10:52:36] DEBUG [breach.strategy:207] 	Endpoint: https://aes128gcm.ruptureit.com/test2.php?reflection=%s
+[19/May/2017 10:52:36] "GET /breach/get_work/187 HTTP/1.1" 200 222
+[19/May/2017 10:52:37] DEBUG [breach.strategy:428] Work completed:
+[19/May/2017 10:52:37] DEBUG [breach.strategy:429] 	Length: 29040
+[19/May/2017 10:52:37] DEBUG [breach.strategy:430] 	Records: 32
+[19/May/2017 10:52:37] DEBUG [breach.strategy:246] Marking sampleset as completed:
+[19/May/2017 10:52:37] DEBUG [breach.strategy:247] 	candidatealphabet: nopqrstuvwxyz
+[19/May/2017 10:52:37] DEBUG [breach.strategy:248] 	roundknownalphabet: abcdefghijklmnopqrstuvwxyz
+[19/May/2017 10:52:37] "POST /breach/work_completed/187 HTTP/1.1" 200 18
+[19/May/2017 10:52:37] DEBUG [breach.strategy:195] Found 1 unstarted samplesets
+[19/May/2017 10:52:37] DEBUG [breach.strategy:205] Giving work:
+[19/May/2017 10:52:37] DEBUG [breach.strategy:206] 	Candidate: abcdefghijklm
+[19/May/2017 10:52:37] DEBUG [breach.strategy:207] 	Endpoint: https://aes128gcm.ruptureit.com/test2.php?reflection=%s
+[19/May/2017 10:52:37] "GET /breach/get_work/187 HTTP/1.1" 200 222
+[19/May/2017 10:52:37] DEBUG [breach.strategy:428] Work completed:
+[19/May/2017 10:52:37] DEBUG [breach.strategy:429] 	Length: 28892
+[19/May/2017 10:52:37] DEBUG [breach.strategy:430] 	Records: 32
+[19/May/2017 10:52:37] DEBUG [breach.strategy:246] Marking sampleset as completed:
+[19/May/2017 10:52:37] DEBUG [breach.strategy:247] 	candidatealphabet: abcdefghijklm
+[19/May/2017 10:52:37] DEBUG [breach.strategy:248] 	roundknownalphabet: abcdefghijklmnopqrstuvwxyz
+[19/May/2017 10:52:37] DEBUG [breach.analyzer:39] 
+###########################################################################
+[19/May/2017 10:52:37] DEBUG [breach.analyzer:40] Candidate scoreboard:
+[19/May/2017 10:52:37] DEBUG [breach.analyzer:42] 	abcdefghijklm: 28892
+[19/May/2017 10:52:37] DEBUG [breach.analyzer:42] 	nopqrstuvwxyz: 29040
+[19/May/2017 10:52:37] DEBUG [breach.strategy:264] ###########################################################################
+[19/May/2017 10:52:37] DEBUG [breach.strategy:265] Decision:
+[19/May/2017 10:52:37] DEBUG [breach.strategy:267] 	state: {'knownalphabet': u'abcdefghijklm', 'knownsecret': u'bi'}
+[19/May/2017 10:52:37] DEBUG [breach.strategy:267] 	confidence: 2.3125
+[19/May/2017 10:52:37] DEBUG [breach.strategy:268] ###########################################################################
+[19/May/2017 10:52:37] DEBUG [breach.strategy:308] Checking max reflection length...
+[19/May/2017 10:52:37] DEBUG [breach.strategy:359] Created new round:
+[19/May/2017 10:52:37] DEBUG [breach.strategy:360] 	Known secret: bi
+[19/May/2017 10:52:37] DEBUG [breach.strategy:361] 	Known alphabet: abcdefghijklm
+[19/May/2017 10:52:37] DEBUG [breach.strategy:362] 	Amount: 32
+[19/May/2017 10:52:37] DEBUG [breach.strategy:381] 	Alignment alphabet: EUDGMBILCTJKYXHNZWRFOAPQVS
+[19/May/2017 10:52:37] "POST /breach/work_completed/187 HTTP/1.1" 200 18
+[19/May/2017 10:52:37] DEBUG [breach.strategy:195] Found 2 unstarted samplesets
+[19/May/2017 10:52:37] DEBUG [breach.strategy:205] Giving work:
+[19/May/2017 10:52:37] DEBUG [breach.strategy:206] 	Candidate: abcdef
+[19/May/2017 10:52:37] DEBUG [breach.strategy:207] 	Endpoint: https://aes128gcm.ruptureit.com/test2.php?reflection=%s
+[19/May/2017 10:52:37] "GET /breach/get_work/187 HTTP/1.1" 200 186
+[19/May/2017 10:52:38] DEBUG [breach.strategy:428] Work completed:
+[19/May/2017 10:52:38] DEBUG [breach.strategy:429] 	Length: 27372
+[19/May/2017 10:52:38] DEBUG [breach.strategy:430] 	Records: 32
+[19/May/2017 10:52:38] DEBUG [breach.strategy:246] Marking sampleset as completed:
+[19/May/2017 10:52:38] DEBUG [breach.strategy:247] 	candidatealphabet: abcdef
+[19/May/2017 10:52:38] DEBUG [breach.strategy:248] 	roundknownalphabet: abcdefghijklm
+[19/May/2017 10:52:38] "POST /breach/work_completed/187 HTTP/1.1" 200 18
+[19/May/2017 10:52:38] DEBUG [breach.strategy:195] Found 1 unstarted samplesets
+[19/May/2017 10:52:38] DEBUG [breach.strategy:205] Giving work:
+[19/May/2017 10:52:38] DEBUG [breach.strategy:206] 	Candidate: ghijklm
+[19/May/2017 10:52:38] DEBUG [breach.strategy:207] 	Endpoint: https://aes128gcm.ruptureit.com/test2.php?reflection=%s
+[19/May/2017 10:52:38] "GET /breach/get_work/187 HTTP/1.1" 200 186
+[19/May/2017 10:52:38] DEBUG [breach.strategy:428] Work completed:
+[19/May/2017 10:52:38] DEBUG [breach.strategy:429] 	Length: 27464
+[19/May/2017 10:52:38] DEBUG [breach.strategy:430] 	Records: 32
+[19/May/2017 10:52:38] DEBUG [breach.strategy:246] Marking sampleset as completed:
+[19/May/2017 10:52:38] DEBUG [breach.strategy:247] 	candidatealphabet: ghijklm
+[19/May/2017 10:52:38] DEBUG [breach.strategy:248] 	roundknownalphabet: abcdefghijklm
+[19/May/2017 10:52:38] DEBUG [breach.analyzer:39] 
+###########################################################################
+[19/May/2017 10:52:38] DEBUG [breach.analyzer:40] Candidate scoreboard:
+[19/May/2017 10:52:38] DEBUG [breach.analyzer:42] 	abcdef: 27372
+[19/May/2017 10:52:38] DEBUG [breach.analyzer:42] 	ghijklm: 27464
+[19/May/2017 10:52:38] DEBUG [breach.strategy:264] ###########################################################################
+[19/May/2017 10:52:38] DEBUG [breach.strategy:265] Decision:
+[19/May/2017 10:52:38] DEBUG [breach.strategy:267] 	state: {'knownalphabet': u'abcdef', 'knownsecret': u'bi'}
+[19/May/2017 10:52:38] DEBUG [breach.strategy:267] 	confidence: 1.4375
+[19/May/2017 10:52:38] DEBUG [breach.strategy:268] ###########################################################################
+[19/May/2017 10:52:38] DEBUG [breach.strategy:308] Checking max reflection length...
+[19/May/2017 10:52:38] DEBUG [breach.strategy:359] Created new round:
+[19/May/2017 10:52:38] DEBUG [breach.strategy:360] 	Known secret: bi
+[19/May/2017 10:52:38] DEBUG [breach.strategy:361] 	Known alphabet: abcdef
+[19/May/2017 10:52:38] DEBUG [breach.strategy:362] 	Amount: 32
+[19/May/2017 10:52:38] DEBUG [breach.strategy:381] 	Alignment alphabet: KUCHWQLZXBRFADGOPTSYJNVEMI
+[19/May/2017 10:52:38] "POST /breach/work_completed/187 HTTP/1.1" 200 18
+[19/May/2017 10:52:38] DEBUG [breach.strategy:195] Found 2 unstarted samplesets
+[19/May/2017 10:52:38] DEBUG [breach.strategy:205] Giving work:
+[19/May/2017 10:52:38] DEBUG [breach.strategy:206] 	Candidate: abc
+[19/May/2017 10:52:38] DEBUG [breach.strategy:207] 	Endpoint: https://aes128gcm.ruptureit.com/test2.php?reflection=%s
+[19/May/2017 10:52:38] "GET /breach/get_work/187 HTTP/1.1" 200 162
+[19/May/2017 10:52:39] DEBUG [breach.strategy:428] Work completed:
+[19/May/2017 10:52:39] DEBUG [breach.strategy:429] 	Length: 26640
+[19/May/2017 10:52:39] DEBUG [breach.strategy:430] 	Records: 32
+[19/May/2017 10:52:39] DEBUG [breach.strategy:246] Marking sampleset as completed:
+[19/May/2017 10:52:39] DEBUG [breach.strategy:247] 	candidatealphabet: abc
+[19/May/2017 10:52:39] DEBUG [breach.strategy:248] 	roundknownalphabet: abcdef
+[19/May/2017 10:52:39] "POST /breach/work_completed/187 HTTP/1.1" 200 18
+[19/May/2017 10:52:39] DEBUG [breach.strategy:195] Found 1 unstarted samplesets
+[19/May/2017 10:52:39] DEBUG [breach.strategy:205] Giving work:
+[19/May/2017 10:52:39] DEBUG [breach.strategy:206] 	Candidate: def
+[19/May/2017 10:52:39] DEBUG [breach.strategy:207] 	Endpoint: https://aes128gcm.ruptureit.com/test2.php?reflection=%s
+[19/May/2017 10:52:39] "GET /breach/get_work/187 HTTP/1.1" 200 162
+[19/May/2017 10:52:40] DEBUG [breach.strategy:428] Work completed:
+[19/May/2017 10:52:40] DEBUG [breach.strategy:429] 	Length: 26688
+[19/May/2017 10:52:40] DEBUG [breach.strategy:430] 	Records: 32
+[19/May/2017 10:52:40] DEBUG [breach.strategy:246] Marking sampleset as completed:
+[19/May/2017 10:52:40] DEBUG [breach.strategy:247] 	candidatealphabet: def
+[19/May/2017 10:52:40] DEBUG [breach.strategy:248] 	roundknownalphabet: abcdef
+[19/May/2017 10:52:40] DEBUG [breach.analyzer:39] 
+###########################################################################
+[19/May/2017 10:52:40] DEBUG [breach.analyzer:40] Candidate scoreboard:
+[19/May/2017 10:52:40] DEBUG [breach.analyzer:42] 	abc: 26640
+[19/May/2017 10:52:40] DEBUG [breach.analyzer:42] 	def: 26688
+[19/May/2017 10:52:40] DEBUG [breach.strategy:264] ###########################################################################
+[19/May/2017 10:52:40] DEBUG [breach.strategy:265] Decision:
+[19/May/2017 10:52:40] DEBUG [breach.strategy:267] 	state: {'knownalphabet': u'abc', 'knownsecret': u'bi'}
+[19/May/2017 10:52:40] DEBUG [breach.strategy:267] 	confidence: 0.75
+[19/May/2017 10:52:40] DEBUG [breach.strategy:268] ###########################################################################
+[19/May/2017 10:52:40] DEBUG [breach.strategy:308] Checking max reflection length...
+[19/May/2017 10:52:40] DEBUG [breach.strategy:359] Created new round:
+[19/May/2017 10:52:40] DEBUG [breach.strategy:360] 	Known secret: bi
+[19/May/2017 10:52:40] DEBUG [breach.strategy:361] 	Known alphabet: abc
+[19/May/2017 10:52:40] DEBUG [breach.strategy:362] 	Amount: 32
+[19/May/2017 10:52:40] DEBUG [breach.strategy:381] 	Alignment alphabet: BOHRMZUNIYCVTWEKFSALJDXPGQ
+[19/May/2017 10:52:40] "POST /breach/work_completed/187 HTTP/1.1" 200 18
+[19/May/2017 10:52:40] DEBUG [breach.strategy:195] Found 2 unstarted samplesets
+[19/May/2017 10:52:40] DEBUG [breach.strategy:205] Giving work:
+[19/May/2017 10:52:40] DEBUG [breach.strategy:206] 	Candidate: a
+[19/May/2017 10:52:40] DEBUG [breach.strategy:207] 	Endpoint: https://aes128gcm.ruptureit.com/test2.php?reflection=%s
+[19/May/2017 10:52:40] "GET /breach/get_work/187 HTTP/1.1" 200 156
+[19/May/2017 10:52:40] DEBUG [breach.strategy:428] Work completed:
+[19/May/2017 10:52:40] DEBUG [breach.strategy:429] 	Length: 26432
+[19/May/2017 10:52:40] DEBUG [breach.strategy:430] 	Records: 32
+[19/May/2017 10:52:40] DEBUG [breach.strategy:246] Marking sampleset as completed:
+[19/May/2017 10:52:40] DEBUG [breach.strategy:247] 	candidatealphabet: a
+[19/May/2017 10:52:40] DEBUG [breach.strategy:248] 	roundknownalphabet: abc
+[19/May/2017 10:52:40] "POST /breach/work_completed/187 HTTP/1.1" 200 18
+[19/May/2017 10:52:40] DEBUG [breach.strategy:195] Found 1 unstarted samplesets
+[19/May/2017 10:52:40] DEBUG [breach.strategy:205] Giving work:
+[19/May/2017 10:52:40] DEBUG [breach.strategy:206] 	Candidate: bc
+[19/May/2017 10:52:40] DEBUG [breach.strategy:207] 	Endpoint: https://aes128gcm.ruptureit.com/test2.php?reflection=%s
+[19/May/2017 10:52:40] "GET /breach/get_work/187 HTTP/1.1" 200 156
+[19/May/2017 10:52:41] DEBUG [breach.strategy:428] Work completed:
+[19/May/2017 10:52:41] DEBUG [breach.strategy:429] 	Length: 26360
+[19/May/2017 10:52:41] DEBUG [breach.strategy:430] 	Records: 32
+[19/May/2017 10:52:41] DEBUG [breach.strategy:246] Marking sampleset as completed:
+[19/May/2017 10:52:41] DEBUG [breach.strategy:247] 	candidatealphabet: bc
+[19/May/2017 10:52:41] DEBUG [breach.strategy:248] 	roundknownalphabet: abc
+[19/May/2017 10:52:41] DEBUG [breach.analyzer:39] 
+###########################################################################
+[19/May/2017 10:52:41] DEBUG [breach.analyzer:40] Candidate scoreboard:
+[19/May/2017 10:52:41] DEBUG [breach.analyzer:42] 	bc: 26360
+[19/May/2017 10:52:41] DEBUG [breach.analyzer:42] 	a: 26432
+[19/May/2017 10:52:41] DEBUG [breach.strategy:264] ###########################################################################
+[19/May/2017 10:52:41] DEBUG [breach.strategy:265] Decision:
+[19/May/2017 10:52:41] DEBUG [breach.strategy:267] 	state: {'knownalphabet': u'bc', 'knownsecret': u'bi'}
+[19/May/2017 10:52:41] DEBUG [breach.strategy:267] 	confidence: 1.125
+[19/May/2017 10:52:41] DEBUG [breach.strategy:268] ###########################################################################
+[19/May/2017 10:52:41] DEBUG [breach.strategy:308] Checking max reflection length...
+[19/May/2017 10:52:41] DEBUG [breach.strategy:359] Created new round:
+[19/May/2017 10:52:41] DEBUG [breach.strategy:360] 	Known secret: bi
+[19/May/2017 10:52:41] DEBUG [breach.strategy:361] 	Known alphabet: bc
+[19/May/2017 10:52:41] DEBUG [breach.strategy:362] 	Amount: 32
+[19/May/2017 10:52:41] DEBUG [breach.strategy:381] 	Alignment alphabet: EKQOJBVZPGLFMRYAHSTIUNDWXC
+[19/May/2017 10:52:41] "POST /breach/work_completed/187 HTTP/1.1" 200 18
+[19/May/2017 10:52:41] DEBUG [breach.strategy:195] Found 2 unstarted samplesets
+[19/May/2017 10:52:41] DEBUG [breach.strategy:205] Giving work:
+[19/May/2017 10:52:41] DEBUG [breach.strategy:206] 	Candidate: b
+[19/May/2017 10:52:41] DEBUG [breach.strategy:207] 	Endpoint: https://aes128gcm.ruptureit.com/test2.php?reflection=%s
+[19/May/2017 10:52:41] "GET /breach/get_work/187 HTTP/1.1" 200 150
+[19/May/2017 10:52:42] DEBUG [breach.strategy:428] Work completed:
+[19/May/2017 10:52:42] DEBUG [breach.strategy:429] 	Length: 26076
+[19/May/2017 10:52:42] DEBUG [breach.strategy:430] 	Records: 32
+[19/May/2017 10:52:42] DEBUG [breach.strategy:246] Marking sampleset as completed:
+[19/May/2017 10:52:42] DEBUG [breach.strategy:247] 	candidatealphabet: b
+[19/May/2017 10:52:42] DEBUG [breach.strategy:248] 	roundknownalphabet: bc
+[19/May/2017 10:52:42] "POST /breach/work_completed/187 HTTP/1.1" 200 18
+[19/May/2017 10:52:42] DEBUG [breach.strategy:195] Found 1 unstarted samplesets
+[19/May/2017 10:52:42] DEBUG [breach.strategy:205] Giving work:
+[19/May/2017 10:52:42] DEBUG [breach.strategy:206] 	Candidate: c
+[19/May/2017 10:52:42] DEBUG [breach.strategy:207] 	Endpoint: https://aes128gcm.ruptureit.com/test2.php?reflection=%s
+[19/May/2017 10:52:42] "GET /breach/get_work/187 HTTP/1.1" 200 150
+[19/May/2017 10:52:42] DEBUG [breach.strategy:428] Work completed:
+[19/May/2017 10:52:42] DEBUG [breach.strategy:429] 	Length: 26152
+[19/May/2017 10:52:42] DEBUG [breach.strategy:430] 	Records: 32
+[19/May/2017 10:52:42] DEBUG [breach.strategy:246] Marking sampleset as completed:
+[19/May/2017 10:52:42] DEBUG [breach.strategy:247] 	candidatealphabet: c
+[19/May/2017 10:52:42] DEBUG [breach.strategy:248] 	roundknownalphabet: bc
+[19/May/2017 10:52:42] DEBUG [breach.analyzer:39] 
+###########################################################################
+[19/May/2017 10:52:42] DEBUG [breach.analyzer:40] Candidate scoreboard:
+[19/May/2017 10:52:42] DEBUG [breach.analyzer:42] 	b: 26076
+[19/May/2017 10:52:42] DEBUG [breach.analyzer:42] 	c: 26152
+[19/May/2017 10:52:42] DEBUG [breach.strategy:264] ###########################################################################
+[19/May/2017 10:52:42] DEBUG [breach.strategy:265] Decision:
+[19/May/2017 10:52:42] DEBUG [breach.strategy:267] 	state: {'knownalphabet': u'abcdefghijklmnopqrstuvwxyz', 'knownsecret': u'bib'}
+[19/May/2017 10:52:42] DEBUG [breach.strategy:267] 	confidence: 1.1875
+[19/May/2017 10:52:42] DEBUG [breach.strategy:268] ###########################################################################
+[19/May/2017 10:52:42] DEBUG [breach.strategy:308] Checking max reflection length...
+[19/May/2017 10:52:42] DEBUG [breach.strategy:359] Created new round:
+[19/May/2017 10:52:42] DEBUG [breach.strategy:360] 	Known secret: bib
+[19/May/2017 10:52:42] DEBUG [breach.strategy:361] 	Known alphabet: abcdefghijklmnopqrstuvwxyz
+[19/May/2017 10:52:42] DEBUG [breach.strategy:362] 	Amount: 32
+[19/May/2017 10:52:42] DEBUG [breach.strategy:381] 	Alignment alphabet: EMDGOWAINUCPVXHLZKFSQYBRTJ
+[19/May/2017 10:52:42] "POST /breach/work_completed/187 HTTP/1.1" 200 18
+[19/May/2017 10:52:42] DEBUG [breach.strategy:195] Found 2 unstarted samplesets
+[19/May/2017 10:52:42] DEBUG [breach.strategy:205] Giving work:
+[19/May/2017 10:52:42] DEBUG [breach.strategy:206] 	Candidate: abcdefghijklm
+[19/May/2017 10:52:42] DEBUG [breach.strategy:207] 	Endpoint: https://aes128gcm.ruptureit.com/test2.php?reflection=%s
+[19/May/2017 10:52:42] "GET /breach/get_work/187 HTTP/1.1" 200 222
+[19/May/2017 10:52:43] DEBUG [breach.strategy:428] Work completed:
+[19/May/2017 10:52:43] DEBUG [breach.strategy:429] 	Length: 28912
+[19/May/2017 10:52:43] DEBUG [breach.strategy:430] 	Records: 32
+[19/May/2017 10:52:43] DEBUG [breach.strategy:246] Marking sampleset as completed:
+[19/May/2017 10:52:43] DEBUG [breach.strategy:247] 	candidatealphabet: abcdefghijklm
+[19/May/2017 10:52:43] DEBUG [breach.strategy:248] 	roundknownalphabet: abcdefghijklmnopqrstuvwxyz
+[19/May/2017 10:52:43] "POST /breach/work_completed/187 HTTP/1.1" 200 18
+[19/May/2017 10:52:43] DEBUG [breach.strategy:195] Found 1 unstarted samplesets
+[19/May/2017 10:52:43] DEBUG [breach.strategy:205] Giving work:
+[19/May/2017 10:52:43] DEBUG [breach.strategy:206] 	Candidate: nopqrstuvwxyz
+[19/May/2017 10:52:43] DEBUG [breach.strategy:207] 	Endpoint: https://aes128gcm.ruptureit.com/test2.php?reflection=%s
+[19/May/2017 10:52:43] "GET /breach/get_work/187 HTTP/1.1" 200 222
+[19/May/2017 10:52:43] DEBUG [breach.strategy:428] Work completed:
+[19/May/2017 10:52:43] DEBUG [breach.strategy:429] 	Length: 29044
+[19/May/2017 10:52:43] DEBUG [breach.strategy:430] 	Records: 32
+[19/May/2017 10:52:43] DEBUG [breach.strategy:246] Marking sampleset as completed:
+[19/May/2017 10:52:43] DEBUG [breach.strategy:247] 	candidatealphabet: nopqrstuvwxyz
+[19/May/2017 10:52:43] DEBUG [breach.strategy:248] 	roundknownalphabet: abcdefghijklmnopqrstuvwxyz
+[19/May/2017 10:52:43] DEBUG [breach.analyzer:39] 
+###########################################################################
+[19/May/2017 10:52:43] DEBUG [breach.analyzer:40] Candidate scoreboard:
+[19/May/2017 10:52:43] DEBUG [breach.analyzer:42] 	abcdefghijklm: 28912
+[19/May/2017 10:52:43] DEBUG [breach.analyzer:42] 	nopqrstuvwxyz: 29044
+[19/May/2017 10:52:43] DEBUG [breach.strategy:264] ###########################################################################
+[19/May/2017 10:52:43] DEBUG [breach.strategy:265] Decision:
+[19/May/2017 10:52:43] DEBUG [breach.strategy:267] 	state: {'knownalphabet': u'abcdefghijklm', 'knownsecret': u'bib'}
+[19/May/2017 10:52:43] DEBUG [breach.strategy:267] 	confidence: 2.0625
+[19/May/2017 10:52:43] DEBUG [breach.strategy:268] ###########################################################################
+[19/May/2017 10:52:43] DEBUG [breach.strategy:308] Checking max reflection length...
+[19/May/2017 10:52:43] DEBUG [breach.strategy:359] Created new round:
+[19/May/2017 10:52:43] DEBUG [breach.strategy:360] 	Known secret: bib
+[19/May/2017 10:52:43] DEBUG [breach.strategy:361] 	Known alphabet: abcdefghijklm
+[19/May/2017 10:52:43] DEBUG [breach.strategy:362] 	Amount: 32
+[19/May/2017 10:52:43] DEBUG [breach.strategy:381] 	Alignment alphabet: GRUBODWJFCHYQVAMITESXLPKZN
+[19/May/2017 10:52:43] "POST /breach/work_completed/187 HTTP/1.1" 200 18
+[19/May/2017 10:52:43] DEBUG [breach.strategy:195] Found 2 unstarted samplesets
+[19/May/2017 10:52:43] DEBUG [breach.strategy:205] Giving work:
+[19/May/2017 10:52:43] DEBUG [breach.strategy:206] 	Candidate: abcdef
+[19/May/2017 10:52:43] DEBUG [breach.strategy:207] 	Endpoint: https://aes128gcm.ruptureit.com/test2.php?reflection=%s
+[19/May/2017 10:52:43] "GET /breach/get_work/187 HTTP/1.1" 200 186
+[19/May/2017 10:52:44] DEBUG [breach.strategy:428] Work completed:
+[19/May/2017 10:52:44] DEBUG [breach.strategy:429] 	Length: 27452
+[19/May/2017 10:52:44] DEBUG [breach.strategy:430] 	Records: 32
+[19/May/2017 10:52:44] DEBUG [breach.strategy:246] Marking sampleset as completed:
+[19/May/2017 10:52:44] DEBUG [breach.strategy:247] 	candidatealphabet: abcdef
+[19/May/2017 10:52:44] DEBUG [breach.strategy:248] 	roundknownalphabet: abcdefghijklm
+[19/May/2017 10:52:44] "POST /breach/work_completed/187 HTTP/1.1" 200 18
+[19/May/2017 10:52:44] DEBUG [breach.strategy:195] Found 1 unstarted samplesets
+[19/May/2017 10:52:44] DEBUG [breach.strategy:205] Giving work:
+[19/May/2017 10:52:44] DEBUG [breach.strategy:206] 	Candidate: ghijklm
+[19/May/2017 10:52:44] DEBUG [breach.strategy:207] 	Endpoint: https://aes128gcm.ruptureit.com/test2.php?reflection=%s
+[19/May/2017 10:52:44] "GET /breach/get_work/187 HTTP/1.1" 200 186
+[19/May/2017 10:52:44] DEBUG [breach.strategy:428] Work completed:
+[19/May/2017 10:52:44] DEBUG [breach.strategy:429] 	Length: 27532
+[19/May/2017 10:52:44] DEBUG [breach.strategy:430] 	Records: 32
+[19/May/2017 10:52:44] DEBUG [breach.strategy:246] Marking sampleset as completed:
+[19/May/2017 10:52:44] DEBUG [breach.strategy:247] 	candidatealphabet: ghijklm
+[19/May/2017 10:52:44] DEBUG [breach.strategy:248] 	roundknownalphabet: abcdefghijklm
+[19/May/2017 10:52:44] DEBUG [breach.analyzer:39] 
+###########################################################################
+[19/May/2017 10:52:44] DEBUG [breach.analyzer:40] Candidate scoreboard:
+[19/May/2017 10:52:44] DEBUG [breach.analyzer:42] 	abcdef: 27452
+[19/May/2017 10:52:44] DEBUG [breach.analyzer:42] 	ghijklm: 27532
+[19/May/2017 10:52:44] DEBUG [breach.strategy:264] ###########################################################################
+[19/May/2017 10:52:44] DEBUG [breach.strategy:265] Decision:
+[19/May/2017 10:52:44] DEBUG [breach.strategy:267] 	state: {'knownalphabet': u'abcdef', 'knownsecret': u'bib'}
+[19/May/2017 10:52:44] DEBUG [breach.strategy:267] 	confidence: 1.25
+[19/May/2017 10:52:44] DEBUG [breach.strategy:268] ###########################################################################
+[19/May/2017 10:52:45] DEBUG [breach.strategy:308] Checking max reflection length...
+[19/May/2017 10:52:45] DEBUG [breach.strategy:359] Created new round:
+[19/May/2017 10:52:45] DEBUG [breach.strategy:360] 	Known secret: bib
+[19/May/2017 10:52:45] DEBUG [breach.strategy:361] 	Known alphabet: abcdef
+[19/May/2017 10:52:45] DEBUG [breach.strategy:362] 	Amount: 32
+[19/May/2017 10:52:45] DEBUG [breach.strategy:381] 	Alignment alphabet: QCHUWPEZKYLNTBSJIDMOGVFRAX
+[19/May/2017 10:52:45] "POST /breach/work_completed/187 HTTP/1.1" 200 18
+[19/May/2017 10:52:45] DEBUG [breach.strategy:195] Found 2 unstarted samplesets
+[19/May/2017 10:52:45] DEBUG [breach.strategy:205] Giving work:
+[19/May/2017 10:52:45] DEBUG [breach.strategy:206] 	Candidate: abc
+[19/May/2017 10:52:45] DEBUG [breach.strategy:207] 	Endpoint: https://aes128gcm.ruptureit.com/test2.php?reflection=%s
+[19/May/2017 10:52:45] "GET /breach/get_work/187 HTTP/1.1" 200 162
+[19/May/2017 10:52:45] DEBUG [breach.strategy:428] Work completed:
+[19/May/2017 10:52:45] DEBUG [breach.strategy:429] 	Length: 26692
+[19/May/2017 10:52:45] DEBUG [breach.strategy:430] 	Records: 32
+[19/May/2017 10:52:45] DEBUG [breach.strategy:246] Marking sampleset as completed:
+[19/May/2017 10:52:45] DEBUG [breach.strategy:247] 	candidatealphabet: abc
+[19/May/2017 10:52:45] DEBUG [breach.strategy:248] 	roundknownalphabet: abcdef
+[19/May/2017 10:52:45] "POST /breach/work_completed/187 HTTP/1.1" 200 18
+[19/May/2017 10:52:45] DEBUG [breach.strategy:195] Found 1 unstarted samplesets
+[19/May/2017 10:52:45] DEBUG [breach.strategy:205] Giving work:
+[19/May/2017 10:52:45] DEBUG [breach.strategy:206] 	Candidate: def
+[19/May/2017 10:52:45] DEBUG [breach.strategy:207] 	Endpoint: https://aes128gcm.ruptureit.com/test2.php?reflection=%s
+[19/May/2017 10:52:45] "GET /breach/get_work/187 HTTP/1.1" 200 162
+[19/May/2017 10:52:46] DEBUG [breach.strategy:428] Work completed:
+[19/May/2017 10:52:46] DEBUG [breach.strategy:429] 	Length: 26628
+[19/May/2017 10:52:46] DEBUG [breach.strategy:430] 	Records: 32
+[19/May/2017 10:52:46] DEBUG [breach.strategy:246] Marking sampleset as completed:
+[19/May/2017 10:52:46] DEBUG [breach.strategy:247] 	candidatealphabet: def
+[19/May/2017 10:52:46] DEBUG [breach.strategy:248] 	roundknownalphabet: abcdef
+[19/May/2017 10:52:46] DEBUG [breach.analyzer:39] 
+###########################################################################
+[19/May/2017 10:52:46] DEBUG [breach.analyzer:40] Candidate scoreboard:
+[19/May/2017 10:52:46] DEBUG [breach.analyzer:42] 	def: 26628
+[19/May/2017 10:52:46] DEBUG [breach.analyzer:42] 	abc: 26692
+[19/May/2017 10:52:46] DEBUG [breach.strategy:264] ###########################################################################
+[19/May/2017 10:52:46] DEBUG [breach.strategy:265] Decision:
+[19/May/2017 10:52:46] DEBUG [breach.strategy:267] 	state: {'knownalphabet': u'def', 'knownsecret': u'bib'}
+[19/May/2017 10:52:46] DEBUG [breach.strategy:267] 	confidence: 1.0
+[19/May/2017 10:52:46] DEBUG [breach.strategy:268] ###########################################################################
+[19/May/2017 10:52:46] DEBUG [breach.strategy:308] Checking max reflection length...
+[19/May/2017 10:52:46] DEBUG [breach.strategy:359] Created new round:
+[19/May/2017 10:52:46] DEBUG [breach.strategy:360] 	Known secret: bib
+[19/May/2017 10:52:46] DEBUG [breach.strategy:361] 	Known alphabet: def
+[19/May/2017 10:52:46] DEBUG [breach.strategy:362] 	Amount: 32
+[19/May/2017 10:52:46] DEBUG [breach.strategy:381] 	Alignment alphabet: QZVFXOIPRETMGDBACUKLHNWSJY
+[19/May/2017 10:52:46] "POST /breach/work_completed/187 HTTP/1.1" 200 18
+[19/May/2017 10:52:46] DEBUG [breach.strategy:195] Found 2 unstarted samplesets
+[19/May/2017 10:52:46] DEBUG [breach.strategy:205] Giving work:
+[19/May/2017 10:52:46] DEBUG [breach.strategy:206] 	Candidate: d
+[19/May/2017 10:52:46] DEBUG [breach.strategy:207] 	Endpoint: https://aes128gcm.ruptureit.com/test2.php?reflection=%s
+[19/May/2017 10:52:46] "GET /breach/get_work/187 HTTP/1.1" 200 156
+[19/May/2017 10:52:46] DEBUG [breach.strategy:428] Work completed:
+[19/May/2017 10:52:46] DEBUG [breach.strategy:429] 	Length: 26440
+[19/May/2017 10:52:46] DEBUG [breach.strategy:430] 	Records: 32
+[19/May/2017 10:52:46] DEBUG [breach.strategy:246] Marking sampleset as completed:
+[19/May/2017 10:52:46] DEBUG [breach.strategy:247] 	candidatealphabet: d
+[19/May/2017 10:52:46] DEBUG [breach.strategy:248] 	roundknownalphabet: def
+[19/May/2017 10:52:46] "POST /breach/work_completed/187 HTTP/1.1" 200 18
+[19/May/2017 10:52:46] DEBUG [breach.strategy:195] Found 1 unstarted samplesets
+[19/May/2017 10:52:46] DEBUG [breach.strategy:205] Giving work:
+[19/May/2017 10:52:46] DEBUG [breach.strategy:206] 	Candidate: ef
+[19/May/2017 10:52:46] DEBUG [breach.strategy:207] 	Endpoint: https://aes128gcm.ruptureit.com/test2.php?reflection=%s
+[19/May/2017 10:52:46] "GET /breach/get_work/187 HTTP/1.1" 200 156
+[19/May/2017 10:52:47] DEBUG [breach.strategy:428] Work completed:
+[19/May/2017 10:52:47] DEBUG [breach.strategy:429] 	Length: 26304
+[19/May/2017 10:52:47] DEBUG [breach.strategy:430] 	Records: 32
+[19/May/2017 10:52:47] DEBUG [breach.strategy:246] Marking sampleset as completed:
+[19/May/2017 10:52:47] DEBUG [breach.strategy:247] 	candidatealphabet: ef
+[19/May/2017 10:52:47] DEBUG [breach.strategy:248] 	roundknownalphabet: def
+[19/May/2017 10:52:47] DEBUG [breach.analyzer:39] 
+###########################################################################
+[19/May/2017 10:52:47] DEBUG [breach.analyzer:40] Candidate scoreboard:
+[19/May/2017 10:52:47] DEBUG [breach.analyzer:42] 	ef: 26304
+[19/May/2017 10:52:47] DEBUG [breach.analyzer:42] 	d: 26440
+[19/May/2017 10:52:47] DEBUG [breach.strategy:264] ###########################################################################
+[19/May/2017 10:52:47] DEBUG [breach.strategy:265] Decision:
+[19/May/2017 10:52:47] DEBUG [breach.strategy:267] 	state: {'knownalphabet': u'ef', 'knownsecret': u'bib'}
+[19/May/2017 10:52:47] DEBUG [breach.strategy:267] 	confidence: 2.125
+[19/May/2017 10:52:47] DEBUG [breach.strategy:268] ###########################################################################
+[19/May/2017 10:52:47] DEBUG [breach.strategy:308] Checking max reflection length...
+[19/May/2017 10:52:47] DEBUG [breach.strategy:359] Created new round:
+[19/May/2017 10:52:47] DEBUG [breach.strategy:360] 	Known secret: bib
+[19/May/2017 10:52:47] DEBUG [breach.strategy:361] 	Known alphabet: ef
+[19/May/2017 10:52:47] DEBUG [breach.strategy:362] 	Amount: 32
+[19/May/2017 10:52:47] DEBUG [breach.strategy:381] 	Alignment alphabet: MICPWBYOZTXFADHERNKJLUVQGS
+[19/May/2017 10:52:47] "POST /breach/work_completed/187 HTTP/1.1" 200 18
+[19/May/2017 10:52:47] DEBUG [breach.strategy:195] Found 2 unstarted samplesets
+[19/May/2017 10:52:47] DEBUG [breach.strategy:205] Giving work:
+[19/May/2017 10:52:47] DEBUG [breach.strategy:206] 	Candidate: e
+[19/May/2017 10:52:47] DEBUG [breach.strategy:207] 	Endpoint: https://aes128gcm.ruptureit.com/test2.php?reflection=%s
+[19/May/2017 10:52:47] "GET /breach/get_work/187 HTTP/1.1" 200 150
+[19/May/2017 10:52:48] DEBUG [breach.strategy:428] Work completed:
+[19/May/2017 10:52:48] DEBUG [breach.strategy:429] 	Length: 26112
+[19/May/2017 10:52:48] DEBUG [breach.strategy:430] 	Records: 32
+[19/May/2017 10:52:48] DEBUG [breach.strategy:246] Marking sampleset as completed:
+[19/May/2017 10:52:48] DEBUG [breach.strategy:247] 	candidatealphabet: e
+[19/May/2017 10:52:48] DEBUG [breach.strategy:248] 	roundknownalphabet: ef
+[19/May/2017 10:52:48] "POST /breach/work_completed/187 HTTP/1.1" 200 18
+[19/May/2017 10:52:48] DEBUG [breach.strategy:195] Found 1 unstarted samplesets
+[19/May/2017 10:52:48] DEBUG [breach.strategy:205] Giving work:
+[19/May/2017 10:52:48] DEBUG [breach.strategy:206] 	Candidate: f
+[19/May/2017 10:52:48] DEBUG [breach.strategy:207] 	Endpoint: https://aes128gcm.ruptureit.com/test2.php?reflection=%s
+[19/May/2017 10:52:48] "GET /breach/get_work/187 HTTP/1.1" 200 150
+[19/May/2017 10:52:48] DEBUG [breach.strategy:428] Work completed:
+[19/May/2017 10:52:48] DEBUG [breach.strategy:429] 	Length: 26200
+[19/May/2017 10:52:48] DEBUG [breach.strategy:430] 	Records: 32
+[19/May/2017 10:52:48] DEBUG [breach.strategy:246] Marking sampleset as completed:
+[19/May/2017 10:52:48] DEBUG [breach.strategy:247] 	candidatealphabet: f
+[19/May/2017 10:52:48] DEBUG [breach.strategy:248] 	roundknownalphabet: ef
+[19/May/2017 10:52:48] DEBUG [breach.analyzer:39] 
+###########################################################################
+[19/May/2017 10:52:48] DEBUG [breach.analyzer:40] Candidate scoreboard:
+[19/May/2017 10:52:48] DEBUG [breach.analyzer:42] 	e: 26112
+[19/May/2017 10:52:48] DEBUG [breach.analyzer:42] 	f: 26200
+[19/May/2017 10:52:48] DEBUG [breach.strategy:264] ###########################################################################
+[19/May/2017 10:52:48] DEBUG [breach.strategy:265] Decision:
+[19/May/2017 10:52:48] DEBUG [breach.strategy:267] 	state: {'knownalphabet': u'abcdefghijklmnopqrstuvwxyz', 'knownsecret': u'bibe'}
+[19/May/2017 10:52:48] DEBUG [breach.strategy:267] 	confidence: 1.375
+[19/May/2017 10:52:48] DEBUG [breach.strategy:268] ###########################################################################
+[19/May/2017 10:52:48] DEBUG [breach.strategy:308] Checking max reflection length...
+[19/May/2017 10:52:48] DEBUG [breach.strategy:359] Created new round:
+[19/May/2017 10:52:48] DEBUG [breach.strategy:360] 	Known secret: bibe
+[19/May/2017 10:52:48] DEBUG [breach.strategy:361] 	Known alphabet: abcdefghijklmnopqrstuvwxyz
+[19/May/2017 10:52:48] DEBUG [breach.strategy:362] 	Amount: 32
+[19/May/2017 10:52:48] DEBUG [breach.strategy:381] 	Alignment alphabet: ZMWJIFCTNOULSYQERDAGXPVBHK
+[19/May/2017 10:52:48] "POST /breach/work_completed/187 HTTP/1.1" 200 18
+[19/May/2017 10:52:48] DEBUG [breach.strategy:195] Found 2 unstarted samplesets
+[19/May/2017 10:52:48] DEBUG [breach.strategy:205] Giving work:
+[19/May/2017 10:52:48] DEBUG [breach.strategy:206] 	Candidate: abcdefghijklm
+[19/May/2017 10:52:48] DEBUG [breach.strategy:207] 	Endpoint: https://aes128gcm.ruptureit.com/test2.php?reflection=%s
+[19/May/2017 10:52:48] "GET /breach/get_work/187 HTTP/1.1" 200 222
+[19/May/2017 10:52:49] DEBUG [breach.strategy:428] Work completed:
+[19/May/2017 10:52:49] DEBUG [breach.strategy:429] 	Length: 29084
+[19/May/2017 10:52:49] DEBUG [breach.strategy:430] 	Records: 32
+[19/May/2017 10:52:49] DEBUG [breach.strategy:246] Marking sampleset as completed:
+[19/May/2017 10:52:49] DEBUG [breach.strategy:247] 	candidatealphabet: abcdefghijklm
+[19/May/2017 10:52:49] DEBUG [breach.strategy:248] 	roundknownalphabet: abcdefghijklmnopqrstuvwxyz
+[19/May/2017 10:52:49] "POST /breach/work_completed/187 HTTP/1.1" 200 18
+[19/May/2017 10:52:49] DEBUG [breach.strategy:195] Found 1 unstarted samplesets
+[19/May/2017 10:52:49] DEBUG [breach.strategy:205] Giving work:
+[19/May/2017 10:52:49] DEBUG [breach.strategy:206] 	Candidate: nopqrstuvwxyz
+[19/May/2017 10:52:49] DEBUG [breach.strategy:207] 	Endpoint: https://aes128gcm.ruptureit.com/test2.php?reflection=%s
+[19/May/2017 10:52:49] "GET /breach/get_work/187 HTTP/1.1" 200 222
+[19/May/2017 10:52:50] DEBUG [breach.strategy:428] Work completed:
+[19/May/2017 10:52:50] DEBUG [breach.strategy:429] 	Length: 28996
+[19/May/2017 10:52:50] DEBUG [breach.strategy:430] 	Records: 32
+[19/May/2017 10:52:50] DEBUG [breach.strategy:246] Marking sampleset as completed:
+[19/May/2017 10:52:50] DEBUG [breach.strategy:247] 	candidatealphabet: nopqrstuvwxyz
+[19/May/2017 10:52:50] DEBUG [breach.strategy:248] 	roundknownalphabet: abcdefghijklmnopqrstuvwxyz
+[19/May/2017 10:52:50] DEBUG [breach.analyzer:39] 
+###########################################################################
+[19/May/2017 10:52:50] DEBUG [breach.analyzer:40] Candidate scoreboard:
+[19/May/2017 10:52:50] DEBUG [breach.analyzer:42] 	nopqrstuvwxyz: 28996
+[19/May/2017 10:52:50] DEBUG [breach.analyzer:42] 	abcdefghijklm: 29084
+[19/May/2017 10:52:50] DEBUG [breach.strategy:264] ###########################################################################
+[19/May/2017 10:52:50] DEBUG [breach.strategy:265] Decision:
+[19/May/2017 10:52:50] DEBUG [breach.strategy:267] 	state: {'knownalphabet': u'nopqrstuvwxyz', 'knownsecret': u'bibe'}
+[19/May/2017 10:52:50] DEBUG [breach.strategy:267] 	confidence: 1.375
+[19/May/2017 10:52:50] DEBUG [breach.strategy:268] ###########################################################################
+[19/May/2017 10:52:50] DEBUG [breach.strategy:308] Checking max reflection length...
+[19/May/2017 10:52:50] DEBUG [breach.strategy:359] Created new round:
+[19/May/2017 10:52:50] DEBUG [breach.strategy:360] 	Known secret: bibe
+[19/May/2017 10:52:50] DEBUG [breach.strategy:361] 	Known alphabet: nopqrstuvwxyz
+[19/May/2017 10:52:50] DEBUG [breach.strategy:362] 	Amount: 32
+[19/May/2017 10:52:50] DEBUG [breach.strategy:381] 	Alignment alphabet: JGPUNRFKDZAVCEWISTLOHQXBMY
+[19/May/2017 10:52:50] "POST /breach/work_completed/187 HTTP/1.1" 200 18
+[19/May/2017 10:52:50] DEBUG [breach.strategy:195] Found 2 unstarted samplesets
+[19/May/2017 10:52:50] DEBUG [breach.strategy:205] Giving work:
+[19/May/2017 10:52:50] DEBUG [breach.strategy:206] 	Candidate: nopqrs
+[19/May/2017 10:52:50] DEBUG [breach.strategy:207] 	Endpoint: https://aes128gcm.ruptureit.com/test2.php?reflection=%s
+[19/May/2017 10:52:50] "GET /breach/get_work/187 HTTP/1.1" 200 186
+[19/May/2017 10:52:50] DEBUG [breach.strategy:428] Work completed:
+[19/May/2017 10:52:50] DEBUG [breach.strategy:429] 	Length: 27600
+[19/May/2017 10:52:50] DEBUG [breach.strategy:430] 	Records: 32
+[19/May/2017 10:52:50] DEBUG [breach.strategy:246] Marking sampleset as completed:
+[19/May/2017 10:52:50] DEBUG [breach.strategy:247] 	candidatealphabet: nopqrs
+[19/May/2017 10:52:50] DEBUG [breach.strategy:248] 	roundknownalphabet: nopqrstuvwxyz
+[19/May/2017 10:52:50] "POST /breach/work_completed/187 HTTP/1.1" 200 18
+[19/May/2017 10:52:50] DEBUG [breach.strategy:195] Found 1 unstarted samplesets
+[19/May/2017 10:52:50] DEBUG [breach.strategy:205] Giving work:
+[19/May/2017 10:52:50] DEBUG [breach.strategy:206] 	Candidate: tuvwxyz
+[19/May/2017 10:52:50] DEBUG [breach.strategy:207] 	Endpoint: https://aes128gcm.ruptureit.com/test2.php?reflection=%s
+[19/May/2017 10:52:50] "GET /breach/get_work/187 HTTP/1.1" 200 186
+[19/May/2017 10:52:51] DEBUG [breach.strategy:428] Work completed:
+[19/May/2017 10:52:51] DEBUG [breach.strategy:429] 	Length: 27676
+[19/May/2017 10:52:51] DEBUG [breach.strategy:430] 	Records: 32
+[19/May/2017 10:52:51] DEBUG [breach.strategy:246] Marking sampleset as completed:
+[19/May/2017 10:52:51] DEBUG [breach.strategy:247] 	candidatealphabet: tuvwxyz
+[19/May/2017 10:52:51] DEBUG [breach.strategy:248] 	roundknownalphabet: nopqrstuvwxyz
+[19/May/2017 10:52:51] DEBUG [breach.analyzer:39] 
+###########################################################################
+[19/May/2017 10:52:51] DEBUG [breach.analyzer:40] Candidate scoreboard:
+[19/May/2017 10:52:51] DEBUG [breach.analyzer:42] 	nopqrs: 27600
+[19/May/2017 10:52:51] DEBUG [breach.analyzer:42] 	tuvwxyz: 27676
+[19/May/2017 10:52:51] DEBUG [breach.strategy:264] ###########################################################################
+[19/May/2017 10:52:51] DEBUG [breach.strategy:265] Decision:
+[19/May/2017 10:52:51] DEBUG [breach.strategy:267] 	state: {'knownalphabet': u'nopqrs', 'knownsecret': u'bibe'}
+[19/May/2017 10:52:51] DEBUG [breach.strategy:267] 	confidence: 1.1875
+[19/May/2017 10:52:51] DEBUG [breach.strategy:268] ###########################################################################
+[19/May/2017 10:52:51] DEBUG [breach.strategy:308] Checking max reflection length...
+[19/May/2017 10:52:51] DEBUG [breach.strategy:359] Created new round:
+[19/May/2017 10:52:51] DEBUG [breach.strategy:360] 	Known secret: bibe
+[19/May/2017 10:52:51] DEBUG [breach.strategy:361] 	Known alphabet: nopqrs
+[19/May/2017 10:52:51] DEBUG [breach.strategy:362] 	Amount: 32
+[19/May/2017 10:52:51] DEBUG [breach.strategy:381] 	Alignment alphabet: RKGMIUHJWNDLTPXZBVSCOEAQYF
+[19/May/2017 10:52:51] "POST /breach/work_completed/187 HTTP/1.1" 200 18
+[19/May/2017 10:52:51] DEBUG [breach.strategy:195] Found 2 unstarted samplesets
+[19/May/2017 10:52:51] DEBUG [breach.strategy:205] Giving work:
+[19/May/2017 10:52:51] DEBUG [breach.strategy:206] 	Candidate: nop
+[19/May/2017 10:52:51] DEBUG [breach.strategy:207] 	Endpoint: https://aes128gcm.ruptureit.com/test2.php?reflection=%s
+[19/May/2017 10:52:51] "GET /breach/get_work/187 HTTP/1.1" 200 162
+[19/May/2017 10:52:51] DEBUG [breach.strategy:428] Work completed:
+[19/May/2017 10:52:51] DEBUG [breach.strategy:429] 	Length: 26608
+[19/May/2017 10:52:51] DEBUG [breach.strategy:430] 	Records: 32
+[19/May/2017 10:52:51] DEBUG [breach.strategy:246] Marking sampleset as completed:
+[19/May/2017 10:52:51] DEBUG [breach.strategy:247] 	candidatealphabet: nop
+[19/May/2017 10:52:51] DEBUG [breach.strategy:248] 	roundknownalphabet: nopqrs
+[19/May/2017 10:52:51] "POST /breach/work_completed/187 HTTP/1.1" 200 18
+[19/May/2017 10:52:51] DEBUG [breach.strategy:195] Found 1 unstarted samplesets
+[19/May/2017 10:52:51] DEBUG [breach.strategy:205] Giving work:
+[19/May/2017 10:52:51] DEBUG [breach.strategy:206] 	Candidate: qrs
+[19/May/2017 10:52:51] DEBUG [breach.strategy:207] 	Endpoint: https://aes128gcm.ruptureit.com/test2.php?reflection=%s
+[19/May/2017 10:52:51] "GET /breach/get_work/187 HTTP/1.1" 200 162
+[19/May/2017 10:52:52] DEBUG [breach.strategy:428] Work completed:
+[19/May/2017 10:52:52] DEBUG [breach.strategy:429] 	Length: 26716
+[19/May/2017 10:52:52] DEBUG [breach.strategy:430] 	Records: 32
+[19/May/2017 10:52:52] DEBUG [breach.strategy:246] Marking sampleset as completed:
+[19/May/2017 10:52:52] DEBUG [breach.strategy:247] 	candidatealphabet: qrs
+[19/May/2017 10:52:52] DEBUG [breach.strategy:248] 	roundknownalphabet: nopqrs
+[19/May/2017 10:52:52] DEBUG [breach.analyzer:39] 
+###########################################################################
+[19/May/2017 10:52:52] DEBUG [breach.analyzer:40] Candidate scoreboard:
+[19/May/2017 10:52:52] DEBUG [breach.analyzer:42] 	nop: 26608
+[19/May/2017 10:52:52] DEBUG [breach.analyzer:42] 	qrs: 26716
+[19/May/2017 10:52:52] DEBUG [breach.strategy:264] ###########################################################################
+[19/May/2017 10:52:52] DEBUG [breach.strategy:265] Decision:
+[19/May/2017 10:52:52] DEBUG [breach.strategy:267] 	state: {'knownalphabet': u'nop', 'knownsecret': u'bibe'}
+[19/May/2017 10:52:52] DEBUG [breach.strategy:267] 	confidence: 1.6875
+[19/May/2017 10:52:52] DEBUG [breach.strategy:268] ###########################################################################
+[19/May/2017 10:52:52] DEBUG [breach.strategy:308] Checking max reflection length...
+[19/May/2017 10:52:52] DEBUG [breach.strategy:359] Created new round:
+[19/May/2017 10:52:52] DEBUG [breach.strategy:360] 	Known secret: bibe
+[19/May/2017 10:52:52] DEBUG [breach.strategy:361] 	Known alphabet: nop
+[19/May/2017 10:52:52] DEBUG [breach.strategy:362] 	Amount: 32
+[19/May/2017 10:52:52] DEBUG [breach.strategy:381] 	Alignment alphabet: SQPTUZFKRHDJOYIMWXBVGLNCAE
+[19/May/2017 10:52:52] "POST /breach/work_completed/187 HTTP/1.1" 200 18
+[19/May/2017 10:52:52] DEBUG [breach.strategy:195] Found 2 unstarted samplesets
+[19/May/2017 10:52:52] DEBUG [breach.strategy:205] Giving work:
+[19/May/2017 10:52:52] DEBUG [breach.strategy:206] 	Candidate: n
+[19/May/2017 10:52:52] DEBUG [breach.strategy:207] 	Endpoint: https://aes128gcm.ruptureit.com/test2.php?reflection=%s
+[19/May/2017 10:52:52] "GET /breach/get_work/187 HTTP/1.1" 200 156
+[19/May/2017 10:52:52] DEBUG [breach.strategy:428] Work completed:
+[19/May/2017 10:52:52] DEBUG [breach.strategy:429] 	Length: 26312
+[19/May/2017 10:52:52] DEBUG [breach.strategy:430] 	Records: 32
+[19/May/2017 10:52:53] DEBUG [breach.strategy:246] Marking sampleset as completed:
+[19/May/2017 10:52:53] DEBUG [breach.strategy:247] 	candidatealphabet: n
+[19/May/2017 10:52:53] DEBUG [breach.strategy:248] 	roundknownalphabet: nop
+[19/May/2017 10:52:53] "POST /breach/work_completed/187 HTTP/1.1" 200 18
+[19/May/2017 10:52:53] DEBUG [breach.strategy:195] Found 1 unstarted samplesets
+[19/May/2017 10:52:53] DEBUG [breach.strategy:205] Giving work:
+[19/May/2017 10:52:53] DEBUG [breach.strategy:206] 	Candidate: op
+[19/May/2017 10:52:53] DEBUG [breach.strategy:207] 	Endpoint: https://aes128gcm.ruptureit.com/test2.php?reflection=%s
+[19/May/2017 10:52:53] "GET /breach/get_work/187 HTTP/1.1" 200 156
+[19/May/2017 10:52:53] DEBUG [breach.strategy:428] Work completed:
+[19/May/2017 10:52:53] DEBUG [breach.strategy:429] 	Length: 26384
+[19/May/2017 10:52:53] DEBUG [breach.strategy:430] 	Records: 32
+[19/May/2017 10:52:53] DEBUG [breach.strategy:246] Marking sampleset as completed:
+[19/May/2017 10:52:53] DEBUG [breach.strategy:247] 	candidatealphabet: op
+[19/May/2017 10:52:53] DEBUG [breach.strategy:248] 	roundknownalphabet: nop
+[19/May/2017 10:52:53] DEBUG [breach.analyzer:39] 
+###########################################################################
+[19/May/2017 10:52:53] DEBUG [breach.analyzer:40] Candidate scoreboard:
+[19/May/2017 10:52:53] DEBUG [breach.analyzer:42] 	n: 26312
+[19/May/2017 10:52:53] DEBUG [breach.analyzer:42] 	op: 26384
+[19/May/2017 10:52:53] DEBUG [breach.strategy:264] ###########################################################################
+[19/May/2017 10:52:53] DEBUG [breach.strategy:265] Decision:
+[19/May/2017 10:52:53] DEBUG [breach.strategy:267] 	state: {'knownalphabet': u'abcdefghijklmnopqrstuvwxyz', 'knownsecret': u'biben'}
+[19/May/2017 10:52:53] DEBUG [breach.strategy:267] 	confidence: 1.125
+[19/May/2017 10:52:53] DEBUG [breach.strategy:268] ###########################################################################
+[19/May/2017 10:52:53] DEBUG [breach.strategy:308] Checking max reflection length...
+[19/May/2017 10:52:53] DEBUG [breach.strategy:359] Created new round:
+[19/May/2017 10:52:53] DEBUG [breach.strategy:360] 	Known secret: biben
+[19/May/2017 10:52:53] DEBUG [breach.strategy:361] 	Known alphabet: abcdefghijklmnopqrstuvwxyz
+[19/May/2017 10:52:53] DEBUG [breach.strategy:362] 	Amount: 32
+[19/May/2017 10:52:53] DEBUG [breach.strategy:381] 	Alignment alphabet: PUYNBIHOQCWKSEDRVALMFTGXJZ
+[19/May/2017 10:52:53] "POST /breach/work_completed/187 HTTP/1.1" 200 18
+[19/May/2017 10:52:53] DEBUG [breach.strategy:195] Found 2 unstarted samplesets
+[19/May/2017 10:52:53] DEBUG [breach.strategy:205] Giving work:
+[19/May/2017 10:52:53] DEBUG [breach.strategy:206] 	Candidate: abcdefghijklm
+[19/May/2017 10:52:53] DEBUG [breach.strategy:207] 	Endpoint: https://aes128gcm.ruptureit.com/test2.php?reflection=%s
+[19/May/2017 10:52:53] "GET /breach/get_work/187 HTTP/1.1" 200 222
+[19/May/2017 10:52:54] DEBUG [breach.strategy:428] Work completed:
+[19/May/2017 10:52:54] DEBUG [breach.strategy:429] 	Length: 28992
+[19/May/2017 10:52:54] DEBUG [breach.strategy:430] 	Records: 32
+[19/May/2017 10:52:54] DEBUG [breach.strategy:246] Marking sampleset as completed:
+[19/May/2017 10:52:54] DEBUG [breach.strategy:247] 	candidatealphabet: abcdefghijklm
+[19/May/2017 10:52:54] DEBUG [breach.strategy:248] 	roundknownalphabet: abcdefghijklmnopqrstuvwxyz
+[19/May/2017 10:52:54] "POST /breach/work_completed/187 HTTP/1.1" 200 18
+[19/May/2017 10:52:54] DEBUG [breach.strategy:195] Found 1 unstarted samplesets
+[19/May/2017 10:52:54] DEBUG [breach.strategy:205] Giving work:
+[19/May/2017 10:52:54] DEBUG [breach.strategy:206] 	Candidate: nopqrstuvwxyz
+[19/May/2017 10:52:54] DEBUG [breach.strategy:207] 	Endpoint: https://aes128gcm.ruptureit.com/test2.php?reflection=%s
+[19/May/2017 10:52:54] "GET /breach/get_work/187 HTTP/1.1" 200 222
+[19/May/2017 10:52:54] DEBUG [breach.strategy:428] Work completed:
+[19/May/2017 10:52:54] DEBUG [breach.strategy:429] 	Length: 29084
+[19/May/2017 10:52:54] DEBUG [breach.strategy:430] 	Records: 32
+[19/May/2017 10:52:54] DEBUG [breach.strategy:246] Marking sampleset as completed:
+[19/May/2017 10:52:54] DEBUG [breach.strategy:247] 	candidatealphabet: nopqrstuvwxyz
+[19/May/2017 10:52:54] DEBUG [breach.strategy:248] 	roundknownalphabet: abcdefghijklmnopqrstuvwxyz
+[19/May/2017 10:52:54] DEBUG [breach.analyzer:39] 
+###########################################################################
+[19/May/2017 10:52:54] DEBUG [breach.analyzer:40] Candidate scoreboard:
+[19/May/2017 10:52:54] DEBUG [breach.analyzer:42] 	abcdefghijklm: 28992
+[19/May/2017 10:52:54] DEBUG [breach.analyzer:42] 	nopqrstuvwxyz: 29084
+[19/May/2017 10:52:54] DEBUG [breach.strategy:264] ###########################################################################
+[19/May/2017 10:52:54] DEBUG [breach.strategy:265] Decision:
+[19/May/2017 10:52:54] DEBUG [breach.strategy:267] 	state: {'knownalphabet': u'abcdefghijklm', 'knownsecret': u'biben'}
+[19/May/2017 10:52:54] DEBUG [breach.strategy:267] 	confidence: 1.4375
+[19/May/2017 10:52:54] DEBUG [breach.strategy:268] ###########################################################################
+[19/May/2017 10:52:54] DEBUG [breach.strategy:308] Checking max reflection length...
+[19/May/2017 10:52:54] DEBUG [breach.strategy:359] Created new round:
+[19/May/2017 10:52:54] DEBUG [breach.strategy:360] 	Known secret: biben
+[19/May/2017 10:52:54] DEBUG [breach.strategy:361] 	Known alphabet: abcdefghijklm
+[19/May/2017 10:52:54] DEBUG [breach.strategy:362] 	Amount: 32
+[19/May/2017 10:52:54] DEBUG [breach.strategy:381] 	Alignment alphabet: HGLWVEUYMFBNAJTPZSRQDIXCOK
+[19/May/2017 10:52:54] "POST /breach/work_completed/187 HTTP/1.1" 200 18
+[19/May/2017 10:52:54] DEBUG [breach.strategy:195] Found 2 unstarted samplesets
+[19/May/2017 10:52:54] DEBUG [breach.strategy:205] Giving work:
+[19/May/2017 10:52:54] DEBUG [breach.strategy:206] 	Candidate: abcdef
+[19/May/2017 10:52:54] DEBUG [breach.strategy:207] 	Endpoint: https://aes128gcm.ruptureit.com/test2.php?reflection=%s
+[19/May/2017 10:52:54] "GET /breach/get_work/187 HTTP/1.1" 200 186
+[19/May/2017 10:52:55] DEBUG [breach.strategy:428] Work completed:
+[19/May/2017 10:52:55] DEBUG [breach.strategy:429] 	Length: 27408
+[19/May/2017 10:52:55] DEBUG [breach.strategy:430] 	Records: 32
+[19/May/2017 10:52:55] DEBUG [breach.strategy:246] Marking sampleset as completed:
+[19/May/2017 10:52:55] DEBUG [breach.strategy:247] 	candidatealphabet: abcdef
+[19/May/2017 10:52:55] DEBUG [breach.strategy:248] 	roundknownalphabet: abcdefghijklm
+[19/May/2017 10:52:55] "POST /breach/work_completed/187 HTTP/1.1" 200 18
+[19/May/2017 10:52:55] DEBUG [breach.strategy:195] Found 1 unstarted samplesets
+[19/May/2017 10:52:55] DEBUG [breach.strategy:205] Giving work:
+[19/May/2017 10:52:55] DEBUG [breach.strategy:206] 	Candidate: ghijklm
+[19/May/2017 10:52:55] DEBUG [breach.strategy:207] 	Endpoint: https://aes128gcm.ruptureit.com/test2.php?reflection=%s
+[19/May/2017 10:52:55] "GET /breach/get_work/187 HTTP/1.1" 200 186
+[19/May/2017 10:52:55] DEBUG [breach.strategy:428] Work completed:
+[19/May/2017 10:52:55] DEBUG [breach.strategy:429] 	Length: 27488
+[19/May/2017 10:52:55] DEBUG [breach.strategy:430] 	Records: 32
+[19/May/2017 10:52:55] DEBUG [breach.strategy:246] Marking sampleset as completed:
+[19/May/2017 10:52:55] DEBUG [breach.strategy:247] 	candidatealphabet: ghijklm
+[19/May/2017 10:52:55] DEBUG [breach.strategy:248] 	roundknownalphabet: abcdefghijklm
+[19/May/2017 10:52:55] DEBUG [breach.analyzer:39] 
+###########################################################################
+[19/May/2017 10:52:55] DEBUG [breach.analyzer:40] Candidate scoreboard:
+[19/May/2017 10:52:55] DEBUG [breach.analyzer:42] 	abcdef: 27408
+[19/May/2017 10:52:55] DEBUG [breach.analyzer:42] 	ghijklm: 27488
+[19/May/2017 10:52:55] DEBUG [breach.strategy:264] ###########################################################################
+[19/May/2017 10:52:55] DEBUG [breach.strategy:265] Decision:
+[19/May/2017 10:52:55] DEBUG [breach.strategy:267] 	state: {'knownalphabet': u'abcdef', 'knownsecret': u'biben'}
+[19/May/2017 10:52:55] DEBUG [breach.strategy:267] 	confidence: 1.25
+[19/May/2017 10:52:55] DEBUG [breach.strategy:268] ###########################################################################
+[19/May/2017 10:52:55] DEBUG [breach.strategy:308] Checking max reflection length...
+[19/May/2017 10:52:55] DEBUG [breach.strategy:359] Created new round:
+[19/May/2017 10:52:55] DEBUG [breach.strategy:360] 	Known secret: biben
+[19/May/2017 10:52:55] DEBUG [breach.strategy:361] 	Known alphabet: abcdef
+[19/May/2017 10:52:55] DEBUG [breach.strategy:362] 	Amount: 32
+[19/May/2017 10:52:56] DEBUG [breach.strategy:381] 	Alignment alphabet: IVJNRGOKMBCEPAZYXUTFQLSHWD
+[19/May/2017 10:52:56] "POST /breach/work_completed/187 HTTP/1.1" 200 18
+[19/May/2017 10:52:56] DEBUG [breach.strategy:195] Found 2 unstarted samplesets
+[19/May/2017 10:52:56] DEBUG [breach.strategy:205] Giving work:
+[19/May/2017 10:52:56] DEBUG [breach.strategy:206] 	Candidate: abc
+[19/May/2017 10:52:56] DEBUG [breach.strategy:207] 	Endpoint: https://aes128gcm.ruptureit.com/test2.php?reflection=%s
+[19/May/2017 10:52:56] "GET /breach/get_work/187 HTTP/1.1" 200 162
+[19/May/2017 10:52:56] DEBUG [breach.strategy:428] Work completed:
+[19/May/2017 10:52:56] DEBUG [breach.strategy:429] 	Length: 26672
+[19/May/2017 10:52:56] DEBUG [breach.strategy:430] 	Records: 32
+[19/May/2017 10:52:56] DEBUG [breach.strategy:246] Marking sampleset as completed:
+[19/May/2017 10:52:56] DEBUG [breach.strategy:247] 	candidatealphabet: abc
+[19/May/2017 10:52:56] DEBUG [breach.strategy:248] 	roundknownalphabet: abcdef
+[19/May/2017 10:52:56] "POST /breach/work_completed/187 HTTP/1.1" 200 18
+[19/May/2017 10:52:56] DEBUG [breach.strategy:195] Found 1 unstarted samplesets
+[19/May/2017 10:52:56] DEBUG [breach.strategy:205] Giving work:
+[19/May/2017 10:52:56] DEBUG [breach.strategy:206] 	Candidate: def
+[19/May/2017 10:52:56] DEBUG [breach.strategy:207] 	Endpoint: https://aes128gcm.ruptureit.com/test2.php?reflection=%s
+[19/May/2017 10:52:56] "GET /breach/get_work/187 HTTP/1.1" 200 162
+[19/May/2017 10:52:57] DEBUG [breach.strategy:428] Work completed:
+[19/May/2017 10:52:57] DEBUG [breach.strategy:429] 	Length: 26596
+[19/May/2017 10:52:57] DEBUG [breach.strategy:430] 	Records: 32
+[19/May/2017 10:52:57] DEBUG [breach.strategy:246] Marking sampleset as completed:
+[19/May/2017 10:52:57] DEBUG [breach.strategy:247] 	candidatealphabet: def
+[19/May/2017 10:52:57] DEBUG [breach.strategy:248] 	roundknownalphabet: abcdef
+[19/May/2017 10:52:57] DEBUG [breach.analyzer:39] 
+###########################################################################
+[19/May/2017 10:52:57] DEBUG [breach.analyzer:40] Candidate scoreboard:
+[19/May/2017 10:52:57] DEBUG [breach.analyzer:42] 	def: 26596
+[19/May/2017 10:52:57] DEBUG [breach.analyzer:42] 	abc: 26672
+[19/May/2017 10:52:57] DEBUG [breach.strategy:264] ###########################################################################
+[19/May/2017 10:52:57] DEBUG [breach.strategy:265] Decision:
+[19/May/2017 10:52:57] DEBUG [breach.strategy:267] 	state: {'knownalphabet': u'def', 'knownsecret': u'biben'}
+[19/May/2017 10:52:57] DEBUG [breach.strategy:267] 	confidence: 1.1875
+[19/May/2017 10:52:57] DEBUG [breach.strategy:268] ###########################################################################
+[19/May/2017 10:52:57] DEBUG [breach.strategy:308] Checking max reflection length...
+[19/May/2017 10:52:57] DEBUG [breach.strategy:359] Created new round:
+[19/May/2017 10:52:57] DEBUG [breach.strategy:360] 	Known secret: biben
+[19/May/2017 10:52:57] DEBUG [breach.strategy:361] 	Known alphabet: def
+[19/May/2017 10:52:57] DEBUG [breach.strategy:362] 	Amount: 32
+[19/May/2017 10:52:57] DEBUG [breach.strategy:381] 	Alignment alphabet: RXKYQGCULTDMHEAZJPNOFWISBV
+[19/May/2017 10:52:57] "POST /breach/work_completed/187 HTTP/1.1" 200 18
+[19/May/2017 10:52:57] DEBUG [breach.strategy:195] Found 2 unstarted samplesets
+[19/May/2017 10:52:57] DEBUG [breach.strategy:205] Giving work:
+[19/May/2017 10:52:57] DEBUG [breach.strategy:206] 	Candidate: d
+[19/May/2017 10:52:57] DEBUG [breach.strategy:207] 	Endpoint: https://aes128gcm.ruptureit.com/test2.php?reflection=%s
+[19/May/2017 10:52:57] "GET /breach/get_work/187 HTTP/1.1" 200 156
+[19/May/2017 10:52:57] DEBUG [breach.strategy:428] Work completed:
+[19/May/2017 10:52:57] DEBUG [breach.strategy:429] 	Length: 26352
+[19/May/2017 10:52:57] DEBUG [breach.strategy:430] 	Records: 32
+[19/May/2017 10:52:57] DEBUG [breach.strategy:246] Marking sampleset as completed:
+[19/May/2017 10:52:57] DEBUG [breach.strategy:247] 	candidatealphabet: d
+[19/May/2017 10:52:57] DEBUG [breach.strategy:248] 	roundknownalphabet: def
+[19/May/2017 10:52:57] "POST /breach/work_completed/187 HTTP/1.1" 200 18
+[19/May/2017 10:52:57] DEBUG [breach.strategy:195] Found 1 unstarted samplesets
+[19/May/2017 10:52:57] DEBUG [breach.strategy:205] Giving work:
+[19/May/2017 10:52:57] DEBUG [breach.strategy:206] 	Candidate: ef
+[19/May/2017 10:52:57] DEBUG [breach.strategy:207] 	Endpoint: https://aes128gcm.ruptureit.com/test2.php?reflection=%s
+[19/May/2017 10:52:57] "GET /breach/get_work/187 HTTP/1.1" 200 156
+[19/May/2017 10:52:58] DEBUG [breach.strategy:428] Work completed:
+[19/May/2017 10:52:58] DEBUG [breach.strategy:429] 	Length: 25550
+[19/May/2017 10:52:58] DEBUG [breach.strategy:430] 	Records: 31
+[19/May/2017 10:52:58] DEBUG [breach.strategy:438] Records not multiple of samplesize. Checking need for calibration...
+[19/May/2017 10:52:58] WARNING [breach.strategy:475] Not all records captured
+[19/May/2017 10:52:58] DEBUG [breach.strategy:246] Marking sampleset as completed:
+[19/May/2017 10:52:58] DEBUG [breach.strategy:247] 	candidatealphabet: ef
+[19/May/2017 10:52:58] DEBUG [breach.strategy:248] 	roundknownalphabet: def
+[19/May/2017 10:52:58] "POST /breach/work_completed/187 HTTP/1.1" 200 18
+[19/May/2017 10:52:58] DEBUG [breach.strategy:195] Found 1 unstarted samplesets
+[19/May/2017 10:52:58] DEBUG [breach.strategy:205] Giving work:
+[19/May/2017 10:52:58] DEBUG [breach.strategy:206] 	Candidate: ef
+[19/May/2017 10:52:58] DEBUG [breach.strategy:207] 	Endpoint: https://aes128gcm.ruptureit.com/test2.php?reflection=%s
+[19/May/2017 10:52:58] "GET /breach/get_work/187 HTTP/1.1" 200 156
+[19/May/2017 10:52:59] DEBUG [breach.strategy:428] Work completed:
+[19/May/2017 10:52:59] DEBUG [breach.strategy:429] 	Length: 25510
+[19/May/2017 10:52:59] DEBUG [breach.strategy:430] 	Records: 31
+[19/May/2017 10:52:59] DEBUG [breach.strategy:438] Records not multiple of samplesize. Checking need for calibration...
+[19/May/2017 10:52:59] WARNING [breach.strategy:475] Not all records captured
+[19/May/2017 10:52:59] DEBUG [breach.strategy:246] Marking sampleset as completed:
+[19/May/2017 10:52:59] DEBUG [breach.strategy:247] 	candidatealphabet: ef
+[19/May/2017 10:52:59] DEBUG [breach.strategy:248] 	roundknownalphabet: def
+[19/May/2017 10:52:59] "POST /breach/work_completed/187 HTTP/1.1" 200 18
+[19/May/2017 10:52:59] DEBUG [breach.strategy:195] Found 1 unstarted samplesets
+[19/May/2017 10:52:59] DEBUG [breach.strategy:205] Giving work:
+[19/May/2017 10:52:59] DEBUG [breach.strategy:206] 	Candidate: ef
+[19/May/2017 10:52:59] DEBUG [breach.strategy:207] 	Endpoint: https://aes128gcm.ruptureit.com/test2.php?reflection=%s
+[19/May/2017 10:52:59] "GET /breach/get_work/187 HTTP/1.1" 200 156
+[19/May/2017 10:52:59] DEBUG [breach.strategy:428] Work completed:
+[19/May/2017 10:52:59] DEBUG [breach.strategy:429] 	Length: 26408
+[19/May/2017 10:52:59] DEBUG [breach.strategy:430] 	Records: 32
+[19/May/2017 10:52:59] DEBUG [breach.strategy:246] Marking sampleset as completed:
+[19/May/2017 10:52:59] DEBUG [breach.strategy:247] 	candidatealphabet: ef
+[19/May/2017 10:52:59] DEBUG [breach.strategy:248] 	roundknownalphabet: def
+[19/May/2017 10:52:59] DEBUG [breach.analyzer:39] 
+###########################################################################
+[19/May/2017 10:52:59] DEBUG [breach.analyzer:40] Candidate scoreboard:
+[19/May/2017 10:52:59] DEBUG [breach.analyzer:42] 	d: 26352
+[19/May/2017 10:52:59] DEBUG [breach.analyzer:42] 	ef: 26408
+[19/May/2017 10:52:59] DEBUG [breach.strategy:264] ###########################################################################
+[19/May/2017 10:52:59] DEBUG [breach.strategy:265] Decision:
+[19/May/2017 10:52:59] DEBUG [breach.strategy:267] 	state: {'knownalphabet': u'abcdefghijklmnopqrstuvwxyz', 'knownsecret': u'bibend'}
+[19/May/2017 10:52:59] DEBUG [breach.strategy:267] 	confidence: 0.875
+[19/May/2017 10:52:59] DEBUG [breach.strategy:268] ###########################################################################
+[19/May/2017 10:52:59] DEBUG [breach.strategy:308] Checking max reflection length...
+[19/May/2017 10:52:59] DEBUG [breach.strategy:359] Created new round:
+[19/May/2017 10:52:59] DEBUG [breach.strategy:360] 	Known secret: bibend
+[19/May/2017 10:52:59] DEBUG [breach.strategy:361] 	Known alphabet: abcdefghijklmnopqrstuvwxyz
+[19/May/2017 10:52:59] DEBUG [breach.strategy:362] 	Amount: 32
+[19/May/2017 10:52:59] DEBUG [breach.strategy:381] 	Alignment alphabet: CFZSXDNAVEMTKRUBLGPWOQYIHJ
+[19/May/2017 10:52:59] "POST /breach/work_completed/187 HTTP/1.1" 200 18
+[19/May/2017 10:52:59] DEBUG [breach.strategy:195] Found 2 unstarted samplesets
+[19/May/2017 10:52:59] DEBUG [breach.strategy:205] Giving work:
+[19/May/2017 10:52:59] DEBUG [breach.strategy:206] 	Candidate: abcdefghijklm
+[19/May/2017 10:52:59] DEBUG [breach.strategy:207] 	Endpoint: https://aes128gcm.ruptureit.com/test2.php?reflection=%s
+[19/May/2017 10:52:59] "GET /breach/get_work/187 HTTP/1.1" 200 222
+[19/May/2017 10:53:00] DEBUG [breach.strategy:428] Work completed:
+[19/May/2017 10:53:00] DEBUG [breach.strategy:429] 	Length: 29124
+[19/May/2017 10:53:00] DEBUG [breach.strategy:430] 	Records: 32
+[19/May/2017 10:53:00] DEBUG [breach.strategy:246] Marking sampleset as completed:
+[19/May/2017 10:53:00] DEBUG [breach.strategy:247] 	candidatealphabet: abcdefghijklm
+[19/May/2017 10:53:00] DEBUG [breach.strategy:248] 	roundknownalphabet: abcdefghijklmnopqrstuvwxyz
+[19/May/2017 10:53:00] "POST /breach/work_completed/187 HTTP/1.1" 200 18
+[19/May/2017 10:53:00] DEBUG [breach.strategy:195] Found 1 unstarted samplesets
+[19/May/2017 10:53:00] DEBUG [breach.strategy:205] Giving work:
+[19/May/2017 10:53:00] DEBUG [breach.strategy:206] 	Candidate: nopqrstuvwxyz
+[19/May/2017 10:53:00] DEBUG [breach.strategy:207] 	Endpoint: https://aes128gcm.ruptureit.com/test2.php?reflection=%s
+[19/May/2017 10:53:00] "GET /breach/get_work/187 HTTP/1.1" 200 222
+[19/May/2017 10:53:00] DEBUG [breach.strategy:428] Work completed:
+[19/May/2017 10:53:00] DEBUG [breach.strategy:429] 	Length: 28932
+[19/May/2017 10:53:00] DEBUG [breach.strategy:430] 	Records: 32
+[19/May/2017 10:53:00] DEBUG [breach.strategy:246] Marking sampleset as completed:
+[19/May/2017 10:53:00] DEBUG [breach.strategy:247] 	candidatealphabet: nopqrstuvwxyz
+[19/May/2017 10:53:00] DEBUG [breach.strategy:248] 	roundknownalphabet: abcdefghijklmnopqrstuvwxyz
+[19/May/2017 10:53:00] DEBUG [breach.analyzer:39] 
+###########################################################################
+[19/May/2017 10:53:00] DEBUG [breach.analyzer:40] Candidate scoreboard:
+[19/May/2017 10:53:00] DEBUG [breach.analyzer:42] 	nopqrstuvwxyz: 28932
+[19/May/2017 10:53:00] DEBUG [breach.analyzer:42] 	abcdefghijklm: 29124
+[19/May/2017 10:53:00] DEBUG [breach.strategy:264] ###########################################################################
+[19/May/2017 10:53:00] DEBUG [breach.strategy:265] Decision:
+[19/May/2017 10:53:00] DEBUG [breach.strategy:267] 	state: {'knownalphabet': u'nopqrstuvwxyz', 'knownsecret': u'bibend'}
+[19/May/2017 10:53:00] DEBUG [breach.strategy:267] 	confidence: 3.0
+[19/May/2017 10:53:00] DEBUG [breach.strategy:268] ###########################################################################
+[19/May/2017 10:53:00] DEBUG [breach.strategy:308] Checking max reflection length...
+[19/May/2017 10:53:00] DEBUG [breach.strategy:359] Created new round:
+[19/May/2017 10:53:00] DEBUG [breach.strategy:360] 	Known secret: bibend
+[19/May/2017 10:53:00] DEBUG [breach.strategy:361] 	Known alphabet: nopqrstuvwxyz
+[19/May/2017 10:53:00] DEBUG [breach.strategy:362] 	Amount: 32
+[19/May/2017 10:53:00] DEBUG [breach.strategy:381] 	Alignment alphabet: QNEDPFLMIAKOSGZVBWHJXUTCRY
+[19/May/2017 10:53:00] "POST /breach/work_completed/187 HTTP/1.1" 200 18
+[19/May/2017 10:53:00] DEBUG [breach.strategy:195] Found 2 unstarted samplesets
+[19/May/2017 10:53:00] DEBUG [breach.strategy:205] Giving work:
+[19/May/2017 10:53:00] DEBUG [breach.strategy:206] 	Candidate: nopqrs
+[19/May/2017 10:53:00] DEBUG [breach.strategy:207] 	Endpoint: https://aes128gcm.ruptureit.com/test2.php?reflection=%s
+[19/May/2017 10:53:00] "GET /breach/get_work/187 HTTP/1.1" 200 186
+[19/May/2017 10:53:01] DEBUG [breach.strategy:428] Work completed:
+[19/May/2017 10:53:01] DEBUG [breach.strategy:429] 	Length: 27616
+[19/May/2017 10:53:01] DEBUG [breach.strategy:430] 	Records: 32
+[19/May/2017 10:53:01] DEBUG [breach.strategy:246] Marking sampleset as completed:
+[19/May/2017 10:53:01] DEBUG [breach.strategy:247] 	candidatealphabet: nopqrs
+[19/May/2017 10:53:01] DEBUG [breach.strategy:248] 	roundknownalphabet: nopqrstuvwxyz
+[19/May/2017 10:53:01] "POST /breach/work_completed/187 HTTP/1.1" 200 18
+[19/May/2017 10:53:01] DEBUG [breach.strategy:195] Found 1 unstarted samplesets
+[19/May/2017 10:53:01] DEBUG [breach.strategy:205] Giving work:
+[19/May/2017 10:53:01] DEBUG [breach.strategy:206] 	Candidate: tuvwxyz
+[19/May/2017 10:53:01] DEBUG [breach.strategy:207] 	Endpoint: https://aes128gcm.ruptureit.com/test2.php?reflection=%s
+[19/May/2017 10:53:01] "GET /breach/get_work/187 HTTP/1.1" 200 186
+[19/May/2017 10:53:02] DEBUG [breach.strategy:428] Work completed:
+[19/May/2017 10:53:02] DEBUG [breach.strategy:429] 	Length: 27492
+[19/May/2017 10:53:02] DEBUG [breach.strategy:430] 	Records: 32
+[19/May/2017 10:53:02] DEBUG [breach.strategy:246] Marking sampleset as completed:
+[19/May/2017 10:53:02] DEBUG [breach.strategy:247] 	candidatealphabet: tuvwxyz
+[19/May/2017 10:53:02] DEBUG [breach.strategy:248] 	roundknownalphabet: nopqrstuvwxyz
+[19/May/2017 10:53:02] DEBUG [breach.analyzer:39] 
+###########################################################################
+[19/May/2017 10:53:02] DEBUG [breach.analyzer:40] Candidate scoreboard:
+[19/May/2017 10:53:02] DEBUG [breach.analyzer:42] 	tuvwxyz: 27492
+[19/May/2017 10:53:02] DEBUG [breach.analyzer:42] 	nopqrs: 27616
+[19/May/2017 10:53:02] DEBUG [breach.strategy:264] ###########################################################################
+[19/May/2017 10:53:02] DEBUG [breach.strategy:265] Decision:
+[19/May/2017 10:53:02] DEBUG [breach.strategy:267] 	state: {'knownalphabet': u'tuvwxyz', 'knownsecret': u'bibend'}
+[19/May/2017 10:53:02] DEBUG [breach.strategy:267] 	confidence: 1.9375
+[19/May/2017 10:53:02] DEBUG [breach.strategy:268] ###########################################################################
+[19/May/2017 10:53:02] DEBUG [breach.strategy:308] Checking max reflection length...
+[19/May/2017 10:53:02] DEBUG [breach.strategy:359] Created new round:
+[19/May/2017 10:53:02] DEBUG [breach.strategy:360] 	Known secret: bibend
+[19/May/2017 10:53:02] DEBUG [breach.strategy:361] 	Known alphabet: tuvwxyz
+[19/May/2017 10:53:02] DEBUG [breach.strategy:362] 	Amount: 32
+[19/May/2017 10:53:02] DEBUG [breach.strategy:381] 	Alignment alphabet: KUHOTSYGAJMZBDWRPFECLVQXIN
+[19/May/2017 10:53:02] "POST /breach/work_completed/187 HTTP/1.1" 200 18
+[19/May/2017 10:53:02] DEBUG [breach.strategy:195] Found 2 unstarted samplesets
+[19/May/2017 10:53:02] DEBUG [breach.strategy:205] Giving work:
+[19/May/2017 10:53:02] DEBUG [breach.strategy:206] 	Candidate: tuv
+[19/May/2017 10:53:02] DEBUG [breach.strategy:207] 	Endpoint: https://aes128gcm.ruptureit.com/test2.php?reflection=%s
+[19/May/2017 10:53:02] "GET /breach/get_work/187 HTTP/1.1" 200 168
+[19/May/2017 10:53:02] DEBUG [breach.strategy:428] Work completed:
+[19/May/2017 10:53:02] DEBUG [breach.strategy:429] 	Length: 23440
+[19/May/2017 10:53:02] DEBUG [breach.strategy:430] 	Records: 28
+[19/May/2017 10:53:02] DEBUG [breach.strategy:438] Records not multiple of samplesize. Checking need for calibration...
+[19/May/2017 10:53:02] WARNING [breach.strategy:475] Not all records captured
+[19/May/2017 10:53:02] DEBUG [breach.strategy:246] Marking sampleset as completed:
+[19/May/2017 10:53:02] DEBUG [breach.strategy:247] 	candidatealphabet: tuv
+[19/May/2017 10:53:02] DEBUG [breach.strategy:248] 	roundknownalphabet: tuvwxyz
+[19/May/2017 10:53:02] "POST /breach/work_completed/187 HTTP/1.1" 200 18
+[19/May/2017 10:53:02] DEBUG [breach.strategy:195] Found 2 unstarted samplesets
+[19/May/2017 10:53:02] DEBUG [breach.strategy:205] Giving work:
+[19/May/2017 10:53:02] DEBUG [breach.strategy:206] 	Candidate: wxyz
+[19/May/2017 10:53:02] DEBUG [breach.strategy:207] 	Endpoint: https://aes128gcm.ruptureit.com/test2.php?reflection=%s
+[19/May/2017 10:53:02] "GET /breach/get_work/187 HTTP/1.1" 200 168
+[19/May/2017 10:53:03] DEBUG [breach.strategy:428] Work completed:
+[19/May/2017 10:53:03] DEBUG [breach.strategy:429] 	Length: 27004
+[19/May/2017 10:53:03] DEBUG [breach.strategy:430] 	Records: 32
+[19/May/2017 10:53:03] DEBUG [breach.strategy:246] Marking sampleset as completed:
+[19/May/2017 10:53:03] DEBUG [breach.strategy:247] 	candidatealphabet: wxyz
+[19/May/2017 10:53:03] DEBUG [breach.strategy:248] 	roundknownalphabet: tuvwxyz
+[19/May/2017 10:53:03] "POST /breach/work_completed/187 HTTP/1.1" 200 18
+[19/May/2017 10:53:03] DEBUG [breach.strategy:195] Found 1 unstarted samplesets
+[19/May/2017 10:53:03] DEBUG [breach.strategy:205] Giving work:
+[19/May/2017 10:53:03] DEBUG [breach.strategy:206] 	Candidate: tuv
+[19/May/2017 10:53:03] DEBUG [breach.strategy:207] 	Endpoint: https://aes128gcm.ruptureit.com/test2.php?reflection=%s
+[19/May/2017 10:53:03] "GET /breach/get_work/187 HTTP/1.1" 200 168
+[19/May/2017 10:53:03] DEBUG [breach.strategy:428] Work completed:
+[19/May/2017 10:53:03] DEBUG [breach.strategy:429] 	Length: 26872
+[19/May/2017 10:53:03] DEBUG [breach.strategy:430] 	Records: 32
+[19/May/2017 10:53:03] DEBUG [breach.strategy:246] Marking sampleset as completed:
+[19/May/2017 10:53:03] DEBUG [breach.strategy:247] 	candidatealphabet: tuv
+[19/May/2017 10:53:03] DEBUG [breach.strategy:248] 	roundknownalphabet: tuvwxyz
+[19/May/2017 10:53:03] DEBUG [breach.analyzer:39] 
+###########################################################################
+[19/May/2017 10:53:03] DEBUG [breach.analyzer:40] Candidate scoreboard:
+[19/May/2017 10:53:03] DEBUG [breach.analyzer:42] 	tuv: 26872
+[19/May/2017 10:53:03] DEBUG [breach.analyzer:42] 	wxyz: 27004
+[19/May/2017 10:53:03] DEBUG [breach.strategy:264] ###########################################################################
+[19/May/2017 10:53:03] DEBUG [breach.strategy:265] Decision:
+[19/May/2017 10:53:03] DEBUG [breach.strategy:267] 	state: {'knownalphabet': u'tuv', 'knownsecret': u'bibend'}
+[19/May/2017 10:53:03] DEBUG [breach.strategy:267] 	confidence: 2.0625
+[19/May/2017 10:53:03] DEBUG [breach.strategy:268] ###########################################################################
+[19/May/2017 10:53:04] DEBUG [breach.strategy:308] Checking max reflection length...
+[19/May/2017 10:53:04] DEBUG [breach.strategy:359] Created new round:
+[19/May/2017 10:53:04] DEBUG [breach.strategy:360] 	Known secret: bibend
+[19/May/2017 10:53:04] DEBUG [breach.strategy:361] 	Known alphabet: tuv
+[19/May/2017 10:53:04] DEBUG [breach.strategy:362] 	Amount: 32
+[19/May/2017 10:53:04] DEBUG [breach.strategy:381] 	Alignment alphabet: WFUYQZCSKRETPVAOMHGJXLNDBI
+[19/May/2017 10:53:04] "POST /breach/work_completed/187 HTTP/1.1" 200 18
+[19/May/2017 10:53:04] DEBUG [breach.strategy:195] Found 2 unstarted samplesets
+[19/May/2017 10:53:04] DEBUG [breach.strategy:205] Giving work:
+[19/May/2017 10:53:04] DEBUG [breach.strategy:206] 	Candidate: t
+[19/May/2017 10:53:04] DEBUG [breach.strategy:207] 	Endpoint: https://aes128gcm.ruptureit.com/test2.php?reflection=%s
+[19/May/2017 10:53:04] "GET /breach/get_work/187 HTTP/1.1" 200 156
+[19/May/2017 10:53:04] DEBUG [breach.strategy:428] Work completed:
+[19/May/2017 10:53:04] DEBUG [breach.strategy:429] 	Length: 26436
+[19/May/2017 10:53:04] DEBUG [breach.strategy:430] 	Records: 32
+[19/May/2017 10:53:04] DEBUG [breach.strategy:246] Marking sampleset as completed:
+[19/May/2017 10:53:04] DEBUG [breach.strategy:247] 	candidatealphabet: t
+[19/May/2017 10:53:04] DEBUG [breach.strategy:248] 	roundknownalphabet: tuv
+[19/May/2017 10:53:04] "POST /breach/work_completed/187 HTTP/1.1" 200 18
+[19/May/2017 10:53:04] DEBUG [breach.strategy:195] Found 1 unstarted samplesets
+[19/May/2017 10:53:04] DEBUG [breach.strategy:205] Giving work:
+[19/May/2017 10:53:04] DEBUG [breach.strategy:206] 	Candidate: uv
+[19/May/2017 10:53:04] DEBUG [breach.strategy:207] 	Endpoint: https://aes128gcm.ruptureit.com/test2.php?reflection=%s
+[19/May/2017 10:53:04] "GET /breach/get_work/187 HTTP/1.1" 200 156
+[19/May/2017 10:53:05] DEBUG [breach.strategy:428] Work completed:
+[19/May/2017 10:53:05] DEBUG [breach.strategy:429] 	Length: 26340
+[19/May/2017 10:53:05] DEBUG [breach.strategy:430] 	Records: 32
+[19/May/2017 10:53:05] DEBUG [breach.strategy:246] Marking sampleset as completed:
+[19/May/2017 10:53:05] DEBUG [breach.strategy:247] 	candidatealphabet: uv
+[19/May/2017 10:53:05] DEBUG [breach.strategy:248] 	roundknownalphabet: tuv
+[19/May/2017 10:53:05] DEBUG [breach.analyzer:39] 
+###########################################################################
+[19/May/2017 10:53:05] DEBUG [breach.analyzer:40] Candidate scoreboard:
+[19/May/2017 10:53:05] DEBUG [breach.analyzer:42] 	uv: 26340
+[19/May/2017 10:53:05] DEBUG [breach.analyzer:42] 	t: 26436
+[19/May/2017 10:53:05] DEBUG [breach.strategy:264] ###########################################################################
+[19/May/2017 10:53:05] DEBUG [breach.strategy:265] Decision:
+[19/May/2017 10:53:05] DEBUG [breach.strategy:267] 	state: {'knownalphabet': u'uv', 'knownsecret': u'bibend'}
+[19/May/2017 10:53:05] DEBUG [breach.strategy:267] 	confidence: 1.5
+[19/May/2017 10:53:05] DEBUG [breach.strategy:268] ###########################################################################
+[19/May/2017 10:53:05] DEBUG [breach.strategy:308] Checking max reflection length...
+[19/May/2017 10:53:05] DEBUG [breach.strategy:359] Created new round:
+[19/May/2017 10:53:05] DEBUG [breach.strategy:360] 	Known secret: bibend
+[19/May/2017 10:53:05] DEBUG [breach.strategy:361] 	Known alphabet: uv
+[19/May/2017 10:53:05] DEBUG [breach.strategy:362] 	Amount: 32
+[19/May/2017 10:53:05] DEBUG [breach.strategy:381] 	Alignment alphabet: IYHENXPZFWCVKGDALBQSJTUORM
+[19/May/2017 10:53:05] "POST /breach/work_completed/187 HTTP/1.1" 200 18
+[19/May/2017 10:53:05] DEBUG [breach.strategy:195] Found 2 unstarted samplesets
+[19/May/2017 10:53:05] DEBUG [breach.strategy:205] Giving work:
+[19/May/2017 10:53:05] DEBUG [breach.strategy:206] 	Candidate: u
+[19/May/2017 10:53:05] DEBUG [breach.strategy:207] 	Endpoint: https://aes128gcm.ruptureit.com/test2.php?reflection=%s
+[19/May/2017 10:53:05] "GET /breach/get_work/187 HTTP/1.1" 200 150
+[19/May/2017 10:53:05] DEBUG [breach.strategy:428] Work completed:
+[19/May/2017 10:53:05] DEBUG [breach.strategy:429] 	Length: 26068
+[19/May/2017 10:53:05] DEBUG [breach.strategy:430] 	Records: 32
+[19/May/2017 10:53:05] DEBUG [breach.strategy:246] Marking sampleset as completed:
+[19/May/2017 10:53:05] DEBUG [breach.strategy:247] 	candidatealphabet: u
+[19/May/2017 10:53:05] DEBUG [breach.strategy:248] 	roundknownalphabet: uv
+[19/May/2017 10:53:05] "POST /breach/work_completed/187 HTTP/1.1" 200 18
+[19/May/2017 10:53:05] DEBUG [breach.strategy:195] Found 1 unstarted samplesets
+[19/May/2017 10:53:05] DEBUG [breach.strategy:205] Giving work:
+[19/May/2017 10:53:05] DEBUG [breach.strategy:206] 	Candidate: v
+[19/May/2017 10:53:05] DEBUG [breach.strategy:207] 	Endpoint: https://aes128gcm.ruptureit.com/test2.php?reflection=%s
+[19/May/2017 10:53:05] "GET /breach/get_work/187 HTTP/1.1" 200 150
+[19/May/2017 10:53:06] DEBUG [breach.strategy:428] Work completed:
+[19/May/2017 10:53:06] DEBUG [breach.strategy:429] 	Length: 26164
+[19/May/2017 10:53:06] DEBUG [breach.strategy:430] 	Records: 32
+[19/May/2017 10:53:06] DEBUG [breach.strategy:246] Marking sampleset as completed:
+[19/May/2017 10:53:06] DEBUG [breach.strategy:247] 	candidatealphabet: v
+[19/May/2017 10:53:06] DEBUG [breach.strategy:248] 	roundknownalphabet: uv
+[19/May/2017 10:53:06] DEBUG [breach.analyzer:39] 
+###########################################################################
+[19/May/2017 10:53:06] DEBUG [breach.analyzer:40] Candidate scoreboard:
+[19/May/2017 10:53:06] DEBUG [breach.analyzer:42] 	u: 26068
+[19/May/2017 10:53:06] DEBUG [breach.analyzer:42] 	v: 26164
+[19/May/2017 10:53:06] DEBUG [breach.strategy:264] ###########################################################################
+[19/May/2017 10:53:06] DEBUG [breach.strategy:265] Decision:
+[19/May/2017 10:53:06] DEBUG [breach.strategy:267] 	state: {'knownalphabet': u'abcdefghijklmnopqrstuvwxyz', 'knownsecret': u'bibendu'}
+[19/May/2017 10:53:06] DEBUG [breach.strategy:267] 	confidence: 1.5
+[19/May/2017 10:53:06] DEBUG [breach.strategy:268] ###########################################################################
+[19/May/2017 10:53:06] DEBUG [breach.strategy:308] Checking max reflection length...
+[19/May/2017 10:53:06] DEBUG [breach.strategy:359] Created new round:
+[19/May/2017 10:53:06] DEBUG [breach.strategy:360] 	Known secret: bibendu
+[19/May/2017 10:53:06] DEBUG [breach.strategy:361] 	Known alphabet: abcdefghijklmnopqrstuvwxyz
+[19/May/2017 10:53:06] DEBUG [breach.strategy:362] 	Amount: 32
+[19/May/2017 10:53:06] DEBUG [breach.strategy:381] 	Alignment alphabet: KYWVDPUSMTJBGCZAQXEINHLFRO
+[19/May/2017 10:53:06] "POST /breach/work_completed/187 HTTP/1.1" 200 18
+[19/May/2017 10:53:06] DEBUG [breach.strategy:195] Found 2 unstarted samplesets
+[19/May/2017 10:53:06] DEBUG [breach.strategy:205] Giving work:
+[19/May/2017 10:53:06] DEBUG [breach.strategy:206] 	Candidate: abcdefghijklm
+[19/May/2017 10:53:06] DEBUG [breach.strategy:207] 	Endpoint: https://aes128gcm.ruptureit.com/test2.php?reflection=%s
+[19/May/2017 10:53:06] "GET /breach/get_work/187 HTTP/1.1" 200 222
+[19/May/2017 10:53:06] DEBUG [breach.strategy:428] Work completed:
+[19/May/2017 10:53:06] DEBUG [breach.strategy:429] 	Length: 28956
+[19/May/2017 10:53:06] DEBUG [breach.strategy:430] 	Records: 32
+[19/May/2017 10:53:06] DEBUG [breach.strategy:246] Marking sampleset as completed:
+[19/May/2017 10:53:06] DEBUG [breach.strategy:247] 	candidatealphabet: abcdefghijklm
+[19/May/2017 10:53:06] DEBUG [breach.strategy:248] 	roundknownalphabet: abcdefghijklmnopqrstuvwxyz
+[19/May/2017 10:53:07] "POST /breach/work_completed/187 HTTP/1.1" 200 18
+[19/May/2017 10:53:07] DEBUG [breach.strategy:195] Found 1 unstarted samplesets
+[19/May/2017 10:53:07] DEBUG [breach.strategy:205] Giving work:
+[19/May/2017 10:53:07] DEBUG [breach.strategy:206] 	Candidate: nopqrstuvwxyz
+[19/May/2017 10:53:07] DEBUG [breach.strategy:207] 	Endpoint: https://aes128gcm.ruptureit.com/test2.php?reflection=%s
+[19/May/2017 10:53:07] "GET /breach/get_work/187 HTTP/1.1" 200 222
+[19/May/2017 10:53:07] DEBUG [breach.strategy:428] Work completed:
+[19/May/2017 10:53:07] DEBUG [breach.strategy:429] 	Length: 29068
+[19/May/2017 10:53:07] DEBUG [breach.strategy:430] 	Records: 32
+[19/May/2017 10:53:07] DEBUG [breach.strategy:246] Marking sampleset as completed:
+[19/May/2017 10:53:07] DEBUG [breach.strategy:247] 	candidatealphabet: nopqrstuvwxyz
+[19/May/2017 10:53:07] DEBUG [breach.strategy:248] 	roundknownalphabet: abcdefghijklmnopqrstuvwxyz
+[19/May/2017 10:53:07] DEBUG [breach.analyzer:39] 
+###########################################################################
+[19/May/2017 10:53:07] DEBUG [breach.analyzer:40] Candidate scoreboard:
+[19/May/2017 10:53:07] DEBUG [breach.analyzer:42] 	abcdefghijklm: 28956
+[19/May/2017 10:53:07] DEBUG [breach.analyzer:42] 	nopqrstuvwxyz: 29068
+[19/May/2017 10:53:07] DEBUG [breach.strategy:264] ###########################################################################
+[19/May/2017 10:53:07] DEBUG [breach.strategy:265] Decision:
+[19/May/2017 10:53:07] DEBUG [breach.strategy:267] 	state: {'knownalphabet': u'abcdefghijklm', 'knownsecret': u'bibendu'}
+[19/May/2017 10:53:07] DEBUG [breach.strategy:267] 	confidence: 1.75
+[19/May/2017 10:53:07] DEBUG [breach.strategy:268] ###########################################################################
+[19/May/2017 10:53:07] DEBUG [breach.strategy:308] Checking max reflection length...
+[19/May/2017 10:53:07] DEBUG [breach.strategy:359] Created new round:
+[19/May/2017 10:53:07] DEBUG [breach.strategy:360] 	Known secret: bibendu
+[19/May/2017 10:53:07] DEBUG [breach.strategy:361] 	Known alphabet: abcdefghijklm
+[19/May/2017 10:53:07] DEBUG [breach.strategy:362] 	Amount: 32
+[19/May/2017 10:53:07] DEBUG [breach.strategy:381] 	Alignment alphabet: INYWTVAFMSUEBKHQZRLGJODPCX
+[19/May/2017 10:53:07] "POST /breach/work_completed/187 HTTP/1.1" 200 18
+[19/May/2017 10:53:07] DEBUG [breach.strategy:195] Found 2 unstarted samplesets
+[19/May/2017 10:53:07] DEBUG [breach.strategy:205] Giving work:
+[19/May/2017 10:53:07] DEBUG [breach.strategy:206] 	Candidate: abcdef
+[19/May/2017 10:53:07] DEBUG [breach.strategy:207] 	Endpoint: https://aes128gcm.ruptureit.com/test2.php?reflection=%s
+[19/May/2017 10:53:07] "GET /breach/get_work/187 HTTP/1.1" 200 186
+[19/May/2017 10:53:08] DEBUG [breach.strategy:428] Work completed:
+[19/May/2017 10:53:08] DEBUG [breach.strategy:429] 	Length: 27532
+[19/May/2017 10:53:08] DEBUG [breach.strategy:430] 	Records: 32
+[19/May/2017 10:53:08] DEBUG [breach.strategy:246] Marking sampleset as completed:
+[19/May/2017 10:53:08] DEBUG [breach.strategy:247] 	candidatealphabet: abcdef
+[19/May/2017 10:53:08] DEBUG [breach.strategy:248] 	roundknownalphabet: abcdefghijklm
+[19/May/2017 10:53:08] "POST /breach/work_completed/187 HTTP/1.1" 200 18
+[19/May/2017 10:53:08] DEBUG [breach.strategy:195] Found 1 unstarted samplesets
+[19/May/2017 10:53:08] DEBUG [breach.strategy:205] Giving work:
+[19/May/2017 10:53:08] DEBUG [breach.strategy:206] 	Candidate: ghijklm
+[19/May/2017 10:53:08] DEBUG [breach.strategy:207] 	Endpoint: https://aes128gcm.ruptureit.com/test2.php?reflection=%s
+[19/May/2017 10:53:08] "GET /breach/get_work/187 HTTP/1.1" 200 186
+[19/May/2017 10:53:08] DEBUG [breach.strategy:428] Work completed:
+[19/May/2017 10:53:08] DEBUG [breach.strategy:429] 	Length: 27424
+[19/May/2017 10:53:08] DEBUG [breach.strategy:430] 	Records: 32
+[19/May/2017 10:53:08] DEBUG [breach.strategy:246] Marking sampleset as completed:
+[19/May/2017 10:53:08] DEBUG [breach.strategy:247] 	candidatealphabet: ghijklm
+[19/May/2017 10:53:08] DEBUG [breach.strategy:248] 	roundknownalphabet: abcdefghijklm
+[19/May/2017 10:53:08] DEBUG [breach.analyzer:39] 
+###########################################################################
+[19/May/2017 10:53:08] DEBUG [breach.analyzer:40] Candidate scoreboard:
+[19/May/2017 10:53:08] DEBUG [breach.analyzer:42] 	ghijklm: 27424
+[19/May/2017 10:53:08] DEBUG [breach.analyzer:42] 	abcdef: 27532
+[19/May/2017 10:53:08] DEBUG [breach.strategy:264] ###########################################################################
+[19/May/2017 10:53:08] DEBUG [breach.strategy:265] Decision:
+[19/May/2017 10:53:08] DEBUG [breach.strategy:267] 	state: {'knownalphabet': u'ghijklm', 'knownsecret': u'bibendu'}
+[19/May/2017 10:53:08] DEBUG [breach.strategy:267] 	confidence: 1.6875
+[19/May/2017 10:53:08] DEBUG [breach.strategy:268] ###########################################################################
+[19/May/2017 10:53:08] DEBUG [breach.strategy:308] Checking max reflection length...
+[19/May/2017 10:53:08] DEBUG [breach.strategy:359] Created new round:
+[19/May/2017 10:53:08] DEBUG [breach.strategy:360] 	Known secret: bibendu
+[19/May/2017 10:53:08] DEBUG [breach.strategy:361] 	Known alphabet: ghijklm
+[19/May/2017 10:53:08] DEBUG [breach.strategy:362] 	Amount: 32
+[19/May/2017 10:53:08] DEBUG [breach.strategy:381] 	Alignment alphabet: ASFYBQTHPCDJONKULIEZVMGXRW
+[19/May/2017 10:53:08] "POST /breach/work_completed/187 HTTP/1.1" 200 18
+[19/May/2017 10:53:08] DEBUG [breach.strategy:195] Found 2 unstarted samplesets
+[19/May/2017 10:53:08] DEBUG [breach.strategy:205] Giving work:
+[19/May/2017 10:53:08] DEBUG [breach.strategy:206] 	Candidate: ghi
+[19/May/2017 10:53:08] DEBUG [breach.strategy:207] 	Endpoint: https://aes128gcm.ruptureit.com/test2.php?reflection=%s
+[19/May/2017 10:53:08] "GET /breach/get_work/187 HTTP/1.1" 200 168
+[19/May/2017 10:53:09] DEBUG [breach.strategy:428] Work completed:
+[19/May/2017 10:53:09] DEBUG [breach.strategy:429] 	Length: 26882
+[19/May/2017 10:53:09] DEBUG [breach.strategy:430] 	Records: 32
+[19/May/2017 10:53:09] DEBUG [breach.strategy:246] Marking sampleset as completed:
+[19/May/2017 10:53:09] DEBUG [breach.strategy:247] 	candidatealphabet: ghi
+[19/May/2017 10:53:09] DEBUG [breach.strategy:248] 	roundknownalphabet: ghijklm
+[19/May/2017 10:53:09] "POST /breach/work_completed/187 HTTP/1.1" 200 18
+[19/May/2017 10:53:09] DEBUG [breach.strategy:195] Found 1 unstarted samplesets
+[19/May/2017 10:53:09] DEBUG [breach.strategy:205] Giving work:
+[19/May/2017 10:53:09] DEBUG [breach.strategy:206] 	Candidate: jklm
+[19/May/2017 10:53:09] DEBUG [breach.strategy:207] 	Endpoint: https://aes128gcm.ruptureit.com/test2.php?reflection=%s
+[19/May/2017 10:53:09] "GET /breach/get_work/187 HTTP/1.1" 200 168
+[19/May/2017 10:53:09] DEBUG [breach.strategy:428] Work completed:
+[19/May/2017 10:53:09] DEBUG [breach.strategy:429] 	Length: 26774
+[19/May/2017 10:53:09] DEBUG [breach.strategy:430] 	Records: 32
+[19/May/2017 10:53:09] DEBUG [breach.strategy:246] Marking sampleset as completed:
+[19/May/2017 10:53:09] DEBUG [breach.strategy:247] 	candidatealphabet: jklm
+[19/May/2017 10:53:09] DEBUG [breach.strategy:248] 	roundknownalphabet: ghijklm
+[19/May/2017 10:53:09] DEBUG [breach.analyzer:39] 
+###########################################################################
+[19/May/2017 10:53:09] DEBUG [breach.analyzer:40] Candidate scoreboard:
+[19/May/2017 10:53:09] DEBUG [breach.analyzer:42] 	jklm: 26774
+[19/May/2017 10:53:09] DEBUG [breach.analyzer:42] 	ghi: 26882
+[19/May/2017 10:53:09] DEBUG [breach.strategy:264] ###########################################################################
+[19/May/2017 10:53:09] DEBUG [breach.strategy:265] Decision:
+[19/May/2017 10:53:09] DEBUG [breach.strategy:267] 	state: {'knownalphabet': u'jklm', 'knownsecret': u'bibendu'}
+[19/May/2017 10:53:09] DEBUG [breach.strategy:267] 	confidence: 1.6875
+[19/May/2017 10:53:09] DEBUG [breach.strategy:268] ###########################################################################
+[19/May/2017 10:53:09] DEBUG [breach.strategy:308] Checking max reflection length...
+[19/May/2017 10:53:09] DEBUG [breach.strategy:359] Created new round:
+[19/May/2017 10:53:09] DEBUG [breach.strategy:360] 	Known secret: bibendu
+[19/May/2017 10:53:09] DEBUG [breach.strategy:361] 	Known alphabet: jklm
+[19/May/2017 10:53:09] DEBUG [breach.strategy:362] 	Amount: 32
+[19/May/2017 10:53:09] DEBUG [breach.strategy:381] 	Alignment alphabet: UMQWXFVGARYHSLKCZDITBPEONJ
+[19/May/2017 10:53:10] "POST /breach/work_completed/187 HTTP/1.1" 200 18
+[19/May/2017 10:53:10] DEBUG [breach.strategy:195] Found 2 unstarted samplesets
+[19/May/2017 10:53:10] DEBUG [breach.strategy:205] Giving work:
+[19/May/2017 10:53:10] DEBUG [breach.strategy:206] 	Candidate: jk
+[19/May/2017 10:53:10] DEBUG [breach.strategy:207] 	Endpoint: https://aes128gcm.ruptureit.com/test2.php?reflection=%s
+[19/May/2017 10:53:10] "GET /breach/get_work/187 HTTP/1.1" 200 156
+[19/May/2017 10:53:10] DEBUG [breach.strategy:428] Work completed:
+[19/May/2017 10:53:10] DEBUG [breach.strategy:429] 	Length: 26404
+[19/May/2017 10:53:10] DEBUG [breach.strategy:430] 	Records: 32
+[19/May/2017 10:53:10] DEBUG [breach.strategy:246] Marking sampleset as completed:
+[19/May/2017 10:53:10] DEBUG [breach.strategy:247] 	candidatealphabet: jk
+[19/May/2017 10:53:10] DEBUG [breach.strategy:248] 	roundknownalphabet: jklm
+[19/May/2017 10:53:10] "POST /breach/work_completed/187 HTTP/1.1" 200 18
+[19/May/2017 10:53:10] DEBUG [breach.strategy:195] Found 1 unstarted samplesets
+[19/May/2017 10:53:10] DEBUG [breach.strategy:205] Giving work:
+[19/May/2017 10:53:10] DEBUG [breach.strategy:206] 	Candidate: lm
+[19/May/2017 10:53:10] DEBUG [breach.strategy:207] 	Endpoint: https://aes128gcm.ruptureit.com/test2.php?reflection=%s
+[19/May/2017 10:53:10] "GET /breach/get_work/187 HTTP/1.1" 200 156
+[19/May/2017 10:53:11] DEBUG [breach.strategy:428] Work completed:
+[19/May/2017 10:53:11] DEBUG [breach.strategy:429] 	Length: 26320
+[19/May/2017 10:53:11] DEBUG [breach.strategy:430] 	Records: 32
+[19/May/2017 10:53:11] DEBUG [breach.strategy:246] Marking sampleset as completed:
+[19/May/2017 10:53:11] DEBUG [breach.strategy:247] 	candidatealphabet: lm
+[19/May/2017 10:53:11] DEBUG [breach.strategy:248] 	roundknownalphabet: jklm
+[19/May/2017 10:53:11] DEBUG [breach.analyzer:39] 
+###########################################################################
+[19/May/2017 10:53:11] DEBUG [breach.analyzer:40] Candidate scoreboard:
+[19/May/2017 10:53:11] DEBUG [breach.analyzer:42] 	lm: 26320
+[19/May/2017 10:53:11] DEBUG [breach.analyzer:42] 	jk: 26404
+[19/May/2017 10:53:11] DEBUG [breach.strategy:264] ###########################################################################
+[19/May/2017 10:53:11] DEBUG [breach.strategy:265] Decision:
+[19/May/2017 10:53:11] DEBUG [breach.strategy:267] 	state: {'knownalphabet': u'lm', 'knownsecret': u'bibendu'}
+[19/May/2017 10:53:11] DEBUG [breach.strategy:267] 	confidence: 1.3125
+[19/May/2017 10:53:11] DEBUG [breach.strategy:268] ###########################################################################
+[19/May/2017 10:53:11] DEBUG [breach.strategy:308] Checking max reflection length...
+[19/May/2017 10:53:11] DEBUG [breach.strategy:359] Created new round:
+[19/May/2017 10:53:11] DEBUG [breach.strategy:360] 	Known secret: bibendu
+[19/May/2017 10:53:11] DEBUG [breach.strategy:361] 	Known alphabet: lm
+[19/May/2017 10:53:11] DEBUG [breach.strategy:362] 	Amount: 32
+[19/May/2017 10:53:11] DEBUG [breach.strategy:381] 	Alignment alphabet: POMCRLAQGITXYHDEJZFVSUKNWB
+[19/May/2017 10:53:11] "POST /breach/work_completed/187 HTTP/1.1" 200 18
+[19/May/2017 10:53:11] DEBUG [breach.strategy:195] Found 2 unstarted samplesets
+[19/May/2017 10:53:11] DEBUG [breach.strategy:205] Giving work:
+[19/May/2017 10:53:11] DEBUG [breach.strategy:206] 	Candidate: l
+[19/May/2017 10:53:11] DEBUG [breach.strategy:207] 	Endpoint: https://aes128gcm.ruptureit.com/test2.php?reflection=%s
+[19/May/2017 10:53:11] "GET /breach/get_work/187 HTTP/1.1" 200 150
+[19/May/2017 10:53:11] DEBUG [breach.strategy:428] Work completed:
+[19/May/2017 10:53:11] DEBUG [breach.strategy:429] 	Length: 26180
+[19/May/2017 10:53:11] DEBUG [breach.strategy:430] 	Records: 32
+[19/May/2017 10:53:11] DEBUG [breach.strategy:246] Marking sampleset as completed:
+[19/May/2017 10:53:11] DEBUG [breach.strategy:247] 	candidatealphabet: l
+[19/May/2017 10:53:11] DEBUG [breach.strategy:248] 	roundknownalphabet: lm
+[19/May/2017 10:53:11] "POST /breach/work_completed/187 HTTP/1.1" 200 18
+[19/May/2017 10:53:12] DEBUG [breach.strategy:195] Found 1 unstarted samplesets
+[19/May/2017 10:53:12] DEBUG [breach.strategy:205] Giving work:
+[19/May/2017 10:53:12] DEBUG [breach.strategy:206] 	Candidate: m
+[19/May/2017 10:53:12] DEBUG [breach.strategy:207] 	Endpoint: https://aes128gcm.ruptureit.com/test2.php?reflection=%s
+[19/May/2017 10:53:12] "GET /breach/get_work/187 HTTP/1.1" 200 150
+[19/May/2017 10:53:12] DEBUG [breach.strategy:428] Work completed:
+[19/May/2017 10:53:12] DEBUG [breach.strategy:429] 	Length: 26088
+[19/May/2017 10:53:12] DEBUG [breach.strategy:430] 	Records: 32
+[19/May/2017 10:53:12] DEBUG [breach.strategy:246] Marking sampleset as completed:
+[19/May/2017 10:53:12] DEBUG [breach.strategy:247] 	candidatealphabet: m
+[19/May/2017 10:53:12] DEBUG [breach.strategy:248] 	roundknownalphabet: lm
+[19/May/2017 10:53:12] DEBUG [breach.analyzer:39] 
+###########################################################################
+[19/May/2017 10:53:12] DEBUG [breach.analyzer:40] Candidate scoreboard:
+[19/May/2017 10:53:12] DEBUG [breach.analyzer:42] 	m: 26088
+[19/May/2017 10:53:12] DEBUG [breach.analyzer:42] 	l: 26180
+[19/May/2017 10:53:12] DEBUG [breach.strategy:264] ###########################################################################
+[19/May/2017 10:53:12] DEBUG [breach.strategy:265] Decision:
+[19/May/2017 10:53:12] DEBUG [breach.strategy:267] 	state: {'knownalphabet': u'abcdefghijklmnopqrstuvwxyz', 'knownsecret': u'bibendum'}
+[19/May/2017 10:53:12] DEBUG [breach.strategy:267] 	confidence: 1.4375
+[19/May/2017 10:53:12] DEBUG [breach.strategy:268] ###########################################################################
+[19/May/2017 10:53:12] DEBUG [breach.strategy:308] Checking max reflection length...
+[19/May/2017 10:53:12] DEBUG [breach.strategy:359] Created new round:
+[19/May/2017 10:53:12] DEBUG [breach.strategy:360] 	Known secret: bibendum
+[19/May/2017 10:53:12] DEBUG [breach.strategy:361] 	Known alphabet: abcdefghijklmnopqrstuvwxyz
+[19/May/2017 10:53:12] DEBUG [breach.strategy:362] 	Amount: 32
+[19/May/2017 10:53:12] "POST /breach/work_completed/187 HTTP/1.1" 200 17

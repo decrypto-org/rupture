@@ -1,6 +1,6 @@
 from django.utils import timezone
 from django.test import TestCase
-from breach.models import SampleSet, Victim, Target, Round
+from breach.models import Target, Victim, Round, SampleSet
 
 
 class RuptureTestCase(TestCase):
@@ -10,11 +10,8 @@ class RuptureTestCase(TestCase):
             prefix='test',
             alphabet='0123456789'
         )
-        self.victim = Victim.objects.create(
-            target=target,
-            sourceip='192.168.10.140',
-            snifferendpoint='http://localhost/'
-        )
+        self.victim = self.create_mock_victim(target)
+
         round = Round.objects.create(
             victim=self.victim,
             amount=1,
@@ -35,11 +32,8 @@ class RuptureTestCase(TestCase):
         ]
 
         # Balance checking
-        self.balance_victim = Victim.objects.create(
-            target=target,
-            sourceip='192.168.10.141',
-            snifferendpoint='http://localhost/'
-        )
+        self.balance_victim = self.create_mock_victim(target)
+
         balance_round = Round.objects.create(
             victim=self.balance_victim,
             amount=1,
@@ -60,6 +54,15 @@ class RuptureTestCase(TestCase):
                 data='small'
             )
         ]
+
+    def create_mock_victim(self, target):
+
+        mock_victim = Victim.objects.create(
+            target=target,
+            sourceip='192.168.10.140',
+            snifferendpoint='http://localhost/'
+        )
+        return mock_victim
 
     def tearDown(self):
         for sampleset in self.balance_samplesets + self.samplesets:

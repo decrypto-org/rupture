@@ -40,24 +40,29 @@ socket.on('connection', (client) => {
             ({victim_id} = data);
         }
         catch (e) {
-            winston.error('Got invalid client-hello message from client');
+            winston.error('Got invalid client-hello message from client ' + client.id);
             return;
         }
+        victimId = victim_id;
 
-        if (!victims[victim_id]) {
-            victimId = victim_id;
+        if (!victims[victimId]) {
+            winston.debug('Client (' + client.id + ') is now active for victim ' + victimId);
             victims[victimId] = client.id;
+        }
+
+        if (victims[victimId] == client.id) {
+            winston.debug('Sending server-hello message to client ' + client.id);
             client.emit('server-hello');
-            winston.debug('Send server-hello message');
         }
         else {
-            client.emit('server-nowork');
-            winston.debug('There is an other victimId <-> client.id match. Make client idle');
+            winston.debug('There is an other victimId (' + victimId + ') <-> client.id (' + victims[victimId] + ') match. Make client (' + client.id + ') idle');
+            doNoWork();
         }
     });
 
     const doNoWork = () => {
-        client.emit('do-work', {});
+        winston.debug('Sending server-nowork to client ' + client.id);
+        client.emit('server-nowork');
     };
 
     const createNewWork = () => {
@@ -160,9 +165,10 @@ socket.on('connection', (client) => {
     client.on('disconnect', () => {
         winston.info('Client ' + client.id + ' disconnected');
 
+        // If this client was active, empty the spot of its victim
         for (let i in victims) {
             if (victims[i] == client.id) {
-                victims[i] = null;
+                delete victims[i];
             }
         }
 

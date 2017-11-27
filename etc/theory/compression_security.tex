@@ -1,0 +1,63 @@
+\documentclass[sigconf, anonymous]{acmart}
+
+\fancyhf{} % Remove fancy page headers
+\fancyhead[C]{Anonymous submission \#288 to ACM CCS 2017}
+\fancyfoot[C]{\thepage}
+
+\setcopyright{none} % No copyright notice required for submissions
+\acmConference[Anonymous Submission to ACM CCS 2017]{ACM Conference on Computer and Communications Security}{Due 19 May 2017}{Dallas, Texas}
+\acmYear{2017}
+
+\settopmatter{printacmref=false, printccs=true, printfolios=true} % We want page numbers on submissions
+
+\usepackage{listings}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathtools}
+\usepackage{url}
+
+\DeclarePairedDelimiter{\ceil}{\lceil}{\rceil}
+\newcommand{\overbar}[1]{\mkern1.5mu\overline{\mkern-1.5mu#1\mkern-1.5mu}\mkern 1.5mu}
+\newcommand\defeq{\stackrel{\mathclap{\normalfont\mbox{def}}}{=}}
+
+\begin{document}
+\title{On the (in)security of encryption over compression in TLS}
+
+\input{sections/abstract.tex}
+
+\begin{CCSXML}
+    <ccs2012>
+    <concept>
+    <concept_id>10002978.10003022.10003026</concept_id>
+    <concept_desc>Security and privacy~Web application security</concept_desc>
+    <concept_significance>500</concept_significance>
+    </concept>
+    </ccs2012>
+\end{CCSXML}
+
+\ccsdesc[500]{Security and privacy~Web application security}
+
+\keywords{compression, BREACH, CRIME, web security, defense, reflection security}
+
+\maketitle
+
+\input{sections/introduction.tex}
+\input{sections/attack_description.tex}
+\input{sections/rupture.tex}
+\input{sections/rupture_optimizations.tex}
+\input{sections/rupture_experiments.tex}
+\input{sections/reflection_security.tex}
+\input{sections/security_of_compression.tex}
+\input{sections/compression_attacks.tex}
+\input{sections/defense.tex}
+\input{sections/related.tex}
+\input{sections/future_work.tex}
+
+\bibliographystyle{ACM-Reference-Format}
+\bibliography{citations}
+
+\appendix
+\input{sections/appendix.tex}
+\input{sections/experiments.tex}
+
+\end{document}

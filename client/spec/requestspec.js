@@ -18,11 +18,10 @@ describe('request', () => {
         };
     }
 
-    global.Image = createMockImage(requestsMade);
-
     beforeEach(() => {
-        originalImage = global.Image;
         requestsMade = [];
+        global.Image = createMockImage(requestsMade);
+        originalImage = global.Image;
     });
 
     afterEach(() => {

@@ -41,32 +41,36 @@ def start():
     interface = data['interface']
     destination_port = data['destination_port']
 
-    # Check if a same sniffer already exists
     if (source_ip, destination_host) in sniffers:
-        err = '409 - Sniffer (source_ip: {}, destination_host: {}) already exists.'.format(source_ip, destination_host)
-        logger.warning(err)
-        return str(err), 409
+        if sniffers[(source_ip, destination_host)].is_recording():
+            err = '409 - Sniffer (source_ip: {}, destination_host: {}) already exists.'.format(source_ip, destination_host)
+            logger.warning(err)
+            return str(err), 409
 
-    params = {
-        'source_ip': source_ip,
-        'destination_host': destination_host,
-        'interface': interface,
-        'destination_port': destination_port
-    }
+        sniffer = sniffers[(source_ip, destination_host)]
+    else:
+        params = {
+            'source_ip': source_ip,
+            'destination_host': destination_host,
+            'interface': interface,
+            'destination_port': destination_port
+        }
 
-    # Check if parameters are invalid
-    try:
-        sniffer = Sniffer(params)
-    except ValueError, err:
-        logger.warning(err)
-        return str(err), 400
+        # Check if parameters are invalid
+        try:
+            sniffer = Sniffer(params)
+        except ValueError, err:
+            logger.warning(err)
+            return str(err), 400
 
-    sniffers[(source_ip, destination_host)] = sniffer
+        sniffers[(source_ip, destination_host)] = sniffer
+        sniffer.start()
+        while not sniffer.isAlive():
+            sleep(0.01)
 
-    # Start the new sniffer thread and block until it has come to life
-    sniffer.start()
-    while not sniffer.is_alive():
-        sleep(0.01)
+    # Start recording packets
+    sniffer.record_sniffing()
+
     msg = 'Sniffer (source_ip: {}, destination_host: {}) is alive.'.format(source_ip, destination_host)
     logger.debug(msg)
 
@@ -94,13 +98,13 @@ def read():
     source_ip = request.args.get('source_ip')
     destination_host = request.args.get('destination_host')
 
-    # Get the sniffer, if exists, else return status 404
-    try:
-        sniffer = sniffers[(source_ip, destination_host)]
-    except KeyError:
+    # Get the sniffer, if exists and recording, else return status 404
+    if (source_ip, destination_host) not in sniffers or not sniffers[(source_ip, destination_host)].is_recording():
         msg = '(get_sniff) 404 Not Found: Sniffer (source_ip : {}, destination_host: {})'.format(source_ip, destination_host)
         logger.warning(msg)
         return msg, 404
+    else:
+        sniffer = sniffers[(source_ip, destination_host)]
 
     # Use the sniffer's get_capture() method to get the captured packets
     try:
@@ -136,21 +140,17 @@ def delete():
     logger.debug('Deleting sniffer (source_ip : {}, destination_host: {})...'.format(source_ip, destination_host))
 
     # Get the sniffer object and its source_ip and destination_host, if exists
-    try:
-        sniffer = sniffers[(source_ip, destination_host)]
-    except KeyError:
-        msg = '(get_sniff) 404 Not found: Sniffer (source_ip : {}, destination_host: {})'.format(source_ip, destination_host)
+    if (source_ip, destination_host) not in sniffers or not sniffers[(source_ip, destination_host)].is_recording():
+        msg = '(delete) 404 Not Found: Sniffer (source_ip : {}, destination_host: {})'.format(source_ip, destination_host)
         logger.warning(msg)
         return msg, 404
+    else:
+        sniffer = sniffers[(source_ip, destination_host)]
 
-    # Stop the sniffer capture and wait for the thread to join
+    # Stop the sniffer capture
     sniffer.stop()
-    sniffer.join()
 
-    # Delete the sniffer entries from both dictionaries
-    del sniffers[(source_ip, destination_host)]
-
-    msg = '(get_sniff) Sniffer (source_ip : {}, destination_host: {}) was deleted.'.format(source_ip, destination_host)
+    msg = '(delete) Sniffer (source_ip : {}, destination_host: {}) was deleted.'.format(source_ip, destination_host)
     logger.debug(msg)
 
     return msg, 200

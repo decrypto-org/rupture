@@ -1,0 +1,43 @@
+\section{Related work}\label{sec:related}
+
+\subsection{Compression attacks}
+
+The compression side-channel attack technique was first studied by Kelsey
+\cite{kelsey2002compression} in 2002. Kelley and Tamassia\cite{kelley2014secure}
+discuss the notion of \textit{entropy-restricted} semantic security. However,
+this only models the case where two secrets compress to the same length, making
+it difficult to capture practical techniques used in attacks such as BREACH.
+
+Alawatugoda et al. \cite{alawatugoda2015protecting} introduce a model for \textit{Cookie recovery},
+\textit{Random cookie indistinguishability}, and \textit{Chosen cookie indistinguishability}.
+Nevertheless, their security models are limited to classes of rendering functions
+that are very specific. In their models, the attacker is able to directly influence
+the output of the rendering function through concatenation.
+
+\subsection{Defenses}
+
+\subsubsection{Disabling compression}\label{subsec:disablecom}
+Compression is the basic assumption for the compression detectability, so disabling
+compression would break the adaptive reflection game. However, this is not a
+viable solution. Disabling compression results in a performance penalty that
+outweighs the benefits of the defense.
+
+\subsubsection{SameSite cookies}\label{subsec:samesite}
+SameSite cookies \cite{mwest2015firstparty} is a proposed draft for enhancing
+web security. The main puprose of this technique is to mitigate cross-site
+request forgery attacks. It introduces a new attribute for web cookies, that web
+servers may opt-in, which states that cookies may only be included in a
+``first-party" context, i.e. in same origin requests. The current BREACH
+application depends on cross-origin requests in order to call the reflection
+oracle, so enabling SameSite cookies would result in the elimination of this
+type of reflection oracle of the Reflection-Security Game.
+
+\subsubsection{Masking secrets}\label{subsec:masking}
+Masking is a method for hiding a secret's properties. A mask is a random
+bitstream in the secret's size, which is XORed with the secret and concatenated
+with the masked output. The secret can then be obtained by applying XOR between
+the masked secret and the mask. This method doubles the size of the protected
+secret, while also weakening the compression performance. Therefore, it is
+applied on high value secrets only, in order to avoid significant performance
+penalties. It is used by Facebook \cite{facebookbreach} in order to protect CSRF
+tokens against BREACH attacks.

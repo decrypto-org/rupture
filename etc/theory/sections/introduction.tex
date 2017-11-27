@@ -1,0 +1,74 @@
+\section{Introduction}\label{sec:prev}
+
+Compression and encryption composition has caused serious security problems in
+protocols such as TLS \cite{dierks2008tls} over the years, with an array of
+attacks making major headlines in computer security dissemination forums,
+including BREACH \cite{gluck2013breach}, TIME \cite{be2013perfect}, and CRIME
+\cite{duong2012crime}. Although the idea that compression is a side-channel that
+can be exploited is certainly folklore in the cryptography community and is
+documented at least as early as Kelsey's work \cite{kelsey2002compression}, a
+proper theoretical model capturing the real-world perspective of these
+side-channel attacks is still elusive.
+
+Motivated by this, in this paper we introduce a general model that incorporates
+the rendering process that is exploited during these attacks and facilitate a
+thorough theoretical analysis of the security of encryption-compression
+composition. We showcase the power of our approach by (i) demonstrating an
+attack framework, called Rupture, that substantially improves the attack
+performance, (ii) showing the above attacks can be expressed as instances
+of our compression side-channel attack template, (iii) presenting a general
+mitigation strategy, called context hiding, and our implementation of it called
+CTX, that strikes a good balance between security and efficiency and can be
+readily incorporated in a TLS system without a significant performance
+degradation.
+
+% More information on related work can be
+%found on Appendix B.
+
+\noindent
+\textbf{Our contributions.} First, we implement Rupture,\footnotemark[1] an open
+source production-grade framework for conducting compression and encryption
+composition attacks. This generic framework provides an extensible mechanism for
+experimentally testing attack techniques in a modular setting and we implement
+the specific compression attack instance of BREACH. This is the first
+time a working tool is provided for this class of attacks and an extensive
+description of its architecture is in section \ref{app:rupture}.
+
+Our attack framework achieves significant improvements compared to previous
+attempts. We improve the complexity from linear to logarithmic in the secret's
+alphabet size, attack block ciphers in addition to stream ciphers and employ
+practical techniques for network level optimization. Our optimizations are
+described in section \ref{subsec:optimizations} and experimental results are
+offered in section \ref{subsec:rupture_experiments}.
+
+We then introduce a model for analyzing compression and encryption composition
+attacks, the \textit{adaptive reflection game}, with an accompanying security
+definition, in section \ref{sec:refsec}. This model is novel as it generalizes
+the concept and the properties of these attacks.
+
+We prove that all encryption functions are insecure when composed with
+compression, based on a series of required assumptions. We define the properties
+\textit{interdependence} and \textit{compression idealness} and show that these
+somewhat innocent properties enable the construction of an attacker, which we
+prove breaks the security of the scheme.
+
+Having established the attack premises, we shift our interest in defending
+against such attacks. Although there are several proposed defenses, we feel that
+none achieves good compression performance in real-world systems. In this
+direction, section \ref{sec:defense} introduces \textit{context hiding}, a
+method that mitigates a class of practical compression side-channel attacks like
+BREACH.
+
+Our implementation of the context hiding defense technique is called
+CTX\footnote[1]{The GitHub repositories of the Rupture and CTX projects make the
+source code openly available but have been removed for anonymization purposes
+and can be provided upon request.}. CTX runs at the application layer of web
+services, is opt-in, and achieves better balance between security and
+compression performance compared to existing defense methods.
+
+We experimentally show that CTX performs well in time and space. Specifically,
+we find that the performance penalty of CTX compared to other proposed methods
+is significantly lower and within accepted rates for real-world applications.
+
+Finally, we provide theoretical arguments as to why CTX is an effective defense
+method.

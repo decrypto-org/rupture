@@ -1,0 +1,26 @@
+{
+  "name": "rupture-frontend",
+  "version": "0.1.0",
+  "private": true,
+  "devDependencies": {
+    "react-scripts": "0.8.4"
+  },
+  "dependencies": {
+    "axios": "^0.15.3",
+    "bower": "^1.8.0",
+    "lodash": "^4.17.2",
+    "moment": "^2.18.1",
+    "react": "^15.4.1",
+    "react-bootstrap": "^0.31.0",
+    "react-dom": "^15.4.1",
+    "react-modal-bootstrap": "^1.1.0",
+    "react-router": "^3.0.0"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  },
+  "proxy": "http://localhost:8000/"
+}

@@ -1,5 +1,7 @@
 node_modules
 dist
+client_*
+*.json.gzip
 *.tmp
 *.swp
 *.pyc
@@ -9,4 +11,10 @@ env/
 .DS_Store
 tags
 *.aux
+*.blg
+*.bbl
+*.out
 .coverage
+client_*
+*.json.gzip
+bower_components

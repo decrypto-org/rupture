@@ -25,19 +25,19 @@ class BaseTestCase(ThreadAwareTestCase):
             calibration_wait=self.calibration_wait
         )
 
-    def _request(self, url):
+    @patch('app.Sniffer.start', return_value=None)
+    @patch('app.Sniffer.isAlive', return_value=True)
+    def _request(self, url, patched_sniffer_start, patched_sniffer_isAlive):
         return self.app.post(
             url,
             data=json.dumps(self.data),
             content_type='application/json'
         )
 
-    @patch('app.Sniffer.start_sniffing', return_value=None)
-    def _start(self, patched_start_sniffing):
+    def _start(self):
         return self._request('/start')
 
-    @patch('sniffer.Sniffer.stop', return_value=None)
-    def _delete(self, patched_sniffer_stop):
+    def _delete(self):
         return self._request('/delete')
 
     def _read(self):

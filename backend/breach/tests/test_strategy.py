@@ -4,10 +4,7 @@ from binascii import hexlify
 
 from breach.tests.base import RuptureTestCase
 from breach.strategy import Strategy
-from breach.models import SampleSet
-from breach.models import Round
-from breach.models import Target
-from breach.models import Victim
+from breach.models import Target, Victim, Round, SampleSet
 
 
 class StrategyTestCase(RuptureTestCase):
@@ -178,4 +175,35 @@ class StrategyTestCase(RuptureTestCase):
             'https://di.uoa.gr/?breach=^0^5^4^testsecret3^testsecret2^testsecret1^'
         )
 
+        strategy1._mark_current_work_completed()
+
+    @patch('breach.strategy.Sniffer')
+    def test_divide_and_conquer(self, Sniffer):
+
+        DIVIDE_CONQUER = 2
+        # Mock initial round
+        mock_target = Target.objects.create(
+            endpoint='https://di.uoa.gr/?breach=%s',
+            prefix='test',
+            alphabet='0123',
+            name='webuoa',
+            method=DIVIDE_CONQUER
+        )
+
+        victim = self.create_mock_victim(mock_target)
+
+        strategy0 = Strategy(victim)
+        work0 = strategy0.get_work()
+        self.assertEqual(
+             work0['url'],
+             'https://di.uoa.gr/?breach=^3^2^test1^test0^'
+        )
+        strategy0._mark_current_work_completed()
+
+        strategy1 = Strategy(victim)
+        work1 = strategy1.get_work()
+        self.assertEqual(
+            work1['url'],
+            'https://di.uoa.gr/?breach=^1^0^test3^test2^'
+        )
         strategy1._mark_current_work_completed()

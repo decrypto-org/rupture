@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Target, Victim, SampleSet
+from breach.models import Target, Victim, SampleSet
 
 admin.site.register(Target)
 admin.site.register(Victim)
