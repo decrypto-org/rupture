@@ -39,7 +39,7 @@ class StrategyTestCase(RuptureTestCase):
     def test_same_round_different_batch(self, Sniffer):
 
         # Mock captured parameteres for Sniffer
-        capture0 = {'data': 'exlength', 'records': 1}
+        capture0 = {'data': 'exleng', 'records': 1}
         capture1 = {'data': 'length', 'records': 1}
         instance = Sniffer.return_value
         instance.read.return_value = capture0
@@ -68,7 +68,7 @@ class StrategyTestCase(RuptureTestCase):
             SampleSet.objects.create(
                 round=dif_batch_round,
                 candidatealphabet='0',
-                datalength=len(hexlify('length2'))
+                datalength=len(hexlify('length'))
             ),
             SampleSet.objects.create(
                 round=dif_batch_round,
