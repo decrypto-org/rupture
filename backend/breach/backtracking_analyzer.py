@@ -15,11 +15,11 @@ def get_accumulated_probabilities(sorted_candidate_lengths, current_round_acc_pr
     Returns a dictionary containing every possible candidate alphabet and its
     accumulated probability value.
     '''
-    compression_function_factor = 1.3
+    compression_function_factor = 1.05
     relative_probability_sum = 0.0
     min_candidate_value = sorted_candidate_lengths[0]['length']
     round_factor = 4
-    amplification_factor = 1.2
+    amplification_factor = 1.05
 
     # Calculate relative probability sum based on each candidate's length.
     for candidate in sorted_candidate_lengths:
@@ -137,8 +137,7 @@ def decide_next_backtracking_world_state(samplesets, accumulated_prob):
     # Ensure we have a decision to make
     assert(len(candidate_lengths) > 1)
 
-    candidates = get_candidates(candidate_lengths,
-                                        accumulated_prob)
+    candidates = get_candidates(candidate_lengths, accumulated_prob)
 
     state = []
     # All candidates are returned in order to create new rounds.
