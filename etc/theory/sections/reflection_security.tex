@@ -77,8 +77,7 @@ The reflection oracle provided to the simulator is as follows:
 
 \begin{lstlisting}[texcl,mathescape,basicstyle=\small]
 def $\text{Reflect}^{k}_{s'}(r)$:
-    $m = f(s', r)$
-    $c \leftarrow \mathcal{E}_{k}(m)$
+    $c \leftarrow \mathcal{K}_{k}(s', r)$
     return $c$
 \end{lstlisting}
 
