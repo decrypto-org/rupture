@@ -87,6 +87,9 @@ class Strategy(object):
                 index=current_round_index
             )[0]
 
+    def get_decrypted_secret(self):
+        return self._round.knownsecret
+
     def _build_candidates_divide_conquer(self, state):
         candidate_alphabet_cardinality = len(state['knownalphabet']) / 2
 
