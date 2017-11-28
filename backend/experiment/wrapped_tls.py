@@ -4,6 +4,8 @@ from tlslite.tlsconnection import TLSConnection
 from tlslite import HTTPTLSConnection
 from tlslite.integration.clienthelper import ClientHelper
 
+import os
+
 
 class DebugSocket(object):
     def __init__(self, sock):
@@ -113,5 +115,12 @@ def get_response(url, plaintext=False):
 
 
 if __name__ == '__main__':
-    url = str(u'https://ruptureit.com/test.php?reflection=^c^b^e^d^g^f^i^h^k^j^m^l^o^n^q^p^s^r^u^t^w^v^y^x^z^impera^K^')
-    print get_response(url)
+    letters = [
+        ('e', 'https://ruptureit.com/test.php?reflection=^o^impe^'),
+        ('o', 'https://ruptureit.com/test.php?reflection=^e^impo^')
+    ]
+    os.system('gcc -o infgen infgen.c')
+    for l in letters:
+        with open('txt_' + l[0], 'w') as f:
+            f.write(get_response(l[1], True))
+        os.system('./infgen txt_' + l[0] + ' > i_' + l[0])
