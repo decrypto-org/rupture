@@ -97,16 +97,19 @@ def parse(data):
     return app_data + parse(data[TLS_HEADER_LENGTH + length:])
 
 
-def get_response(url):
+def get_response(url, plaintext=False):
     parsed = urlparse(url)
     h = ManagedHTTPTLSConnection(parsed.netloc, 443)
     headers = {
         'Accept-Encoding': 'gzip, deflate, br',
     }
     h.request("GET", parsed.path + '?' + parsed.query, '', headers)
-    h.getresponse()
-    app_data = parse(h.get_encrypted_response())
-    return app_data
+
+    r = h.getresponse().read()
+    if plaintext:
+        return r
+
+    return parse(h.get_encrypted_response())
 
 
 if __name__ == '__main__':
