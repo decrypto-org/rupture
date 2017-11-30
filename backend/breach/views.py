@@ -3,7 +3,6 @@ from django.views.generic import View
 from django.views.decorators.csrf import csrf_exempt
 from breach.strategy import Strategy
 from breach.models import Target, Victim, Round
-from django.core import serializers
 from .forms import TargetForm, VictimForm, AttackForm
 import json
 from django.utils import timezone
@@ -62,7 +61,7 @@ class TargetView(View):
         if form.is_valid():
             target = form.save()
             return JsonResponse({
-               'target_name': target.name
+                'target_name': target.name
             })
 
     def get(self, request):
@@ -140,7 +139,7 @@ class AttackView(View):
             victim.attack()
 
             return JsonResponse({
-               'victim_id': victim.id
+                'victim_id': victim.id
             })
 
         return HttpResponse(status=500)

@@ -1,4 +1,3 @@
-from django.utils import timezone
 from mock import patch
 from binascii import hexlify
 
@@ -39,7 +38,7 @@ class StrategyTestCase(RuptureTestCase):
     def test_same_round_different_batch(self, Sniffer):
 
         # Mock captured parameteres for Sniffer
-        capture0 = {'data': 'exlength', 'records': 1}
+        capture0 = {'data': 'exleng', 'records': 1}
         capture1 = {'data': 'length', 'records': 1}
         instance = Sniffer.return_value
         instance.read.return_value = capture0
@@ -68,12 +67,12 @@ class StrategyTestCase(RuptureTestCase):
             SampleSet.objects.create(
                 round=dif_batch_round,
                 candidatealphabet='0',
-                data=hexlify('length2')
+                datalength=len(hexlify('length'))
             ),
             SampleSet.objects.create(
                 round=dif_batch_round,
                 candidatealphabet='1',
-                data=hexlify('length')
+                datalength=len(hexlify('length'))
             )
         ]
 
@@ -130,22 +129,21 @@ class StrategyTestCase(RuptureTestCase):
             knownalphabet='012',
         )
 
-        change_branch_samplesets = [
-            SampleSet.objects.create(
-                round=change_branch_round,
-                candidatealphabet='0',
-                data='small'
-            ),
-            SampleSet.objects.create(
-                round=change_branch_round,
-                candidatealphabet='1', data='small2'
-            ),
-            SampleSet.objects.create(
-                round=change_branch_round,
-                candidatealphabet='2',
-                data='bigbigbigbigdata'
-            )
-        ]
+        SampleSet.objects.create(
+            round=change_branch_round,
+            candidatealphabet='0',
+            datalength=len('small')
+        )
+        SampleSet.objects.create(
+            round=change_branch_round,
+            candidatealphabet='1',
+            datalength=len('small2')
+        )
+        SampleSet.objects.create(
+            round=change_branch_round,
+            candidatealphabet='2',
+            datalength=len('bigbigbigbigdata')
+        )
 
         strategy0 = Strategy(change_branch_victim)
         work0 = strategy0.get_work()
@@ -199,18 +197,16 @@ class StrategyTestCase(RuptureTestCase):
             knownalphabet='01',
         )
 
-        next_round_samplesets = [
-            SampleSet.objects.create(
-                round=next_round,
-                candidatealphabet='0',
-                data='bigbignextround'
-            ),
-            SampleSet.objects.create(
-                round=next_round,
-                candidatealphabet='1',
-                data='smallround'
-            )
-        ]
+        SampleSet.objects.create(
+            round=next_round,
+            candidatealphabet='0',
+            datalength=len('bigbignextround')
+        )
+        SampleSet.objects.create(
+            round=next_round,
+            candidatealphabet='1',
+            datalength=len('smallround')
+        )
 
         strategy0 = Strategy(next_round_victim)
         work0 = strategy0.get_work()
@@ -269,8 +265,8 @@ class StrategyTestCase(RuptureTestCase):
         strategy0 = Strategy(victim)
         work0 = strategy0.get_work()
         self.assertEqual(
-             work0['url'],
-             'https://di.uoa.gr/?breach=^3^2^test1^test0^'
+            work0['url'],
+            'https://di.uoa.gr/?breach=^3^2^test1^test0^'
         )
         strategy0._mark_current_work_completed()
 

@@ -22,12 +22,12 @@ class RuptureTestCase(TestCase):
             SampleSet.objects.create(
                 round=round,
                 candidatealphabet='0',
-                data='bigbigbigbigbigbig'
+                datalength=len('bigbigbigbigbigbig')
             ),
             SampleSet.objects.create(
                 round=round,
                 candidatealphabet='1',
-                data='small'
+                datalength=len('small')
             )
         ]
 
@@ -46,12 +46,12 @@ class RuptureTestCase(TestCase):
             SampleSet.objects.create(
                 round=balance_round,
                 candidatealphabet='0',
-                data='bigbigbigbigbigbig'
+                datalength=len('bigbigbigbigbigbig')
             ),
             SampleSet.objects.create(
                 round=balance_round,
                 candidatealphabet='123',
-                data='small'
+                datalength=len('small')
             )
         ]
 

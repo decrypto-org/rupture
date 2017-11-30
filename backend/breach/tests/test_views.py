@@ -155,7 +155,7 @@ class ViewsTestCase(TestCase):
             target=self.target1
         )
 
-        victim2 = Victim.objects.create(
+        Victim.objects.create(
             sourceip='192.168.1.6',
             target=self.target2
         )
@@ -173,7 +173,7 @@ class ViewsTestCase(TestCase):
         sampleset1_data = {
             'round': new_round,
             'candidatealphabet': 'a',
-            'data': hexlify('length'),
+            'datalength': len(hexlify('length')),
             'success': True,
             'alignmentalphabet': 'ABCDEFGHIJKLMNOPQRSTUVXYZ'
         }
@@ -183,7 +183,7 @@ class ViewsTestCase(TestCase):
         sampleset2_data = {
             'round': new_round,
             'candidatealphabet': 'b',
-            'data': hexlify('length2'),
+            'datalength': len(hexlify('length2')),
             'success': True,
             'alignmentalphabet': 'ABCDEFGHIJKLMNOPQRSTUVXYZ'
         }
