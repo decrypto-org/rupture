@@ -88,9 +88,11 @@ class Target(models.Model):
 
     SERIAL = 1
     DIVIDE_CONQUER = 2
+    BACKTRACKING = 3
     METHOD_CHOICES = (
         (SERIAL, 'serial'),
         (DIVIDE_CONQUER, 'divide&conquer'),
+        (BACKTRACKING, 'backtracking')
     )
 
     method = models.IntegerField(
