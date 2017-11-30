@@ -35,5 +35,6 @@ def scan_network():
             possible_victims.append(addr_attrs[u'addr'])
     return possible_victims
 
+
 if __name__ == '__main__':
     print scan_network()

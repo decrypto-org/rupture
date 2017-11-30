@@ -59,10 +59,8 @@ def get_candidates(candidate_lengths, accumulated_prob):
 
     Returns a list with each candidate and its accumulated probability.
     '''
-
     assert(len(candidate_lengths) > 1)
 
-    samplesets_per_candidate = len(candidate_lengths.items()[0][1])
     accumulated_candidate_lengths = []
 
     for candidate_alphabet, list_of_lengths in candidate_lengths.iteritems():
@@ -77,8 +75,7 @@ def get_candidates(candidate_lengths, accumulated_prob):
         key=operator.itemgetter('length')
     )
 
-    candidates_probabilities = get_accumulated_probabilities(sorted_candidate_lengths,
-                                                             accumulated_prob)
+    candidates_probabilities = get_accumulated_probabilities(sorted_candidate_lengths, accumulated_prob)
 
     logger.debug('\n' + 75 * '#')
     logger.debug('Candidate scoreboard:')

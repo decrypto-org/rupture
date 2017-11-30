@@ -155,7 +155,7 @@ class ViewsTestCase(TestCase):
             target=self.target1
         )
 
-        victim2 = Victim.objects.create(
+        Victim.objects.create(
             sourceip='192.168.1.6',
             target=self.target2
         )

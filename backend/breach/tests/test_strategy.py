@@ -1,4 +1,3 @@
-from django.utils import timezone
 from mock import patch
 from binascii import hexlify
 
@@ -266,8 +265,8 @@ class StrategyTestCase(RuptureTestCase):
         strategy0 = Strategy(victim)
         work0 = strategy0.get_work()
         self.assertEqual(
-             work0['url'],
-             'https://di.uoa.gr/?breach=^3^2^test1^test0^'
+            work0['url'],
+            'https://di.uoa.gr/?breach=^3^2^test1^test0^'
         )
         strategy0._mark_current_work_completed()
 
