@@ -37,7 +37,7 @@ class Strategy(object):
             'port': self._victim.target.port,
             'calibration_wait': self._victim.calibration_wait
         }
-        self._sniffer = Sniffer(sniffer_params)
+        self.sniffer = Sniffer(sniffer_params)
 
         # Extract maximum round index for the current victim.
         current_round_index = Round.objects.filter(victim=self._victim).aggregate(Max('index'))['index__max']
@@ -86,6 +86,9 @@ class Strategy(object):
                 victim=self._victim,
                 index=current_round_index
             )[0]
+
+    def get_decrypted_secret(self):
+        return self._round.knownsecret
 
     def _build_candidates_divide_conquer(self, state):
         candidate_alphabet_cardinality = len(state['knownalphabet']) / 2
@@ -198,7 +201,7 @@ class Strategy(object):
             self._mark_current_work_completed(sampleset=s)
 
         try:
-            self._sniffer.start()
+            self.sniffer.start()
         except (requests.HTTPError, requests.exceptions.ConnectionError), err:
             if isinstance(err, requests.HTTPError):
                 status_code = err.response.status_code
@@ -208,7 +211,7 @@ class Strategy(object):
                 # delete already existing sniffer.
                 if status_code == 409:
                     try:
-                        self._sniffer.delete()
+                        self.sniffer.delete()
                     except (requests.HTTPError, requests.exceptions.ConnectionError), err:
                         logger.warning('Caught error when trying to delete sniffer: {}'.format(err))
 
@@ -283,7 +286,7 @@ class Strategy(object):
         self._handle_sampleset_success(capture, sampleset)
 
     def _collect_capture(self):
-        return self._sniffer.read()
+        return self.sniffer.read()
 
     def _analyze_current_round(self):
         '''Analyzes the current round samplesets to extract a decision.'''
@@ -540,7 +543,7 @@ class Strategy(object):
                 raise ValueError('Realtime reported unsuccessful capture')
 
             # Stop data collection and delete sniffer
-            self._sniffer.delete()
+            self.sniffer.delete()
         except (requests.HTTPError, requests.exceptions.ConnectionError, ValueError), err:
             if isinstance(err, requests.HTTPError):
                 status_code = err.response.status_code
@@ -550,7 +553,7 @@ class Strategy(object):
                 # delete sniffer to avoid conflict.
                 if status_code == 422:
                     try:
-                        self._sniffer.delete()
+                        self.sniffer.delete()
                     except (requests.HTTPError, requests.exceptions.ConnectionError), err:
                         logger.warning('Caught error when trying to delete sniffer: {}'.format(err))
 
@@ -560,7 +563,7 @@ class Strategy(object):
             elif isinstance(err, ValueError):
                 logger.warning(err)
                 try:
-                    self._sniffer.delete()
+                    self.sniffer.delete()
                 except (requests.HTTPError, requests.exceptions.ConnectionError), err:
                     logger.warning('Caught error when trying to delete sniffer: {}'.format(err))
 

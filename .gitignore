@@ -18,3 +18,5 @@ tags
 client_*
 *.json.gzip
 bower_components
+infgen
+*.pdf
