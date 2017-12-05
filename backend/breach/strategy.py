@@ -238,6 +238,10 @@ class Strategy(object):
 
         logger.debug('Giving work:')
         logger.debug('\tCandidate: {}'.format(sampleset.candidatealphabet))
+        logger.debug('\tKnown secret: {}'.format(sampleset.round.knownsecret))
+        logger.debug('\tKnown alphabet: {}'.format(sampleset.round.knownalphabet))
+        logger.debug('\tAlignment alphabet: {}'.format(sampleset.alignmentalphabet))
+        logger.debug('\tAmount: {}'.format(sampleset.round.amount))
 
         return work
 
@@ -359,8 +363,6 @@ class Strategy(object):
             alphabet = _build_candidate_alphabets()[0]
             return self._reflection(alphabet)
 
-        logger.debug('Checking max reflection length...')
-
         if self._round.victim.target.maxreflectionlength == 0:
             self._set_round_cardinalities(self._build_candidates(state))
             return
@@ -425,11 +427,6 @@ class Strategy(object):
             self._round.delete()
             raise err
 
-        logger.debug('Created new round:')
-        logger.debug('\tKnown secret: {}'.format(next_round.knownsecret))
-        logger.debug('\tKnown alphabet: {}'.format(next_round.knownalphabet))
-        logger.debug('\tAmount: {}'.format(next_round.amount))
-
     def _create_round_samplesets(self):
         state = {
             'knownalphabet': self._round.knownalphabet,
@@ -446,8 +443,6 @@ class Strategy(object):
             alignmentalphabet = list(self._round.victim.target.alignmentalphabet)
             random.shuffle(alignmentalphabet)
             alignmentalphabet = ''.join(alignmentalphabet)
-
-        logger.debug('\tAlignment alphabet: {}'.format(alignmentalphabet))
 
         for candidate in candidate_alphabets:
             SampleSet.create_sampleset({
