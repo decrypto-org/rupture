@@ -600,7 +600,7 @@ class Strategy(object):
                 logger.info('Optimal Candidates:')
                 candidate_rounds = Round.objects.filter(completed=None).order_by('-accumulated_probability')
                 for i in candidate_rounds:
-                    logger.info('\tSecret: {} Probability: {}'.format(i.knownsecret, i.accumulated_probability))
+                    logger.info('\tSecret: %s Probability: %.6f' % (i.knownsecret, i.accumulated_probability))
                 logger.info(75 * '$')
 
                 return False
@@ -612,7 +612,7 @@ class Strategy(object):
         logger.info('Optimal Candidates:')
         candidate_rounds = Round.objects.filter(completed=None).order_by('-accumulated_probability')
         for i in candidate_rounds:
-            logger.info('\tSecret: {} Probability: {}'.format(i.knownsecret, i.accumulated_probability))
+            logger.info('\tSecret: %s Probability: %.6f' % (i.knownsecret, i.accumulated_probability))
         logger.info(75 * '$')
 
         # If current branch is completed, then we already matched the

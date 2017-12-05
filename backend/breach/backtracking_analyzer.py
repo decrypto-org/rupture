@@ -18,7 +18,6 @@ def get_accumulated_probabilities(sorted_candidate_lengths, current_round_acc_pr
     compression_function_factor = 1.05
     relative_probability_sum = 0.0
     min_candidate_value = sorted_candidate_lengths[0]['length']
-    round_factor = 4
     amplification_factor = 1.05
 
     # Calculate relative probability sum based on each candidate's length.
@@ -27,8 +26,6 @@ def get_accumulated_probabilities(sorted_candidate_lengths, current_round_acc_pr
             -abs(candidate['length'] - min_candidate_value)
         )
 
-        relative_probability_sum = round(relative_probability_sum, round_factor)
-
     accumulated_probabilities = []
 
     # Calculate every candidate's accumulated probability by multiplying its
@@ -36,12 +33,10 @@ def get_accumulated_probabilities(sorted_candidate_lengths, current_round_acc_pr
     # amplification factor.
 
     for candidate in sorted_candidate_lengths:
-        relative_prob = round(
-            float(
-                compression_function_factor ** (
-                    -abs(candidate['length'] - min_candidate_value)
-                )
-            ), round_factor
+        relative_prob = float(
+            compression_function_factor ** (
+                -abs(candidate['length'] - min_candidate_value)
+            )
         ) / relative_probability_sum
 
         accumulated_value = (
