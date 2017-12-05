@@ -295,8 +295,10 @@ class Strategy(object):
         logger.debug(75 * '#')
 
         if self._round.get_method() == Target.BACKTRACKING:
-            self._decision = decide_next_backtracking_world_state(current_round_samplesets,
-                                                                  self._round.accumulated_probability)
+            self._decision = decide_next_backtracking_world_state(
+                current_round_samplesets,
+                self._round.accumulated_probability
+            )
 
             logger.debug('Optimal Candidates:')
             for i in self._decision:
