@@ -124,6 +124,8 @@ STATIC_URL = '/static/'
 
 # Logging
 
+LOG_LEVEL = 'DEBUG'
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -141,12 +143,12 @@ LOGGING = {
     },
     'handlers': {
         'console': {
-            'level': 'DEBUG',
+            'level': LOG_LEVEL,
             'class': 'logging.StreamHandler',
             'formatter': 'verbose'
         },
         'app': {
-            'level': 'DEBUG',
+            'level': LOG_LEVEL,
             'class': 'logging.FileHandler',
             'filename': 'rupture.log',
             'formatter': 'app'
@@ -155,15 +157,15 @@ LOGGING = {
     'loggers': {
         'breach.strategy': {
             'handlers': ['console', 'app'],
-            'level': 'DEBUG'
+            'level': LOG_LEVEL
         },
         'breach.analyzer': {
             'handlers': ['console', 'app'],
-            'level': 'DEBUG'
+            'level': LOG_LEVEL
         },
         'breach.backtracking_analyzer': {
             'handlers': ['console', 'app'],
-            'level': 'DEBUG'
+            'level': LOG_LEVEL
         },
     }
 }
