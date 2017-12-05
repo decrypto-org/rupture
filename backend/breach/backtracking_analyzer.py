@@ -33,10 +33,8 @@ def get_accumulated_probabilities(sorted_candidate_lengths, current_round_acc_pr
     # amplification factor.
 
     for candidate in sorted_candidate_lengths:
-        relative_prob = float(
-            compression_function_factor ** (
-                -abs(candidate['length'] - min_candidate_value)
-            )
+        relative_prob = compression_function_factor ** (
+            -abs(candidate['length'] - min_candidate_value)
         ) / relative_probability_sum
 
         accumulated_value = (
