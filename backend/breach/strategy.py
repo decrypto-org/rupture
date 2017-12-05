@@ -302,16 +302,8 @@ class Strategy(object):
                 current_round_samplesets,
                 self._round.accumulated_probability
             )
-
-            logger.info('Optimal Candidates:')
-            for i in self._decision:
-                logger.info('{}'.format(i))
         else:
             self._decision = decide_next_world_state(current_round_samplesets)
-
-            logger.info('Decision:')
-            for i in self._decision:
-                logger.info('\t{}: {}'.format(i, self._decision[i]))
 
         self._analyzed = True
 
@@ -573,6 +565,12 @@ class Strategy(object):
             return self._complete_round()
 
     def _complete_round(self):
+        logger.info(75 * '$')
+        logger.info('Decision:')
+        for i in self._decision:
+            logger.info('\t{}: {}'.format(i, self._decision[i]))
+        logger.info(75 * '$')
+
         if self._round_is_completed():
             # Advance to the next round.
             try:
@@ -597,10 +595,25 @@ class Strategy(object):
         if not self._check_branch_length():
             try:
                 self._create_new_rounds()
+
+                logger.info(75 * '$')
+                logger.info('Optimal Candidates:')
+                candidate_rounds = Round.objects.filter(completed=None).order_by('-accumulated_probability')
+                for i in candidate_rounds:
+                    logger.info('\tSecret: {} Probability: {}'.format(i.knownsecret, i.accumulated_probability))
+                logger.info(75 * '$')
+
                 return False
             except MaxReflectionLengthError:
                 # If a new round cannot be created, end the attack.
                 return True
+
+        logger.info(75 * '$')
+        logger.info('Optimal Candidates:')
+        candidate_rounds = Round.objects.filter(completed=None).order_by('-accumulated_probability')
+        for i in candidate_rounds:
+            logger.info('\tSecret: {} Probability: {}'.format(i.knownsecret, i.accumulated_probability))
+        logger.info(75 * '$')
 
         # If current branch is completed, then we already matched the
         # secretlength.
