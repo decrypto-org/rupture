@@ -58,29 +58,14 @@ class Strategy(object):
     def _choose_next_round(self, method, current_round_index):
         # Choose next round to analyze, based on the execution method.
         if method == Target.BACKTRACKING:
-            max_accumulated_prob = Round.objects.filter(
+            candidate_rounds = Round.objects.filter(
                 victim=self._victim,
                 completed=None
-            ).aggregate(Max('accumulated_probability'))
+            ).order_by('-accumulated_probability')
+            self._round = candidate_rounds[0]
 
-            # Check if more than one objects have the same accumulated
-            # probability.
-            if isinstance(max_accumulated_prob, list):
-                max_value = max_accumulated_prob[0]['accumulated_probability__max']
-                self._round = Round.objects.get(
-                    victim=self._victim,
-                    completed=None,
-                    accumulated_probability=max_value)[0]
-            else:
-                max_value = max_accumulated_prob['accumulated_probability__max']
-                self._round = Round.objects.get(
-                    victim=self._victim,
-                    completed=None,
-                    accumulated_probability=max_value)
-
-            if not self._round.started:
-                self._round.started = timezone.now()
-                self._round.save()
+            self._round.started = timezone.now()
+            self._round.save()
         else:
             self._round = Round.objects.filter(
                 victim=self._victim,
