@@ -77,10 +77,11 @@ def get_candidates(candidate_lengths, accumulated_prob):
 
     candidates_probabilities = get_accumulated_probabilities(sorted_candidate_lengths, accumulated_prob)
 
-    logger.debug('\n' + 75 * '#')
-    logger.debug('Candidate scoreboard:')
+    logger.info(75 * '#')
+    logger.info('Candidate scoreboard:')
     for cand in sorted_candidate_lengths:
-        logger.debug('\t{}: {}'.format(cand['candidate_alphabet'], cand['length']))
+        logger.info('\t{}: {}'.format(cand['candidate_alphabet'], cand['length']))
+    logger.info(75 * '#')
 
     return candidates_probabilities
 

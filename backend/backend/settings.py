@@ -160,7 +160,11 @@ LOGGING = {
         'breach.analyzer': {
             'handlers': ['console', 'app'],
             'level': 'DEBUG'
-        }
+        },
+        'breach.backtracking_analyzer': {
+            'handlers': ['console', 'app'],
+            'level': 'DEBUG'
+        },
     }
 }
 

@@ -292,7 +292,6 @@ class Strategy(object):
         '''Analyzes the current round samplesets to extract a decision.'''
 
         current_round_samplesets = SampleSet.objects.filter(round=self._round, success=True)
-        logger.debug(75 * '#')
 
         if self._round.get_method() == Target.BACKTRACKING:
             self._decision = decide_next_backtracking_world_state(
@@ -300,17 +299,16 @@ class Strategy(object):
                 self._round.accumulated_probability
             )
 
-            logger.debug('Optimal Candidates:')
+            logger.info('Optimal Candidates:')
             for i in self._decision:
-                logger.debug('\n{}'.format(i))
+                logger.info('{}'.format(i))
         else:
             self._decision = decide_next_world_state(current_round_samplesets)
 
-            logger.debug('Decision:')
+            logger.info('Decision:')
             for i in self._decision:
-                logger.debug('\t{}: {}'.format(i, self._decision[i]))
+                logger.info('\t{}: {}'.format(i, self._decision[i]))
 
-        logger.debug(75 * '#')
         self._analyzed = True
 
     def _round_is_completed(self):
