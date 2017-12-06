@@ -58,29 +58,14 @@ class Strategy(object):
     def _choose_next_round(self, method, current_round_index):
         # Choose next round to analyze, based on the execution method.
         if method == Target.BACKTRACKING:
-            max_accumulated_prob = Round.objects.filter(
+            candidate_rounds = Round.objects.filter(
                 victim=self._victim,
                 completed=None
-            ).aggregate(Max('accumulated_probability'))
+            ).order_by('-accumulated_probability')
+            self._round = candidate_rounds[0]
 
-            # Check if more than one objects have the same accumulated
-            # probability.
-            if isinstance(max_accumulated_prob, list):
-                max_value = max_accumulated_prob[0]['accumulated_probability__max']
-                self._round = Round.objects.get(
-                    victim=self._victim,
-                    completed=None,
-                    accumulated_probability=max_value)[0]
-            else:
-                max_value = max_accumulated_prob['accumulated_probability__max']
-                self._round = Round.objects.get(
-                    victim=self._victim,
-                    completed=None,
-                    accumulated_probability=max_value)
-
-            if not self._round.started:
-                self._round.started = timezone.now()
-                self._round.save()
+            self._round.started = timezone.now()
+            self._round.save()
         else:
             self._round = Round.objects.filter(
                 victim=self._victim,
@@ -238,6 +223,10 @@ class Strategy(object):
 
         logger.debug('Giving work:')
         logger.debug('\tCandidate: {}'.format(sampleset.candidatealphabet))
+        logger.debug('\tKnown secret: {}'.format(sampleset.round.knownsecret))
+        logger.debug('\tKnown alphabet: {}'.format(sampleset.round.knownalphabet))
+        logger.debug('\tAlignment alphabet: {}'.format(sampleset.alignmentalphabet))
+        logger.debug('\tAmount: {}'.format(sampleset.round.amount))
 
         return work
 
@@ -292,40 +281,15 @@ class Strategy(object):
         '''Analyzes the current round samplesets to extract a decision.'''
 
         current_round_samplesets = SampleSet.objects.filter(round=self._round, success=True)
-        self._decision = decide_next_world_state(current_round_samplesets)
-        logger.debug(75 * '#')
 
         if self._round.get_method() == Target.BACKTRACKING:
-            self._decision = decide_next_backtracking_world_state(current_round_samplesets,
-                                                                  self._round.accumulated_probability)
-
-            logger.debug('Optimal Candidates:')
-            for i in self._decision:
-                logger.debug('{}'.format(i))
+            self._decision = decide_next_backtracking_world_state(
+                current_round_samplesets,
+                self._round.accumulated_probability
+            )
         else:
             self._decision = decide_next_world_state(current_round_samplesets)
 
-            logger.debug('Decision:')
-            for i in self._decision:
-                logger.debug('\t{}: {}'.format(i, self._decision[i]))
-
-        logger.debug(75 * '#')
-
-        if self._round.get_method() == Target.BACKTRACKING:
-            self._decision = decide_next_backtracking_world_state(current_round_samplesets,
-                                                                  self._round.accumulated_probability)
-
-            logger.debug('Optimal Candidates:')
-            for i in self._decision:
-                logger.debug('\n{}'.format(i))
-        else:
-            self._decision = decide_next_world_state(current_round_samplesets)
-
-            logger.debug('Decision:')
-            for i in self._decision:
-                logger.debug('\t{}: {}'.format(i, self._decision[i]))
-
-        logger.debug(75 * '#')
         self._analyzed = True
 
     def _round_is_completed(self):
@@ -375,8 +339,6 @@ class Strategy(object):
         def _get_first_reflection():
             alphabet = _build_candidate_alphabets()[0]
             return self._reflection(alphabet)
-
-        logger.debug('Checking max reflection length...')
 
         if self._round.victim.target.maxreflectionlength == 0:
             self._set_round_cardinalities(self._build_candidates(state))
@@ -442,11 +404,6 @@ class Strategy(object):
             self._round.delete()
             raise err
 
-        logger.debug('Created new round:')
-        logger.debug('\tKnown secret: {}'.format(next_round.knownsecret))
-        logger.debug('\tKnown alphabet: {}'.format(next_round.knownalphabet))
-        logger.debug('\tAmount: {}'.format(next_round.amount))
-
     def _create_round_samplesets(self):
         state = {
             'knownalphabet': self._round.knownalphabet,
@@ -463,8 +420,6 @@ class Strategy(object):
             alignmentalphabet = list(self._round.victim.target.alignmentalphabet)
             random.shuffle(alignmentalphabet)
             alignmentalphabet = ''.join(alignmentalphabet)
-
-        logger.debug('\tAlignment alphabet: {}'.format(alignmentalphabet))
 
         for candidate in candidate_alphabets:
             SampleSet.create_sampleset({
@@ -595,6 +550,12 @@ class Strategy(object):
             return self._complete_round()
 
     def _complete_round(self):
+        logger.info(75 * '$')
+        logger.info('Decision:')
+        for i in self._decision:
+            logger.info('\t{}: {}'.format(i, self._decision[i]))
+        logger.info(75 * '$')
+
         if self._round_is_completed():
             # Advance to the next round.
             try:
@@ -619,10 +580,25 @@ class Strategy(object):
         if not self._check_branch_length():
             try:
                 self._create_new_rounds()
+
+                logger.info(75 * '$')
+                logger.info('Optimal Candidates:')
+                candidate_rounds = Round.objects.filter(completed=None).order_by('-accumulated_probability')
+                for i in candidate_rounds:
+                    logger.info('\tSecret: %s Probability: %.6f' % (i.knownsecret, i.accumulated_probability))
+                logger.info(75 * '$')
+
                 return False
             except MaxReflectionLengthError:
                 # If a new round cannot be created, end the attack.
                 return True
+
+        logger.info(75 * '$')
+        logger.info('Optimal Candidates:')
+        candidate_rounds = Round.objects.filter(completed=None).order_by('-accumulated_probability')
+        for i in candidate_rounds:
+            logger.info('\tSecret: %s Probability: %.6f' % (i.knownsecret, i.accumulated_probability))
+        logger.info(75 * '$')
 
         # If current branch is completed, then we already matched the
         # secretlength.

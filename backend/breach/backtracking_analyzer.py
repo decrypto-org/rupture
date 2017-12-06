@@ -18,16 +18,13 @@ def get_accumulated_probabilities(sorted_candidate_lengths, current_round_acc_pr
     compression_function_factor = 1.05
     relative_probability_sum = 0.0
     min_candidate_value = sorted_candidate_lengths[0]['length']
-    round_factor = 4
     amplification_factor = 1.05
 
     # Calculate relative probability sum based on each candidate's length.
     for candidate in sorted_candidate_lengths:
-        relative_probability_sum += (compression_function_factor **
-                                     (-abs(candidate['length'] -
-                                      min_candidate_value)))
-
-        relative_probability_sum = round(relative_probability_sum, round_factor)
+        relative_probability_sum += compression_function_factor ** (
+            -abs(candidate['length'] - min_candidate_value)
+        )
 
     accumulated_probabilities = []
 
@@ -36,14 +33,15 @@ def get_accumulated_probabilities(sorted_candidate_lengths, current_round_acc_pr
     # amplification factor.
 
     for candidate in sorted_candidate_lengths:
-        relative_prob = (round(float(compression_function_factor **
-                                     (-abs(candidate['length'] -
-                                      min_candidate_value))), round_factor) /
-                         relative_probability_sum)
+        relative_prob = compression_function_factor ** (
+            -abs(candidate['length'] - min_candidate_value)
+        ) / relative_probability_sum
 
-        accumulated_value = (amplification_factor *
-                             current_round_acc_probability *
-                             relative_prob)
+        accumulated_value = (
+            amplification_factor *
+            current_round_acc_probability *
+            relative_prob
+        )
 
         accumulated_probabilities.append({
             'candidate': candidate['candidate_alphabet'],
@@ -77,10 +75,11 @@ def get_candidates(candidate_lengths, accumulated_prob):
 
     candidates_probabilities = get_accumulated_probabilities(sorted_candidate_lengths, accumulated_prob)
 
-    logger.debug('\n' + 75 * '#')
-    logger.debug('Candidate scoreboard:')
+    logger.info(75 * '#')
+    logger.info('Candidate scoreboard:')
     for cand in sorted_candidate_lengths:
-        logger.debug('\t{}: {}'.format(cand['candidate_alphabet'], cand['length']))
+        logger.info('\t{}: {}'.format(cand['candidate_alphabet'], cand['length']))
+    logger.info(75 * '#')
 
     return candidates_probabilities
 
