@@ -1,5 +1,7 @@
 [![Build
 Status](https://travis-ci.org/decrypto-org/rupture.svg?branch=develop)](https://travis-ci.org/decrypto-org/rupture)
+[![Coverage
+Status](https://coveralls.io/repos/github/decrypto-org/rupture/badge.svg?branch=develop)](https://coveralls.io/github/decrypto-org/rupture?branch=develop)
 
 Rupture
 =======
