@@ -3,6 +3,7 @@ victim_1:
     snifferendpoint: 'http://127.0.0.1:9000'
     sourceip: '192.168.1.70'
     realtimeurl: 'http://127.0.0.1:3031'
+    interface: 'eno1'
 victim_2:
     target: 'dimkarakostas'
     snifferendpoint: 'http://127.0.0.1:9000'
