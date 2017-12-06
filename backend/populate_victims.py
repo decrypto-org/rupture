@@ -67,13 +67,13 @@ def create_victim(victim, client_dir):
              \tsourceip: {}
              \tinterface: {}
              \trealtimeurl: {}'''.format(
-                v.id,
-                v.target.name,
-                v.snifferendpoint,
-                v.sourceip,
-                v.interface,
-                v.realtimeurl
-            )
+        v.id,
+        v.target.name,
+        v.snifferendpoint,
+        v.sourceip,
+        v.interface,
+        v.realtimeurl
+    )
 
     create_client(v.realtimeurl, v.id, client_dir)
     create_injection(v.sourceip, v.id, client_dir)
@@ -81,6 +81,7 @@ def create_victim(victim, client_dir):
 
 def create_client(realtimeurl, victimid, client_dir):
     print '[*] Creating client for chosen victim...'
+    print '[*] Using the client directory:', client_dir
 
     with open(os.devnull, 'w') as FNULL:
         p = subprocess.Popen(
@@ -106,7 +107,11 @@ def create_injection(sourceip, victimid, client_dir):
     with open(os.path.join(client_dir, 'client_{}/inject.sh'.format(victimid)), 'w') as f:
         f.write(injection)
 
-    print '[*] Injection script created in following directory:\n\t{}'.format(os.path.join(client_dir, 'client_{}/inject.sh'.format(victimid)))
+    print '[*] Injection script created in following directory:\n\t{}'.format(
+        os.path.join(
+            client_dir, 'client_{}/inject.sh'.format(victimid)
+        )
+    )
 
 
 def get_victims(victim_cfg):
