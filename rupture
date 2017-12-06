@@ -90,6 +90,10 @@ error_checking $@
 BASEDIR=$(dirname -- "$(readlink -f -- "${BASH_SOURCE}")")
 RUPTUREDIR="$HOME/.rupture"
 mkdir -p $RUPTUREDIR
+if [ ! -d $RUPTUREDIR/client ]; then
+    mkdir -p $RUPTUREDIR/client
+    cp -r $BASEDIR/client $RUPTUREDIR
+fi
 
 while [[ $# -gt 0 ]]
 do
