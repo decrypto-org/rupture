@@ -25,6 +25,6 @@ dimkarakostas:
     secretlength: 9
     alignmentalphabet: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
     recordscardinality: 1
-    method: 'serial'
+    method: 'backtracking'
     samplesize: 64
     confidence_threshold: 1.0
