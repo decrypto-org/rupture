@@ -1,5 +1,7 @@
 [![Build
 Status](https://travis-ci.org/decrypto-org/rupture.svg?branch=develop)](https://travis-ci.org/decrypto-org/rupture)
+[![Coverage
+Status](https://coveralls.io/repos/github/decrypto-org/rupture/badge.svg?branch=develop)](https://coveralls.io/github/decrypto-org/rupture?branch=develop)
 
 Rupture
 =======
@@ -32,7 +34,7 @@ You can install the whole framework as follows:
 
  - Install rupture.
 ```sh
-rupture/ $ ./install.sh all
+rupture/ $ ./install all
 ```
 
 or you can also install each module separately, as below.
@@ -44,13 +46,13 @@ Rupture uses Javascript for communication between the client code and the realti
 #### Injection
  - Install injection.
 ```sh
-rupture$ ./install.sh injection
+rupture$ ./install injection
 ```
 
 #### Client
  - Install client.
 ```sh
-rupture$ ./install.sh client
+rupture$ ./install client
 ```
 
 ### Python
@@ -60,13 +62,13 @@ Rupture uses Python for the Command & Control server. Communication between js r
 #### Backend
  - Install backend.
 ```sh
-rupture/ $ ./install.sh backend
+rupture/ $ ./install backend
 ```
 
 #### Sniffer
  - Install sniffer.
 ```sh
-rupture/ $ ./install.sh sniffer
+rupture/ $ ./install sniffer
 ```
 
 Execution
@@ -78,42 +80,42 @@ Execution
     - rupture/backend/victim_config.yml
  - Setup backend.
 ```sh
-rupture $ ./rupture setup
+rupture $ ./rupture -s
 ```
  - Deploy backend.
 ```sh
-rupture $ ./rupture backend
+rupture $ ./rupture --backend
 ```
 
 #### Realtime
  - Deploy realtime.
 ```sh
-rupture $ ./rupture realtime
+rupture $ ./rupture --realtime
 ```
 
 #### Sniffer
  - Deploy sniffer.
 ```sh
-rupture $ ./rupture sniffer
+rupture $ ./rupture --sniffer
 ```
 
 ##### Attack
  - You can also deploy backend, realtime and sniffer modules all together:
 ```sh
-rupture/ $ sudo ./rupture attack
+rupture/ $ sudo ./rupture --attack
 ```
 
 **Note: Sniffer deployment - either standalone or all together with 'attack' - may need elevated privileges, since it requires access to network interface.**
 
 #### Client
  - Client code is in following directory:
-    - rupture/client/client_<id>
+    - ~/.rupture/client/client_<id>
 
    where <id> is the victim's id in the backend database.
  - Open the following test HTML page in browser:
-    - rupture/client/client_<id>/test.html
+    - ~/.rupture/client/client_<id>/test.html
 
    or inject client code in HTTP responses:
 ```sh
-rupture/client/client_<id> $ ./inject.sh
+~/.rupture/client/client_<id> $ ./inject.sh
 ```

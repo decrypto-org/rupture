@@ -1,7 +1,7 @@
 from django import setup
 import os
+import sys
 import yaml
-from backend.settings import BASE_DIR
 import subprocess
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'backend.settings')
@@ -38,7 +38,7 @@ def select_victim(victims):
     return victim_list
 
 
-def create_victim(victim):
+def create_victim(victim, client_dir):
     try:
         target = Target.objects.filter(name=victim['target'])[0]
     except IndexError:
@@ -50,10 +50,9 @@ def create_victim(victim):
         'snifferendpoint': victim['snifferendpoint'],
         'sourceip': victim['sourceip'],
         'realtimeurl': victim['realtimeurl'],
-        'recordscardinality': target.recordscardinality
+        'recordscardinality': target.recordscardinality,
+        'interface': victim['interface']
     }
-    if 'interface' in victim:
-        victim_args['interface'] = victim['interface']
     if 'calibration_wait' in victim:
         victim_args['calibration_wait'] = victim['calibration_wait']
 
@@ -67,23 +66,21 @@ def create_victim(victim):
              \tsourceip: {}
              \tinterface: {}
              \trealtimeurl: {}'''.format(
-                v.id,
-                v.target.name,
-                v.snifferendpoint,
-                v.sourceip,
-                v.interface,
-                v.realtimeurl
-            )
+        v.id,
+        v.target.name,
+        v.snifferendpoint,
+        v.sourceip,
+        v.interface,
+        v.realtimeurl
+    )
 
-    create_client(v.realtimeurl, v.id)
-    create_injection(v.sourceip, v.id)
+    create_client(v.realtimeurl, v.id, client_dir)
+    create_injection(v.sourceip, v.id, client_dir)
 
 
-def create_client(realtimeurl, victimid):
+def create_client(realtimeurl, victimid, client_dir):
     print '[*] Creating client for chosen victim...'
-
-    rupture_dir = os.path.abspath(os.path.join(BASE_DIR, os.pardir))
-    client_dir = os.path.join(rupture_dir, 'client')
+    print '[*] Using the client directory:', client_dir
 
     with open(os.devnull, 'w') as FNULL:
         p = subprocess.Popen(
@@ -98,11 +95,8 @@ def create_client(realtimeurl, victimid):
             print '[!] Something went wrong when creating client {}'.format(victimid)
 
 
-def create_injection(sourceip, victimid):
+def create_injection(sourceip, victimid, client_dir):
     print '[*] Creating injection script for chosen victim...'
-
-    rupture_dir = os.path.abspath(os.path.join(BASE_DIR, os.pardir))
-    client_dir = os.path.join(rupture_dir, 'client')
 
     with open(os.path.join(client_dir, 'inject.sh'), 'r') as f:
         injection = f.read()
@@ -112,12 +106,16 @@ def create_injection(sourceip, victimid):
     with open(os.path.join(client_dir, 'client_{}/inject.sh'.format(victimid)), 'w') as f:
         f.write(injection)
 
-    print '[*] Injection script created in following directory:\n\t{}'.format(os.path.join(client_dir, 'client_{}/inject.sh'.format(victimid)))
+    print '[*] Injection script created in following directory:\n\t{}'.format(
+        os.path.join(
+            client_dir, 'client_{}/inject.sh'.format(victimid)
+        )
+    )
 
 
-def get_victims():
+def get_victims(victim_cfg):
     try:
-        with open(os.path.join(BASE_DIR, 'victim_config.yml'), 'r') as ymlconf:
+        with open(victim_cfg, 'r') as ymlconf:
             cfg = yaml.load(ymlconf)
     except IOError, err:
         print 'IOError: %s' % err
@@ -126,12 +124,14 @@ def get_victims():
 
 
 if __name__ == '__main__':
-    victims = get_victims()
+    victim_cfg = sys.argv[1]
+    client_dir = sys.argv[2]
+    victims = get_victims(victim_cfg)
     try:
         victim_list = select_victim(victims)
         for victim in victim_list:
             try:
-                create_victim(victim)
+                create_victim(victim, client_dir)
             except ValueError:
                 print '[!] Invalid parameters for victim ({}, {}).'.format(victim['target'], victim['sourceip'])
     except KeyboardInterrupt:

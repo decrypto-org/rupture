@@ -6,6 +6,8 @@ ruptureit:
     alignmentalphabet: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
     recordscardinality: 1
     method: 'serial'
+    samplesize: 64
+    confidence_threshold: 1.0
 dionyziz:
     endpoint: 'https://dionyziz.com/breach-test/reflect.php?ref=%s'
     prefix: 'imper'
@@ -14,6 +16,8 @@ dionyziz:
     alignmentalphabet: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
     recordscardinality: 1
     method: 'divide&conquer'
+    samplesize: 64
+    confidence_threshold: 1.0
 dimkarakostas:
     endpoint: 'https://dimkarakostas.com/rupture/test.php?ref=%s'
     prefix: 'imper'
@@ -21,4 +25,6 @@ dimkarakostas:
     secretlength: 9
     alignmentalphabet: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
     recordscardinality: 1
-    method: 'serial'
+    method: 'backtracking'
+    samplesize: 64
+    confidence_threshold: 1.0

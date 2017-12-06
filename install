@@ -41,6 +41,14 @@ install_bettercap() {
     sudo gem install bettercap
 }
 
+show_config_info_message() {
+    echo "###################################################"
+    echo "# Don't forget to update the configuration files: #"
+    echo "#     backend/target_config.yml                   #"
+    echo "#     backend/victim_config.yml                   #"
+    echo "###################################################"
+}
+
 USAGE="Usage: $0 options
 options:
     client
@@ -91,6 +99,7 @@ for var in "$@"; do
         (cd backend
         activate_virtualenv
         python manage.py migrate)
+        show_config_info_message
         ;;
     sniffer)
         install_python
@@ -110,9 +119,7 @@ for var in "$@"; do
         python manage.py migrate)
         (cd sniffer
         activate_virtualenv)
-        echo '##########################################################################'
-        echo "# Don't forget to create your population scripts or update existing ones #"
-        echo '##########################################################################'
+        show_config_info_message
         ;;
   esac
 done

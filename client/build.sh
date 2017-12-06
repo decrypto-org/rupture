@@ -1,6 +1,13 @@
-#!/bin/sh
+#!/bin/bash
 
-BASEDIR=$(dirname "$0")
+BASEDIR=$(dirname -- "$(readlink -f -- "${BASH_SOURCE}")")
+RUPTUREDIR="$HOME/.rupture"
+
+if [ -d $RUPTUREDIR ]; then
+    CLIENTDIR="$RUPTUREDIR/client"
+else
+    CLIENTDIR=$BASEDIR
+fi
 
 REALTIMEURL=$1
 VICTIMID=$2
@@ -8,9 +15,10 @@ VICTIMID=$2
 echo "module.exports = {
     COMMAND_CONTROL_URL: '${REALTIMEURL}',
     VICTIM_ID: '${VICTIMID}'
-};"  > $BASEDIR/config.js
+};"  > $CLIENTDIR/config.js
 
+cd $CLIENTDIR
 if npm run webpack; then
-    mkdir -p $BASEDIR/client_$VICTIMID
-    cp -r $BASEDIR/test.html $BASEDIR/dist $BASEDIR/client_$VICTIMID
+    mkdir -p $CLIENTDIR/client_$VICTIMID
+    cp -r $CLIENTDIR/test.html $CLIENTDIR/dist $CLIENTDIR/client_$VICTIMID
 fi
