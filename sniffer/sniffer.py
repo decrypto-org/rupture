@@ -50,27 +50,16 @@ class Sniffer(threading.Thread):
 
         # Initialize object variables with parameters from arg dictionary
         self.arg = arg
-        try:
-            self.interface = str(arg['interface'])
-            self.source_ip = str(arg['source_ip'])
-            self.destination_host = str(arg['destination_host'])
-            self.destination_port = int(arg['destination_port'])
-        except KeyError:
-            raise ValueError('Invalid argument dictionary - Not enough parameters')
+
+        self.interface = str(arg['interface'])
+        self.source_ip = str(arg['source_ip'])
+        self.destination_host = str(arg['destination_host'])
+        self.destination_port = int(arg['destination_port'])
 
         try:
             self.destination_ip = socket.gethostbyname(self.destination_host)
         except socket.gaierror, err:
             raise ValueError('socket.gaierror - {}'.format(str(err)))
-
-        # If either of the parameters is None, raise ValueError
-        if not all([
-            self.interface,
-            self.source_ip,
-            self.destination_host,
-            self.destination_port]
-        ):
-            raise ValueError('Invalid argument dictionary - Invalid parameters')
 
         # Dictionary with keys the destination (victim's) port
         # and value the data stream corresponding to that port

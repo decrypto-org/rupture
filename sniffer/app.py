@@ -36,10 +36,18 @@ def start():
             201: a new sniffer for those arguments has been created
     '''
     data = request.get_json()
-    source_ip = data['source_ip']
-    destination_host = data['destination_host']
-    interface = data['interface']
-    destination_port = data['destination_port']
+    try:
+        source_ip = str(data['source_ip'])
+        destination_host = str(data['destination_host'])
+        interface = str(data['interface'])
+        destination_port = int(data['destination_port'])
+
+        if 'calibration_wait' in data:
+            calibration_wait = float(data['calibration_wait'])
+        else:
+            calibration_wait = 0.0
+    except (KeyError, ValueError):
+        return 'Malformed request data', 400
 
     if (source_ip, destination_host) in sniffers:
         if sniffers[(source_ip, destination_host)].is_recording():
@@ -75,8 +83,8 @@ def start():
     logger.debug(msg)
 
     # Give Scapy some time to lock the low-level network resources and start sniffing
-    logger.debug('Waiting for calibration: {} seconds...'.format(float(data['calibration_wait'])))
-    sleep(float(data['calibration_wait']))
+    logger.debug('Waiting for calibration: {} seconds...'.format(calibration_wait))
+    sleep(calibration_wait)
 
     return msg, 201
 
@@ -134,8 +142,11 @@ def delete():
             200: sniffer was deleted successfully
     '''
     data = request.get_json()
-    source_ip = data['source_ip']
-    destination_host = data['destination_host']
+    try:
+        source_ip = str(data['source_ip'])
+        destination_host = str(data['destination_host'])
+    except KeyError:
+        return 'Malformed request data', 400
 
     logger.debug('Deleting sniffer (source_ip : {}, destination_host: {})...'.format(source_ip, destination_host))
 
