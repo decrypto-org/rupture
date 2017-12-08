@@ -75,6 +75,10 @@ class Strategy(object):
     def get_decrypted_secret(self):
         return self._round.knownsecret
 
+    def get_backtracking_scoreboard(self):
+        candidate_rounds = Round.objects.filter(completed=None).order_by('-accumulated_probability')
+        return [{'knownsecret': i.knownsecret, 'accumulated_probability': i.accumulated_probability} for i in candidate_rounds]
+
     def _build_candidates_divide_conquer(self, state):
         candidate_alphabet_cardinality = len(state['knownalphabet']) / 2
 
@@ -595,9 +599,8 @@ class Strategy(object):
 
         logger.info(75 * '$')
         logger.info('Optimal Candidates:')
-        candidate_rounds = Round.objects.filter(completed=None).order_by('-accumulated_probability')
-        for i in candidate_rounds:
-            logger.info('\tSecret: %s Probability: %.6f' % (i.knownsecret, i.accumulated_probability))
+        for i in self.get_backtracking_scoreboard():
+            logger.info('\tSecret: %s Probability: %.6f' % (i['knownsecret'], i['accumulated_probability']))
         logger.info(75 * '$')
 
         # If current branch is completed, then we already matched the
