@@ -47,7 +47,6 @@ class Round(models.Model):
         batches = groupby(samplesets, lambda x: x.batch)
         for batch, batch_samplesets in batches:
             list_batch_samplesets = list(batch_samplesets)
-            print batch, list_batch_samplesets
             decision = decide_next_world_state(list_batch_samplesets)
             batch_details = {
                 'round': self.index,
