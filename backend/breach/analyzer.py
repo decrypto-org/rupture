@@ -5,10 +5,6 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-class AnalyzerError(Exception):
-    pass
-
-
 def decide_optimal_candidate(candidate_lengths, samples_per_sampleset):
     '''Take a dictionary of candidate alphabets and their associated
     accumulative lengths and decide which candidate alphabet is the best

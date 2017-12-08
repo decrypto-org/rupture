@@ -350,13 +350,16 @@ class Strategy(object):
 
         while len(_get_first_reflection()) > self._round.victim.target.maxreflectionlength:
             if self._round.get_method() == Target.DIVIDE_CONQUER:
-                self._round.method = Target.SERIAL
+                self._round.victim.target.method = Target.SERIAL
+                self._round.victim.target.save()
                 logger.info('Divide & conquer method cannot be used, falling back to serial.')
             elif self._round.check_huffman_pool():
                 self._round.huffman_pool = False
+                self._round.save()
                 logger.info('Huffman pool cannot be used, removing it.')
             elif self._round.check_block_align():
                 self._round.block_align = False
+                self._round.save()
                 logger.info('Block alignment cannot be used, removing it.')
             else:
                 raise MaxReflectionLengthError('Cannot attack, specified maxreflectionlength is too short')
@@ -493,6 +496,8 @@ class Strategy(object):
                             if self._need_for_cardinality_update():
                                 self._victim.recordscardinality = int(capture['records'] / self._victim.target.samplesize)
                                 self._victim.save()
+                                self._victim.target.recordscardinality = int(capture['records'] / self._victim.target.samplesize)
+                                self._victim.target.save()
                                 self._flush_batch_samplesets()
                                 logger.debug("Updating records' cardinality. New cardinality: {}".format(self._victim.recordscardinality))
 
