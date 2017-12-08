@@ -8,6 +8,14 @@ from breach.models import Target, Victim, Round, SampleSet
 
 class StrategyTestCase(RuptureTestCase):
     @patch('breach.strategy.Sniffer')
+    def test_knownsecret(self, Sniffer):
+        strategy = Strategy(self.victim)
+        self.assertEqual(
+            strategy.get_decrypted_secret(),
+            'testsecret'
+        )
+
+    @patch('breach.strategy.Sniffer')
     def test_first_round(self, Sniffer):
         strategy0 = Strategy(self.victim)
 
