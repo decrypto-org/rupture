@@ -81,5 +81,87 @@ class CalibrationTestCase(BaseTestCase):
         app.sleep.assert_called_with(1000000.0)
 
 
+class ErrorHandlingTestCase(BaseTestCase):
+    def test_no_host(self):
+        self.data = dict(
+            source_ip=self.source_ip,
+            destination_port=self.destination_port,
+            interface=self.interface,
+            calibration_wait=self.calibration_wait
+        )
+        rv = self._start()
+        self.assertEqual(rv.status_code, 400)
+
+        rv = self._delete()
+        self.assertEqual(rv.status_code, 400)
+
+    def test_no_port(self):
+        self.data = dict(
+            source_ip=self.source_ip,
+            destination_host=self.destination_host,
+            interface=self.interface,
+            calibration_wait=self.calibration_wait
+        )
+        rv = self._start()
+        self.assertEqual(rv.status_code, 400)
+
+    def test_no_source_ip(self):
+        self.data = dict(
+            destination_host=self.destination_host,
+            destination_port=self.destination_port,
+            interface=self.interface,
+            calibration_wait=self.calibration_wait
+        )
+        rv = self._start()
+        self.assertEqual(rv.status_code, 400)
+
+        rv = self._delete()
+        self.assertEqual(rv.status_code, 400)
+
+    def test_no_interface(self):
+        self.data = dict(
+            source_ip=self.source_ip,
+            destination_host=self.destination_host,
+            destination_port=self.destination_port,
+            calibration_wait=self.calibration_wait
+        )
+        rv = self._start()
+        self.assertEqual(rv.status_code, 400)
+
+    def test_calibration(self):
+        self.data = dict(
+            source_ip=self.source_ip,
+            destination_host=self.destination_host,
+            destination_port=self.destination_port,
+            interface=self.interface,
+            calibration_wait='hi'
+        )
+        rv = self._start()
+        self.assertEqual(rv.status_code, 400)
+
+        self.data = dict(
+            source_ip=self.source_ip,
+            destination_host=self.destination_host,
+            destination_port=self.destination_port,
+            interface=self.interface
+        )
+        rv = self._start()
+        self.assertEqual(rv.status_code, 201)
+
+    def test_invalid_hostname(self):
+        self.data = dict(
+            source_ip=self.source_ip,
+            destination_host='hi',
+            destination_port=self.destination_port,
+            interface=self.interface,
+            calibration_wait=self.calibration_wait
+        )
+        rv = self._start()
+        self.assertEqual(rv.status_code, 400)
+
+        rv = self._delete()
+        self.assertEqual(rv.status_code, 404)
+
+
 if __name__ == '__main__':
     unittest.main()
