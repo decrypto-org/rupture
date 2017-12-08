@@ -1,7 +1,6 @@
 import requests
 import logging
 import json
-from time import sleep
 
 
 logger = logging.getLogger(__name__)
@@ -57,21 +56,3 @@ class Sniffer(object):
             data=json.dumps(self.get_sniffer_state())
         )
         r.raise_for_status()
-
-if __name__ == '__main__':
-    source_ip = '147.102.239.229'
-    destination_host = 'dionyziz.com'
-    interface = 'wlan0'
-    destination_port = '443'
-    logger.debug('Initializing sniffer')
-    sniffer = Sniffer('http://%s:9000' % source_ip, source_ip, destination_host, interface, destination_port)
-    logger.debug('Starting')
-    sniffer.start()
-    logger.debug('Sniff started')
-    sleep(5)
-    logger.debug('Reading sniffer data')
-    data = sniffer.read()
-    logger.debug('Sniffer data read:\n%s', data)
-    logger.debug('Stopping sniffer')
-    sniffer.stop()
-    logger.debug('Sniffer stopped')
