@@ -60,8 +60,8 @@ class Sniffer(threading.Thread):
 
         try:
             self.destination_ip = socket.gethostbyname(self.destination_host)
-        except socket.herror, err:
-            raise ValueError('socket.herror - {}'.format(str(err)))
+        except socket.gaierror, err:
+            raise ValueError('socket.gaierror - {}'.format(str(err)))
 
         # If either of the parameters is None, raise ValueError
         if not all([
