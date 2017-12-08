@@ -123,3 +123,15 @@ class Target(models.Model):
         help_text=('The threshold that is used for confidence, in order '
                    'to determine whether a candidate should be chosen.')
     )
+
+    compression_function_factor = models.FloatField(
+        default=1.05,
+        help_text=('The compression factor that is used for the '
+                   'the backtracking execution.')
+    )
+
+    amplification_factor = models.FloatField(
+        default=1.05,
+        help_text=('The amplification factor that is used for the '
+                   'the backtracking execution.')
+    )

@@ -5,7 +5,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-def get_accumulated_probabilities(sorted_candidate_lengths, current_round_acc_probability):
+def get_accumulated_probabilities(sorted_candidate_lengths, current_round_acc_probability, compression_function_factor, amplification_factor):
     '''Take a dictionary of sorted candidate alphabets  and calculate the
     relative probability of each candidate being in the target secret based on
     their associated accumulative lengths. Then associate the relative values
@@ -15,10 +15,8 @@ def get_accumulated_probabilities(sorted_candidate_lengths, current_round_acc_pr
     Returns a dictionary containing every possible candidate alphabet and its
     accumulated probability value.
     '''
-    compression_function_factor = 1.05
     relative_probability_sum = 0.0
     min_candidate_value = sorted_candidate_lengths[0]['length']
-    amplification_factor = 1.05
 
     # Calculate relative probability sum based on each candidate's length.
     for candidate in sorted_candidate_lengths:
@@ -51,7 +49,7 @@ def get_accumulated_probabilities(sorted_candidate_lengths, current_round_acc_pr
     return accumulated_probabilities
 
 
-def get_candidates(candidate_lengths, accumulated_prob):
+def get_candidates(candidate_lengths, accumulated_prob, compression_function_factor, amplification_factor):
     '''Take a dictionary of candidate alphabets and their associated
     accumulative lengths.
 
@@ -73,7 +71,7 @@ def get_candidates(candidate_lengths, accumulated_prob):
         key=operator.itemgetter('length')
     )
 
-    candidates_probabilities = get_accumulated_probabilities(sorted_candidate_lengths, accumulated_prob)
+    candidates_probabilities = get_accumulated_probabilities(sorted_candidate_lengths, accumulated_prob, compression_function_factor, amplification_factor)
 
     logger.info(75 * '#')
     logger.info('Candidate scoreboard:')
@@ -133,7 +131,10 @@ def decide_next_backtracking_world_state(samplesets, accumulated_prob):
     # Ensure we have a decision to make
     assert(len(candidate_lengths) > 1)
 
-    candidates = get_candidates(candidate_lengths, accumulated_prob)
+    compression_function_factor = samplesets[0].round.victim.target.compression_function_factor
+    amplification_factor = samplesets[0].round.victim.target.amplification_factor
+
+    candidates = get_candidates(candidate_lengths, accumulated_prob, compression_function_factor, amplification_factor)
 
     state = []
     # All candidates are returned in order to create new rounds.
