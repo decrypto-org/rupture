@@ -39,6 +39,7 @@ class BacktrackingTestCase(RuptureTestCase):
             amount=1,
             knownsecret='branchsecret',
             knownalphabet='012',
+            method=BACKTRACKING
         )
 
         SampleSet.objects.create(

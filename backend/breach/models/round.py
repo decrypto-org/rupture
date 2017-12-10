@@ -2,6 +2,7 @@ from __future__ import unicode_literals
 from django.db import models
 from django.core.exceptions import ValidationError
 from breach.analyzer import decide_next_world_state
+from breach.models import Target
 from itertools import groupby
 
 
@@ -9,26 +10,8 @@ class Round(models.Model):
     class Meta:
         unique_together = (('victim', 'index'),)
 
-    def check_block_align(self):
-        try:
-            return self.block_align
-        except AttributeError:
-            self.block_align = self.victim.target.block_align
-            return self.block_align
-
-    def check_huffman_pool(self):
-        try:
-            return self.huffman_pool
-        except AttributeError:
-            self.huffman_pool = self.victim.target.huffman_pool
-            return self.huffman_pool
-
     def get_method(self):
-        try:
-            return self.method
-        except AttributeError:
-            self.method = self.victim.target.method
-            return self.method
+        return self.method
 
     def clean(self):
         if not self.knownsecret.startswith(self.victim.target.prefix):
@@ -128,4 +111,22 @@ class Round(models.Model):
     accumulated_probability = models.FloatField(
         default=1.0,
         help_text='Accumulated probability of current round\'s given knownsecret. '
+    )
+
+    method = models.IntegerField(
+        default=Target.SERIAL,
+        choices=Target.METHOD_CHOICES,
+        help_text='Method of building candidate samplesets.'
+    )
+
+    block_align = models.BooleanField(
+        default=True,
+        help_text=('Whether to use block alignment or not, in case '
+                   'maxreflectionlength does not allow it')
+    )
+
+    huffman_pool = models.BooleanField(
+        default=True,
+        help_text=('Whether to use Huffman pool or not, in case '
+                   'maxreflectionlength does not allow it')
     )
