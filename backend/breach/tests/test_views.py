@@ -54,6 +54,47 @@ class ViewsTestCase(TestCase):
             'method': 2
         }
 
+    def tearDown(self):
+        for v in Victim.objects.all():
+            v.delete()
+
+    def test_get_work(self):
+        response = self.client.get(reverse('get_work') + '/1')
+        self.assertEqual(response.status_code, 404)
+
+        victim = Victim.objects.create(
+            target=self.target1,
+            sourceip='0.0.0.0'
+        )
+
+        response = self.client.get(reverse('get_work') + '/1')
+        self.assertEqual(response.status_code, 200)
+
+        victim.state = 'paused'
+        victim.save()
+        response = self.client.get(reverse('get_work') + '/1')
+        self.assertEqual(response.status_code, 404)
+
+    def test_work_completed(self):
+        response = self.client.post(
+            reverse('work_completed') + '/1',
+            json.dumps({'success': True}),
+            content_type="application/json"
+        )
+        self.assertEqual(response.status_code, 404)
+
+        Victim.objects.create(
+            target=self.target1,
+            sourceip='0.0.0.0'
+        )
+
+        response = self.client.post(
+            reverse('work_completed') + '/1',
+            json.dumps({'success': False}),
+            content_type="application/json"
+        )
+        self.assertEqual(response.status_code, 200)
+
     def test_target_post(self):
         """
         Test post requests for /target
