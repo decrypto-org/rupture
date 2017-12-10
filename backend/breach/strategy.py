@@ -357,11 +357,6 @@ class Strategy(object):
                 self._round.huffman_pool = False
                 self._round.save()
                 logger.info('Huffman pool cannot be used, removing it.')
-            elif self._round.check_block_align():
-            elif self._round.block_align:
-                self._round.block_align = False
-                self._round.save()
-                logger.info('Block alignment cannot be used, removing it.')
             else:
                 raise MaxReflectionLengthError('Cannot attack, specified maxreflectionlength is too short')
 
