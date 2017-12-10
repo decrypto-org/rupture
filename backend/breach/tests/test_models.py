@@ -1,5 +1,5 @@
 from django.test import TestCase
-from breach.models import Target, Victim, Round
+from breach.models import Target, Victim
 
 
 class ModelTestCase(TestCase):
@@ -35,26 +35,3 @@ class ModelTestCase(TestCase):
         self.assertEqual(self.victim.realtimeurl, 'http://localhost:3031')
         self.assertEqual(self.victim.snifferendpoint, 'http://127.0.0.1:9000')
         self.assertEqual(self.victim.calibration_wait, 0.0)
-
-    def test_round(self):
-        round1 = Round.objects.create(
-            victim=self.victim,
-            knownalphabet='01'
-        )
-
-        self.assertTrue(round1.check_block_align())
-        round1.block_align = False
-        self.assertTrue(round1.check_huffman_pool())
-        round1.huffman_pool = False
-        self.assertEqual(round1.get_method(), 1)
-        round1.method = 2
-
-        round2 = Round.objects.create(
-            victim=self.victim,
-            knownalphabet='01',
-            index=2
-        )
-
-        self.assertTrue(round2.check_block_align())
-        self.assertTrue(round2.check_huffman_pool())
-        self.assertEqual(round2.get_method(), 1)

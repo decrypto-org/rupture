@@ -145,7 +145,7 @@ class Strategy(object):
             ''
         ]
 
-        if self._round.check_huffman_pool():
+        if self._round.huffman_pool:
             # Huffman complement indicates the knownalphabet symbols that are not currently being tested
             huffman_complement = set(self._round.knownalphabet) - set(alphabet)
 
@@ -349,18 +349,14 @@ class Strategy(object):
             return
 
         while len(_get_first_reflection()) > self._round.victim.target.maxreflectionlength:
-            if self._round.get_method() == Target.DIVIDE_CONQUER:
-                self._round.victim.target.method = Target.SERIAL
-                self._round.victim.target.save()
+            if self._round.method == Target.DIVIDE_CONQUER:
+                self._round.method = Target.SERIAL
+                self._round.save()
                 logger.info('Divide & conquer method cannot be used, falling back to serial.')
-            elif self._round.check_huffman_pool():
+            elif self._round.huffman_pool:
                 self._round.huffman_pool = False
                 self._round.save()
                 logger.info('Huffman pool cannot be used, removing it.')
-            elif self._round.check_block_align():
-                self._round.block_align = False
-                self._round.save()
-                logger.info('Block alignment cannot be used, removing it.')
             else:
                 raise MaxReflectionLengthError('Cannot attack, specified maxreflectionlength is too short')
 
@@ -391,7 +387,10 @@ class Strategy(object):
             amount=self._victim.target.samplesize,
             knownalphabet=state['knownalphabet'],
             knownsecret=state['knownsecret'],
-            accumulated_probability=prob
+            accumulated_probability=prob,
+            huffman_pool=self._victim.target.huffman_pool,
+            block_align=self._victim.target.block_align,
+            method=self._victim.target.method
         )
         next_round.save()
         self._round = next_round
@@ -423,7 +422,7 @@ class Strategy(object):
         candidate_alphabets = self._build_candidates(state)
 
         alignmentalphabet = ''
-        if self._round.check_block_align():
+        if self._round.block_align:
             alignmentalphabet = list(self._round.victim.target.alignmentalphabet)
             random.shuffle(alignmentalphabet)
             alignmentalphabet = ''.join(alignmentalphabet)
