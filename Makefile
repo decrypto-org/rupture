@@ -13,7 +13,7 @@ syntax:
 	# Syntax check MD files
 	mdl --rules ~MD036 etc
 test:
-	cd backend && python manage.py test
+	cd backend && coverage run --source=breach ./manage.py test
 	cd sniffer && nosetests --with-coverage --cover-package=app,sniffer
 	cd realtime && npm run test
 	cd client && npm run test
