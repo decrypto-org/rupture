@@ -70,6 +70,7 @@ class StrategyTestCase(RuptureTestCase):
             amount=1,
             knownsecret='testsecret',
             knownalphabet='01',
+            huffman_balance=False
         )
         self.dif_batch_samplesets = [
             SampleSet.objects.create(
@@ -116,7 +117,8 @@ class StrategyTestCase(RuptureTestCase):
             endpoint='https://di.uoa.gr/?breach=%s',
             prefix='test',
             alphabet='0123456789',
-            name='ruptureit'
+            name='ruptureit',
+            huffman_balance=False
         )
 
         next_round_victim = Victim.objects.create(
@@ -130,6 +132,7 @@ class StrategyTestCase(RuptureTestCase):
             amount=1,
             knownsecret='testsecret',
             knownalphabet='01',
+            huffman_balance=False
         )
 
         SampleSet.objects.create(
@@ -192,7 +195,8 @@ class StrategyTestCase(RuptureTestCase):
             prefix='test',
             alphabet='0123',
             name='webuoa',
-            method=DIVIDE_CONQUER
+            method=DIVIDE_CONQUER,
+            huffman_balance=False
         )
 
         victim = self.create_mock_victim(mock_target)
@@ -244,7 +248,8 @@ class StrategyTestCase(RuptureTestCase):
             prefix='test',
             alphabet='0123',
             maxreflectionlength=12,
-            method=2
+            method=2,
+            huffman_balance=False
         )
 
         victim = Victim.objects.create(
@@ -267,7 +272,8 @@ class StrategyTestCase(RuptureTestCase):
             prefix='test',
             alphabet='0123',
             maxreflectionlength=6,
-            method=2
+            method=2,
+            huffman_balance=False
         )
 
         victim = Victim.objects.create(
