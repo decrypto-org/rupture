@@ -342,14 +342,21 @@ class Strategy(object):
 
         def _get_first_reflection():
             alphabet = _build_candidate_alphabets()[0]
-            return self._reflection(alphabet)
+            ref = self._reflection(alphabet)
+            if self._round.huffman_balance:
+                ref += self._get_huffman_balance()
+            return ref
 
         if self._round.victim.target.maxreflectionlength == 0:
             self._set_round_cardinalities(self._build_candidates(state))
             return
 
         while len(_get_first_reflection()) > self._round.victim.target.maxreflectionlength:
-            if self._round.method == Target.DIVIDE_CONQUER:
+            if self._round.huffman_balance:
+                self._round.huffman_balance = False
+                self._round.save()
+                logger.info('Huffman balance cannot be used, removing it.')
+            elif self._round.method == Target.DIVIDE_CONQUER:
                 self._round.method = Target.SERIAL
                 self._round.save()
                 logger.info('Divide & conquer method cannot be used, falling back to serial.')
