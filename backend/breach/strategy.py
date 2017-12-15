@@ -165,7 +165,7 @@ class Strategy(object):
 
     def _sampleset_to_work(self, sampleset):
         return {
-            'url': self._url(sampleset.candidatealphabet),
+            'url': self._url(sampleset.candidatealphabet) + sampleset.huffman_match_balance,
             'amount': self._victim.target.samplesize,
             'alignmentalphabet': sampleset.alignmentalphabet,
             'timeout': 0
@@ -411,6 +411,28 @@ class Strategy(object):
             self._round.delete()
             raise err
 
+    def _get_huffman_balance(self):
+        # The LZ77 algorithm runs first and the Huffman tree is produced afterwards.
+        # When the LZ77 algorithm runs, it creates "match" symbols encoding the length
+        # of the matching portion of the text, e.g., if the matching size is 5, the symbol
+        # encoded will be a "match 5". When the secret compresses well due to LZ77, the
+        # symbol encoded in the Huffman tree will be a match equal to the known secret text
+        # length plus one; when it does not compress well, it will be a match equal to
+        # only the known secret length. The changing frequencies of the match symbols
+        # occurrences can cause a snowball effect on the Huffman tree if their frequencies
+        # are close to the frequencies of other symbols (such as literals). Here, we artificially
+        # create more occurences of the "match 5" and "match 6" LZ77 symbols (for a known
+        # secret of e.g. size 5) such that we can separate them distinctly within the Huffman
+        # tree.
+
+        balance1 = ''
+        balance2 = ''
+        for i in range(len(self._round.knownsecret) + 1):
+            balance1 += random.choice(string.ascii_lowercase + string.ascii_uppercase)
+            balance2 += random.choice(string.ascii_lowercase + string.ascii_uppercase)
+        balance1 = balance1[:-1]
+        return ''.join([balance2 + balance1 + chr(ord('A') + i) for i in range(random.randrange(ord('Z') - ord('A')))])
+
     def _create_round_samplesets(self):
         state = {
             'knownalphabet': self._round.knownalphabet,
@@ -421,6 +443,10 @@ class Strategy(object):
         self._round.save()
 
         candidate_alphabets = self._build_candidates(state)
+
+        huffman_match_balance = ''
+        if self._round.huffman_balance:
+            huffman_match_balance = self._get_huffman_balance()
 
         alignmentalphabet = ''
         if self._round.block_align:
@@ -433,6 +459,7 @@ class Strategy(object):
                 'round': self._round,
                 'candidatealphabet': candidate,
                 'alignmentalphabet': alignmentalphabet,
+                'huffman_match_balance': huffman_match_balance,
                 'batch': self._round.batch
             })
 
