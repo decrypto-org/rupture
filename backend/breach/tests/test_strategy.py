@@ -218,6 +218,29 @@ class StrategyTestCase(RuptureTestCase):
         strategy1._mark_current_work_completed()
 
     @patch('breach.strategy.Sniffer')
+    def test_downgrade_huffman_balance(self, Sniffer):
+        target = Target.objects.create(
+            name='maxreflection',
+            endpoint='https://test.com/?breach=%s',
+            prefix='test',
+            alphabet='0123',
+            maxreflectionlength=30,
+            method=2
+        )
+
+        victim = Victim.objects.create(
+            target=target,
+            sourceip='192.168.10.141',
+            snifferendpoint='http://localhost/'
+        )
+
+        strategy = Strategy(victim)
+        work = strategy.get_work()
+        self.assertEqual(work, {'url': u'https://test.com/?breach=^3^2^test1^test0^', 'amount': 64, 'timeout': 0, 'alignmentalphabet': u''})
+
+        target.delete()
+
+    @patch('breach.strategy.Sniffer')
     def test_downgrade_to_serial(self, Sniffer):
         target = Target.objects.create(
             name='maxreflection',
