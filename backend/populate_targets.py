@@ -49,6 +49,8 @@ def create_target(target):
         target_args['samplesize'] = target['samplesize']
     if 'confidence_threshold' in target:
         target_args['confidence_threshold'] = target['confidence_threshold']
+    if 'huffman_balance' in target:
+        target_args['huffman_balance'] = target['huffman_balance']
 
     t = Target(**target_args)
     t.save()
@@ -59,6 +61,7 @@ def create_target(target):
          \talphabet: {}
          \tsecretlength: {}
          \talignmentalphabet: {}
+         \thuffman_balance: {}
          \trecordscardinality: {}
          \tmethod: {}'''.format(
             t.name,
@@ -67,6 +70,7 @@ def create_target(target):
             t.alphabet,
             t.secretlength,
             t.alignmentalphabet,
+            t.huffman_balance,
             t.recordscardinality,
             t.method
         )

@@ -390,6 +390,7 @@ class Strategy(object):
             accumulated_probability=prob,
             huffman_pool=self._victim.target.huffman_pool,
             block_align=self._victim.target.block_align,
+            huffman_balance=self._victim.target.huffman_balance,
             method=self._victim.target.method
         )
         next_round.save()
