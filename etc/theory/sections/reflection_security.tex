@@ -8,14 +8,20 @@ including Rupture, as instances of the theoretical model we introduce.
 
 \subsection{The reflection game}\label{subsec:refsecgame}
 
-Let $\mathcal{SE} = (Gen, \mathcal{E}, \mathcal{D})$ be a private-key encryption
-scheme, $\mathcal{A}$ be an adversary and $\mathcal{S}$ be a simulator. Also let
-some function $f(\cdot, \cdot)$, some function
-$g$ of the plaintext, some function $Com(\cdot)$, and a distribution of secrets
-$\mathcal{M}$. We call $f$ a rendering function and require that it
-is polynomially computable and reversible. We call $Com$ the compression
-function and require that it is a deterministic polynomially computable and
-reversible bijection.
+Let $\mathcal{T} = (Gen, K, \mathcal{D})$ be a triplet of algorithms. In this
+triplet, $Gen$ is a key generation algorithm which, given a security parameter
+$1^\lambda$ returns some key $\kappa$. The function $K$ is an encryption
+function with three parameters: The key $\kappa$ and two plaintexts $s$ and $r$,
+which we call the \textit{secret} and \textit{reflection} specifically. For now,
+we leave the question of how these plaintexts are combined to be encrypted
+together undefined; this will be instantiated into a concrete function when we
+discuss the security of particular schemes.
+
+Let $\mathcal{A}$ be an adversary and $\mathcal{S}$ be a simulator. Also let
+$\mathcal{M}$ be a distribution of plaintexts and $g$ a function defined on its
+support, as well as some function $Com(\cdot)$ defined on the domain of $K$. We
+call $Com$ the compression function and require that it is a deterministic
+polynomially computable and reversible bijection.
 
 The game $\text{Game}_{\text{REF-SEC}}^{\mathcal{SE},\mathcal{A}}(\lambda)$ is
 parameterized with the security parameter $\lambda$. The challenger produces a
@@ -25,9 +31,8 @@ chooses a secret $s \leftarrow \mathcal{M}$.
 The adversary is then allowed to run and make arbitrary calls to a reflection
 oracle. The oracle is parameterized by $s$, the secret unknown to the adversary.
 For the reflection oracle call, the adversary chooses a reflection string $r$
-and sends it to the oracle. The oracle computes $m = f(s, r)$. Subsequently $m$
-is encrypted as $c = \mathcal{E}_\kappa(m)$, and $c$ is sent back to the
-adversary.
+and sends it to the oracle. The oracle computes $c = K_\kappa(s, r)$.
+Subsequently $c$ is sent back to the adversary.
 
 When the adversary decides to complete the game, they output a guess $y$. The
 adversary is successful if $g(s) = y$. In the case of Rupture, a successful
@@ -51,8 +56,7 @@ Where the reflection oracle provided to the adversary is as follows:
 
 \begin{lstlisting}[texcl,mathescape,basicstyle=\small]
 def $\text{Reflect}^{k}_s(r)$:
-    $m = f(s, r)$
-    $c \leftarrow \mathcal{E}_{k}(m)$
+    $c \leftarrow K_{k}(s, r)$
     return $c$
 \end{lstlisting}
 
@@ -62,7 +66,7 @@ Let the simulator game be defined as follows:
 def $\text{Game}_{\text{REF-SIM}}^{\mathcal{SE},\mathcal{S}}(\lambda)$:
     $s \leftarrow \mathcal{M}$
     $s' = 0^{|s|}$
-    $y \leftarrow \mathcal{S}^{\text{Reflect}^{k}_s(r)}(1^\lambda, {|Com(s)|})$
+    $y \leftarrow \mathcal{S}^{\text{Reflect}^{k}_{s'}(r)}(1^\lambda, {|Com(s)|})$
     if $y = g(s)$:
         return 1
     else:
@@ -73,8 +77,7 @@ The reflection oracle provided to the simulator is as follows:
 
 \begin{lstlisting}[texcl,mathescape,basicstyle=\small]
 def $\text{Reflect}^{k}_{s'}(r)$:
-    $m = f(s', r)$
-    $c \leftarrow \mathcal{E}_{k}(m)$
+    $c \leftarrow \mathcal{K}_{k}(s', r)$
     return $c$
 \end{lstlisting}
 
@@ -101,8 +104,9 @@ Let us now define the advantage of the adversary against a simulator:
 
 \subsection{Adaptive reflection security}\label{subsec:adaptiverefsec}
 
-Given a rendering function $f(\cdot, \cdot)$, a private-key encryption
-scheme $\mathcal{SE}$ is \textit{reflection-secure} if:
+Given a rendering function $f(\cdot, \cdot)$, a private-key encryption scheme
+$\mathcal{SE}$ composed with a rendering function $f$ is
+\textit{reflection-secure} if:
 \begin{align*}
     \forall \mathcal{M}:
     \forall g:
@@ -112,7 +116,7 @@ scheme $\mathcal{SE}$ is \textit{reflection-secure} if:
 \end{align*}
 
 \begin{lemma}[Semantic security]
-    Let $(Gen, K, D)$ be a length-preserving reflection-secure encryption
+    Let $(Gen, E, D)$ be a length-preserving reflection-secure encryption
     scheme. Then it is also semantically secure.
 \end{lemma}
 
