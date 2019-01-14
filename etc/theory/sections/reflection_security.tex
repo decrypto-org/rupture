@@ -36,47 +36,68 @@ prefix of secret $s$.
 
 Formally, let the secret key adversarial game be defined as follows:
 
-\begin{lstlisting}[texcl,mathescape,basicstyle=\small]
-def $\text{Game}_{\text{REF-SEC}}^{\mathcal{SE},\mathcal{A}}(\lambda)$:
-    $k \leftarrow Gen(1^\lambda)$
-    $s \leftarrow \mathcal{M}$
-    $y \leftarrow \mathcal{A}^{\text{Reflect}^{k}_s(r)}(1^\lambda)$
-    if $y = g(s)$:
-        return 1
-    else:
-        return 0
-\end{lstlisting}
+\begin{algorithm}
+    \caption{The reflection security game.}\label{alg:refsec-game}
+    \begin{algorithmic}
+        \Function {$\text{Game}_{\text{REF-SEC}}^{\mathcal{SE},\mathcal{A}}$}{$\lambda$}:
+            \State $k \leftarrow Gen(1^\lambda)$
+            \State $s \leftarrow \mathcal{M}$
+            \State $y \leftarrow \mathcal{A}^{\text{Reflect}^{k}_s(r)}(1^\lambda)$
+            \If {$y = g(s)$}
+                \State \Return $1$
+            \Else
+                \State \Return $0$
+            \EndIf
+        \EndFunction
+    \end{algorithmic}
+\end{algorithm}
 
 Where the reflection oracle provided to the adversary is as follows:
 
 \begin{lstlisting}[texcl,mathescape,basicstyle=\small]
-def $\text{Reflect}^{k}_s(r)$:
-    $m = f(s, r)$
-    $c \leftarrow \mathcal{E}_{k}(m)$
-    return $c$
 \end{lstlisting}
+
+\begin{algorithm}
+    \caption{The reflection oracle.}\label{alg:ref-oracle}
+    \begin{algorithmic}
+        \Function {$\text{Reflect}^{k}_s$}{$r$}:
+            \State $m = f(s, r)$
+            \State $c \leftarrow \mathcal{E}_{k}(m)$
+            \State \Return $c$
+        \EndFunction
+    \end{algorithmic}
+\end{algorithm}
 
 Let the simulator game be defined as follows:
 
-\begin{lstlisting}[texcl,mathescape,basicstyle=\small]
-def $\text{Game}_{\text{REF-SIM}}^{\mathcal{SE},\mathcal{S}}(\lambda)$:
-    $s \leftarrow \mathcal{M}$
-    $s' = 0^{|s|}$
-    $y \leftarrow \mathcal{S}^{\text{Reflect}^{k}_s(r)}(1^\lambda, {|Com(s)|})$
-    if $y = g(s)$:
-        return 1
-    else:
-        return 0
-\end{lstlisting}
+\begin{algorithm}
+    \caption{The simulated reflection security game.}\label{alg:sim-refsec-game}
+    \begin{algorithmic}
+        \Function {$\text{Game}_{\text{REF-SIM}}^{\mathcal{SE},\mathcal{S}}$}{$\lambda$}:
+            \State $s \leftarrow \mathcal{M}$
+            \State $s' = 0^{|s|}$
+            \State $y \leftarrow \mathcal{S}^{\text{Reflect}^{k}_s(r)}(1^\lambda, {|Com(s)|})$
+            \If {$y = g(s)$}
+                \State \Return $1$
+            \Else
+                \State \Return $0$
+            \EndIf
+        \EndFunction
+    \end{algorithmic}
+\end{algorithm}
 
 The reflection oracle provided to the simulator is as follows:
 
-\begin{lstlisting}[texcl,mathescape,basicstyle=\small]
-def $\text{Reflect}^{k}_{s'}(r)$:
-    $m = f(s', r)$
-    $c \leftarrow \mathcal{E}_{k}(m)$
-    return $c$
-\end{lstlisting}
+\begin{algorithm}
+    \caption{The simulator's reflection oracle.}\label{alg:sim-ref-oracle}
+    \begin{algorithmic}
+        \Function {$\text{Reflect}^{k}_{s'}$}{$r$}:
+            \State $m = f(s', r)$
+            \State $c \leftarrow \mathcal{E}_{k}(m)$
+            \State \Return $c$
+        \EndFunction
+    \end{algorithmic}
+\end{algorithm}
 
 Both the adversary and the simulator are given access to an encryption and decryption oracle, but
 are not allowed to call the decryption oracle with the reflection oracle output.

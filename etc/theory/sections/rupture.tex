@@ -89,8 +89,7 @@ following paragraphs.
         \label{fig:rupture_architecture}
    \end{figure}
 
-\subsubsection{Client}
-
+\noindent \textbf{Client.}
 The client component is a Javascript code that issues requests towards a chosen
 endpoint. It needs to be executed from the browser of the victim, so that the
 victim's authentication cookies are included in the request and the secrets are
@@ -99,8 +98,7 @@ connects to the realtime service through a \textit{command-and-control} channel,
 registers itself, and then waits for work instructions, which come in the form
 of URLs for the requests it needs to make.
 
-\subsubsection{Injector}
-
+\noindent \textbf{Injector.}
 The injector component is responsible for injecting the client to the victim's
 browser. The injection is performed by ARP spoofing (or NDP poisoning in the
 case of IPv6) the local network and forwarding all traffic in a
@@ -111,8 +109,7 @@ as multiple injectors can be deployed to different networks, all controlled by t
 same central command-and-control channel. The injector module is built using
 Bettercap as the underlying tool for the network injection.
 
-\subsubsection{Realtime}
-
+\noindent \textbf{Realtime.}
 The realtime is a service that acts as an intermediary between the clients and
 the backend. When a client is injected in a page, it registers to the realtime and
 maintains an open connection. Consequently the realtime holds command-and-control
@@ -126,8 +123,7 @@ the work instructions for the active clients. The realtime is built in
 Node.js \cite{tilkov2010node} and uses the socket.io framework
 \cite{rai2013socket} for the command-and-control connections.
 
-\subsubsection{Sniffer}
-
+\noindent \textbf{Sniffer.}
 The sniffer component is responsible for collecting data from the victim's
 network. When instructed, the sniffer collects the encrypted request and
 response network packets for a given victim and a target. It also exposes a HTTP
@@ -135,8 +131,7 @@ API which is utilized by the backend for controlling when the sniffing starts an
 stops, and to retrieve the sniffed data. It is built in Python, using Scapy
 \cite{biondi2010scapy} for the network functionality.
 
-\subsubsection{Backend}
-
+\noindent \textbf{Backend.}
 The backend component is the center of operations for all attacks. It is
 configured with the target and victim information, initializes the attacks and
 designs the samplesets that should be collected.  When work needs to be done,

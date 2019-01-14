@@ -3,7 +3,7 @@
 Rupture incorporates a number of optimizations that allow for faster and more
 robust execution of attacks against multiple protocols.
 
-\subsubsection{Block alignment}\label{subsec:blockalign}
+\noindent \textbf{Block alignment.}\label{subsec:blockalign}
 In block ciphers, the length of the encrypted text is rounded up to a product of
 $\mu$-bits, where $\mu$ is the block size. Consequently, length difference
 between two plaintexts does not always result in a similar length difference between the
@@ -32,7 +32,7 @@ intuitively.
       \label{fig:block_alignment}
    \end{figure}
 
-\subsubsection{Reflection computation methods}\label{subsec:reflectionmethods}
+\noindent \textbf{Reflection computation methods.}\label{subsec:reflectionmethods}
 So far we have described the need for building and analysing reflections to
 distinguish a single candidate in the secret's alphabet $\Sigma$ as the correct
 one. In this section, we present two methods for constructing the reflections.
@@ -64,13 +64,13 @@ when the $\Sigma$ is the set of digits.
       \label{fig:divide_and_conquer}
    \end{figure}
 
-\subsubsection{Request parallelization}\label{subsec:parallel}
+\noindent \textbf{Request parallelization.}\label{subsec:parallel}
 Modern web servers are able to handle multiple parallel requests and
 browsers can issue a certain amount of parallel requests per domain. This
 functionality enables the adversary to issue multiple parallel requests per
 candidate and efficiently reduce the execution time of the attack.
 
-\subsubsection{Request soup}
+\noindent \textbf{Request soup.}
 Previous sections demonstrated the need for multiple requests per reflection
 string $r_i$. However, communication is time expensive, so in many cases it is
 preferable to issue multiple requests for a candidate and treat them as a set
