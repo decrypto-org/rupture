@@ -8,8 +8,6 @@ Rupture
 Rupture is a framework for easily conducting BREACH and other compression-based
 attacks.
 
-> For more information, please visit Rupture's home page: [RuptureIt](https://ruptureit.com)
-
 Authors
 =======
 Rupture is developed by:
