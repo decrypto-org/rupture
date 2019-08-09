@@ -130,3 +130,8 @@ class Round(models.Model):
         help_text=('Whether to use Huffman pool or not, in case '
                    'maxreflectionlength does not allow it')
     )
+
+    huffman_balance = models.BooleanField(
+        default=True,
+        help_text=('Whether to use huffman balance for match symbols.')
+    )

@@ -70,6 +70,7 @@ class StrategyTestCase(RuptureTestCase):
             amount=1,
             knownsecret='testsecret',
             knownalphabet='01',
+            huffman_balance=False
         )
         self.dif_batch_samplesets = [
             SampleSet.objects.create(
@@ -116,7 +117,8 @@ class StrategyTestCase(RuptureTestCase):
             endpoint='https://di.uoa.gr/?breach=%s',
             prefix='test',
             alphabet='0123456789',
-            name='ruptureit'
+            name='ruptureit',
+            huffman_balance=False
         )
 
         next_round_victim = Victim.objects.create(
@@ -130,6 +132,7 @@ class StrategyTestCase(RuptureTestCase):
             amount=1,
             knownsecret='testsecret',
             knownalphabet='01',
+            huffman_balance=False
         )
 
         SampleSet.objects.create(
@@ -192,7 +195,8 @@ class StrategyTestCase(RuptureTestCase):
             prefix='test',
             alphabet='0123',
             name='webuoa',
-            method=DIVIDE_CONQUER
+            method=DIVIDE_CONQUER,
+            huffman_balance=False
         )
 
         victim = self.create_mock_victim(mock_target)
@@ -212,6 +216,29 @@ class StrategyTestCase(RuptureTestCase):
             'https://di.uoa.gr/?breach=^1^0^test3^test2^'
         )
         strategy1._mark_current_work_completed()
+
+    @patch('breach.strategy.Sniffer')
+    def test_downgrade_huffman_balance(self, Sniffer):
+        target = Target.objects.create(
+            name='maxreflection',
+            endpoint='https://test.com/?breach=%s',
+            prefix='test',
+            alphabet='0123',
+            maxreflectionlength=30,
+            method=2
+        )
+
+        victim = Victim.objects.create(
+            target=target,
+            sourceip='192.168.10.141',
+            snifferendpoint='http://localhost/'
+        )
+
+        strategy = Strategy(victim)
+        work = strategy.get_work()
+        self.assertEqual(work, {'url': u'https://test.com/?breach=^3^2^test1^test0^', 'amount': 64, 'timeout': 0, 'alignmentalphabet': u''})
+
+        target.delete()
 
     @patch('breach.strategy.Sniffer')
     def test_downgrade_to_serial(self, Sniffer):
@@ -244,7 +271,8 @@ class StrategyTestCase(RuptureTestCase):
             prefix='test',
             alphabet='0123',
             maxreflectionlength=12,
-            method=2
+            method=2,
+            huffman_balance=False
         )
 
         victim = Victim.objects.create(
@@ -267,7 +295,8 @@ class StrategyTestCase(RuptureTestCase):
             prefix='test',
             alphabet='0123',
             maxreflectionlength=6,
-            method=2
+            method=2,
+            huffman_balance=False
         )
 
         victim = Victim.objects.create(

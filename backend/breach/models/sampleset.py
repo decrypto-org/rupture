@@ -93,3 +93,10 @@ class SampleSet(models.Model):
         help_text=('Whether the samples in this sampleset were all collected '
                    'successfully')
     )
+
+    huffman_match_balance = models.CharField(
+        max_length=255,
+        default='',
+        help_text=('The alphabet used for balancing the Huffman tree for the '
+                   'match pointers.')
+    )
