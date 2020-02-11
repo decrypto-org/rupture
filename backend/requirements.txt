@@ -1,4 +1,4 @@
-Django==1.9.2
+Django==1.11.28
 PyYAML==3.11
 coverage==4.2
 coveralls==1.1
